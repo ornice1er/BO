@@ -1,0 +1,17 @@
+{
+  "routes": [
+    "/",
+    "/404",
+    "/activate-account",
+    "/admin",
+    "/admin/dashboard",
+    "/admin/permissions",
+    "/admin/profils",
+    "/admin/roles",
+    "/admin/users",
+    "/forget-password",
+    "/login",
+    "/user-account",
+    "/user-settinngs"
+  ]
+}
