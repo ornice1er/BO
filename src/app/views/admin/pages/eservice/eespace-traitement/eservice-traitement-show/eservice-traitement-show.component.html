@@ -1,0 +1,255 @@
+<app-bread-title [title]="'Consultation des détails de la demande'"></app-bread-title>
+
+
+<div class="d-flex justify-content-between mb-5">
+    <!--div class="">
+        <button class="btn btn-dark   " (click)="back2()">
+            <i icon="arrow-left-outline"></i>Retour</button>
+    </!--div-->
+    
+    <div class="" *ngIf="(myPrestation.need_meeting && selected_data?.status==5) || (myPrestation.need_meeting && !myPrestation.from_pns)">
+        <a type="button" [routerLink]="'/admin/agenda/'+selected_data?.code+'/'+myPrestation?.slug+'/'+myPrestation.code" class="btn btn-dark  text-white">
+           Créer un rendez vous </a>
+    </div>
+
+    <div class="">
+        <button class="btn  btn-primary " nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation') && (!isTreated || !isMyTreated) && selected_data?.status!=7 && uas.length!=0 && selected_data?.status!=6" (click)="open(dialogAffectation)">
+            <i icon="corner-right-down-outline"></i>  {{isTreated && !isMyTreated ? 'Retourner pour correction':'Affecter'}} 
+        </button>
+    </div>
+    <div class="" >
+        <button class="btn  btn-warning " nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification') && !isTreated && selected_data?.status!=7"  (click)="open2()" >
+            <i icon="edit-2-outline"></i> Traiter la demande
+        </button>
+    </div>
+    <div class="">
+        <button class="btn  btn-warning " nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="selected_data?.status!=7 && selected_data?.status!=4 && hasPermission('modification') && isTreated"  (click)="open2()" >
+            <i icon="edit-2-outline"></i> {{isMyTreated ? 'Modifier mon avis':'Voir la réponse du collaborateur'}} 
+        </button>
+    </div>
+    <div class="">
+        <button class="btn  btn-success " nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top"  *ngIf="selected_data?.status!=7 && isMyTreated && !isSigner() && selected_data?.status !=9" (click)="transUp()">
+            <i icon="corner-right-up-outline"></i> Transmettre au supérieur
+        </button>
+    </div>
+    <div class="">
+        <button class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data?.status!=5" (click)="validate()">
+            <i icon="corner-right-up-outline"></i> Valider provisoirement la demande
+        </button>
+    </div>
+    <!--div class="">
+        <button class="btn  btn-info " nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA?.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
+            <i icon="info"></i>Suspension
+        </button>
+    </div>
+ 
+    <div-- class="">
+        
+        <button  *ngIf="selected_data!=null && responseUA?.hasPermission==false" class="btn  btn-danger " nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
+            <i icon="close-outline"></i> Rejet
+        </button>
+    </div-->
+    <div class="">
+        <button class="btn  btn-info " nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel' && selected_data?.status!=7" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
+            <i icon="info"></i>Suspendre pour accord à l'amiable
+        </button>
+    </div>
+    <!--div-- class="">
+       
+        <button class="btn  btn-warning " nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('previsualisation') && myPrestation.content_type!=1 && responseUA.hasPermission && selected_data?.status!=7"  (click)="open3()" >
+            <i icon="edit-2-outline"></i> Générer un prototype de livrable
+        </button>
+        <button class="btn  btn-primary mx-1"  *ngIf="selected_data!=null && selected_data?.filename!=null"   (click)="showFile2()">Visualiser le document</button>
+
+    </!--div-->
+
+ 
+
+  
+
+
+
+ 
+
+ 
+</div>
+<ng-container *ngIf="selected_data!=undefined">
+    <div *ngIf="!showPreview2 && !showPreview">
+        <ngx-adpap-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-presence-au-poste' && myPrestation?.from_pns"  (openedFile)="showFile($event)"  (openedFile2)="showResponseFile($event)"></ngx-adpap-details>
+        <ngx-atn-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-non-litige' && myPrestation?.from_pns" (openedFile)="showFile($event)"  (openedFile2)="showResponseFile($event)"></ngx-atn-details>
+        <ngx-as-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-stage' && myPrestation?.from_pns" (openedFile)="showFile($event)" (openedFile2)="showResponseFile($event)"></ngx-as-details>
+        <ngx-ads-details [selected_data]='selected_data' [prestation]="prestation" *ngIf="prestation=='autorisation-de-stage' && myPrestation?.from_pns" (openedFile)="showFile($event)" (openedFile2)="showResponseFile($event)"></ngx-ads-details>
+        <ngx-asf-details [selected_data]='selected_data' (openedFile)="showFile($event)"  *ngIf="prestation=='attestation-de-service-fait' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-asf-details>
+        <ngx-cnr-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='certificat-de-non-radiation' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-cnr-details>
+        <ngx-vsa-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='attestation-de-validite-des-services' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vsa-details>
+        <ngx-al-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-al-details>
+        <ngx-am-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='decision-agrement-exercice-medecin' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-am-details>
+        <ngx-vri-details [selected_data]='selected_data'(openedFile)="showFile($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vri-details>
+        <ngx-vca-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='visa-contrat-apprentisage' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vca-details>
+        <ngx-detab-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='declaration-etablissement' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-detab-details>
+        <app-code-template-details [selected_data]='selected_data' (openedFile)="showFile($event)" (openedFile3)="showFileContract($event)" *ngIf="!myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></app-code-template-details>
+        
+    </div>
+</ng-container>
+<div class="text-center"  *ngIf="selected_data==undefined">
+    <img src="assets/spinner.gif" alt="" height="50">
+</div>
+
+<ng-template #dialogAffectation let-c="close" let-d="dismiss">
+    <form #addInstruction="ngForm" (ngSubmit)="transDown(addInstruction.value)">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> {{isTreated && !isMyTreated ? 'Retour pour correction':'Affecter la demande'}} </h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div class="form-group">
+                <label for="">Choisir un collaborateur</label>
+                <select name="ua_down_id" id="" class="form-control" ngModel required >
+                    <option *ngFor="let ua of uas" [value]="ua.id">{{ua.libelle}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Laissez une instruction</label>
+                <textarea name="instruction" rows="3" class="form-control" required ngModel maxlength="200"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="">Pour au plus tard, le </label>
+                <input type="date" nbInput name="delay" required ngModel class="form-control">
+            </div>
+        </div>    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+</form>
+
+  </ng-template>
+
+
+<div *ngIf="showPreview"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-dark mb-3 " (click)="back()">Fermer le visualiseur</button>
+                <!--button  *ngIf="!showResponseFilePreview"  class="btn btn-success mb-3 " [disabled]="!activeobsPanel"  (click)="openWindow(contentTemplateAmendement)">Faire des observations</!--button-->
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+
+
+  <ng-template #contentTemplateAmendement let-c="close" let-d="dismiss">
+    <form #addAmend="ngForm" (ngSubmit)="storeAmend()">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Observation sur pièce analysée</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="">observation</label>
+            <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="observation" name="observation"
+            ></textarea>
+        </div>
+        </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+    </form>
+
+ </ng-template>
+
+
+<ng-template #dialogRejet let-c="close" let-d="dismiss">
+    <form #addRejet="ngForm" (ngSubmit)="decline(addRejet.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Rejet de la demande</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="">Laissez le motif</label>
+            <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+        </div>    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+</form>
+
+  </ng-template>    
+
+
+<ng-template #dialogSuspension let-c="close" let-d="dismiss">
+    <form #addSusp="ngForm" (ngSubmit)="needCorrection(addSusp.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Suspension de la demande</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="">Laissez le motif</label>
+            <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+</form>
+
+  </ng-template>
+
+
+  
+<div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-dark mb-3 " (click)="back3()">Fermer le visualiseur</button>
+             
+                <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data?.isAutorized && isSigner() && selected_data?.status!=7"  [disabled]="loading" (click)="open(dialogSign)">Signer l'attestation / Délivrer mon visa</button>
+                <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data?.isAutorized && isSigner() && selected_data?.status!=7"  [disabled]="loading" (click)="delivered()">Délivrer l'attestation / Délivrer le document final</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+
+  <ng-template #dialogSign  let-c="close" let-d="dismiss">
+    <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Signer ce document</h4>
+            <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+      <div class="modal-body">
+            <div class="form-group">
+                <label for="">Saisissez votre mot de passe de délivrance</label>
+                <input name="password" type="password" class="form-control" required ngModel>
+            </div>
+        </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+
+</form>
+
+</ng-template>

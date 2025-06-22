@@ -1,0 +1,223 @@
+<app-bread-title [title]="'Gestion des unités administratives'"></app-bread-title>
+
+<div>
+  
+    <div>
+        
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="buttons-row">
+                    <button class="btn btn-sm btn-warning mx-1" (click)="open(dialogU)" nbTooltip="Modifier l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('modification')">
+                        Modifier
+                    </button>
+                    <button class="btn btn-sm btn-danger mx-1" (click)="delete()" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')">
+                        Supprimer
+                    </button>
+                    <button class=" btn btn-sm btn-primary float-right" (click)="open(dialog)">Ajouter une nouvelle unité adminstrative</button>
+                </div>
+            </div>
+        </div>
+       <div class="card card-body">
+        <table class="table" >
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Libellé</th>
+                <th scope="col">Unité parent</th>
+                <th scope="col">Direction départementale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data">
+                <th >
+                               <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+
+                </th>
+                <td>{{d?.libelle}}</td>
+                <td>{{d?.parent?.libelle}}</td>
+                <td>
+                    <span *ngIf="d.department_id == null">
+                        Unité administrative non départementale
+                    </span>
+                    <span *ngIf="d.department_id">
+                        {{d?.department?.name}}
+
+                    </span>
+                </td>
+              </tr>
+              <tr *ngIf="data.length == 0  && !loading2">
+                  <td colspan="4" class="text-center">Aucun élément trouvé</td>
+              </tr>
+              <tr *ngIf="loading2">
+        <img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+            </tr>
+          </table>
+       </div>
+    </div>
+  </div>
+  
+
+  <ng-template #dialog let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+    <div class="modal-header">
+        Enregistrement d'une unité administrative
+
+        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="typeLabel">Type</label>
+            <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="type_unite_admin_id" ngModel>
+                <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+            </select>
+           </div>
+           <div class="form-group">
+            <label for="typeLabel">Entité</label>
+            <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" ngModel>
+                <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
+            </select>
+           </div>
+            <div class="form-group">
+                <label for="typeLabel">Libellé</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" ngModel>
+                <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                    <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                </span>
+
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Sigle</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #sigle="ngModel" name="sigle" ngModel>
+                <span *ngIf="sigle.invalid && (sigle.dirty || sigle.touched)" class="text-danger">
+                    <small *ngIf="sigle.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                </span>
+
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Email de la structure</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #mail="ngModel" name="email" ngModel>
+                <span *ngIf="mail.invalid && (mail.dirty || mail.touched)" class="text-danger">
+                    <small *ngIf="mail.errors?.required" id="typeLabelHelp" class="form-text">Le email est requis.</small>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Unité admin sous-tutelle de</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #ua_parent_code="ngModel" name="ua_parent_code" ngModel>
+                    <option [value]="t.id" *ngFor="let t of data">{{t.libelle}}</option>
+                </select>
+               </div>
+
+               <div class="d-flex justify-content-between mb-3">
+                <span>Est ce une unité administrative départementale ?</span>
+                <ng-toggle
+                name="ua_department"
+                [(ngModel)]="ua_department"
+                [color]="{
+                    unchecked: '#939da2',
+                    checked: '#0C574E'
+                }"
+                [values]="{
+                    checked: true, 
+                    unchecked: false
+                }"
+                (change)="changed($event)"
+                ></ng-toggle>
+              </div>
+
+              <div class="form-group" *ngIf="ua_department">
+                <label for="typeLabel">Choix du département</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"   name="department_id" ngModel>
+                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                </select>
+               </div>
+
+ </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+  <ng-template #dialogU let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification d'une unité administrative</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="typeLabel">Type</label>
+            <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="type_unite_admin_id" [(ngModel)]="selected_data.type_unite_admin_id">
+                <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+            </select>
+           </div>
+           <div class="form-group">
+            <label for="typeLabel">Entité</label>
+            <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id">
+                <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
+            </select>
+           </div>
+            <div class="form-group">
+                <label for="typeLabel">Libellé</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" [(ngModel)]="selected_data.libelle">
+                <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                    <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                </span>
+
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Sigle</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #sigle="ngModel" name="sigle" [(ngModel)]="selected_data.sigle">
+                <span *ngIf="sigle.invalid && (sigle.dirty || sigle.touched)" class="text-danger">
+                    <small *ngIf="sigle.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                </span>
+
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Email de la structure</label>
+                <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #mail="ngModel" name="email" [(ngModel)]="selected_data.email">
+                <span *ngIf="mail.invalid && (mail.dirty || mail.touched)" class="text-danger">
+                    <small *ngIf="mail.errors?.required" id="typeLabelHelp" class="form-text">Le email est requis.</small>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="typeLabel">Unité admin sous-tutelle de</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #ua_parent_code="ngModel" name="ua_parent_code" [(ngModel)]="selected_data.ua_parent_code">
+                    <option [value]="t.id" *ngFor="let t of data">{{t.libelle}}</option>
+                </select>
+               </div>
+               <div class="d-flex justify-content-between mb-3">
+                <span>Est ce une unité administrative départementale ?</span>
+                <ng-toggle
+                name="ua_department"
+                [(ngModel)]="ua_department"
+                [color]="{
+                    unchecked: '#939da2',
+                    checked: '#0C574E'
+                }"
+                [values]="{
+                    checked: true, 
+                    unchecked: false
+                }"
+                (change)="changed($event)"
+                ></ng-toggle>
+              </div>
+
+              <div class="form-group" *ngIf="ua_department">
+                <label for="typeLabel">Choix du département</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"   name="department_id" [(ngModel)]="selected_data.department_id">
+                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                </select>
+               </div>
+ </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+</form>
+
+  </ng-template>

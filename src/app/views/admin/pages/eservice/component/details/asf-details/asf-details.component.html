@@ -1,0 +1,101 @@
+<div class="card card-body"  style="overflow: auto; height: 90vh;">
+    <div class="h3">Détails de la demande
+
+    </div>
+
+    <div >
+
+        <div *ngIf=" selected_data?.affectation?.instruction" class="alert alert-info">
+            <p><strong>Instruction : </strong> {{ selected_data.affectation.instruction}}</p>
+            <p><strong>Pour au plus tard, le</strong> {{ selected_data.affectation.delay}}</p>
+        </div>
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Informations natives de la demande</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom</dt>
+                        <dd class="dd">{{selected_data.asf.name_structure}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Email</dt>
+                        <dd class="dd">{{selected_data.asf.email_structure}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Téléphone</dt>
+                        <dd class="dd">{{selected_data.asf.phone_structure}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Adresse</dt>
+                        <dd class="dd">{{selected_data.asf.ref_marche}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">RCCM</dt>
+                        <dd class="dd">{{selected_data.asf.rccm}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Ifu</dt>
+                        <dd class="dd">{{selected_data.asf.ifu}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Type</dt>
+                        <dd class="dd">{{selected_data?.asf.type == "execution" ? "Attestation de bonne fin d'exécution" : "Attestation de service fait"}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset >
+            <legend class="bg-info p-1 text-white">Pièces jointes</legend>
+            <dl *ngFor="let f of selected_data.asf.files" class="">
+                <dt class="dt">{{f.filename}}</dt>
+                <dd class="dd">
+                    <button class="btn btn-sm btn-dark"  (click)="showFile(f)">voir fichier</button>
+                    <!--button  status="warning"  (click)="treat(selected_data.code,f.id)">Traiter la pièce</button-->
+
+                </dd>
+            </dl>
+        </fieldset>
+        
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Historique des avis</legend>
+
+            <div  *ngFor="let r of selected_data.reponses" class="card border p-1">
+                <div class="h5 text-primary">{{r.unite_admin.libelle}}</div> 
+                <div>
+                    <h6> <strong class="text-secondary me-1">Accord : </strong>{{getDecision(r.hasPermission)}}</h6>
+                 
+                     <p class="lorem">
+                        <strong class="me-1 text-secondary">Argumentaire</strong>
+                        {{r.reason}}
+                    </p>
+                    <p class="lorem">
+                        <strong class="me-1 text-secondary">Observation</strong>
+
+                        {{r.observation}}
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <button *ngIf="r.note != null" class="btn btn-primary btn-sm"   (click)="showResponseFile(r.note)">Voir la note de service</button>
+                        <button *ngIf="r.preview_file != null"  class="btn btn-primary btn-sm"  (click)="showResponseFile(r.preview_file)">Voir le prototype livrable</button>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+
+      </div>
+
+</div>

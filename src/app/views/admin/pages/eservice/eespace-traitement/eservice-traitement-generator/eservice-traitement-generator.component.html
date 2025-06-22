@@ -1,0 +1,103 @@
+<app-bread-title [title]="'Génération de document'"></app-bread-title>
+
+<div class="d-flex justify-content-end p-3 ">
+    <button class="btn btn-sm btn-dark mx-1"    (click)="back2()">Retour</button>
+
+    <button class="btn btn-sm btn-primary mx-1"  *ngIf="selected_data!=null && selected_data.filename!=null"   (click)="showFile2()">Visualiser le document</button>
+
+</div>
+
+
+<div class="container p-3" *ngIf="!showPreview2">
+<div class="card">
+    <div class="card-body">
+        <form #addAttestation="ngForm" (ngSubmit)="deliveryrDoc(addAttestation.value)">
+            <div > 
+          
+                <div class="p-3">
+                    <div class="" *ngIf="prestation=='autorisation-de-stage'">
+                        <h6>Point des contenus générés</h6>
+                        <ul>
+                            <li *ngFor="let d of docs"><strong class="mr-2">{{d?.name}}</strong> <i class="fa fa-check" *ngIf="d?.content != null"></i></li>
+        
+                        </ul>
+                        <div class="form-group" >
+                            <label for="">Veuillez sélection le contenu à générer</label>
+                            <select class="form-control" (change)="changeDesc($event)">
+                                <option value="0">Lettre d'acception</option>
+                                <option value="1">Lettre d'agrément</option>
+                                <option value="2">Autorisation de stage</option>
+                              </select>
+                        </div>
+                    </div>
+                  
+                    <!-- <div *ngIf="content !=null">
+                        <div>
+                            <div class="mb-3" >
+                        <h6 class="mb-3"><strong>Un contenu déjà disponible</strong></h6>
+                        <p  [innerHTML]="content"></p>
+                    </div>
+                        </div>
+                    </div> -->
+                    <div class="form-group text-center" *ngIf="myPrestation.content_type==0 && isTreated">
+                        <angular-editor name="desc" [placeholder]="'Enter text here...'" [(ngModel)]="desc" [config]="editorConfig"></angular-editor>
+    
+                        <!--ckeditor  [config]="{ extraPlugins: 'divarea', height: '600',width:'1000'}" name="contenu" [(ngModel)]="desc"></ckeditor-->
+                    </div>
+                    
+                    <p *ngIf="myPrestation.content_type==2 && isTreated" class="h4 text-center text-info p-5">Pas de contenu à éditer pour cette prestation, Vous pouvez prodéder à la génération du document</p>
+                  
+                </div>
+                
+                 
+                <div>
+                  <button *ngIf="isTreated" type="submit" class="btn btn-outline-primary" [disabled]="addAttestation.invalid || loading">Générer le document <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+                </div>
+        
+            </div>
+        </form>
+    </div>
+</div>
+    
+</div>
+
+<div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Retour</button>
+                <button class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized && isSigner()" (click)="open(dialogAffectation)">Signer l'attestation</button>
+                <button class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized && isSigner()" (click)="delivered()">Délivrer l'attestation</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+  <ng-template #dialogAffectation  let-c="close" let-d="dismiss">
+    <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Signer ce document</h4>
+            <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+      <div class="modal-body">
+            <div class="form-group">
+                <label for="">Saisissez votre mot de passe de délivrance</label>
+                <input name="password" type="password" class="form-control" required ngModel>
+            </div>
+        </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    </div>
+
+</form>
+
+</ng-template>

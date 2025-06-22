@@ -1,0 +1,163 @@
+<div class="card card-body"  style="overflow: auto; height: 90vh;">
+    <div class="h3">Détails de la demande
+
+    </div>
+    <div *ngIf="ads!=undefined" >
+
+        <div *ngIf="selected_data?.affectation?.instruction" class="alert alert-info">
+            <p><strong>Instruction : </strong> {{ selected_data.affectation.instruction}}</p>
+            <p><strong>Pour au plus tard, le</strong> {{ selected_data.affectation.delay}}</p>
+        </div>
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Informations du demandeur</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom et prénom(s)</dt>
+                        <dd class="dd">{{selected_data.as.identity}}</dd>
+                    </dl>
+                </div>
+               
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Adresse</dt>
+                        <dd class="dd">{{selected_data.as.address}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Formation</dt>
+                        <dd class="dd">{{selected_data.as.graduation}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Spécialité</dt>
+                        <dd class="dd">{{selected_data.as.domain}}</dd>
+                    </dl>
+                </div>      
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Email</dt>
+                        <dd class="dd">{{selected_data.email}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Téléphone</dt>
+                        <dd class="dd">{{selected_data.phone}}</dd>
+                    </dl>
+                </div>
+
+            </div>
+        </fieldset>
+        <!--fieldset>
+            <legend class="bg-info p-1 text-white">Informations de l'école</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom de l'école de formation</dt>
+                        <dd class="dd">{{ads.school}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom du Directeur</dt>
+                        <dd class="dd">{{ads.director_identity}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Adresse</dt>
+                        <dd class="dd">{{ads.school_address}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Localité / Ville</dt>
+                        <dd class="dd">{{ads.locality}}</dd>
+                    </dl>
+                </div>
+                
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Email</dt>
+                        <dd class="dd">{{ads.email_school}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Téléphone</dt>
+                        <dd class="dd">{{ads.phone_school}}</dd>
+                    </dl>
+                </div>
+              
+              
+            
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Informations de stage</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nature de stage</dt>
+                        <dd class="dd">{{ads.nature}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Type de stage</dt>
+                        <dd class="dd">{{ads.type}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Motif de stage</dt>
+                        <dd class="dd">{{ads.motif}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Durée de stage</dt>
+                        <dd class="dd">{{ads.delay}} mois</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+  
+
+     
+        <fieldset >
+            <legend class="bg-info p-1 text-white">Pièces jointes</legend>
+            <dl *ngFor="let f of selected_data.as.files" class="">
+                <dt class="dt">{{f.filename}}</dt>
+                <dd class="dd"><button   (click)="showFile(f)">voir fichier</button>
+                    <!--button  status="warning"  (click)="treat(selected_data.code,f.id)">Traiter la pièce</button-->
+
+                </dd>
+            </dl>
+        </fieldset>
+
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Historique des avis</legend>
+
+            <div  *ngFor="let r of selected_data.reponses">
+                <div>{{r.unite_admin.libelle}}</div> 
+                <div>
+                    <h6> <strong>Accord : </strong>{{getDecision(r.hasPermission)}}</h6>
+                     <p class="lorem">
+                        <strong class="mr-1">Argumentaire</strong>
+                        {{r.reason}}
+                    </p>
+                    <p class="lorem">
+                        <strong class="mr-1">Observation</strong>
+
+                        {{r.observation}}
+                    </p>
+                </div>
+            </div>
+        </fieldset>
+      </div>  
+
+</div>

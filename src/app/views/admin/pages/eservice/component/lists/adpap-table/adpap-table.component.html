@@ -1,0 +1,41 @@
+<table class="table table-sm  table-hover"  >
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Code demande</th>
+        <th scope="col">Date Enreg.</th>
+        <th scope="col">Identité</th>
+        <th scope="col">Matricule</th>
+        <!--th scope="col">Corps</!--th>
+        <th-- scope="col">Structure</th-->
+        <th scope="col">Téléphone </th>
+        <th scope="col">Email</th>
+        <!--th scope="col" *ngIf=" selected_data && selected_data?.filename!=null">Fichier délivré</!--th-->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of data">
+       <td>
+                     <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+
+      </td>
+        <td>{{d?.code}}</td>
+        <td>{{d?.created_at | date: "dd-MM-yyyy hh:mm:ss"}}</td>
+        <td>{{d?.adpap.identity}}</td>
+        <td>{{d?.adpap.matricule}}</td>
+        <!--td>{{d?.adpap.corporate}}</td-->
+        <!--td>{{d?.adpap.structure}}</!--td-->
+        <td>{{d?.phone}}</td>
+        <td>{{d?.email}}</td>
+        <!--td *ngIf="selected_data && d?.filename!=null">
+            <button   (click)="showFile2(d?.filename)">voir fichier</button>
+        </!--td-->
+      </tr>
+      <tr *ngIf="data.length == 0  && !loading2">
+          <td colspan="7" class="text-center">Aucun élément trouvé</td>
+      </tr>
+      <tr *ngIf="loading2">
+<img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+    </tr>
+  </table>

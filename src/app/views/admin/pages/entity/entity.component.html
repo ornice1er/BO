@@ -1,0 +1,131 @@
+<app-bread-title [title]="' Gestion des entités'"></app-bread-title>
+
+<div>
+ 
+    <div>
+        
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="buttons-row">
+                   
+                    <button class="btn btn-sm btn-warning mx-1" (click)="open(dialogU)" nbTooltip="Modifier l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('modification')" >
+                        <i icon="edit-2-outline"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger mx-1" (click)="delete()" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')" >
+                        <i icon="trash-2-outline"></i>
+                    </button>
+                  
+                    <button class=" btn btn-sm btn-primary float-right" *ngIf="hasPermission('ajout')" (click)="open(dialog)">Ajouter une nouvelle entité</button>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Libellé</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data">
+                <th >
+                               <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+
+                </th>
+                <td>{{d?.libelle}}</td>
+              </tr>
+              <tr *ngIf="data.length == 0  && !loading2">
+                  <td colspan="3" class="text-center">Aucun élément trouvé</td>
+              </tr>
+              <tr *ngIf="loading2">
+        <img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+            </tr>
+          </table>
+    </div>
+  </div>
+  
+  <ng-template #dialog  let-ref="dialogRef">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value,ref)">
+    <div>
+      <div>Enregistrement d' entité
+
+        <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div>
+                <p class="lead mb-3" *ngIf="error != ''">
+                    <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
+                </p>
+               <div class="form-group">
+                <label for="typeLabel">Type</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="type_entity_id" ngModel>
+                    <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+                </select>
+               </div>
+                <div class="form-group">
+                    <label for="typeLabel">Libellé</label>
+                    <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" ngModel>
+                    <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                        <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+    
+                </div>
+                <div class="form-group">
+                    <label for="typeLabel">Sigle</label>
+                    <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #sigle="ngModel" name="sigle" ngModel>
+                    <span *ngIf="sigle.invalid && (sigle.dirty || sigle.touched)" class="text-danger">
+                        <small *ngIf="sigle.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+    
+                </div>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+      </div>
+    
+    </div>
+</form>
+  </ng-template>
+
+
+  <ng-template #dialogU  let-ref="dialogRef">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value,ref)">
+    <div>
+      <div>Modification d' entité
+
+        <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div>
+                <p class="lead mb-3" *ngIf="error != ''">
+                    <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
+                </p>
+               <div class="form-group">
+                <label for="typeLabel">Type</label>
+                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="type_entity_id" [(ngModel)]="selected_data.type_entity_id">
+                    <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+                </select>
+               </div>
+                <div class="form-group">
+                    <label for="typeLabel">Libellé</label>
+                    <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" [(ngModel)]="selected_data.libelle">
+                    <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                        <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+    
+                </div>
+                <div class="form-group">
+                    <label for="typeLabel">Sigle</label>
+                    <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #sigle="ngModel" name="sigle" [(ngModel)]="selected_data.sigle">
+                    <span *ngIf="sigle.invalid && (sigle.dirty || sigle.touched)" class="text-danger">
+                        <small *ngIf="sigle.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+    
+                </div>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+      </div>
+    
+    </div>
+</form>
+  </ng-template>

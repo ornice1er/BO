@@ -1,0 +1,158 @@
+<app-bread-title [title]="'Mon agenda'"></app-bread-title>
+  
+    <div>
+        
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                
+                <div class="buttons-row">
+                    <button  class=" btn btn-sm btn-primary float-right" (click)="open(dialog)" >Programmer une rencontre</button>
+
+                    <button *ngIf="selected_data!=null && canTransmit" class="btn btn-sm btn-warning mx-1" (click)="open(dialogU)" nbTooltip="Modifier l'élément" nbTooltipPlacement="top" [disabled]="loading">
+                        Reprogrammer la rencontre
+                    </button>
+                    <button *ngIf="selected_data!=null && canTransmit" class="btn btn-sm btn-danger mx-1" (click)="delete()" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" [disabled]="loading">
+                        Annuler la rencontre
+                    </button>
+                    <button *ngIf="canTransmit && role!='Directeur'" class=" btn btn-sm btn-primary float-right mx-1" (click)="transUp()" [disabled]="loading">Transmettre</button>
+                    <button *ngIf="canSendMail" class=" btn btn-sm btn-primary float-right mx-1" (click)="sendMail()" [disabled]="loading">Envoyer le mail</button>
+                </div>
+            </div>
+        </div>
+        <div class="card card-body">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Prestation concernée</th>
+
+                    <th scope="col">Texte</th>
+                    <th scope="col">Etape</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Réponse usager</th>
+                    <th scope="col">Auteur</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of data">
+                    <th >
+                                   <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+    
+                    </th>
+                    <td>{{d?.date_start | date:"dd-MM-yyyy"}}</td>
+                    <td>{{d?.requete?.prestation?.name}}</td>
+
+                    <td>{{d?.description}}</td>
+                   
+                    <td>{{d?.unite_admin?.libelle}}</td>
+                    <td>{{getStatus(d?.status)}}</td>
+                    <td>{{d?.usager_response==null ?"En attente de réponse":d?.usager_response==0?"Pas disponible":"Diponible"}}</td>
+                    <td>{{d.user?.agent?.lastname}} {{d.user?.agent?.firstname}}</td>
+
+                  </tr>
+                  <tr *ngIf="data.length == 0 && !loading2">
+                      <td colspan="7" class="text-center">Aucun élément trouvé</td>
+                  </tr>
+                  <tr *ngIf="loading2">
+            <img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+                </tr>
+              </table>
+        </div>
+    </div>
+  
+    <ng-template #dialog let-c="close" let-d="dismiss">
+        <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Enregistrer un programme</h4>
+                <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+            </div>
+      <div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label for="">Choisir la prestation</label>
+                <select name="" id="" class="form-control" (change)="loadRequete($event)" [disabled]="upId != undefined">
+                    <option selected disabled></option>
+                    <option *ngFor="let up of user_prestations" [selected]="upId==up.id" [value]="up.prestation.id">{{up.prestation.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group" *ngIf="code ==undefined">
+                <label for="">Choisir la requête</label>
+                <select class="form-control" ngModel name="requete_id" required >
+                    <option selected disabled></option>
+                    <option *ngFor="let req of requetes" [selected]="code==reqId" [value]="req.id">{{req.code}}</option>
+                </select>
+            </div>
+             
+            <div class="form-group" *ngIf="code !=undefined">
+                <label for="">Choisir la requête</label>
+                <select class="form-control" [(ngModel)]="reqId" name="requete_id" required disabled>
+                    <option selected disabled></option>
+                    <option *ngFor="let req of requetes" [value]="req.id">{{req.code}}</option>
+                </select>
+            </div>
+ 
+                <div class="form-group">
+                    <label for="typeLabel">Texte</label>
+                    <textarea  #description="ngModel" name="description" ngModel class="form-control" rows="5"></textarea>
+                    <span *ngIf="description.invalid && (description.dirty || description.touched)" class="text-danger">
+                        <small *ngIf="description.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+                </div>
+              
+                <div class="form-group">
+                    <label for="typeLabel">Date </label>
+                    <input type="datetime-local" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #date_start="ngModel" name="date_start" ngModel>
+                    <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
+                        <small *ngIf="date_start.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                    </span>
+                </div>
+              
+      </div>
+    </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+      </div>
+    
+</form>
+  </ng-template>
+
+  <ng-template #dialogU  let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+    <div style="height: 80vh;">
+      <div>
+        <h6>Modification de programme
+            <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </h6>
+      </div>
+      <div >
+
+     
+        <div class="form-group">
+            <label for="typeLabel">Texte</label>
+            <textarea  #description="ngModel" name="description" [(ngModel)]="selected_data.description" class="form-control" rows="5"></textarea>
+            <span *ngIf="description.invalid && (description.dirty || description.touched)" class="text-danger">
+                <small *ngIf="description.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+            </span>
+        </div>
+     
+        <div class="form-group">
+            <label for="typeLabel">Date</label>
+            <input type="datetime-local" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #date_start="ngModel" name="date_start" [(ngModel)]="selected_data.date_start">
+            <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
+                <small *ngIf="date_start.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+            </span>
+        </div>
+      
+</div>
+      <div>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+      </div>
+    
+    </div>
+</form>
+  </ng-template>

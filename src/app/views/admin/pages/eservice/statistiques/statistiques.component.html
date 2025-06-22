@@ -1,0 +1,49 @@
+<app-bread-title [title]="'Statitistique Globale'"></app-bread-title>
+
+
+<div class="card card-body">
+    <div>
+      <form #formStat="ngForm" (ngSubmit)="loadStat(formStat.value)">
+      <div class="d-flex justify-content-between flex-sm-column">
+        <span>Statitistique Globale</span>
+        <div class="d-flex justify-content-center">
+          <div class="form-group">
+              <label for="">DU</label>
+              <input type="date" ngModel name="date_start" id="" class="form-control-sm">
+            </div>
+            <div class="form-group">
+              <label for="">AU</label>
+              <input type="date" ngModel name="date_end" id="" class="form-control-sm">
+            </div>
+            <div class="">
+                          <button [disabled]="loading2"  class="btn btn-sm btn-info" type="submit" > Rechercher</button>
+
+            </div>
+        </div>
+       
+      </div>
+    </form>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Demandes Totales</th>
+                <th scope="col">Demandes Traitées</th>
+                <th scope="col">Demandes Non Traitées</th>
+                <th scope="col">Demandes finalisées</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="data !=undefined">
+                <td>{{data.totale}}</td>
+                <td>{{data.treated}}</td>
+                <td>{{data.noTreated}}</td>
+                <td>{{data.finished}}</td>                
+              </tr>
+              <tr *ngIf="loading2">
+        <img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+            </tr>
+          </table>
+    </div>
+</div>

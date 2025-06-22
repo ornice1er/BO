@@ -1,0 +1,43 @@
+<app-bread-title [title]="'Statistique globale des sollicitations'"></app-bread-title>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-end">
+        <button (click)="export()" class="btn btn-sm btn-info">Exporter en PDF</button>
+    </div>
+<div class="card-body">
+
+    <table class="table table-bordred mb-3 table-sm">
+        <thead>
+            <th>Libellé</th>
+            <th>Totales</th>
+            <th>Traitées</th>
+            <th>Rejetées</th>
+            <th>Délivrées</th>
+            <th>Finalisées</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let d of data">
+                <td>{{d.name}}</td>
+                <td>{{d.total}}</td>
+                <td>{{d.treated}}</td>
+                <td>{{d.rejected}}</td>
+                <td>{{d.signed}}</td>
+                <td>{{d.finished}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="">
+
+        <h4>Graphe d'évolution des demandes au cours des mois</h4>
+
+        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
+            <canvas baseChart
+            [type]="'line'"
+      [datasets]="chartData"
+      [labels]="chartLabels"
+      [options]="chartOptions"
+      ></canvas>
+          </div>
+    </div>
+</div>
+</div>

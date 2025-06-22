@@ -1,0 +1,272 @@
+<div class="card card-body"  style="overflow: auto; height: 90vh;">
+    <div class="h3">Détails de la demande
+
+    </div>
+
+
+    <div >
+
+        <div *ngIf="selected_data?.affectation?.instruction" class="alert alert-info">
+            <p><strong>Instruction : </strong> {{ selected_data?.affectation.instruction}}</p>
+            <p><strong>Pour au plus tard, le</strong> {{ selected_data?.affectation.delay}}</p>
+        </div>
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Informations natives de la demande</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Objet</dt>
+                        <dd class="dd">{{selected_data?.detab?.objet}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Dénomination commerciale</dt>
+                        <dd class="dd">{{selected_data?.detab?.den_com}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom du chef d'établissement</dt>
+                        <dd class="dd">{{selected_data?.detab?.name_respo}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Qualité du chef d'établissement</dt>
+                        <dd class="dd">{{selected_data?.detab?.quality_respo}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Type établissement</dt>
+                        <dd class="dd">{{selected_data?.detab?.type_etablissement}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Activité principale réelle de l'établissement</dt>
+                        <dd class="dd">{{selected_data?.detab?.activite_principale}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Effectif du personnel</dt>
+                        <dd class="dd">{{selected_data?.detab?.eff}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Travailleur étranger</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.travailleur).etranger}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Travailleur permanent</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.travailleur).permanent}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Travailleur occasionnel</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.travailleur).occasionnel}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Convention collective applicable</dt>
+                        <dd class="dd">{{selected_data?.detab?.conv_collect_app}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" *ngIf="selected_data?.detab?.conv_collect_app == 'Particulier'">
+                    <dl>
+                        <dt class="dt">Texte de la convention</dt>
+                        <dd class="dd">{{selected_data?.detab?.conv_collect_app_2}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Date de création</dt>
+                        <dd class="dd">{{selected_data?.detab?.date_creation}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">S'agit - il d'une entreprise à un établissement ?</dt>
+                        <dd class="dd">{{selected_data?.detab?.status ? 'OUI':'NON'}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" *ngIf="selected_data?.detab?.status == '1'">
+                    <dl>
+                        <dt class="dt">Forme juridique</dt>
+                        <dd class="dd">{{selected_data?.detab?.forme_juridique}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" *ngIf="selected_data?.detab?.forme_juridique == 'Société régie'">
+                    <dl>
+                        <dt class="dt">Capitale sociale</dt>
+                        <dd class="dd">{{selected_data?.detab?.cap}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Email</dt>
+                        <dd class="dd">{{selected_data?.email}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Contact</dt>
+                        <dd class="dd">{{selected_data?.phone}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+       
+        <fieldset *ngIf="selected_data?.detab?.status == '1'">
+            <legend class="bg-info p-1 text-white">Adresse de l'établissement</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Département</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_etablissement).departement}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Commune</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_etablissement).commune}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Quartier</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_etablissement).quartier}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Adresse</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_etablissement).adresse}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Rue</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_etablissement).rue}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset *ngIf="selected_data?.detab?.status == '0'">
+            <legend class="bg-info p-1 text-white">Entreprise à n établissement</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Nom de l'entrepreneur ou raison sociale de l'entrepreneur</dt>
+                        <dd class="dd">{{selected_data?.detab?.name_chief}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Activité principale de l'entreprise                        </dt>
+                        <dd class="dd">{{selected_data?.detab?.activite_principale_ent}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" >
+                    <dl>
+                        <dt class="dt">Forme juridique</dt>
+                        <dd class="dd">{{selected_data?.detab?.forme_juridique_ent}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" *ngIf="selected_data?.detab?.forme_juridique_ent == 'Société régie'">
+                    <dl>
+                        <dt class="dt">Capitale sociale</dt>
+                        <dd class="dd">{{selected_data?.detab?.cap_ent}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4" >
+                    <dl>
+                        <dt class="dt">Nombre d'établissement</dt>
+                        <dd class="dd">{{selected_data?.detab?.nombre_etablissement}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset *ngIf="selected_data?.detab?.status == '0'">
+            <legend class="bg-info p-1 text-white">Adresse du siège de l'entreprise</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Département</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_ent).departement}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Commune</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_ent).commune}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Quartier</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_ent).quartier}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Adresse</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_ent).adresse}}</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl>
+                        <dt class="dt">Rue</dt>
+                        <dd class="dd">{{getJson(selected_data?.detab?.address_ent).rue}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset >
+            <legend class="bg-info p-1 text-white">Pièces jointes</legend>
+            <div class="row">
+                <dl *ngFor="let f of selected_data?.detab?.files" class="col-3">
+                    <dt class="dt">{{f.filename}}</dt>
+                    <dd class="dd">
+                        <button class="btn btn-sm btn-dark"  (click)="showFile(f)">voir fichier</button>
+                        <!--button  status="warning"  (click)="treat(selected_data?.code,f.id)">Traiter la pièce</button-->
+                    </dd>
+                </dl>
+            </div>
+       
+        </fieldset>
+
+        <fieldset>
+            <legend class="bg-info p-1 text-white">Historique des avis</legend>
+
+            <div  *ngFor="let r of selected_data?.reponses">
+                <div>{{r.unite_admin.libelle}}</div> 
+                <div>
+                    <h6> <strong>Accord : </strong>{{getDecision(r.hasPermission)}}</h6>
+                     <p class="lorem">
+                        <strong class="mr-1">Argumentaire</strong>
+                        {{r.reason}}
+                    </p>
+                    <p class="lorem">
+                        <strong class="mr-1">Observation</strong>
+
+                        {{r.observation}}
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <button *ngIf="r.note != null" class="btn btn-primary btn-sm"   (click)="showResponseFile(r.note)">Voir la note de service</button>
+                        <button *ngIf="r.preview_file != null"  class="btn btn-primary btn-sm"  (click)="showResponseFile(r.preview_file)">Voir le prototype livrable</button>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+      </div> 
+</div>

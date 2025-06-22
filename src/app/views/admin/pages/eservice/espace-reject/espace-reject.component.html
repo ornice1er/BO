@@ -1,0 +1,489 @@
+<app-bread-title [title]="'Demande à rejeter'"></app-bread-title>
+<div  *ngIf="!showPreview2">
+    <!--div>
+      Gestion des demandes {{prestationName}}
+
+    </div-->
+  
+    <div >
+        
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="buttons-row">
+
+                    <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('consultation')" (click)="show()" >
+                        <i icon="eye-outline"></i> consultation
+                    </button>
+
+                    <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification')"  (click)="openWindow(contentTemplate)" >
+                        <i icon="edit-2-outline"></i> Projet de réponse
+                    </button-->
+
+                    <button class="btn btn-sm btn-danger mx-1" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')"  (click)="open3()">
+                        <i icon="trash-2-outline"></i> Suppression
+                    </button>
+
+                    <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation')" (click)="open(dialogAffectation)">
+                        <i icon="corner-right-down-outline"></i> Affectation
+                    </button-->
+
+                    <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('transmission')" (click)="transUp()">
+                        <i icon="corner-right-up-outline"></i> Transmission
+                    </button-->
+
+                    <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
+                        <i icon="info"></i>Suspension
+                    </button-->
+                    <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
+                        <i icon="info"></i>Suspension pour accord à l'amiable
+                    </button-->
+                    <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Autoriser la délivrance du livrable" nbTooltipPlacement="top" *ngIf="hasPermission('autorisation') && selected_data?.content!=null" (click)="authorized()" >
+                        <i icon="checkmark-outline"></i> Autorisation
+                    </button-->
+                    <button class="btn btn-sm btn-info mx-1" nbTooltip="Télécharger le livrable" nbTooltipPlacement="top" *ngIf="hasPermission('impression')" >
+                        <i icon="download-outline"></i> Téléchargement
+                    </button>
+                    <!--button class="btn btn-sm btn-info mx-1"  *ngIf="responseUA.hasPermission" nbTooltip="Générer le contenu du livrable" nbTooltipPlacement="top"  (click)="open2(dialogAttestation)">
+                        <i icon="pantone-outline"></i>Contenu livrable
+                    </button-->
+                    <button  *ngIf="selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-light"   (click)="showFile2()">Visualiser le document à délivrer</button>
+                    <!--button  *ngIf="(prestation=='visa-reglement-interieur-entreprise' || prestation=='visa-contrat-apprentisage') && selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser l'élément" nbTooltipPlacement="top"  (click)="authorized()">
+                        <i icon="checkmark-outline"></i>
+                    </button-->
+                    <!--button  *ngIf="selected_data!=null && responseUA.hasPermission==false" class="btn btn-sm btn-danger mx-1" nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
+                        <i icon="close-outline"></i> Rejet
+                    </button-->
+                    <!--button class="btn btn-sm btn-dark mx-1"  *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltip="Simuler les indemnités" nbTooltipPlacement="top"  (click)="open(dialogSimulation)">
+                        <i icon="hash-outline"></i>
+                    </button-->
+                </div>
+            </div>
+        </div>
+        <div class="card card-body">
+        <ngx-adpap-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
+        <ngx-atn-table  [loading2]="loading2"[dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
+        <ngx-as-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
+        <ngx-ads-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
+        <ngx-asf-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
+        <ngx-cnr-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
+        <ngx-vsa-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
+        <ngx-vca-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
+        <ngx-vri-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
+        <ngx-al-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
+        <ngx-am-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>
+        <ngx-detab-table [loading2]="loading2" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
+        <app-code-template-list [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="code!=undefined"></app-code-template-list>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mb-3">
+            <div class="buttons-row">
+
+                <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('consultation')" (click)="show()" >
+                    <i icon="eye-outline"></i> consultation
+                </button>
+
+                <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification')"  (click)="openWindow(contentTemplate)" >
+                    <i icon="edit-2-outline"></i> Projet de réponse
+                </button-->
+
+                <button class="btn btn-sm btn-danger mx-1" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')"  (click)="open3()">
+                    <i icon="trash-2-outline"></i> Suppression
+                </button>
+
+                <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation')" (click)="open(dialogAffectation)">
+                    <i icon="corner-right-down-outline"></i> Affectation
+                </button-->
+
+                <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('transmission')" (click)="transUp()">
+                    <i icon="corner-right-up-outline"></i> Transmission
+                </button-->
+
+                <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
+                    <i icon="info"></i>Suspension
+                </button-->
+                <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
+                    <i icon="info"></i>Suspension pour accord à l'amiable
+                </button-->
+                <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Autoriser la délivrance du livrable" nbTooltipPlacement="top" *ngIf="hasPermission('autorisation') && selected_data?.content!=null" (click)="authorized()" >
+                    <i icon="checkmark-outline"></i> Autorisation
+                </button-->
+                <button class="btn btn-sm btn-info mx-1" nbTooltip="Télécharger le livrable" nbTooltipPlacement="top" *ngIf="hasPermission('impression')" >
+                    <i icon="download-outline"></i> Téléchargement
+                </button>
+                <!--button class="btn btn-sm btn-info mx-1"  *ngIf="responseUA.hasPermission" nbTooltip="Générer le contenu du livrable" nbTooltipPlacement="top"  (click)="open2(dialogAttestation)">
+                    <i icon="pantone-outline"></i>Contenu livrable
+                </button-->
+                <button  *ngIf="selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-light"   (click)="showFile2()">Visualiser le document à délivrer</button>
+                <!--button  *ngIf="(prestation=='visa-reglement-interieur-entreprise' || prestation=='visa-contrat-apprentisage') && selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser l'élément" nbTooltipPlacement="top"  (click)="authorized()">
+                    <i icon="checkmark-outline"></i>
+                </button-->
+                <!--button  *ngIf="selected_data!=null && responseUA.hasPermission==false" class="btn btn-sm btn-danger mx-1" nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
+                    <i icon="close-outline"></i> Rejet
+                </button-->
+                <!--button class="btn btn-sm btn-dark mx-1"  *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltip="Simuler les indemnités" nbTooltipPlacement="top"  (click)="open(dialogSimulation)">
+                    <i icon="hash-outline"></i>
+                </button-->
+            </div>
+        </div>
+    </div>
+    </div>
+
+  </div>
+  
+<div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Fermer le prévisualiseur</button>
+                <!--button class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized" (click)="open(dialogPass)">Signer l'attestation</button>
+                <button-- class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized" (click)="delivered()">Délivrer l'attestation</button-->
+                
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+  <ng-template #dialog  let-ref="dialogRef">
+    <button id="cBtn"  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+    <ngx-adpap-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-presence-au-poste'" ></ngx-adpap-details>
+    <ngx-atn-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-non-litige'" (openedFile)="showFile($event)"></ngx-atn-details>
+    <ngx-as-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-stage'" (openedFile)="showFile($event)" (openedFile)="prepareDesc($event)"></ngx-as-details>
+    <ngx-ads-details [selected_data]='selected_data'  [prestation]="prestation" *ngIf="prestation=='autorisation-de-stage'" (openedFile)="showFile($event)"></ngx-ads-details>
+    <ngx-asf-details [selected_data]='selected_data'  (openedFile)="showFile($event)"  *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-details>
+    <ngx-cnr-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-details>
+    <ngx-vsa-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-details>
+    <ngx-al-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-details>
+    <ngx-am-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-details>
+    <ngx-vri-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-details>
+    <ngx-vca-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-details>
+    <ngx-detab-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-details>
+  
+</ng-template>
+
+
+  <ng-template #dialogEdit  let-ref="dialogRef">
+    <div>
+      <div>Projet de réponse de la demande
+
+        <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div>
+      
+      </div>    
+    </div>
+  </ng-template>
+
+  <ng-template #contentTemplate let-ref="windowRef" >
+          <form #addResponse="ngForm" (ngSubmit)="storeResponse(ref,addResponse.value)">
+          <div size="large">
+         
+                <div class="form-group">
+                    <label for="">Argumentaire</label>
+                    <textarea name="" id="" cols="30" class="form-control" rows="2" [(ngModel)]="responseUA.reason" name="reason"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="">observation</label>
+                    <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="responseUA.observation" name="observation"
+                    ></textarea>
+                </div>
+
+                <h6>Décision finale</h6>
+                <!--div [(value:any)]="radioGroupValue" [(ngModel)]="responseUA.hasPermission" name="hasPermission" >
+                    <div
+                      [value]="true" >
+                      favorable
+                    </div>
+                    <div
+                      [value]="false"  >
+                      Défavorable
+                    </div>
+                  </div-->
+          </div>
+  
+          <div *ngIf="selected_data!=null && responseUA.hasPermission==true && prestation=='autorisation-de-stage'" >
+            <hr>
+            <h6>Complèter ces informations</h6>
+            <hr>
+            <div class="row">
+            <div class="col-12 col-md-6">
+
+                <div class="form-group">
+                     <label for="">Direction</label>
+                     <input type="text" class="form-control" [(ngModel)]="selected_data.ads.structure" name="structure">
+                </div>
+            </div>
+            <!-- <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Service</label>
+                     <input type="text" class="form-control" [(ngModel)]="selected_data.ads.service" name="service">
+                </div>
+            </div> -->
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Date début de stage</label>
+                     <input type="date" class="form-control" [(ngModel)]="selected_data.ads.date_start" name="date_start">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Date fin de stage</label>
+                     <input type="date" class="form-control" [(ngModel)]="selected_data.ads.date_end" name="date_end">
+                </div>
+            </div>
+                </div>
+          </div>
+            <button type="submit" class="btn btn-outline-primary" [disabled]="addResponse.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+           
+        </form>
+
+  
+  </ng-template>
+
+
+  <ng-template #dialogAffectation let-ref="dialogRef">
+    <form #addInstruction="ngForm" (ngSubmit)="transDown(addInstruction.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez une instruction</label>
+                <textarea name="instruction" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+            <div class="form-group">
+                <label for="">Pour au plus tard, le </label>
+                <input type="date" nbInput name="delay" required ngModel>
+            </div>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+<ng-template #dialogSuspension let-ref="dialogRef">
+    <form #addSusp="ngForm" (ngSubmit)="needCorrection(addSusp.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez le motif</label>
+                <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+    
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+<ng-template #dialogRejet let-ref="dialogRef">
+    <form #addRejet="ngForm" (ngSubmit)="decline(addRejet.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez le motif</label>
+                <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+    
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+  <ng-template #dialogAttestation let-ref="dialogRef">
+    <form #addAttestation="ngForm" (ngSubmit)="deliveryrDoc(addAttestation.value,ref)">
+    <div style="height: 90vh; width: 800px; margin-left: 10%; margin-right: 10%;"> 
+        <div>
+            Création du document
+            <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+        </div>
+        <div class="p-3">
+            <div class="" *ngIf="prestation=='autorisation-de-stage'">
+                <h6>Point des contenus générés</h6>
+                <ul>
+                    <li *ngFor="let d of docs"><strong class="mr-2">{{d?.name}}</strong> <i class="fa fa-check" *ngIf="d?.content != null"></i></li>
+
+                </ul>
+                <div class="form-group" >
+                    <label for="">Veuillez sélection le contenu à générer</label>
+                    <select class="form-control" (change)="changeDesc($event)">
+                        <option value="0">Lettre d'acception</option>
+                        <option value="1">Lettre d'agrément</option>
+                        <option value="2">Autorisation de stage</option>
+                      </select>
+                </div>
+            </div>
+          
+            <!-- <div *ngIf="content !=null">
+                <div>
+                    <div class="mb-3" >
+                <h6 class="mb-3"><strong>Un contenu déjà disponible</strong></h6>
+                <p  [innerHTML]="content"></p>
+            </div>
+                </div>
+            </div> -->
+            <div class="form-group" >
+                <!--ckeditor  [config]="{ extraPlugins: 'divarea', height: '400',width:'800'}" name="contenu" [(ngModel)]="desc"></ckeditor-->
+            </div>
+          
+        </div>
+        
+         
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addAttestation.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+  <ng-template #dialogSimulation let-ref="dialogRef">
+    <form>
+    <div style="height: 90vh; width: 80%; margin-left: 10%; margin-right: 10%;"> 
+        <div>
+            Simuler d'indenminité
+            <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+        </div>
+        
+        <div>  
+
+            <i icon="shopping-bag-outline">Informations sur le contrat de travail</i>
+       
+           <div class="row">
+               <div class="col-12 col-md-6">
+                   <div class="form-group">
+                        <label for="">Date d'entrée dans l'entreprise</label>
+                        <input type="date" class="form-control">
+                   </div>
+               </div>
+               <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Date de cessation des fonctions</label>
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group row">
+                    <span>Contrat de travail écrit</span>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                        <label class="form-check-label" for="inlineRadio1">Oui</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <label class="form-check-label" for="inlineRadio2">Non</label>
+                      </div>
+                   
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Dernier salaire net</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Montant moyen des 3 derniers mois de salaire net</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Nombre de salariés</label>
+                    <select name="" class="form-control" id="">
+                        <option value="">Moins de 11</option>
+                        <option value="">Entre 11 et 49</option>
+                        <option value="">Moins 50 et 499</option>
+                        <option value="">500 et plus</option>
+                    </select>
+                </div>
+            </div>
+           </div>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" >Calculer  </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+
+
+<div *ngIf="showPreview"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Retour</button>
+                <button class="btn btn-outline-success mb-3 " [disabled]="!activeobsPanel"  (click)="openWindow(contentTemplateAmendement)">Faire des observations</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+  <ng-template #contentTemplateAmendement let-ref="windowRef">
+    <div class="list-card"> 
+        <form #addAmend="ngForm" (ngSubmit)="storeAmend(ref)">
+        <div size="large">
+              <div class="form-group">
+                  <label for="">observation</label>
+                  <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="observation" name="observation"
+                  ></textarea>
+              </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+
+        </div>
+      </form>
+
+    </div>
+
+</ng-template>
+
+<ng-template #dialogPass let-ref="dialogRef">
+    <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Saisissez votre mot de passe de délivrance</label>
+                <textarea name="password" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+          
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>

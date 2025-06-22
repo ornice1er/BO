@@ -1,0 +1,111 @@
+
+<app-bread-title [title]="'Demande en attente pour finalisation'"></app-bread-title>
+<div *ngIf="!showPreview2">
+
+  
+    <div class="card card-body">     
+        <div class="buttons-row">
+
+            <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('consultation')" (click)="show()" >
+                <i icon="eye-outline"></i> consultation
+            </button>
+
+            <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification')"  (click)="openWindow(contentTemplate)" >
+                <i icon="edit-2-outline"></i> Projet de réponse
+            </button-->
+
+            <button class="btn btn-sm btn-danger mx-1" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')"  (click)="open3()">
+                <i icon="trash-2-outline"></i> Suppression
+            </button>
+
+            <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation')" (click)="open(dialogAffectation)">
+                <i icon="corner-right-down-outline"></i> Affectation
+            </button-->
+
+            <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('transmission')" (click)="transUp()">
+                <i icon="corner-right-up-outline"></i> Transmission
+            </button-->
+
+            <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
+                <i icon="info"></i>Suspension
+            </button-->
+            <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
+                <i icon="info"></i>Suspension pour accord à l'amiable
+            </button-->
+            <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Autoriser la délivrance du livrable" nbTooltipPlacement="top" *ngIf="hasPermission('autorisation') && selected_data?.content!=null" (click)="authorized()" >
+                <i icon="checkmark-outline"></i> Autorisation
+            </button-->
+            <button class="btn btn-sm btn-info mx-1" nbTooltip="Télécharger le livrable" nbTooltipPlacement="top" *ngIf="hasPermission('impression')" >
+                <i icon="download-outline"></i> Téléchargement
+            </button>
+            <!--button class="btn btn-sm btn-info mx-1"  *ngIf="responseUA.hasPermission" nbTooltip="Générer le contenu du livrable" nbTooltipPlacement="top"  (click)="open2(dialogAttestation)">
+                <i icon="pantone-outline"></i>Contenu livrable
+            </button-->
+            <!--button  *ngIf="selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-light"   (click)="showFile2()">Visualiser le document à délivrer</!--button-->
+            <!--button  *ngIf="(prestation=='visa-reglement-interieur-entreprise' || prestation=='visa-contrat-apprentisage') && selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser l'élément" nbTooltipPlacement="top"  (click)="authorized()">
+                <i icon="checkmark-outline"></i>
+            </button-->
+            <!--button  *ngIf="selected_data!=null && responseUA.hasPermission==false" class="btn btn-sm btn-danger mx-1" nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
+                <i icon="close-outline"></i> Rejet
+            </button-->
+            <!--button class="btn btn-sm btn-dark mx-1"  *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltip="Simuler les indemnités" nbTooltipPlacement="top"  (click)="open(dialogSimulation)">
+                <i icon="hash-outline"></i>
+            </button-->
+        </div>  
+    
+        <ngx-adpap-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
+        <ngx-atn-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
+        <ngx-as-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
+        <ngx-ads-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
+        <ngx-asf-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
+        <ngx-cnr-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
+        <ngx-vsa-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
+        <ngx-vca-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
+        <ngx-vri-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
+        <ngx-al-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
+        <ngx-am-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>*
+        <ngx-detab-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
+        <app-code-template-list [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="code!=undefined"></app-code-template-list>
+
+    </div>
+  </div>
+  
+
+
+
+  <ng-template #dialog let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Détails des parcours</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <ol >
+        <li *ngFor="let p of selected_data.parcours">
+            <p class="lorem">{{p.libelle}}</p>
+        </li>
+    </ol>
+ </div>
+    <div class="modal-footer">
+       
+    </div>
+  </ng-template>
+
+
+
+  <div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Retour</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>

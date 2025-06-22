@@ -1,0 +1,157 @@
+
+    <app-bread-title [title]="'Mon profil'"></app-bread-title>
+   <div class="card">
+    <div class="card-body">
+        <nav ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="active">
+            <ng-container [ngbNavItem]="1">
+                <a ngbNavLink>Information personnelle</a>
+                <ng-template ngbNavContent>
+                    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+                        <p class="lead mb-3" *ngIf="error != ''">
+                            <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
+                        </p>
+                        <div class="form-group">
+                            <label for="typeLabel">Matricule</label>
+                            <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #numero_matricule="ngModel" name="numero_matricule" [(ngModel)]="selected_data.numero_matricule">
+                           
+                        </div>
+                        <div class="form-group">
+                            <label for="typeLabel">Nom</label>
+                            <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #lastname="ngModel" name="lastname" [(ngModel)]="selected_data.lastname">
+                           
+            
+                        </div>
+                        <div class="form-group">
+                            <label for="typeLabel">Prénoms</label>
+                            <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #firstname="ngModel" name="firstname" [(ngModel)]="selected_data.firstname">
+                          
+            
+                        </div>
+                      
+                       <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder </button>
+                    </form>
+                </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="2">
+                <a ngbNavLink>Changement de mot de passe</a>
+                <ng-template ngbNavContent>
+                    <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm.value,passwordForm)">
+                        <div class="form-group">
+                            <label for="typeLabel">Votre mot de passe</label>
+                            <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required  name="old_password" ngModel>
+                        </div>
+                        <div class="form-group">
+                            <label for="typeLabel">Nouveau</label>
+                            <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required  name="password" ngModel>
+                           
+                        </div>
+                        <div class="form-group">
+                            <label for="typeLabel">Confirmer</label>
+                            <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="c_password" ngModel>
+                         
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="passwordForm.invalid || loading">Sauvegarder </button>
+    
+                    </form>
+                </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="3" *ngIf="role=='Directeur'">
+                <a ngbNavLink>Mon code de signature</a>
+                <ng-template ngbNavContent>
+                    <div class="text-center p-5" *ngIf="token ==undefined">
+                            <button class="btn btn-sm btn-primary" [disabled]="loading" (click)="generateCode()">Envoyer le lien de génération du code de signature <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+                    </div>
+    
+                    <div class="" *ngIf="token !=undefined">
+                        <form #codeForm="ngForm" (ngSubmit)="changeCode(codeForm.value,codeForm)">                     
+                            <div class="form-group">
+                                <label for="typeLabel">Saisissez le code</label>
+                                <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required  name="password" ngModel>
+                               
+                            </div>
+                            <div class="form-group">
+                                <label for="typeLabel">Retapez le code</label>
+                                <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="c_password" ngModel>
+                             
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary" [disabled]="codeForm.invalid || loading">Sauvegarder </button>
+        
+                        </form>
+                    </div>
+    
+                
+                </ng-template>
+            </ng-container>
+        </nav>
+        
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        
+    </div>
+   </div>
+    <!--div>
+        <div>
+            <tabset #tabs >
+            <tab tabIcon="edit-outline" tabTitle="Information personnel">
+                <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+                    <p class="lead mb-3" *ngIf="error != ''">
+                        <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
+                    </p>
+                    <div class="form-group">
+                        <label for="typeLabel">Matricule</label>
+                        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #numero_matricule="ngModel" name="numero_matricule" [(ngModel)]="selected_data.numero_matricule">
+                       
+                    </div>
+                    <div class="form-group">
+                        <label for="typeLabel">Nom</label>
+                        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #lastname="ngModel" name="lastname" [(ngModel)]="selected_data.lastname">
+                       
+        
+                    </div>
+                    <div class="form-group">
+                        <label for="typeLabel">Prénoms</label>
+                        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #firstname="ngModel" name="firstname" [(ngModel)]="selected_data.firstname">
+                      
+        
+                    </div>
+                  
+                   <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder </button>
+                </form>
+            </tab>
+            <tab tabIcon="edit-outline" tabTitle="Changement de mot de passe ">
+                <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm.value)">
+                    <div class="form-group">
+                        <label for="typeLabel">Votre mot de passe</label>
+                        <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required  name="old_password" ngModel>
+                    </div>
+                    <div class="form-group">
+                        <label for="typeLabel">Nouveau</label>
+                        <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required  name="password" ngModel>
+                       
+                    </div>
+                    <div class="form-group">
+                        <label for="typeLabel">Confirmer</label>
+                        <input type="password" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="c_password" ngModel>
+                     
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary" [disabled]="passwordForm.invalid || loading">Sauvegarder </button>
+
+                </form>
+            </tab>
+            <tab tabIcon="edit-outline" tabTitle="Signature" *ngIf="role=='Directeur'">
+                <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm.value)">
+                    <div class="form-group">
+                        <label for="typeLabel">Nom de visa</label>
+                        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #numero_matricule="ngModel" name="old_password" ngModel>
+                    </div>
+                    <div class="form-group">
+                        <label for="typeLabel">Charger le fichier</label>
+                        <input #fileIpt type="file" nbInput class="border-info"  maxlength="255" id="inputWebsite"  required name="file" (change)="upload($event)" accept=".pdf" ngModel>
+                       
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary" [disabled]="passwordForm.invalid || loading">Sauvegarder </button>
+
+                </form>
+            </tab>
+        </tabset>
+        </div>
+    </div-->

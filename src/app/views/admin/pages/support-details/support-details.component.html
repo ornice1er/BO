@@ -1,0 +1,67 @@
+<app-bread-title [title]="'Détails des sujets'"></app-bread-title>
+
+<div class="container">
+    <div *ngIf="user.id == data?.user_id" class="d-flex justify-content-end mb-3">
+        <button (click)="setStatus(0)" [disabled]="loading2" *ngIf="data?.is_open" class="btn btn-sm bg-danger text-white">Fermer ce ticket</button>
+        <button (click)="setStatus(1)" [disabled]="loading2"  *ngIf="!data?.is_open" class="btn btn-sm bg-success text-white">Réouvrir ce ticket</button>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-9">
+            <div class="shadow p-3 mb-5 bg-white rounded">
+                <div class="d-flex justify-content-end">
+                    <span *ngIf="data?.is_open" class="bg-warning p-1 text-white"> Ouvert</span>
+                    <span *ngIf="!data?.is_open" class="bg-danger p-1 text-white"> Fermé</span>
+                </div>
+                <dl>
+                    <dt><b>Type de sujet :</b> </dt>
+                    <dd>{{data.type?.name}}</dd>
+                </dl>
+                <dl>
+                    <dt><b>Objet :</b> </dt>
+                    <dd>{{data.object}}</dd>
+                </dl>
+                <dl>
+                    <dt><b>Contenu :</b> </dt>
+                    <dd>{{data.content}}</dd>
+                </dl>
+                <dl>
+                    <dt><b>Date:</b> </dt>
+                    <dd>{{data.created_at | date: "dd-MM-yyyy"}}</dd>
+                </dl>
+            
+            </div>
+
+            <h4 class="mb-3"><b>Liste des réponses</b></h4>
+            <div *ngFor="let d of data.responses" class="shadow p-3 mb-5 bg-white rounded">
+             
+                <dl>
+                    <dt><b>Contenu :</b> </dt>
+                    <dd>{{d.content}}</dd>
+                </dl>
+                <dl>
+                    <dt><b>Date:</b> </dt>
+                    <dd>{{d.created_at | date: "dd-MM-yyyy"}}</dd>
+                </dl>
+            
+            </div>
+
+            <div class="card card-body mt-5">
+                <form  #contactForm="ngForm" (ngSubmit)="sendContact(contactForm)">
+                    <div class="row">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                        <textarea name="content" placeholder="Envoyez une réponse*" class="form-control" required ngModel></textarea>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="contactForm.invalid">Envoyer ma réponse<i class="fa fa fa-send text-yellow ml-3"></i></button>
+                    </div>
+                    
+                </div>
+                </form>
+              </div>
+
+        </div>
+        <div class="col-12 col-md-3">
+
+        </div>
+    </div>
+</div>

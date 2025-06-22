@@ -1,0 +1,98 @@
+<app-bread-title [title]="'Gestion des Type entités'"></app-bread-title>
+
+
+<div>
+ 
+    <div>
+        
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <div class="buttons-row">
+                    <button class="btn btn-sm btn-warning mx-1" (click)="open(dialogU)" nbTooltip="Modifier l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('modification')">
+                        Modifier
+                    </button>
+                    <button class="btn btn-sm btn-danger mx-1" (click)="delete()" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')">
+                        Supprimer
+                    </button>
+                    <button class=" btn btn-sm btn-primary float-right" (click)="open(dialog)" *ngIf="hasPermission('ajout')">Ajouter un nouveau type</button>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Libellé</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data">
+                <th >
+                               <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+
+                </th>
+                <td>{{d?.libelle}}</td>
+              </tr>
+              <tr *ngIf="data.length == 0 && !loading2">
+                  <td colspan="3" class="text-center">Aucun élément trouvé</td>
+              </tr>
+              <tr *ngIf="loading2">
+        <img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+            </tr>
+          </table>
+    </div>
+  </div>
+  
+  
+  <ng-template #dialog let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Enregistrement de type entité</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="typeLabel">Libellé</label>
+        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" ngModel>
+        <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+            <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+        </span>
+
+    </div>
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+
+
+  <ng-template #dialogU let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="typeLabel">Libellé</label>
+        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" [(ngModel)]="selected_data.libelle">
+        <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+            <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+        </span>
+
+    </div>
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>

@@ -1,0 +1,47 @@
+<div class="mb-3">
+  <h6>Demande venant du PNS</h6>
+ </div>
+<table class="table table-sm  table-hover" >
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Code demande</th>
+        <th scope="col">Date Enreg.</th>
+        <th scope="col">Identité</th>
+        <th scope="col">Entité</th>
+        <th scope="col">Grade</th>
+        <th scope="col">Fonction</th>
+        <th scope="col">Date de prise de service</th>
+        <th scope="col" >Livrable disponible (Oui/Non)</th>
+        <th *ngIf="showLastLevel">Etape</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of data">
+       <td>
+                     <input class="form-check-input" name="flexRadioDefault" type="radio" (click)="checked(d)">
+
+
+      </td>
+        <td>{{d?.code}}</td>
+        <td>{{d?.created_at | date: "dd-MM-yyyy hh:mm:ss"}}</td>
+        <td>{{d?.vsa.identity}}</td>
+        <td>{{d?.vsa.entity}}</td>
+        <td>{{d?.vsa.rank}}</td>
+        <td>{{d?.vsa.job}}</td>
+        <td>{{d?.vsa.job_date | date:"dd-MM-yyyy"}}</td>
+        <td *ngIf="d?.filename!=null">
+          <span class="badge bg-warning text-white">oui</span>
+        </td>
+        <td *ngIf="d?.filename==null">
+           <span class="badge bg-secondary text-white">non</span>
+        </td>
+        <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
+      </tr>
+      <tr *ngIf="data.length == 0  && !loading2">
+          <td colspan="5" class="text-center">Aucun élément trouvé</td>
+      </tr>
+      <tr *ngIf="loading2">
+<img src="assets/spinner.gif"  style="width:180px; height:150px;"/>
+    </tr>
+  </table>

@@ -1,0 +1,88 @@
+
+<app-bread-title [title]="'Parcours des demandes '"></app-bread-title>
+<div *ngIf="!showPreview2">
+
+  
+    <div class="card card-body">     
+        <div class="buttons-row mb-3">
+            <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter le parcours" nbTooltipPlacement="top" (click)="open(dialog)" >
+                Voir le parcours
+            </button>
+            <button  *ngIf="selected_data!=null && selected_data.filename!=null"   class="btn btn-sm btn-secondary"  (click)="showFile2()">Consulter le fichier</button>
+
+        </div>    
+    <div class="table-responsive mb-3">
+        <ngx-adpap-table [showLastLevel]="true"[dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
+        <ngx-atn-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
+        <ngx-as-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
+        <ngx-ads-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
+        <ngx-asf-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
+        <ngx-cnr-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
+        <ngx-vsa-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
+        <ngx-vca-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
+        <ngx-vri-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
+        <ngx-al-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
+        <ngx-am-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>*
+        <ngx-detab-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
+      </div>
+      <div class="buttons-row mb-3">
+        <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter le parcours" nbTooltipPlacement="top" (click)="open(dialog)" >
+            Voir le parcours
+        </button>
+        <button  *ngIf="selected_data!=null && selected_data.filename!=null"   class="btn btn-sm btn-secondary"  (click)="showFile2()">Consulter le fichier</button>
+
+    </div>    
+    </div>
+  </div>
+  
+
+
+
+  <ng-template #dialog let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Détails des parcours</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <table class="table table-sm">
+        <thead>
+          <th>#</th>
+          <th>Libellé</th>
+          <th>Date et heure</th>
+          <th> Auteur</th>
+        </thead>
+        <tbody>
+          <tr  *ngFor="let p of selected_data.parcours;let i= index">
+            <td>{{i+1}}</td>
+            <td>{{p.libelle}}</td>
+            <td>{{p.created_at | date:"dd-MM-yyyy hh:mm:ss"}}</td>
+            <td>{{p.user?.agent?.firstname}} {{p.user?.agent?.lastname}}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+ </div>
+    <div class="modal-footer">
+       
+    </div>
+  </ng-template>
+
+
+
+  <div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Fermer le visualiseur</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
