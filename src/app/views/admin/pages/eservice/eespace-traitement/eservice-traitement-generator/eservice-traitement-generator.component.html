@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Génération de document'"></app-bread-title>
 
 <div class="d-flex justify-content-end p-3 ">
     <button class="btn btn-sm btn-dark mx-1"    (click)="back2()">Retour</button>
@@ -51,7 +50,7 @@
                 
                  
                 <div>
-                  <button *ngIf="isTreated" type="submit" class="btn btn-outline-primary" [disabled]="addAttestation.invalid || loading">Générer le document <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+                  <button *ngIf="isTreated" type="submit" class="btn btn-outline-primary" [disabled]="addAttestation.invalid || loading">Générer le document <app-loading [isVisible]="loading"></app-loading> </button>
                 </div>
         
             </div>
@@ -95,7 +94,7 @@
             </div>
         </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Signer <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 
 </form>

@@ -20,7 +20,7 @@ export class AppStudentSelected{
         this.studentSelected.next(studentSelected);
     }
 
-    getStudentSelected(): Observable<any> {
+    getStudentSelected(): any {
         return this.studentSelected.asObservable();
     }
 }

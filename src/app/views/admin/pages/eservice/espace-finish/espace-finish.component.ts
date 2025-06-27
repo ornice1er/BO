@@ -1,26 +1,34 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataTableDirective } from 'angular-datatables';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PrestationDetails } from '../prestation-details';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
-import { Config } from 'src/app/app.config';
-import { AffectationService } from 'src/app/core/_services/affectation.service';
-import { RequeteService } from 'src/app/core/_services/requete.service';
-import { ResponseService } from 'src/app/core/_services/response.service';
-import { LocalService } from 'src/app/core/_services/storage_services/local.service';
-import { globalName } from 'src/app/core/_utils/utils';
-import { PrestationDetails } from '../prestation-details';
+import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
+import { AffectationService } from '../../../../../core/services/affectation.service';
+import { RequeteService } from '../../../../../core/services/requete.service';
+import { ResponseService } from '../../../../../core/services/response.service';
+import { ConfigService } from '../../../../../core/utils/config-service';
+import { GlobalName } from '../../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-espace-finish',
   templateUrl: './espace-finish.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./espace-finish.component.css']
 })
 export class EspaceFinishComponent implements OnInit {
 
-  @ViewChild(DataTableDirective , {static: false})dtElement!: DataTableDirective;
   isDtInitialized:boolean = false
   selected_data:any
   data:any[]=[]
@@ -53,31 +61,6 @@ export class EspaceFinishComponent implements OnInit {
     pdfSrc :SafeResourceUrl | undefined | undefined | undefined
   fileUploaded:File | undefined | null
   fileUploaded2:File| undefined | null
-  dtOptions: DataTables.Settings = {
-    language: {
-      processing:     "Traitement en cours...",
-      search:         "Rechercher&nbsp;:",
-      lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
-      info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-      infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-      infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-      infoPostFix:    "",
-      loadingRecords: "Chargement en cours...",
-      zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-      emptyTable:     "Aucune donnée disponible dans le tableau",
-      paginate: {
-          first:      "Premier",
-          previous:   "Pr&eacute;c&eacute;dent",
-          next:       "Suivant",
-          last:       "Dernier"
-      },
-      aria: {
-          sortAscending:  ": activer pour trier la colonne par ordre croissant",
-          sortDescending: ": activer pour trier la colonne par ordre décroissant"
-      }
-  }
-  };
-  dtTrigger: Subject<any> = new Subject<any>();
   docs=[
     {
       id:0,
@@ -102,7 +85,7 @@ export class EspaceFinishComponent implements OnInit {
   
       constructor(
         private activatedRoute:ActivatedRoute ,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         private affService:AffectationService,
         private requeteService:RequeteService,
         private toastrService:ToastrService,
@@ -131,7 +114,7 @@ export class EspaceFinishComponent implements OnInit {
         this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
         this.code=this.activatedRoute.snapshot.paramMap.get('code')
 
-        this.user=this.locService.getItem(globalName.user);
+        this.user=this.locService.get(GlobalName.userName);
         this.permissions=this.user.roles[0].permissions;
         this.all();
         this.getName(this.prestation);
@@ -141,19 +124,6 @@ export class EspaceFinishComponent implements OnInit {
     ngAfterViewInit(): void {
      // this.dtTrigger.next();
   }
-  rerender(){
-    if (this.isDtInitialized) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      
-        dtInstance.destroy();
-        this.dtTrigger.next();
-      });
-    } else {
-      this.isDtInitialized = true
-      this.dtTrigger.next();
-    }
-   }
-  
   // rerender(): void {
   //   this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
   //      dtInstance.destroy();
@@ -170,7 +140,6 @@ export class EspaceFinishComponent implements OnInit {
         this.data=res
         this.loading2=false;
         this.modalService.dismissAll()
-      if(res.length!=0)  this.rerender()
       },
       (error:any)=>{
         
@@ -480,15 +449,15 @@ export class EspaceFinishComponent implements OnInit {
       alert("Veuillez sélectionner une ligne !")
       return;
     }
-    //var url=Config.toFile(this.doc_path)+"/"+name;
+    //var url=ConfigService.toFile(this.doc_path)+"/"+name;
     //window.open(url, '_blank');
 
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview2=true;
     
       //ref.close()
-   /* var url=Config.toFile('litige/files')+name;
+   /* var url=ConfigService.toFile('litige/files')+name;
     window.open(url, '_blank');*/
   }
   showFile3(name:any){
@@ -497,21 +466,21 @@ export class EspaceFinishComponent implements OnInit {
       return;
     }
     
-    var url=Config.toFile(this.doc_path)+"/"+name;
+    var url=ConfigService.toFile(this.doc_path)+"/"+name;
     window.open(url, '_blank');
   }
   //name,file,ref,code
   showFile(el:any){
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+el.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+el.filename;
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview=true;
     this.observation="";
     this.selected_file=el;
     
-      $('#cBtn').trigger('click');
+    //  $('#cBtn').trigger('click');
       //ref.close()
       this.activeobsPanel=true;
-   /* var url=Config.toFile('litige/files')+name;
+   /* var url=ConfigService.toFile('litige/files')+name;
     window.open(url, '_blank');*/
   }
 
@@ -577,7 +546,6 @@ export class EspaceFinishComponent implements OnInit {
 
   }
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   needCorrection(value:any,ref:any){
@@ -702,7 +670,7 @@ export class EspaceFinishComponent implements OnInit {
        this.toastrService.warning("Aucun élément selectionné");
       return ;
     }
-    this.locService.setItem("selected_data",this.selected_data)
+    this.locService.set("selected_data",this.selected_data)
     this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selected_data.code+'/'+this.prestation])
   }
 }

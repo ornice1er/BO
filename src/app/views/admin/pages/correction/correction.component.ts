@@ -1,24 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { MyToastr } from '../../../app.toastr';
-import { RequeteService } from '../../../core/_services/requete.service';
-import { Subject } from 'rxjs';
-import { DialogNamePromptComponent } from '../../dialog-name-prompt/dialog-name-prompt.component';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { DataTableDirective } from 'angular-datatables';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { LocalService } from 'src/app/core/_services/storage_services/local.service';
-import { globalName } from 'src/app/core/_utils/utils';
-
+import { Subject } from 'rxjs';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { RequeteService } from '../../../../core/services/requete.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { GlobalName } from '../../../../core/utils/global-name';
 
 @Component({
   selector: 'ngx-correction',
   templateUrl: './correction.component.html',
+    standalone:true,
+    imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+
   styleUrls: ['./correction.component.css']
 })
 export class CorrectionComponent implements OnInit,OnDestroy {
-  @ViewChild(DataTableDirective) dtElement: DataTableDirective | undefined;
   user:any
   data:any[]=[];
   slug:any;
@@ -28,30 +33,6 @@ export class CorrectionComponent implements OnInit,OnDestroy {
   prestationName:any;
   doc_path=""
   doc_prefix=""
-  dtOptions: DataTables.Settings = {
-    language: {
-      processing:     "Traitement en cours...",
-      search:         "Rechercher&nbsp;:",
-      lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
-      info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-      infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-      infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-      infoPostFix:    "",
-      loadingRecords: "Chargement en cours...",
-      zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-      emptyTable:     "Aucune donnée disponible dans le tableau",
-      paginate: {
-          first:      "Premier",
-          previous:   "Pr&eacute;c&eacute;dent",
-          next:       "Suivant",
-          last:       "Dernier"
-      },
-      aria: {
-          sortAscending:  ": activer pour trier la colonne par ordre croissant",
-          sortDescending: ": activer pour trier la colonne par ordre décroissant"
-      }
-  }
-  };
   dtTrigger: Subject<any> = new Subject<any>();
   error:any=""
   code:any
@@ -62,7 +43,7 @@ export class CorrectionComponent implements OnInit,OnDestroy {
   
   constructor(private activatedRoute:ActivatedRoute, private requeteService:RequeteService, private route:ActivatedRoute,
     private _sanitizationService: DomSanitizer,      
-    private locService:LocalService,
+    private locService:LocalStorageService,
     config: NgbModalConfig, private modalService: NgbModal,
     private toastrService:ToastrService){
     
@@ -77,7 +58,7 @@ export class CorrectionComponent implements OnInit,OnDestroy {
       this.prestation=this.slug
             this.all()
             this.getName();
-            this.user=this.locService.getItem(globalName.user);
+            this.user=this.locService.get(GlobalName.user);
 
     })
   
@@ -88,7 +69,6 @@ export class CorrectionComponent implements OnInit,OnDestroy {
     this.requeteService.getByPrestationPending(this.slug,this.code).subscribe((res:any)=>{
       this.loading2=false;
      this.data=res;
-     this.dtTrigger.next();
     },
     (error:any)=>{
       this.loading2=false;

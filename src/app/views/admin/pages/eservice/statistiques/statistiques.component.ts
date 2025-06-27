@@ -1,10 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { DashService } from '../../../../core/_services/dash.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
+import { DashService } from '../../../../../core/services/dash.service';
+import { LoadingComponent } from '../../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-statistiques',
   templateUrl: './statistiques.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./statistiques.component.css']
 })
 export class StatistiquesComponent implements OnInit {

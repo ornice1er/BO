@@ -11,7 +11,7 @@ export class ModalLoaderService {
         this.link.next(path);
     }
 
-    getLink(): Observable<any> {
+    getLink(): any {
         return this.link.asObservable();
     }
 }

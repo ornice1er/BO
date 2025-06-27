@@ -1,5 +1,4 @@
 
-<app-bread-title [title]="'Parcours des demandes '"></app-bread-title>
 <div *ngIf="!showPreview2">
 
   
@@ -12,18 +11,7 @@
 
         </div>    
     <div class="table-responsive mb-3">
-        <ngx-adpap-table [showLastLevel]="true"[dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
-        <ngx-atn-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
-        <ngx-as-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
-        <ngx-ads-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
-        <ngx-asf-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
-        <ngx-cnr-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
-        <ngx-vsa-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
-        <ngx-vca-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
-        <ngx-vri-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
-        <ngx-al-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
-        <ngx-am-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>*
-        <ngx-detab-table [showLastLevel]="true" [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
+      
       </div>
       <div class="buttons-row mb-3">
         <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter le parcours" nbTooltipPlacement="top" (click)="open(dialog)" >

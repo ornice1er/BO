@@ -13,7 +13,7 @@ export class ProfileService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any> {
+  getAll(): any {
     return this.http.get<any>(this.url, ConfigService.addAction('list'));
   }
 

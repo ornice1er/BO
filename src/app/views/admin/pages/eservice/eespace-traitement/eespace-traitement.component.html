@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Demande à traiter'"></app-bread-title>
 <div  *ngIf="!showPreview2">
     <!--div>
       Gestion des demandes {{prestationName}}
@@ -63,20 +62,7 @@
             </div>
         </div>
         <div class="card card-body">
-        <ngx-adpap-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
-        <ngx-atn-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
-        <ngx-as-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
-        <ngx-ads-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
-        <ngx-asf-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
-        <ngx-cnr-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
-        <ngx-vsa-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
-        <ngx-vca-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
-        <ngx-vri-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
-        <ngx-al-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
-        <ngx-am-table  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>
-        <ngx-detab-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
-        <app-code-template-list [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="code!=undefined"></app-code-template-list>
-    </div>
+       </div>
     <div class="row">
         <div class="col-lg-12 mb-3">
             <div class="buttons-row">
@@ -160,20 +146,6 @@
   <ng-template #dialog  let-ref="dialogRef">
     <button id="cBtn"  class=" float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
 
-    <ngx-adpap-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-presence-au-poste'" ></ngx-adpap-details>
-    <ngx-atn-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-non-litige'" (openedFile)="showFile($event)"></ngx-atn-details>
-    <ngx-as-details [selected_data]='selected_data'  *ngIf="prestation=='attestation-de-stage'" (openedFile)="showFile($event)" (openedFile)="prepareDesc($event)"></ngx-as-details>
-    <ngx-ads-details [selected_data]='selected_data'  [prestation]="prestation" *ngIf="prestation=='autorisation-de-stage'" (openedFile)="showFile($event)"></ngx-ads-details>
-    <ngx-asf-details [selected_data]='selected_data'  (openedFile)="showFile($event)"  *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-details>
-    <ngx-cnr-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-details>
-    <ngx-vsa-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-details>
-    <ngx-al-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-details>
-    <ngx-am-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-details>
-    <ngx-vri-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-details>
-    <ngx-vca-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-details>
-    <ngx-detab-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-details>
-    <app-code-template-details [selected_data]='selected_data'  (openedFile)="showFile($event)" *ngIf="code!=undefined"></app-code-template-details>
-  
 </ng-template>
 
 
@@ -249,7 +221,7 @@
             </div>
                 </div>
           </div>
-            <button type="submit" class="btn btn-primary" [disabled]="addResponse.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+            <button type="submit" class="btn btn-primary" [disabled]="addResponse.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
            
         </form>
 
@@ -271,7 +243,7 @@
             </div>
         </div>
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
         </div>
 
     </div>
@@ -289,7 +261,7 @@
     
         </div>
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
         </div>
 
     </div>
@@ -307,7 +279,7 @@
     
         </div>
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
         </div>
 
     </div>
@@ -355,7 +327,7 @@
         
          
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addAttestation.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addAttestation.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
         </div>
 
     </div>
@@ -468,7 +440,7 @@
         </div>
 
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
 
         </div>
       </form>
@@ -488,7 +460,7 @@
           
         </div>
         <div>
-          <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+          <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
         </div>
 
     </div>

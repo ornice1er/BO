@@ -1,15 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-
-import { MyToastr } from '../../../app.toastr';
-import { EntityTypeService } from '../../../core/_services/entity_type.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { UnityAdminTypeService } from '../../../core/_services/unity_admin_type.service';
-import { globalName } from '../../../core/_utils/utils';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { UnityAdminTypeService } from '../../../../core/services/unity_admin_type.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-unity-admin-type',
   templateUrl: './unity-admin-type.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./unity-admin-type.component.css']
 })
 export class UnityAdminTypeComponent implements OnInit {
@@ -24,7 +31,7 @@ export class UnityAdminTypeComponent implements OnInit {
       constructor(
         private unityAdminTypeService:UnityAdminTypeService,
         
-        private locService:LocalService,
+         private locService:LocalStorageService,
         config: NgbModalConfig, private modalService: NgbModal
 
 
@@ -35,7 +42,7 @@ export class UnityAdminTypeComponent implements OnInit {
   
     ngOnInit(): void {
       this.all();
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
     this.permissions=this.user.roles[0].permissions;
     }
   

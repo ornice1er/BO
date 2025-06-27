@@ -15,6 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppSweetAlert } from '../../../core/utils/app-sweet-alert';
 import { FormsModule } from '@angular/forms';
+import { MENU_ADMIN_NATIONAL, MENU_ADMIN_SECTORIEL, MENU_DECISIONNEL } from '../admin-menu';
+import { DashService } from '../../../core/services/dash.service';
 
 @Component({
   selector: 'app-layout',
@@ -41,11 +43,14 @@ export class LayoutComponent {
   role:any
   loading:any
  isMobile: boolean = false;
+   menu:any[]=[]
+  data:any[]=[]
 
 
   constructor(
     private modalService: NgbModal,
     private authService:AuthService,
+    private dashService:DashService,
     private router: Router,
     private toastr:ToastrService,
     private lsService:LocalStorageService
@@ -53,8 +58,10 @@ export class LayoutComponent {
 
   ngOnInit(): void {
   
-     this.user=this.lsService.get(GlobalName.userName)
-    // this.role=this.user.roles[0].name
+    this.user=this.lsService.get(GlobalName.userName)
+    this.role=this.user.roles[0].name
+    this.getUserMenu()
+
 }
 
  @HostListener('window:resize', [])
@@ -106,5 +113,377 @@ toggleMenu() {
       }*/
   
     }
+
+
+      getUserMenu(){
+   
+    switch (this.role) {
+      case "Admin national":
+            this.menu=MENU_ADMIN_NATIONAL;
+        break;
+        case "Admin Sectoriel":
+          
+            this.menu=MENU_ADMIN_SECTORIEL;
+        break;
+        case "Decisionnel":
+          this.menu=MENU_DECISIONNEL;
+      break;
+  
+      default:
+
+      
+      this.menu.push( {
+        title: 'Menu',
+        icon: 'home-outline',
+        link: '/admin/dashboard',
+        home: true,
+        isTitle:true,
+        hasChildren:false,
+  
+      })
+      this.menu.push(  {
+        title: 'Tableau de bord ',
+        icon: 'home-outline',
+        link: '/admin/dashboard',
+        home: true,
+        isTitle:false,
+        hasChildren:false,
+  
+      })
+      this.menu.push(  {
+        title: 'Mes e-Services',
+        icon: 'home-outline',
+        link: '/admin/dashboard',
+        home: false,
+        isTitle:true,
+        hasChildren:false,
+      })
+    
+       
+        let prestations = this.user.userprestation;
+    
+          prestations.forEach((element:any) => {
+            let newCount;
+            let children:any[]=[]
+
+            if (this.user.is_trade) {
+              if (!element?.prestation?.is_automatic_delivered) {
+            if (
+              element?.prestation?.start_point2?.id == this.user.agent.unite_admin.id 
+              || 
+              element?.prestation?.start_points.findIndex((el:any)=>el.unite_admin_id == this.user.agent.unite_admin.id)!=-1) {
+              newCount=this.data.find((el:any) =>el.slug==element.prestation.slug)?.new
+
+              if (element?.prestation?.from_pns){
+                children.push( {
+                        title: 'Demandes en attente',
+                        link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+                        
+                      })
+              }else{
+                children.push( {
+                  title: 'Demandes en attente',
+                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  
+                })
+              }
+
+         
+         
+           }
+
+             if (element?.prestation?.signer2?.id == this.user.agent.unite_admin.id) {
+
+              if (element?.prestation?.from_pns){
+
+                children.push( {
+             
+                  title: 'Demandes à signer',
+                  link: '/admin/eservice/espace-signature/'+element?.prestation?.slug,
+                })
+                children.push( {
+                
+                  title: 'Demandes signées',
+                  link: '/admin/eservice/espace-signed/'+element?.prestation?.slug,
+                })
+                children.push( {
+                
+                  title: 'Demandes à rejeter',
+                  link: '/admin/eservice/espace-reject/'+element?.prestation?.slug,
+                })
+                children.push( {
+                
+                  title: 'Demandes rejetées',
+                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.slug,
+                })
+              }else{
+                children.push( {
+             
+                  title: 'Demandes à signer',
+                  link: '/admin/eservice/espace-signature/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+                children.push( {
+                
+                  title: 'Demandes signées',
+                  link: '/admin/eservice/espace-signed/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+                children.push( {
+                
+                  title: 'Demandes à rejeter',
+                  link: '/admin/eservice/espace-reject/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+                children.push( {
+                
+                  title: 'Demandes rejetées',
+                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+              }
+            
+           }
+
+           if (element?.prestation?.from_pns){
+            if (this.role=="Chef Division" || this.role=="Collaborateur"  ) {
+              children.push( {
+                title: 'Demande à traiter',
+                link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+              })
+            }
+           }else{
+            if (this.role=="Chef Division" || this.role=="Collaborateur"  ) {
+              children.push( {
+                title: 'Demande à traiter',
+                link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              })
+            }
+           }
+           
+           if (element?.prestation?.signer2?.id != this.user.agent.unite_admin.id) {
+
+            if (element?.prestation?.from_pns) {
+
+               children.push( {
+             title: 'Demande à valider',
+             link: '/admin/eservice/espace-validation/'+element?.prestation?.slug,
+           })
+           children.push( {
+             title: 'Demandes mise en attente',
+             link: '/admin/eservice/correction/'+element?.prestation?.slug,
+           })
+           children.push( {
+             title: 'Demandes corrigées',
+             link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.slug,
+           })
+           children.push( {
+             title: 'Demandes finalisées',
+             link: '/admin/eservice/finished/'+element?.prestation?.slug,
+           })
+            }else{
+              
+
+              children.push( {
+                title: 'Demande à valider',
+                link: '/admin/eservice/espace-validation/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              })
+              children.push( {
+                title: 'Demandes mise en attente',
+                link: '/admin/eservice/correction/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              })
+              children.push( {
+                title: 'Demandes corrigées',
+                link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              })
+              children.push( {
+                title: 'Demandes finalisées',
+                link: '/admin/eservice/finished/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              })
+            }
+          
+         }
+
+
+        if (element?.prestation?.from_pns) {
+          if ( element?.prestation?.need_meeting) {
+            children.push(
+            {
+              title: 'Rendez-vous',
+              link: '/admin/agenda/'+element?.prestation?.slug,
+            }
+            )
+          }
+          if ( element?.prestation?.need_validation) {
+            children.push(
+            {
+              title: 'Demande validée pour visa',
+              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.slug,
+            }
+            )
+          }
+
+          children.push( {
+            title: 'Parcours demandes',
+            link: '/admin/eservice/historique/'+element?.prestation?.slug,
+          })
+         } else {
+          if ( element?.prestation?.need_meeting) {
+            children.push(
+            {
+              title: 'Rendez-vous',
+              link: '/admin/agenda/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+            }
+            )
+          }
+          if ( element?.prestation?.need_validation) {
+            children.push(
+            {
+              title: 'Demande validée pour visa',
+              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+            }
+            )
+          }
+
+          children.push( {
+            title: 'Parcours demandes',
+            link: '/admin/eservice/historique/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+          })
+         }
+
+             
+
+
+
+
+
+              }else{
+                if (element?.prestation?.from_pns) {
+               children.push( {
+                  title: 'Demandes finalisées',
+                  link: '/admin/eservice/finished/'+element?.prestation?.slug,
+                })
+                children.push( {
+                  title: 'Parcours demandes',
+                  link: '/admin/eservice/historique/'+element?.prestation?.slug,
+                })
+                }else{
+                children.push( {
+                  title: 'Demandes finalisées',
+                  link: '/admin/eservice/finished/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+                children.push( {
+                  title: 'Parcours demandes',
+                  link: '/admin/eservice/historique/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+                }
+              
+
+             
+              }
+
+         
+
+            }else{
+              if (element?.prestation?.from_pns) {
+                children.push( {
+                  title: 'Demandes à confirmer',
+                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+                })
+              }else{
+                children.push( {
+                  title: 'Demandes à confirmer',
+                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                })
+              }
+           
+            }
+
+
+          
+          
+
+          
+          /*  else{
+              let isCol= this.user.agent.unite_admin.id==element?.prestation?.start_point2?.ua_parent_code?true:false
+            children.push( {
+              
+              title: element?.prestation?.signer2?.id == this.user.agent.unite_admin.id?'Demande à signer':!isCol?'Demande à traiter':'Demandes à valider',
+              link: '/admin/eservice/espace-validation/'+element?.prestation?.slug,
+            })
+            }*/
+
+        
+          
+       
+           
+           /* children.push( {
+              title: 'Statistiques e-services',
+              link: '/admin/eservice/statistiques/'+element?.prestation?.slug,
+            })*/
+          
+          
+           
+
+            this.menu.push({
+              title:element.prestation.name,
+              icon:"",
+              isTitle:false,
+            hasChildren:true, 
+            collapse:false,
+            slug:element.prestation.slug,
+            children:children,
+            newCount:newCount 
+            })
+
+         
+          });
+
+          if (this.user.is_trade) {
+            this.menu.push(
+            {
+              title: 'Statistiques Globales',
+              isTitle:false,
+              hasChildren:false, collapse:false,
+              slug:'',
+              link: '/admin/eservice/statistiques',
+            }
+          );
+          }
+
+          this.menu.push( {
+            title: 'Support',
+            icon: 'home-phone',
+            link: '/admin/supports',
+            isTitle:false,
+            hasChildren:false,
+      
+          })
+
+         
+        
+          this.dashService.statsForMenu().subscribe((res:any)=>{
+            this.data=res.data.stats
+          
+          })
+        break;
+    }
+  }
+
+  getSlug(link:any){
+    
+    var splitted=link.split('/')
+    
+    return splitted[splitted.length-1]
+  }
+  verifyMenu(name:any){
+    
+    var check=this.user.userprestation.find((e:any) => e.prestation.slug==name)
+    
+    return check==undefined || check==null ?false:true
+  }
+
+  toggle(slug:any){
+    var check=this.menu.find((e:any) => e.slug == slug)
+    if(check){
+      check.collapse = !check.collapse
+    }
+  }
 
 }

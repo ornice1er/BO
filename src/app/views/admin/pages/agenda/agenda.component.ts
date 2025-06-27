@@ -1,18 +1,24 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { RequeteService } from 'src/app/core/_services/requete.service';
-import { MyToastr } from '../../../app.toastr';
-import { AgendaService } from '../../../core/_services/agenda.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../core/_utils/utils';
-
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { AgendaService } from '../../../../core/services/agenda.service';
+import { RequeteService } from '../../../../core/services/requete.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { GlobalName } from '../../../../core/utils/global-name';
 
 @Component({
   selector: 'ngx-agenda',
   templateUrl: './agenda.component.html',
+  standalone:true,
+  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
   styleUrls: ['./agenda.component.css']
 })
 export class AgendaComponent implements OnInit,AfterViewInit {
@@ -38,7 +44,7 @@ export class AgendaComponent implements OnInit,AfterViewInit {
   
       constructor(
         private agendaService:AgendaService,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         config: NgbModalConfig, private modalService: NgbModal,
         private requeteService:RequeteService,
         private toastrService:ToastrService,
@@ -66,7 +72,7 @@ export class AgendaComponent implements OnInit,AfterViewInit {
   }
   
     ngOnInit(): void {
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.user_prestations=this.user.userprestation
       this.role=this.user.roles[0].name;
       

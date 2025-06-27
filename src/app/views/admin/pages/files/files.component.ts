@@ -1,14 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-
-import { MyToastr } from '../../../app.toastr';
-import { FilesService } from '../../../core/_services/files.service';
-import { PrestationService } from '../../../core/_services/prestation.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../core/_utils/utils';
-
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { FilesService } from '../../../../core/services/files.service';
+import { PrestationService } from '../../../../core/services/prestation.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 @Component({
   selector: 'ngx-files',
   templateUrl: './files.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./files.component.css']
 })
 export class FilesComponent implements OnInit {
@@ -26,7 +34,7 @@ export class FilesComponent implements OnInit {
         private fileService:FilesService,
         private prestationService:PrestationService,
         
-        private locService:LocalService,
+         private locService:LocalStorageService,
       ){
   
       } 
@@ -36,7 +44,7 @@ export class FilesComponent implements OnInit {
 
       this.getPrestations()
 
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
   

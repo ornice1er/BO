@@ -1,24 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { AffectationService } from 'src/app/core/_services/affectation.service';
-import { ResponseService } from 'src/app/core/_services/response.service';
-import { MyToastr } from '../../../../../app.toastr';
-import { RequeteService } from '../../../../../core/_services/requete.service';
-import { LocalService } from '../../../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../../../core/_utils/utils';
+import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import { AffectationService } from '../../../../../../core/services/affectation.service';
+import { PrestationService } from '../../../../../../core/services/prestation.service';
+import { RequeteService } from '../../../../../../core/services/requete.service';
+import { ResponseService } from '../../../../../../core/services/response.service';
+import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
+import { GlobalName } from '../../../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { PrestationDetails } from '../../prestation-details';
-import * as $ from 'jquery'
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { Config } from 'src/app/app.config';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { UnityAdminService } from 'src/app/core/_services/unity_admin.service';
-import { PrestationService } from 'src/app/core/_services/prestation.service';
-import { AlertNotif } from 'src/app/alert';
+import { ConfigService } from '../../../../../../core/utils/config-service';
+import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 @Component({
   selector: 'ngx-eservice-traitement-edit',
   templateUrl: './eservice-traitement-edit.component.html',
+      standalone:true,
+      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,AngularEditorModule ],
+  
   styleUrls: ['./eservice-traitement-edit.component.css']
 })
 export class EserviceTraitementEditComponent implements OnInit {
@@ -128,7 +136,7 @@ export class EserviceTraitementEditComponent implements OnInit {
 
   constructor(
     private activatedRoute:ActivatedRoute,
-    private locService:LocalService,
+     private locService:LocalStorageService,
     private requeteService:RequeteService,
     private router:Router,
     config: NgbModalConfig, 
@@ -162,7 +170,7 @@ export class EserviceTraitementEditComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
       this.code=this.activatedRoute.snapshot.paramMap.get('code')
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
       this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
       this.responseUaCode=this.activatedRoute.snapshot.paramMap.get('isTreated')
@@ -338,7 +346,7 @@ export class EserviceTraitementEditComponent implements OnInit {
   }
 
   openContract(filename:any){
-    window.open(Config.toFile('docs/responses/'+filename),'_blank')
+    window.open(ConfigService.toFile('docs/responses/'+filename),'_blank')
   }
   back(){
     this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selected_data.code+'/'+this.prestation])
@@ -363,7 +371,7 @@ export class EserviceTraitementEditComponent implements OnInit {
         }
         this.reload=false
      //   this.storeResponse(value)
-        AlertNotif.finishConfirm("Voulez vous vraiment mettre en attente pour complément d'information cet enregistrement ?").then((result:any) =>{
+        AppSweetAlert.confirmBox("Voulez vous vraiment mettre en attente pour complément d'information cet enregistrement ?").then((result:any) =>{
 
     
             if (result.isConfirmed) {
@@ -391,7 +399,7 @@ export class EserviceTraitementEditComponent implements OnInit {
 
       decline(value?:any){
 
-        AlertNotif.finishConfirm("Voulez vous vraiment rejeter cette demande ?").then((result:any) =>{
+        AppSweetAlert.confirmBox("Voulez vous vraiment rejeter cette demande ?").then((result:any) =>{
 
 
           this.toastrService.info("Annulation en cours")
@@ -433,11 +441,11 @@ export class EserviceTraitementEditComponent implements OnInit {
        }
 
        tansUpStart(value:any){
-        AlertNotif.finishConfirm("Voulez vous vraiment transmettre cette demande ?").then((result:any) =>{
+        AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cette demande ?").then((result:any) =>{
           //console.log(result.isConfirmed);
           if(result.isConfirmed){
             this.transit=true
-            $('#responseBtn').trigger('click')
+           // $('#responseBtn').trigger('click')
           }
         });
        }
@@ -517,7 +525,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       }
     
 
-      var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
+      var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
       this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
       this.showPreview2=true;
       console.log(url)
@@ -657,7 +665,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       }
 
       showResponseFile(name:any){
-        var url=Config.toFile("docs/responses/"+name);
+        var url=ConfigService.toFile("docs/responses/"+name);
         this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
         console.log(this.pdfSrc)
         this.showResponseFilePreview=true

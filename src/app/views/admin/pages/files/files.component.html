@@ -74,14 +74,14 @@
                     <label for="typeLabel">Libellé</label>
                     <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" ngModel>
                     <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-                        <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                        <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
                     </span>
     
                 </div>
             
       </div>
       <div>
-        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
       </div>
     
     </div>
@@ -110,7 +110,7 @@
                     <label for="typeLabel">Libellé</label>
                     <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" [(ngModel)]="selected_data.name">
                     <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-                        <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+                        <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
                     </span>
     
                 </div>
@@ -118,14 +118,14 @@
                   <label for="typeLabel">Slug</label>
                   <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #slug="ngModel" name="slug" [(ngModel)]="selected_data.slug">
                   <span *ngIf="slug.invalid && (name.dirty || slug.touched)" class="text-danger">
-                      <small *ngIf="slug.errors?.required" id="typeLabelHelp" class="form-text">Le slug est requis.</small>
+                      <small *ngIf="slug.errors?.['required']" id="typeLabelHelp" class="form-text">Le slug est requis.</small>
                   </span>
   
               </div>
             
       </div>
       <div>
-        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
       </div>
     
     </div>

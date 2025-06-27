@@ -1,49 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataTableDirective } from 'angular-datatables';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { Subject } from 'rxjs';
-
-import { MyToastr } from '../../../app.toastr';
-import { FonctionAgentService } from '../../../core/_services/fonction-agent.service';
-import { OfficerService } from '../../../core/_services/officer.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { UnityAdminService } from '../../../core/_services/unity_admin.service';
-import { globalName } from '../../../core/_utils/utils';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { FonctionAgentService } from '../../../../core/services/fonction-agent.service';
+import { OfficerService } from '../../../../core/services/officer.service';
+import { UnityAdminService } from '../../../../core/services/unity_admin.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-officer',
   templateUrl: './officer.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./officer.component.css']
 })
 export class OfficerComponent implements OnInit {
-  @ViewChild(DataTableDirective , {static: false})dtElement!: DataTableDirective;
   isDtInitialized:boolean = false
-  dtOptions: DataTables.Settings = {
-    language: {
-      processing:     "Traitement en cours...",
-      search:         "Rechercher&nbsp;:",
-      lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
-      info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-      infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-      infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-      infoPostFix:    "",
-      loadingRecords: "Chargement en cours...",
-      zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-      emptyTable:     "Aucune donnée disponible dans le tableau",
-      paginate: {
-          first:      "Premier",
-          previous:   "Pr&eacute;c&eacute;dent",
-          next:       "Suivant",
-          last:       "Dernier"
-      },
-      aria: {
-          sortAscending:  ": activer pour trier la colonne par ordre croissant",
-          sortDescending: ": activer pour trier la colonne par ordre décroissant"
-      }
-  }
-  };
-  dtTrigger: Subject<any> = new Subject<any>();
 
   selected_data:any
   user:any
@@ -60,7 +40,7 @@ export class OfficerComponent implements OnInit {
         private unityAdminService:UnityAdminService,
         
         private fonctionAgentService:FonctionAgentService,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         config: NgbModalConfig, private modalService: NgbModal,
         private toastrService:ToastrService
       ){
@@ -72,29 +52,16 @@ export class OfficerComponent implements OnInit {
       this.all();
       this.getFonctionAgent()
       this.geteUnityAdmin()
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
-  
-    rerender(){
-      if (this.isDtInitialized) {
-        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        
-          dtInstance.destroy();
-          this.dtTrigger.next();
-        });
-      } else {
-        this.isDtInitialized = true
-        this.dtTrigger.next();
-      }
-     }
+ 
   
     all() {
       this.loading2=true;
       this.offcerService.getAll().subscribe((res:any)=>{
         this.data=res
         this.loading2=false;
-        this.rerender()
 
       },
       (error:any)=>{

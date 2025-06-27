@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Traitement de la demande'"></app-bread-title>
 
 <div class="d-flex justify-content-end">
     <button class="btn btn-outline-dark mb-3 " (click)="back()">Retourner aux détails de la demande</button>
@@ -99,8 +98,8 @@
 </div>
 <hr>
 <div class="mb-3">
-    <button type="submit" class="btn btn-sm btn-outline-primary me-3" id="responseBtn" [disabled]="addResponse.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
-    <button *ngIf="!hasPermission('autorisation')  && !isSigner()" type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addResponse.invalid || loading" (click)="tansUpStart(addResponse.value)" >Transmettre <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+    <button type="submit" class="btn btn-sm btn-outline-primary me-3" id="responseBtn" [disabled]="addResponse.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+    <button *ngIf="!hasPermission('autorisation')  && !isSigner()" type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addResponse.invalid || loading" (click)="tansUpStart(addResponse.value)" >Transmettre <app-loading [isVisible]="loading"></app-loading> </button>
 
         <button type="button" class="btn btn-sm btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission" (click)="validate()">
             <i icon="corner-right-up-outline"></i> Valider
@@ -143,7 +142,7 @@
 <div class="d-flex justify-content-between">
   
     <div class="" *ngIf="isTreated">
-        <button type="button" (click)="deliveryrDoc()" class="btn btn-sm btn-outline-primary " [disabled]="!isTreated || loading">{{myPrestation.content_type==1? "Envoyer le document sur le portail":"Générer le document"}} <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="button" (click)="deliveryrDoc()" class="btn btn-sm btn-outline-primary " [disabled]="!isTreated || loading">{{myPrestation.content_type==1? "Envoyer le document sur le portail":"Générer le document"}} <app-loading [isVisible]="loading"></app-loading> </button>
         <button class="btn btn-sm btn-primary mx-1" type="button"  *ngIf="selected_data!=null && selected_data.filename!=null"   (click)="showFile2()">Visualiser le document</button>
 
     </div>
@@ -159,9 +158,9 @@
                 <textarea name="commentaire" rows="3" class="form-control" required [(ngModel)]="responseUA.motif"></textarea>
             </div>    </div>
         <div class="modal-footer">
-            <button id="responseBtn" type="submit" class="btn btn-outline-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
-            <button  type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addRejet.invalid || loading" *ngIf="!isSigner()" (click)="tansUpStart(addRejet.value)" >Transmettre <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
-            <button *ngIf="hasPermission('rejet') && isTreated" type="button" class="btn btn-outline-danger" (click)="decline()" [disabled]="loading">Rejeter la demande <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+            <button id="responseBtn" type="submit" class="btn btn-outline-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+            <button  type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addRejet.invalid || loading" *ngIf="!isSigner()" (click)="tansUpStart(addRejet.value)" >Transmettre <app-loading [isVisible]="loading"></app-loading> </button>
+            <button *ngIf="hasPermission('rejet') && isTreated" type="button" class="btn btn-outline-danger" (click)="decline()" [disabled]="loading">Rejeter la demande <app-loading [isVisible]="loading"></app-loading> </button>
 
         </div>
     </form>
@@ -176,9 +175,9 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button id="responseBtn" type="submit" class="btn btn-outline-primary btn-sm" [disabled]="addSusp.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
-            <button  type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addSusp.invalid || loading" (click)="tansUpStart(addSusp.value)" *ngIf="!isSigner()" >Transmettre <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
-            <button *ngIf="hasPermission('suspension') && isTreated" type="button" class="btn btn-outline-warning btn-sm" (click)="needCorrection()" [disabled]="loading">Suspendre la demande <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+            <button id="responseBtn" type="submit" class="btn btn-outline-primary btn-sm" [disabled]="addSusp.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+            <button  type="button" class="btn btn-sm btn-outline-success mx-1" [disabled]="addSusp.invalid || loading" (click)="tansUpStart(addSusp.value)" *ngIf="!isSigner()" >Transmettre <app-loading [isVisible]="loading"></app-loading> </button>
+            <button *ngIf="hasPermission('suspension') && isTreated" type="button" class="btn btn-outline-warning btn-sm" (click)="needCorrection()" [disabled]="loading">Suspendre la demande <app-loading [isVisible]="loading"></app-loading> </button>
 
         </div>
     </form>
@@ -229,7 +228,7 @@
             </div>
         </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Signer <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 
 </form>

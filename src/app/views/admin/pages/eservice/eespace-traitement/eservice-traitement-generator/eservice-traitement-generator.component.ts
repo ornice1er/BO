@@ -1,23 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MyToastr } from '../../../../../app.toastr';
-import { AffectationService } from '../../../../../core/_services/affectation.service';
-import { RequeteService } from '../../../../../core/_services/requete.service';
-import { ResponseService } from '../../../../../core/_services/response.service';
-import { LocalService } from '../../../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../../../core/_utils/utils';
-import { PrestationDetails } from '../../prestation-details';
-import { Config } from '../../../../../app.config';
-import { DialogNamePromptComponent } from 'src/app/admin/dialog-name-prompt/dialog-name-prompt.component';
+import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-
+import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import { AffectationService } from '../../../../../../core/services/affectation.service';
+import { RequeteService } from '../../../../../../core/services/requete.service';
+import { ResponseService } from '../../../../../../core/services/response.service';
+import { GlobalName } from '../../../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../../../components/loading/loading.component';
+import { PrestationDetails } from '../../prestation-details';
+import { ConfigService } from '../../../../../../core/utils/config-service';
+import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'ngx-eservice-traitement-generator',
   templateUrl: './eservice-traitement-generator.component.html',
+      standalone:true,
+      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,AngularEditorModule ],
+  
   styleUrls: ['./eservice-traitement-generator.component.css']
 })
 export class EserviceTraitementGeneratorComponent implements OnInit {
@@ -102,7 +109,7 @@ editorConfig: AngularEditorConfig = {
 };
   constructor(
     private activatedRoute:ActivatedRoute,
-    private locService:LocalService,
+     private locService:LocalStorageService,
     private requeteService:RequeteService,
     private _sanitizationService: DomSanitizer,
     private router:Router,
@@ -121,12 +128,12 @@ editorConfig: AngularEditorConfig = {
       this.selected_data=null
       this.code=this.activatedRoute.snapshot.paramMap.get('code')
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
       this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
 
      });  
-    this.selected_data=this.locService.getItem('selected_data')
+    this.selected_data=this.locService.get('selected_data')
     this.docs[0].content=this.selected_data.content
     this.docs[1].content=this.selected_data.content2
     this.docs[2].content=this.selected_data.content3
@@ -207,7 +214,7 @@ editorConfig: AngularEditorConfig = {
     }
    
 
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview2=true;
     

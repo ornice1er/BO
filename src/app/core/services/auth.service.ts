@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../utils/config-service';
 import { GlobalName } from '../utils/global-name';
@@ -98,4 +98,32 @@ export class AuthService {
 
         return this.http.get<any>(`${this.url2}api/backups`,ConfigService.addAction('list'));
         }
+
+            changeCode(ressource:any) {
+        return this.http.post(this.url+"/signin/unique-code/store",ressource);
+      }
+
+         sendLink() {
+        return this.http.get(this.url+"/signin/unique-code/mail");
+      }
+    
+
+      getAuthorizationCode(code:any){
+      let data={
+        grant_type:"authorization_code",
+        redirect_uri:"https://sollicitation.hebergeappli.bj/login-check",
+        code:code
+      }
+      let body = new URLSearchParams();
+      body.set('grant_type', "authorization_code");
+      body.set('code', code);
+      body.set('redirect_uri', "https://sollicitation.hebergeappli.bj/login-check");
+
+      return this.http.post("https://pprodofficial.service-public.bj/api/official/token", JSON.stringify(data),  {headers: new HttpHeaders({
+        'Authorization': 'Basic  YXBwLW10ZnA6YXBwLW10ZnA=',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    })});
+
+    }
+    
 }

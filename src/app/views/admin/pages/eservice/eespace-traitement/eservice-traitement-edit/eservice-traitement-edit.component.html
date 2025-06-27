@@ -1,4 +1,3 @@
-<app-bread-title  [title]="'Traitement de la demande'"></app-bread-title>
 <div  #pdfView  class="container mb-5">
  <div class="d-flex justify-content-end">
     <button class="btn btn-dark mb-3" (click)="back()">Retourner aux détails de la demande</button>
@@ -13,15 +12,15 @@
                     <!--button class="btn btn-dark mb-3 " (click)="back2()">Fermer le prévisualiseur</!--button-->
                     <button type="button" (click)="transUp()" [disabled]="loading" *ngIf="isTreated && !isSigner()" class="btn  btn-primary ">
                         Soumettre mon avis
-                         <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                         <app-loading [isVisible]="loading"></app-loading> 
                         </button>
                         <!--button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && !isSigner()" class="btn  btn-primary ">
                            Donner mon avis
-                             <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                             <app-loading [isVisible]="loading"></app-loading> 
                             </!--button-->
                             <!--button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && isSigner()" class="btn  btn-primary ">
                                 Décider
-                                  <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                                  <app-loading [isVisible]="loading"></app-loading> 
                                  </!--button-->
                                  <button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5 && hasPermission('validation')" (click)="validate()">
                                    Envoyer une notification provisoire de demande acceptée
@@ -29,7 +28,7 @@
                                   <!--button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5" (click)="validate()">
                          Valider provisoirement la demande
                     </!--button-->
-                               <button type="button" (click)="delivered()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.need_validation && selected_data.status==5">Clôturer la demande<app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+                               <button type="button" (click)="delivered()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.need_validation && selected_data.status==5">Clôturer la demande<app-loading [isVisible]="loading"></app-loading> </button>
                
                     <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized && isTreated && !myPrestation.need_validation" (click)="open(dialogAffectation)">Signer l'attestation / Délivrer mon visa</button>
                     <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized && isTreated && !myPrestation.need_validation" (click)="delivered()"  [disabled]="loading">Délivrer l'attestation / le document visé</button>
@@ -289,7 +288,7 @@
           
                 <button type="submit" class="btn  btn-primary " [disabled]="loading || addResponse.invalid">
                     {{getText()}}
-                     <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                     <app-loading [isVisible]="loading"></app-loading> 
                     </button>
                
                     <!--button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission" (click)="validate()">
@@ -312,7 +311,7 @@
                    
                 <button type="submit" class="btn  btn-primary " [disabled]="loading">
                     {{getText()}}
-                     <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                     <app-loading [isVisible]="loading"></app-loading> 
                     </button>
                 </div>
             </form>
@@ -330,7 +329,7 @@
               
                     <button type="submit" class="btn  btn-primary " [disabled]="loading">
                         {{getText()}}
-                         <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                         <app-loading [isVisible]="loading"></app-loading> 
                         </button>
                 </div>
             </form>
@@ -351,20 +350,20 @@
     <button class="btn btn-dark mb-3 " (click)="back2()">Fermer le prévisualiseur</button>
     <button type="button" (click)="transUp()" [disabled]="loading" *ngIf="isTreated && !isSigner()" class="btn  btn-primary ">
         Soumettre mon avis
-         <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+         <app-loading [isVisible]="loading"></app-loading> 
         </button>
         <button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && !isSigner()" class="btn  btn-primary ">
            Donner mon avis
-             <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+             <app-loading [isVisible]="loading"></app-loading> 
             </button>
             <button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && isSigner()" class="btn  btn-primary ">
                 Décider
-                  <app-spinner-loading [loading]="loading"></app-spinner-loading> 
+                  <app-loading [isVisible]="loading"></app-loading> 
                  </button>
                  <button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5" (click)="validate()">
                    Envoyer une notification provisoire de demande acceptée
                </button>
-               <button type="button" (click)="deliveryrDoc()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.content_type==1 && selected_data.status==5">Envoyer le document sur le portail <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+               <button type="button" (click)="deliveryrDoc()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.content_type==1 && selected_data.status==5">Envoyer le document sur le portail <app-loading [isVisible]="loading"></app-loading> </button>
 
     <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized && isTreated" (click)="open(dialogAffectation)">Signer l'attestation</button>
     <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized && isTreated" (click)="delivered()">Délivrer l'attestation</button>
@@ -403,7 +402,7 @@
             </div>
         </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 
 </form>

@@ -1,22 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { DataTableDirective } from 'angular-datatables';
-import { Config } from '../../../app.config';
-import { RequeteService } from '../../../core/_services/requete.service';
-import { CodeDecoder, globalName } from '../../../core/_utils/utils';
-import { Subject } from 'rxjs';
-import { LocalService } from 'src/app/core/_services/storage_services/local.service';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { RequeteService } from '../../../../core/services/requete.service';
+import { ConfigService } from '../../../../core/utils/config-service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-historique',
   templateUrl: './historique.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./historique.component.css']
 })
 export class HistoriqueComponent implements OnInit,OnDestroy,AfterViewInit  {
-  @ViewChild(DataTableDirective) dtElement!: DataTableDirective;
   isDtInitialized:boolean = false
 
   user:any
@@ -28,31 +36,6 @@ export class HistoriqueComponent implements OnInit,OnDestroy,AfterViewInit  {
   prestationName:any;
   doc_path=""
   doc_prefix=""
-  dtOptions: DataTables.Settings = {
-    language: {
-      processing:     "Traitement en cours...",
-      search:         "Rechercher&nbsp;:",
-      lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
-      info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-      infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-      infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-      infoPostFix:    "",
-      loadingRecords: "Chargement en cours...",
-      zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-      emptyTable:     "Aucune donnée disponible dans le tableau",
-      paginate: {
-          first:      "Premier",
-          previous:   "Pr&eacute;c&eacute;dent",
-          next:       "Suivant",
-          last:       "Dernier"
-      },
-      aria: {
-          sortAscending:  ": activer pour trier la colonne par ordre croissant",
-          sortDescending: ": activer pour trier la colonne par ordre décroissant"
-      }
-  }
-  };
-  dtTrigger: Subject<any> = new Subject<any>();
   error:any=""
 
   showPreview2=false;
@@ -64,7 +47,7 @@ export class HistoriqueComponent implements OnInit,OnDestroy,AfterViewInit  {
      private requeteService:RequeteService, 
      private route:ActivatedRoute, 
      private _sanitizationService: DomSanitizer,      
-       private locService:LocalService,
+        private locService:LocalStorageService,
        config: NgbModalConfig, private modalService: NgbModal,
        private toastrService:ToastrService
      ){
@@ -74,18 +57,6 @@ export class HistoriqueComponent implements OnInit,OnDestroy,AfterViewInit  {
   ngAfterViewInit(): void {
    // this.dtTrigger.next();
 }
-rerender(){
-  if (this.isDtInitialized) {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-    
-      dtInstance.destroy();
-      this.dtTrigger.next();
-    });
-  } else {
-    this.isDtInitialized = true
-    this.dtTrigger.next();
-  }
- }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -96,7 +67,7 @@ rerender(){
       this.all()
       this.getName();
     })
-    this.user=this.locService.getItem(globalName.user);
+    this.user=this.locService.get(GlobalName.userName);
   }
 
   all() {
@@ -104,7 +75,6 @@ rerender(){
     this.requeteService.getByPrestationAll(this.slug).subscribe((res:any)=>{
       this.loading2=false;
      this.data=res;
-     this.rerender();
     },
     (error:any)=>{
       this.loading2=false;
@@ -127,7 +97,7 @@ rerender(){
   }
  /* showFile2(name:any){
     
-    var url=Config.toFile(this.doc_path)+"/attestation/"+name;
+    var url=ConfigService.toFile(this.doc_path)+"/attestation/"+name;
     window.open(url, '_blank');
   }*/
 
@@ -136,15 +106,15 @@ rerender(){
       alert("Veuillez sélectionner une ligne !")
       return;
     }
-    //var url=Config.toFile(this.doc_path)+"/"+name;
+    //var url=ConfigService.toFile(this.doc_path)+"/"+name;
     //window.open(url, '_blank');
 
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
     console.log(url)
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview2=true;
       //ref.close()
-   /* var url=Config.toFile('litige/files')+name;
+   /* var url=ConfigService.toFile('litige/files')+name;
     window.open(url, '_blank');*/
   }
   getName(){
@@ -210,7 +180,6 @@ rerender(){
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   back(){

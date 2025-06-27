@@ -1,16 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { MyToastr } from '../../../app.toastr';
-import { AuthService } from '../../../core/_services/auth.service';
-import { OfficerService } from '../../../core/_services/officer.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../core/_utils/utils';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { AuthService } from '../../../../core/services/auth.service';
+import { OfficerService } from '../../../../core/services/officer.service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 
 @Component({
   selector: 'ngx-settings',
   templateUrl: './settings.component.html',
+  
+          standalone:true,
+          imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+      
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
@@ -24,7 +34,7 @@ export class SettingsComponent implements OnInit {
   active:any=1
 
   constructor(
-    private localService:LocalService, 
+    private localService:LocalStorageService, 
     private offcerService:OfficerService, 
     private authService: AuthService,
     private toastrService:ToastrService,
@@ -38,8 +48,8 @@ export class SettingsComponent implements OnInit {
     this.token=this.router.snapshot.paramMap.get('token')
     this.active=3
    }
-    this.role= this.localService.getItem(globalName.role)
-    this.user= this.localService.getItem(globalName.user)
+    this.role= this.localService.get(GlobalName.role)
+    this.user= this.localService.get(GlobalName.user)
     this.selected_data=this.user.agent;
   
   }
@@ -79,9 +89,9 @@ changePassword(value:any,form:NgForm){
         .subscribe((res:any) => {
           console.log(res)
           if (res) {
-            localStorage.removeItem(globalName.token)
-        localStorage.removeItem(globalName.user)
-        localStorage.removeItem(globalName.role)
+            localStorage.removeItem(GlobalName.token)
+        localStorage.removeItem(GlobalName.user)
+        localStorage.removeItem(GlobalName.role)
         this.router2.navigate(['/admin'])
           }
           

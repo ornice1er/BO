@@ -1,24 +1,31 @@
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DialogNamePromptComponent } from 'src/app/admin/dialog-name-prompt/dialog-name-prompt.component';
-import { Config } from '../../../../../app.config';
-import { MyToastr } from '../../../../../app.toastr';
-import { AffectationService } from '../../../../../core/_services/affectation.service';
-import { RequeteService } from '../../../../../core/_services/requete.service';
-import { ResponseService } from '../../../../../core/_services/response.service';
-import { LocalService } from '../../../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../../../core/_utils/utils';
-import { PrestationDetails } from '../../prestation-details';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { UnityAdminService } from 'src/app/core/_services/unity_admin.service';
-import { formatDate,Location } from '@angular/common';
-import { AlertNotif } from 'src/app/alert';
+import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import { AffectationService } from '../../../../../../core/services/affectation.service';
+import { RequeteService } from '../../../../../../core/services/requete.service';
+import { ResponseService } from '../../../../../../core/services/response.service';
+import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
+import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { ConfigService } from '../../../../../../core/utils/config-service';
+import { GlobalName } from '../../../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../../../components/loading/loading.component';
+import { PrestationDetails } from '../../prestation-details';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
   templateUrl: './eservice-traitement-show.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
+    
   styleUrls: ['./eservice-traitement-show.component.css'],
   providers: [NgbModalConfig, NgbModal]
 })
@@ -73,7 +80,7 @@ export class EserviceTraitementShowComponent implements OnInit {
 
   constructor(
     private activatedRoute:ActivatedRoute,
-    private locService:LocalService,
+     private locService:LocalStorageService,
     private requeteService:RequeteService,
     private _sanitizationService: DomSanitizer,
     private router:Router,
@@ -95,14 +102,14 @@ export class EserviceTraitementShowComponent implements OnInit {
       this.fileUploaded=null
       this.code=this.activatedRoute.snapshot.paramMap.get('code')
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
       this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
       console.log(this.myPrestation)
       this.getName(this.prestation);
      });  
      
-     this.locService.removeItem('curreent_response')
+     this.locService.remove('curreent_response')
      this.get()
      this.getMyCollab()
   }
@@ -135,22 +142,22 @@ export class EserviceTraitementShowComponent implements OnInit {
   }
 
   showFile(el:any){
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+el.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+el.filename;
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview=true;
     this.observation="";
     this.selected_file=el;
     
-      $('#cBtn').trigger('click');
+     // $('#cBtn').trigger('click');
       this.activeobsPanel=true;
 
   }
 
   showFileContract(file:any){
     
-    //var url=Config.toFile("storage/"+this.selected_data.prestation?.code+"/"+el.file64);
+    //var url=ConfigService.toFile("storage/"+this.selected_data.prestation?.code+"/"+el.file64);
     
-    //window.open(Config.toFile('docs/responses/'+file),'_blank')
+    //window.open(ConfigService.toFile('docs/responses/'+file),'_blank')
     window.open(file,'_blank')
 
     //this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
@@ -164,13 +171,13 @@ export class EserviceTraitementShowComponent implements OnInit {
 
   }
   showResponseFile(name:any){
-    var url=Config.toFile("docs/responses/"+name);
+    var url=ConfigService.toFile("docs/responses/"+name);
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     
     this.showResponseFilePreview=true;
     this.showPreview=true
     
-    $('#cBtn').trigger('click');
+   // $('#cBtn').trigger('click');
   }
 
   showFile2(){
@@ -179,7 +186,7 @@ export class EserviceTraitementShowComponent implements OnInit {
       return;
     }
 
-    var url=Config.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
+    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
     this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
     this.showPreview2=true;
 
@@ -191,7 +198,7 @@ this.modalService.open(content);
   }
 
   open2(){
-    this.locService.setItem("selected_data",this.selected_data)
+    this.locService.set("selected_data",this.selected_data)
     if(this.isTreated && !this.isMyTreated){
       this.router.navigate(['admin/eservice/espace-traitement-edit/'+this.selected_data.code+'/'+this.prestation+'/'+this.responseUA.unite_admin_id])
 
@@ -246,7 +253,7 @@ this.modalService.open(content);
 
     this.modalService.dismissAll()
 
-    AlertNotif.finishConfirm("Voulez vous vraiment affecter/retourner cet enregistrement ?").then((result:any) =>{
+    AppSweetAlert.confirmBox("Voulez vous vraiment affecter/retourner cet enregistrement ?").then((result:any) =>{
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
 
@@ -344,7 +351,7 @@ this.modalService.open(content);
       return ;
     }
 
-    AlertNotif.finishConfirm("Voulez vous vraiment transmettre cet enregistrement ?").then((result:any) =>{
+    AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cet enregistrement ?").then((result:any) =>{
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
         this.affService.store({
@@ -425,7 +432,7 @@ this.modalService.open(content);
 
   storeAmend(){
     this.responseUA.observation=`Les observations suivantes sont à prendre en compte sur le fichier suivant ${this.selected_file.filename}: \n ${this.observation} \n`
-    this.locService.setItem("curreent_response",this.responseUA)
+    this.locService.set("curreent_response",this.responseUA.toString())
     this.activeobsPanel=true
   }
 

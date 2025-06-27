@@ -1,15 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-
-import { MyToastr } from '../../../app.toastr';
-import { FonctionAgentService } from '../../../core/_services/fonction-agent.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../core/_utils/utils';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { FonctionAgentService } from '../../../../core/services/fonction-agent.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-post',
   templateUrl: './post.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+    
   styleUrls: ['./post.component.css']
 })
 export class PostComponent implements OnInit {
@@ -22,7 +30,7 @@ export class PostComponent implements OnInit {
 
   error:any=""
 
-      constructor(private fonctionAgentService:FonctionAgentService,private locService:LocalService,   config: NgbModalConfig, private modalService: NgbModal,
+      constructor(private fonctionAgentService:FonctionAgentService, private locService:LocalStorageService,   config: NgbModalConfig, private modalService: NgbModal,
         private toastrService:ToastrService
         ){
           config.backdrop = 'static';
@@ -31,7 +39,7 @@ export class PostComponent implements OnInit {
   
     ngOnInit(): void {
       this.all();
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
   

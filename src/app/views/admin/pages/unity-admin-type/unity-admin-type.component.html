@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Gestion des Type Unité admin'"></app-bread-title>
 
 
 <div>
@@ -61,13 +60,13 @@
         <label for="typeLabel">Libellé</label>
         <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="libelle" ngModel>
         <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-            <small *ngIf="name.errors?.required" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+            <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
         </span>
 
     </div>
  </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
 
     </div>
 </form>

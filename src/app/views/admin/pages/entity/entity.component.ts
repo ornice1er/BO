@@ -1,14 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-
-import { MyToastr } from '../../../app.toastr';
-import { EntityService } from '../../../core/_services/entity.service';
-import { EntityTypeService } from '../../../core/_services/entity_type.service';
-import { LocalService } from '../../../core/_services/storage_services/local.service';
-import { globalName } from '../../../core/_utils/utils';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { EntityService } from '../../../../core/services/entity.service';
+import { EntityTypeService } from '../../../../core/services/entity_type.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'ngx-entity',
   templateUrl: './entity.component.html',
+      standalone:true,
+      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+  
   styleUrls: ['./entity.component.css']
 })
 export class EntityComponent implements OnInit {
@@ -21,7 +30,7 @@ export class EntityComponent implements OnInit {
   loading=false
   loading2=false
       constructor(private entityService:EntityService,private entitytypeService:EntityTypeService,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         ){
   
       } 
@@ -29,7 +38,7 @@ export class EntityComponent implements OnInit {
     ngOnInit(): void {
       this.all();
       this.getTypeEntity()
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
   

@@ -1,42 +1,39 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { Config } from "../../app.config";
-import {User} from '../_models/user.model';
-import {Observable} from 'rxjs';
-import { globalName } from '../_utils/utils';
+import { ConfigService } from '../utils/config-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
 
-  url = Config.toApiUrl('files');
+  url = ConfigService.toApiUrl('files');
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any> {
-    return this.http.get<any>(this.url, Config.httpHeader(localStorage.getItem(globalName.token)));
+  getAll(): any {
+    return this.http.get<any>(this.url, );
   }
 
   store(ressource: any) {
-    return this.http.post(this.url, ressource, Config.httpHeader(localStorage.getItem(globalName.token)));
+    return this.http.post(this.url, ressource, );
   }
   show(id: any) {
-    return this.http.get(`${this.url}/${id}`, Config.httpHeader(localStorage.getItem(globalName.token)));
+    return this.http.get(`${this.url}/${id}`, );
   }
   update(ressource: any, id: number) {
     ressource['_method']="patch"
-    return this.http.patch(`${this.url}/${id}`, ressource, Config.httpHeader(localStorage.getItem(globalName.token)));
+    return this.http.patch(`${this.url}/${id}`, ressource, );
   }
   delete(id: number) {
-    return this.http.delete(`${this.url}/${id}`, Config.httpHeader(localStorage.getItem(globalName.token)));
+    return this.http.delete(`${this.url}/${id}`, );
   }
   state(id: number) {
-    return this.http.get(`${this.url}/${id}/status`, Config.httpHeader(localStorage.getItem(globalName.token)));
+    return this.http.get(`${this.url}/${id}/status`, );
   }
 
-  getFromPrestationName(name:any): Observable<any> {
-    return this.http.get<any>(`${this.url}/by-prestation/${name}`, Config.httpHeader());
+  getFromPrestationName(name:any): any {
+    return this.http.get<any>(`${this.url}/by-prestation/${name}`);
   }
 
 

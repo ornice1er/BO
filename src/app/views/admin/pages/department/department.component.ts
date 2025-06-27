@@ -1,12 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DepartmentService } from 'src/app/core/_services/department.service';
-import { LocalService } from 'src/app/core/_services/storage_services/local.service';
-import { globalName } from 'src/app/core/_utils/utils';
-
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { DepartmentService } from '../../../../core/services/department.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 @Component({
   selector: 'app-department',
   templateUrl: './department.component.html',
+      standalone:true,
+      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+  
   styleUrls: ['./department.component.css']
 })
 export class DepartmentComponent implements OnInit {
@@ -21,7 +30,7 @@ export class DepartmentComponent implements OnInit {
       constructor(
         private departmentService:DepartmentService,
         config: NgbModalConfig, private modalService: NgbModal,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         ){
           config.backdrop = 'static';
           config.keyboard = false;
@@ -29,7 +38,7 @@ export class DepartmentComponent implements OnInit {
   
     ngOnInit(): void {
       this.all();
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
   

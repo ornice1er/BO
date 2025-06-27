@@ -1,13 +1,24 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BillingService } from 'src/app/core/_services/billing.service';
-import { LocalService } from 'src/app/core/_services/storage_services/local.service';
-import { TypeBillingService } from 'src/app/core/_services/type-billing.service';
-import { globalName } from 'src/app/core/_utils/utils';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { BillingService } from '../../../../core/services/billing.service';
+import { TypeBillingService } from '../../../../core/services/type-billing.service';
+import { GlobalName } from '../../../../core/utils/global-name';
+import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { LoadingComponent } from '../../../components/loading/loading.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-support',
   templateUrl: './support.component.html',
+        standalone:true,
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
+    
   styleUrls: ['./support.component.css']
 })
 export class SupportComponent implements OnInit {
@@ -24,7 +35,7 @@ export class SupportComponent implements OnInit {
         private typeBilling:TypeBillingService,
         private billingService:BillingService,
         config: NgbModalConfig, private modalService: NgbModal,
-        private locService:LocalService,
+         private locService:LocalStorageService,
         ){
           config.backdrop = 'static';
           config.keyboard = false;
@@ -33,7 +44,7 @@ export class SupportComponent implements OnInit {
     ngOnInit(): void {
       this.all();
       this.getTypeBillings()
-      this.user=this.locService.getItem(globalName.user);
+      this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
     }
   

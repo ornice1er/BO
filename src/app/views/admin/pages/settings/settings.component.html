@@ -1,5 +1,4 @@
 
-    <app-bread-title [title]="'Mon profil'"></app-bread-title>
    <div class="card">
     <div class="card-body">
         <nav ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="active">
@@ -59,7 +58,7 @@
                 <a ngbNavLink>Mon code de signature</a>
                 <ng-template ngbNavContent>
                     <div class="text-center p-5" *ngIf="token ==undefined">
-                            <button class="btn btn-sm btn-primary" [disabled]="loading" (click)="generateCode()">Envoyer le lien de génération du code de signature <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+                            <button class="btn btn-sm btn-primary" [disabled]="loading" (click)="generateCode()">Envoyer le lien de génération du code de signature <app-loading [isVisible]="loading"></app-loading> </button>
                     </div>
     
                     <div class="" *ngIf="token !=undefined">

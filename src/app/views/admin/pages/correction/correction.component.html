@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Demande en attente'"></app-bread-title>
 
 <div>
   
@@ -11,19 +10,6 @@
                 <i icon="checkmark-outline"></i>
             </button-->
         </div>    
-        <ngx-adpap-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-presence-au-poste'"></ngx-adpap-table>
-        <ngx-atn-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)"  (uploadFile)="showFile2($event)" *ngIf="prestation=='attestation-de-non-litige'"></ngx-atn-table>
-        <ngx-as-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-stage'"></ngx-as-table>
-        <ngx-ads-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-stage'"></ngx-ads-table>
-        <ngx-asf-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-service-fait'"></ngx-asf-table>
-        <ngx-cnr-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='certificat-de-non-radiation'"></ngx-cnr-table>
-        <ngx-vsa-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='attestation-de-validite-des-services'"></ngx-vsa-table>
-        <ngx-vca-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-contrat-apprentisage'"></ngx-vca-table>
-        <ngx-vri-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise'"></ngx-vri-table>
-        <ngx-al-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'"></ngx-al-table>
-        <ngx-am-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"   [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='decision-agrement-exercice-medecin'"></ngx-am-table>*
-        <ngx-detab-table [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="prestation=='declaration-etablissement'"></ngx-detab-table>
-        <app-code-template-list [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" [data]="data" [loading2]="loading2" [selected_data]="selected_data"  [user]="user" (newItemEvent)="checked($event)" *ngIf="code!=undefined"></app-code-template-list>
 
     </div>
   </div>

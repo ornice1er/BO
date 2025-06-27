@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Consultation des détails de la demande'"></app-bread-title>
 
 
 <div class="d-flex justify-content-between mb-5">
@@ -75,20 +74,7 @@
 </div>
 <ng-container *ngIf="selected_data!=undefined">
     <div *ngIf="!showPreview2 && !showPreview">
-        <ngx-adpap-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-presence-au-poste' && myPrestation?.from_pns"  (openedFile)="showFile($event)"  (openedFile2)="showResponseFile($event)"></ngx-adpap-details>
-        <ngx-atn-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-non-litige' && myPrestation?.from_pns" (openedFile)="showFile($event)"  (openedFile2)="showResponseFile($event)"></ngx-atn-details>
-        <ngx-as-details [selected_data]='selected_data' *ngIf="prestation=='attestation-de-stage' && myPrestation?.from_pns" (openedFile)="showFile($event)" (openedFile2)="showResponseFile($event)"></ngx-as-details>
-        <ngx-ads-details [selected_data]='selected_data' [prestation]="prestation" *ngIf="prestation=='autorisation-de-stage' && myPrestation?.from_pns" (openedFile)="showFile($event)" (openedFile2)="showResponseFile($event)"></ngx-ads-details>
-        <ngx-asf-details [selected_data]='selected_data' (openedFile)="showFile($event)"  *ngIf="prestation=='attestation-de-service-fait' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-asf-details>
-        <ngx-cnr-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='certificat-de-non-radiation' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-cnr-details>
-        <ngx-vsa-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='attestation-de-validite-des-services' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vsa-details>
-        <ngx-al-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-al-details>
-        <ngx-am-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='decision-agrement-exercice-medecin' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-am-details>
-        <ngx-vri-details [selected_data]='selected_data'(openedFile)="showFile($event)" *ngIf="prestation=='visa-reglement-interieur-entreprise' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vri-details>
-        <ngx-vca-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='visa-contrat-apprentisage' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-vca-details>
-        <ngx-detab-details [selected_data]='selected_data' (openedFile)="showFile($event)" *ngIf="prestation=='declaration-etablissement' && myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></ngx-detab-details>
-        <app-code-template-details [selected_data]='selected_data' (openedFile)="showFile($event)" (openedFile3)="showFileContract($event)" *ngIf="!myPrestation?.from_pns" (openedFile2)="showResponseFile($event)"></app-code-template-details>
-        
+
     </div>
 </ng-container>
 <div class="text-center"  *ngIf="selected_data==undefined">
@@ -119,7 +105,7 @@
             </div>
         </div>    </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 </form>
 
@@ -162,7 +148,7 @@
         </div>
         </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
     </form>
 
@@ -182,7 +168,7 @@
             <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
         </div>    </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 </form>
 
@@ -203,7 +189,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 </form>
 
@@ -247,7 +233,7 @@
             </div>
         </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-spinner-loading [loading]="loading"></app-spinner-loading> </button>
+        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-loading [isVisible]="loading"></app-loading> </button>
     </div>
 
 </form>

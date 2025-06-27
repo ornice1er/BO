@@ -1,4 +1,3 @@
-<app-bread-title [title]="'Statistique globale des sollicitations'"></app-bread-title>
 
 <div class="card">
     <div class="card-header d-flex justify-content-end">
@@ -31,12 +30,12 @@
         <h4>Graphe d'évolution des demandes au cours des mois</h4>
 
         <div class="chart-wrapper text-center" *ngIf="data!=undefined">
-            <canvas baseChart
+            <!-- <canvas baseChart
             [type]="'line'"
       [datasets]="chartData"
       [labels]="chartLabels"
       [options]="chartOptions"
-      ></canvas>
+      ></canvas> -->
           </div>
     </div>
 </div>
