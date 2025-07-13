@@ -21,7 +21,6 @@ import { EspaceSignedComponent } from "./pages/eservice/espace-signed/espace-sig
 import { EspaceValidationVisaComponent } from "./pages/eservice/espace-validation-visa/espace-validation-visa.component";
 import { EspaceValidationComponent } from "./pages/eservice/espace-validation/espace-validation.component";
 import { StatistiquesComponent } from "./pages/eservice/statistiques/statistiques.component";
-import { TraitmentComponent } from "./pages/eservice/traitment/traitment.component";
 import { FilesComponent } from "./pages/files/files.component";
 import { HistoriqueComponent } from "./pages/historique/historique.component";
 import { OfficerComponent } from "./pages/officer/officer.component";
@@ -142,15 +141,6 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'prestations',
                 component: PrestationComponent,
             },
-            {
-                path: 'eservice/treatment/:reqCode/:slug',
-                component: TraitmentComponent,
-            },
-            {
-                path: 'eservice/treatment/:reqCode/:fileCode/:slug',
-                component: TraitmentComponent,
-            },
-
             {
                 path: 'eservice/espace-traitement/:slug',
                 component: EespaceTraitementComponent,

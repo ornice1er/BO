@@ -121,5 +121,13 @@ export class RequeteService {
   addContratFile(resource: any) {
     return this.http.post(`${ConfigService.toApiUrl('requete-add-contract-file')}`,resource, );
   }
+  search(resource:any){
+      return this.http.post<any>(`${this.url}-search`,resource,
+       ConfigService.addAction('status'));
+    }
+      setStatus(id:any,status:any){
+    return this.http.get<any>(`${this.url}/${id}/state/${status}`,
+     ConfigService.addAction('status'));
+  }
 
 }

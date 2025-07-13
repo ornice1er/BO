@@ -11,7 +11,7 @@
               <input type="text" name="search_text" [(ngModel)]="search_text">
               </div>
                 <button class="btn btn-warning btn-sm mb-1" (click)="open(dialog2,r)" >Copier vers </button>
-                <button *ngIf="buttonsPermission.add" class="btn btn-primary btn-sm" (click)="open(dialog,r)" >Ajouter un droit </button>
+                <button *ngIf="buttonsPermission.add" class="btn btn-primary btn-sm" (click)="open(addContent,r)" >Ajouter un droit </button>
             </div>
         
             <div class="card-body" style="height: 50vh; overflow-y: scroll; overflow-x: hidden;">
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-  <ng-template #dialog  let-ref="dialogRef" let-d="dismiss">
+  <ng-template #addContent  let-ref="dialogRef" let-d="dismiss">
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value,ref)">
       <div class="modal-header">
             <h6 class="modal-title">

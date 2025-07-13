@@ -3,7 +3,7 @@
   
     <div class="card card-body">     
         <div class="buttons-row mb-3">
-            <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter le parcours" nbTooltipPlacement="top" (click)="open(dialog)" >
+            <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter le parcours" nbTooltipPlacement="top" (click)="add(addContent)" >
                 Voir le parcours
             </button>
             <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser la correction" nbTooltipPlacement="top" (click)="authorized()">
@@ -15,7 +15,7 @@
   </div>
   
 
-  <ng-template #dialog let-c="close" let-d="dismiss">
+  <ng-template #addContent let-c="close" let-d="dismiss">
     <div class="card card-body"  style="overflow: auto; height: 90vh;">
       <div>
         <h4 class="d-flex justify-content-between" id="modal-basic-title">Détails des parcours
@@ -38,5 +38,41 @@
     </div>
   </ng-template>
 
+<ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
 
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
  
+
+<ng-template #addContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
+<ng-template #editContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>

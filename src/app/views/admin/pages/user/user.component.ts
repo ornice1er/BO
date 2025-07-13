@@ -34,12 +34,12 @@ selectedId: number | null = null;
 
   buttonsPermission :any|undefined;
  search_text=""
+  remoteSearchData: any[] = []
   structures:any[] =[]
   roles:any[] =[]
   selectedRoles:any[] =[]
   data:any[] =[]
   dashTags:any[] =AppDashBloc
-  remoteSearchData: any[] = []
   selected_data:any;
   modalOption:any; 
   isDtInitialized:boolean = false
@@ -55,7 +55,8 @@ selectedId: number | null = null;
   }
   isPaginate=true
   tag="admin-users"
-  
+    selectedFilter = '';
+
   constructor(
     private userService:UserService,
     private roleService:RoleService,
@@ -210,6 +211,13 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
 
+    getInitials(lastname: string, firstname: string): string {
+    const last = lastname ? lastname.charAt(0) : '';
+    const first = firstname ? firstname.charAt(0) : '';
+    return (last + first).toUpperCase();
+  }
+
+
   dismiss(){
     this.modalService.dismissAll()
   }
@@ -221,7 +229,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
 
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
-    this.modalOption={centered:false,size:"lg"}
+    
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -248,7 +256,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
   onSearchChange() {
-  const localResults = this.data.filter(d => d.name.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }

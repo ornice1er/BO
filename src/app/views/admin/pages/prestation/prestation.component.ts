@@ -14,6 +14,7 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { NgToggleComponent } from 'ng-toggle-button';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
   selector: 'ngx-prestation',
@@ -36,7 +37,17 @@ export class PrestationComponent implements OnInit {
   loading=false
   loading2=false
   error:any=""
-
+  buttonsPermission :any|undefined;
+is_active=false
+search_text:any=""
+remoteSearchData: any[] = []
+  pg={
+    pageSize:10,
+    p:1,
+    total:0
+  }
+  isPaginate=true
+  selectedId: number | null = null;
   public exampleData:any[]=[];
   public options: any;
   public value: any[]=[];
@@ -63,6 +74,12 @@ export class PrestationComponent implements OnInit {
       this.getUnityAdminsAll()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
+       this.buttonsPermission = {
+      show:true,
+      add:true,
+      edit:true,
+      delete:true
+    };
 
       this.options = {
         width: '500',
@@ -127,6 +144,34 @@ export class PrestationComponent implements OnInit {
         content);
         
     }
+
+      
+    
+add(content:any){
+    this.modalService.open(content,{size:'lg'});
+  }
+
+
+  show(content:any){
+    if(!this.verifyIfElementChecked()) return ;
+    
+    this.modalService.open(content,{size:'lg'});
+  }
+
+  edit(content:any){
+    if(!this.verifyIfElementChecked()) return ;
+    this.modalService.open(content,{size:'lg'});
+
+  }
+
+  verifyIfElementChecked(){
+    console.log(this.selected_data)
+    if (this.selected_data==null) {
+      this.toastrService.warning("Aucun élément selectionné");
+      return false;
+    }
+    return true;
+  }
   
     store(value:any) {
       this.loading=true;
@@ -177,6 +222,68 @@ export class PrestationComponent implements OnInit {
       })
       }
   
+  }
+
+    setStatus(value:any){
+  
+      this.toastrService.warning("Opération en cours")
+        this.loading=true
+          this.prestationService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
+            this.toastrService.success(res.message)
+            this.loading=false
+            this.all()
+        },
+        (err:any)=>{
+          this.loading=false
+          console.log(err)
+            AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        })
+    }
+  
+
+onSearchChange() {
+  const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
+  if (this.search_text.length > 2 && localResults.length === 0) {
+    this.searchRemotely();
+  }
+}
+
+  searchRemotely() {
+  if (!this.search_text || this.search_text.trim().length < 2) return;
+
+  this.loading = true;
+
+  this.prestationService.search({search:this.search_text}).subscribe({
+    next: (result:any) => {
+      this.remoteSearchData = result.data;
+      this.data = this.remoteSearchData;
+      this.pg.p=1
+      this.pg.total=this.data.length
+      this.loading = false;
+      console.log(this.remoteSearchData);
+    },
+    error: (err:any) => {
+      console.error(err);
+      this.loading = false;
+    }
+  });
+}
+
+resetSearch() {
+  this.search_text = '';
+  this.isPaginate=true;
+  this.pg.p = 1; // reset pagination si utilisée
+  this.all(); // méthode pour recharger les données initiales
+}
+
+
+    getPage(event:any){
+    if (this.isPaginate) {
+      this.pg.p=event
+      this.all();
+    } else {
+          this.pg.p=event
+    }
   }
   
   hasPermission(permission:any){

@@ -32,6 +32,7 @@ export class SettingsComponent implements OnInit {
   fileUploaded:File | undefined
   token:any
   active:any=1
+  buttonsPermission :any|undefined;
 
   constructor(
     private localService:LocalStorageService, 
@@ -51,6 +52,12 @@ export class SettingsComponent implements OnInit {
     this.role= this.localService.get(GlobalName.role)
     this.user= this.localService.get(GlobalName.user)
     this.selected_data=this.user.agent;
+     this.buttonsPermission = {
+      show:true,
+      add:true,
+      edit:true,
+      delete:true
+    };
   
   }
 
@@ -71,6 +78,8 @@ upload(event:any){
   this.fileUploaded=event.target.files[0]
   
 }
+
+
 
 changePassword(value:any,form:NgForm){
   this.loading=true;

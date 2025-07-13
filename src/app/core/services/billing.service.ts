@@ -38,4 +38,9 @@ export class BillingService {
     return this.http.get<any>(`${this.url}/set-status/${id}/${status}`,
     ConfigService.httpHeader(localStorage.getItem(GlobalName.token),true));
   }
+  search(resource:any){
+    return this.http.post<any>(`${this.url}-search`,resource,
+     ConfigService.addAction('status'));
+  }
+  
 }

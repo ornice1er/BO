@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
@@ -11,6 +11,8 @@ import { EntityTypeService } from '../../../../core/services/entity_type.service
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { ToastrService } from 'ngx-toastr';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
   selector: 'ngx-entity',
@@ -22,6 +24,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 })
 export class EntityComponent implements OnInit {
   error:any=""
+  buttonsPermission :any|undefined;
+is_active=false
+search_text:any=""
+remoteSearchData: any[] = []
   selected_data:any
   user:any
   data:any[]=[]
@@ -29,8 +35,19 @@ export class EntityComponent implements OnInit {
   data2:any[]=[]
   loading=false
   loading2=false
+    pg={
+    pageSize:10,
+    p:1,
+    total:0
+  }
+  isPaginate=true
+  selectedId: number | null = null;
+
       constructor(private entityService:EntityService,private entitytypeService:EntityTypeService,
          private locService:LocalStorageService,
+             private toastrService:ToastrService,
+             private modalService: NgbModal
+         
         ){
   
       } 
@@ -40,6 +57,12 @@ export class EntityComponent implements OnInit {
       this.getTypeEntity()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
+       this.buttonsPermission = {
+      show:true,
+      add:true,
+      edit:true,
+      delete:true
+    };
     }
   
     all() {
@@ -68,11 +91,33 @@ export class EntityComponent implements OnInit {
     }
   
     
-    open(content:any) {
-      //this.dialogService.open(
-  //      dialog);
-        
+  
+    
+add(content:any){
+    this.modalService.open(content,{size:'lg'});
+  }
+
+
+  show(content:any){
+    if(!this.verifyIfElementChecked()) return ;
+    
+    this.modalService.open(content,{size:'lg'});
+  }
+
+  edit(content:any){
+    if(!this.verifyIfElementChecked()) return ;
+    this.modalService.open(content,{size:'lg'});
+
+  }
+
+  verifyIfElementChecked(){
+    console.log(this.selected_data)
+    if (this.selected_data==null) {
+      this.toastrService.warning("Aucun élément selectionné");
+      return false;
     }
+    return true;
+  }
   
     store(value:any,ref:any) {
       this.loading=true;
@@ -105,6 +150,67 @@ export class EntityComponent implements OnInit {
       })
 
 }
+
+    setStatus(value:any){
+  
+      this.toastrService.warning("Opération en cours")
+        this.loading=true
+          this.entityService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
+            this.toastrService.success(res.message)
+            this.loading=false
+            this.all()
+        },
+        (err:any)=>{
+          this.loading=false
+          console.log(err)
+            AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        })
+    }
+
+ onSearchChange() {
+  const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
+  if (this.search_text.length > 2 && localResults.length === 0) {
+    this.searchRemotely();
+  }
+}
+
+  searchRemotely() {
+  if (!this.search_text || this.search_text.trim().length < 2) return;
+
+  this.loading = true;
+
+  this.entityService.search({search:this.search_text}).subscribe({
+    next: (result:any) => {
+      this.remoteSearchData = result.data;
+      this.data = this.remoteSearchData;
+      this.pg.p=1
+      this.pg.total=this.data.length
+      this.loading = false;
+      console.log(this.remoteSearchData);
+    },
+    error: (err:any) => {
+      console.error(err);
+      this.loading = false;
+    }
+  });
+}
+
+resetSearch() {
+  this.search_text = '';
+  this.isPaginate=true;
+  this.pg.p = 1; // reset pagination si utilisée
+  this.all(); // méthode pour recharger les données initiales
+}
+
+
+  getPage(event:any){
+    if (this.isPaginate) {
+      this.pg.p=event
+      this.all();
+    } else {
+          this.pg.p=event
+    }
+  }
 
 
   hasPermission(permission:any){

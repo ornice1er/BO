@@ -1,48 +1,3 @@
-/** Menu mobile **/
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.app-title {
-  font-weight: bold;
-  color: black;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-.user-menu {
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-/* Bouton menu uniquement visible sur mobile */
-.mobile-menu-btn {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .mobile-menu-btn {
-    display: block;
-  }
-
-  .username {
-    display: none;
-  }
-}
-
-
-/** Menu all **/
 .container {
     height: 100vh;
   }
@@ -63,37 +18,61 @@
 
 
   mat-nav-list a span{
-    color: white !important;
+    color: black ;
   }
+  mat-nav-list a:hover{
+    background-color: #1F0761;
+    border-radius: unset !important;
+
+  }
+   mat-nav-list a:hover span{
+    color: white !important;
+    border-radius: unset !important;
+
+  }
+
 
 
   mat-expansion-panel {
     background-color:unset !important;
-    color: white !important;
+    color: black !important;
   }
   mat-expansion-panel mat-nav-list {
     background-color:white !important;
   }
-  mat-panel-title{
+  mat-expansion-panel mat-expansion-panel-header mat-panel-title{
+    color: black !important;
+  }
+
+  mat-expansion-panel mat-expansion-panel-header mat-panel-title :hover{
+    background-color: #1F0761;
+    color: black !important;
+  }
+  
+  
+  mat-expansion-panel mat-nav-list a span{
+    color: black ;
+  }
+
+    mat-expansion-panel mat-nav-list a:hover span{
     color: white !important;
   }
   
-  mat-expansion-panel mat-nav-list a span{
-    color: black !important;
-  }
   
   mat-sidenav-content{
     min-height: 100vh;
   }
 
   .menu-bg{
-    background-color: rgb(31, 6, 100);
+    background-color: #fff;
   }
 
-  mat-list-item a .active, .active{
-    background-color: black !important;
-    color: white !important;
+  .active{
+    background-color: #FCD343;
     border-radius: unset !important;
+  }
+  .active span {
+    color: white !important;
   }
   
 
@@ -134,5 +113,5 @@
 
 
 .bg-mat-primary{
-    background-color: #2f3364 !important
+    background-color: #1F0761 !important
   }

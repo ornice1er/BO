@@ -18,15 +18,7 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         icon: 'person-outline',
         link: '/admin/users',
       },
-      // {
-      //   title: 'Prestations',
-      //   group: true,
-      // },
-     
-    {
-      title: 'Paramètres',
-      group: true,
-    },
+  
     {
       title: 'Départements',
       icon: 'options-outline',

@@ -1,52 +1,79 @@
-   <div class="dashboard-container">
-      <!-- Sidebar -->
-      <nav class="sidebar" style="min-height: 100px; overflow-y: scroll;">
-        <div class="sidebar-header">
-          <a href="#" class="sidebar-brand">
-            <i class="fas fa-chart-line me-2"></i>
-            BackOffice eService
-          </a>
-        </div>
-        <ul class="sidebar-nav nav flex-column">
-          <li class="nav-item" *ngFor="let m of menu; let i=index">
-            <a class="nav-link active" *ngIf="!m?.isTitle" routerLink="{{m.link}}" routerLinkActive="active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <span>{{m.title}}</span>
-            </a>
-          </li>
-       
-        </ul>
-      </nav>
-            <!-- Main Content -->
-      <main class="main-content">
-        <!-- Header -->
-        <header class="content-header">
-          <div class="d-flex justify-content-between align-items-center">
-            <h1 class="page-title">Backoffice </h1>
-            <div class="dropdown">
-              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-user-circle me-2"></i>
-                Admin
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" (click)="openAddModal(profil)">Profil</a></li>
-                <!-- <li><a class="dropdown-item" href="#">Paramètres</a></li> -->
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
-              </ul>
-            </div>
-          </div>
-        </header>
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-icon-button (click)="toggleMenu()" class="mobile-menu-btn">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-        <!-- Content Body -->
-        <div class="content-body">
-                <router-outlet></router-outlet>
-        </div>
-      </main>
+  <span class="app-title">BackOffice Eservices</span>
+
+  <span class="spacer"></span>
+
+  <!-- Desktop user menu -->
+  <div class="user-menu" *ngIf="!isMobile">
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <img [src]="'assets/user.jpg'" class="avatar" alt="avatar utilisateur">
+      <span class="username">{{ user?.name ?? 'Non défini' }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  </div>
+
+  <!-- Mobile user icon (menu triggered differently) -->
+  <div class="user-menu" *ngIf="isMobile">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<mat-menu #userMenu="matMenu">
+  <div class="menu-header">
+    <img [src]="'assets/user.jpg'" class="avatar" alt="avatar">
+    <div>
+      <strong>{{ user?.name }}</strong>
+      <p>{{ user?.email }}</p>
     </div>
+  </div>
+  <button mat-menu-item (click)="openAddModal(profil)">
+    <mat-icon>edit</mat-icon>
+    <span>Modifier le profil</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Déconnexion</span>
+  </button>
+</mat-menu>
+  
+  <mat-sidenav-container class="">
+    <mat-sidenav #sidenav mode="side" class="menu-bg rounded-0" [(opened)]="menuOpen">
+      <mat-nav-list>
+        <ng-container *ngFor="let m of menu; let i=index">
+        <a *ngIf="!m?.isTitle" mat-list-item routerLink="{{m.link}}" routerLinkActive="active"><span>{{m.title}}</span></a>
+
+          <mat-expansion-panel *ngIf="m?.hasChildren" class=" shadow-none" >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{m.title}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a *ngFor="let sm of m.children; let j=index " mat-list-item routerLink="{{sm.link}}" routerLinkActive="active"><span>{{sm.title}} </span></a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+        </ng-container>
+        
+      
+
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="p-3">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 
 
-    <ng-template #profil let-modal let-c="close" let-d="dismiss">
+  
+  
+  <ng-template #profil let-modal let-c="close" let-d="dismiss">
         <form #frmusager="ngForm" (ngSubmit)="saveUsager(frmusager.value)" class="form-horizontal"
             novalidate="">
             <div class="modal-header bg-mat-primary">
