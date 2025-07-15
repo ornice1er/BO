@@ -160,7 +160,7 @@ toggleMenu() {
       })
     
        
-        let prestations = this.user.userprestation;
+        let prestations = this.user?.userprestation;
     
           prestations.forEach((element:any) => {
             let newCount;
