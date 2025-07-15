@@ -46,6 +46,8 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
+         selectedFilter = '';
+
       constructor(
         private offcerService:OfficerService,
         private unityAdminService:UnityAdminService,
@@ -77,7 +79,7 @@ remoteSearchData: any[] = []
     all() {
       this.loading2=true;
       this.offcerService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
 
       },
@@ -89,7 +91,7 @@ remoteSearchData: any[] = []
 
     geteUnityAdmin(){
       this.unityAdminService.getAll().subscribe((res:any)=>{
-        this.data2=res
+        this.data2=res.data
       },
       (error:any)=>{
         
@@ -98,7 +100,7 @@ remoteSearchData: any[] = []
 
     getFonctionAgent(){
       this.fonctionAgentService.getAll().subscribe((res:any)=>{
-        this.data3=res
+        this.data3=res.data
       },
       (error:any)=>{
         

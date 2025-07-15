@@ -28,7 +28,9 @@ export class SettingsComponent implements OnInit {
   error=""
   user:any
   loading=false;
-  selected_data:any
+  selected_data:any={
+    numero_matricule:""
+  }
   fileUploaded:File | undefined
   token:any
   active:any=1
@@ -51,7 +53,7 @@ export class SettingsComponent implements OnInit {
    }
     this.role= this.localService.get(GlobalName.role)
     this.user= this.localService.get(GlobalName.user)
-    this.selected_data=this.user.agent;
+    this.selected_data=this.user?.agent;
      this.buttonsPermission = {
       show:true,
       add:true,

@@ -65,7 +65,7 @@ export class StatiistiqueComponent implements OnInit {
   ngOnInit(): void {
     this.user=this.locService.get(GlobalName.userName);
     this.dashService.getAll().subscribe((res:any)=>{
-      this.data=res.data
+      this.data=res.data.data
        this.buttonsPermission = {
       show:true,
       add:true,

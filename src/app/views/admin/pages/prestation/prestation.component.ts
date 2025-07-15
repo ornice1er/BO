@@ -51,7 +51,9 @@ remoteSearchData: any[] = []
   public exampleData:any[]=[];
   public options: any;
   public value: any[]=[];
-  
+  selectedFilter = '';
+
+
       constructor(
         private unityAdminService:UnityAdminService,
         private prestationService:PrestationService,
@@ -90,7 +92,7 @@ remoteSearchData: any[] = []
     all() {
       this.loading2=true;
       this.prestationService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
 
       },
@@ -102,7 +104,7 @@ remoteSearchData: any[] = []
 
     getUnityAdmins(){
       this.unityAdminService.getPrincipal().subscribe((res:any)=>{
-        this.data2=res
+        this.data2=res.data
 
        
       },
@@ -112,7 +114,7 @@ remoteSearchData: any[] = []
     }
     getUnityAdminsAll(){
       this.unityAdminService.getAll().subscribe((res:any)=>{
-        this.data4=res
+        this.data4=res.data
         this.data4.forEach((el:any)=>{
           this.exampleData.push(  {
             id: el.id,
@@ -131,7 +133,7 @@ remoteSearchData: any[] = []
     }
     getEntities(){
       this.entityService.getAll().subscribe((res:any)=>{
-        this.data3=res
+        this.data3=res.data
       },
       (error:any)=>{
         

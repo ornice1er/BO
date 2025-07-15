@@ -42,6 +42,8 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
+         selectedFilter = '';
+
 
       constructor(private entityService:EntityService,private entitytypeService:EntityTypeService,
          private locService:LocalStorageService,
@@ -68,7 +70,7 @@ remoteSearchData: any[] = []
     all() {
       this.loading2=true;
       this.entityService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
       },
       (error:any)=>{
@@ -79,7 +81,7 @@ remoteSearchData: any[] = []
 
     getTypeEntity(){
       this.entitytypeService.getAll().subscribe((res:any)=>{
-        this.data2=res
+        this.data2=res.data
       },
       (error:any)=>{
         

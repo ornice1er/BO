@@ -50,8 +50,9 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
-
+  selectedFilter = '';
 permissions=[]
+
       constructor(
         private unityAdminService:UnityAdminService,
         private unityAdminTypeService:UnityAdminTypeService,
@@ -85,7 +86,7 @@ permissions=[]
     all() {
       this.loading2=true;
       this.unityAdminService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
       },
       (error:any)=>{
@@ -96,7 +97,7 @@ permissions=[]
     getDepartments() {
       this.loading2=true;
       this.departmentService.getAll().subscribe((res:any)=>{
-        this.departments=res
+        this.departments=res.data
         this.loading2=false;
       },
       (error:any)=>{
@@ -107,7 +108,7 @@ permissions=[]
 
     getTypeUnityAdmin(){
       this.unityAdminTypeService.getAll().subscribe((res:any)=>{
-        this.data2=res
+        this.data2=res.data
       },
       (error:any)=>{
         
@@ -116,7 +117,7 @@ permissions=[]
 
     getEntities(){
       this.entityService.getAll().subscribe((res:any)=>{
-        this.data3=res
+        this.data3=res.data
       },
       (error:any)=>{
         

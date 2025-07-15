@@ -40,6 +40,8 @@ remoteSearchData: any[] = []
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
   is_active=false;
+  selectedFilter = '';
+
 
     constructor(
           private toastrService:ToastrService,
@@ -67,7 +69,7 @@ remoteSearchData: any[] = []
   all() {
     this.loading2=true;
     this.entityTypeService.getAll().subscribe((res:any)=>{
-      this.data=res
+      this.data=res.data
       this.loading2=false;
     },
     (error:any)=>{

@@ -39,6 +39,7 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
+     selectedFilter = '';
   
       constructor(
         private departmentService:DepartmentService,
@@ -66,7 +67,7 @@ remoteSearchData: any[] = []
     all() {
       this.loading2=true;
       this.departmentService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
       },
       (error:any)=>{

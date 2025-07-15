@@ -43,6 +43,7 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
+selectedFilter = '';
 
       constructor(
         private typeBilling:TypeBillingService,

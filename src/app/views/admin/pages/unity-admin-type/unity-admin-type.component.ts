@@ -41,6 +41,8 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
+  selectedFilter = '';
+
       constructor(
         private unityAdminTypeService:UnityAdminTypeService,
             private toastrService:ToastrService,
@@ -68,7 +70,7 @@ remoteSearchData: any[] = []
     all() {
       this.loading2=true;
       this.unityAdminTypeService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
       },
       (error:any)=>{

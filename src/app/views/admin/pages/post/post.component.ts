@@ -40,6 +40,8 @@ is_active=false
 search_text:any=""
 remoteSearchData: any[] = []
 selectedId: number | null = null;
+  selectedFilter = '';
+
 
       constructor(private fonctionAgentService:FonctionAgentService, private locService:LocalStorageService,   config: NgbModalConfig, private modalService: NgbModal,
         private toastrService:ToastrService
@@ -63,7 +65,7 @@ selectedId: number | null = null;
     all() {
       this.loading2=true;
       this.fonctionAgentService.getAll().subscribe((res:any)=>{
-        this.data=res
+        this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
       },

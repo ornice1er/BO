@@ -3,7 +3,7 @@
     <div class="card-body">
         <nav ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="active">
             <ng-container [ngbNavItem]="1">
-                <a ngbNavLink>Information personnelle</a>
+                <a ngbNavLink class="text-dark">Information personnelle</a>
                 <ng-template ngbNavContent>
                     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
                         <p class="lead mb-3" *ngIf="error != ''">
@@ -32,7 +32,7 @@
                 </ng-template>
             </ng-container>
             <ng-container [ngbNavItem]="2">
-                <a ngbNavLink>Changement de mot de passe</a>
+                <a ngbNavLink class="text-dark">Changement de mot de passe</a>
                 <ng-template ngbNavContent>
                     <form #passwordForm="ngForm" (ngSubmit)="changePassword(passwordForm.value,passwordForm)">
                         <div class="form-group">
