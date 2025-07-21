@@ -21,11 +21,32 @@ import { PrestationDetails } from '../../prestation-details';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { PdfViewerComponentComponent } from '../../../../../components/pdf-viewer-component/pdf-viewer-component.component';
+import { ActionButtonsComponentComponent, ActionButtonsConfig } from '../../../../../components/action-buttons-component/action-buttons-component.component';
+import { ResponseData, ResponseDisplayComponentComponent } from '../../../../../components/response-display-component/response-display-component.component';
+import { DecisionData, DecisionFormComponent } from '../../../../../components/decision-form/decision-form.component';
 @Component({
   selector: 'ngx-eservice-traitement-edit',
   templateUrl: './eservice-traitement-edit.component.html',
       standalone:true,
-      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,AngularEditorModule ],
+      imports:[
+        CommonModule,
+        FormsModule,
+        NgbModule,
+        LoadingComponent,
+        SampleSearchPipe,
+        NgSelectModule,
+        NgxPaginationModule,
+        MatTooltipModule,
+        AngularEditorModule,
+        CommonModule, 
+        FormsModule,
+        PdfViewerComponentComponent,
+        ActionButtonsComponentComponent,
+        DecisionFormComponent,
+        LoadingComponent,
+        ResponseDisplayComponentComponent
+      ],
   
   styleUrls: ['./eservice-traitement-edit.component.css']
 })
@@ -78,7 +99,8 @@ export class EserviceTraitementEditComponent implements OnInit {
   showPreview2=false;
   showResponseFilePreview=false;
 
-    pdfSrc :SafeResourceUrl | undefined
+   // pdfSrc :SafeResourceUrl | undefined
+  pdfSrc: SafeResourceUrl | undefined | string | null = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
   editorConfig: AngularEditorConfig = {
     editable: true,
       spellcheck: true,
@@ -133,6 +155,37 @@ export class EserviceTraitementEditComponent implements OnInit {
   transUpActionState=false
   needActionState=false
   rejetActionState=false
+
+    selectedData: any = {
+    filename: 'sample.pdf',
+    status: 1,
+    isAutorized: false
+  };
+
+  responseData: ResponseData | null = {
+    hasPermission: 1,
+    reason: 'Demande conforme aux exigences',
+    observation: 'Tous les documents requis sont présents et valides.',
+    note: 'note-service.pdf'
+  };
+
+  currentDecision: DecisionData = {
+    hasPermission: -1
+  };
+
+  actionButtonsConfig: ActionButtonsConfig = {
+    isTreated: true,
+    isSigner: false,
+    loading: false,
+    hasValidationPermission: true,
+    hasAuthorizationPermission: true,
+    needValidation: true,
+    isAuthorized: false,
+    status: 1
+  };
+
+  showDecisionForm: boolean = true;
+
 
   constructor(
     private activatedRoute:ActivatedRoute,

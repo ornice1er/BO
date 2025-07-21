@@ -1,6 +1,6 @@
    <div class="dashboard-container">
       <!-- Sidebar -->
-      <nav class="sidebar" style="min-height: 100px; overflow-y: scroll;">
+      <nav class="sidebar slim-scroll-container" style="min-height: 100px; overflow-y: scroll; overflow-x: hidden;">
         <div class="sidebar-header">
           <a href="#" class="sidebar-brand">
             <i class="fas fa-chart-line me-2"></i>
@@ -9,11 +9,41 @@
         </div>
         <ul class="sidebar-nav nav flex-column">
           <li class="nav-item" *ngFor="let m of menu; let i=index">
-            <a class="nav-link active" *ngIf="!m?.isTitle" routerLink="{{m.link}}" routerLinkActive="active">
+            <a class="nav-link active" *ngIf="!m?.isTitle && !m?.hasChildren" routerLink="{{m.link}}" routerLinkActive="active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
-              <span>{{m.title}}</span>
+              <span>{{m.title }}</span>
             </a>
+
+                      <!-- Menu avec sous-menu -->
+        <div *ngIf="!m?.isTitle  && m?.hasChildren" class="nav-item-dropdown">
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             [class.active]="isMenuActive(m)"
+             (click)="toggleSubmenu(i, $event)"
+             [attr.aria-expanded]="m.expanded">
+            <i class="nav-icon {{m.icon || 'fas fa-tachometer-alt'}}"></i>
+            <span>{{m.title }}</span>
+            <i class="fas fa-chevron-down ms-auto submenu-arrow" 
+               [class.rotated]="m.expanded"></i>
+          </a>
+          
+          <!-- Sous-menu -->
+          <ul class="submenu nav flex-column" 
+              [class.show]="m.expanded"
+              [@slideDown]="m.expanded ? 'expanded' : 'collapsed'">
+            <li class="nav-item" *ngFor="let subItem of m.children">
+              <a class="nav-link submenu-link" 
+                 routerLink="{{subItem.link}}" 
+                 routerLinkActive="active">
+                <i class="nav-icon {{subItem.icon || 'fas fa-circle'}}"></i>
+                <span>{{subItem.title }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
           </li>
+
+        
        
         </ul>
       </nav>

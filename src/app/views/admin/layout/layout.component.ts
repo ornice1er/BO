@@ -17,6 +17,7 @@ import { AppSweetAlert } from '../../../core/utils/app-sweet-alert';
 import { FormsModule } from '@angular/forms';
 import { MENU_ADMIN_NATIONAL, MENU_ADMIN_SECTORIEL, MENU_DECISIONNEL } from '../admin-menu';
 import { DashService } from '../../../core/services/dash.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-layout',
@@ -35,7 +36,24 @@ import { DashService } from '../../../core/services/dash.service';
     FormsModule
   ],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrl: './layout.component.css',
+    animations: [
+    trigger('slideDown', [
+      state('collapsed', style({
+        height: '0px',
+        opacity: 0,
+        overflow: 'hidden'
+      })),
+      state('expanded', style({
+        height: '*',
+        opacity: 1,
+        overflow: 'visible'
+      })),
+      transition('collapsed <=> expanded', [
+        animate('300ms ease-in-out')
+      ])
+    ])
+  ]
 })
 export class LayoutComponent {
   menuOpen = true;
@@ -59,6 +77,7 @@ export class LayoutComponent {
   ngOnInit(): void {
   
     this.user=this.lsService.get(GlobalName.userName)
+    console.log( this.user)
     this.role=this.user.roles[0].name
     this.getUserMenu()
 
@@ -160,7 +179,7 @@ toggleMenu() {
       })
     
        
-        let prestations = this.user?.userprestation;
+        let prestations = this.user?.user_prestations;
     
           prestations.forEach((element:any) => {
             let newCount;
@@ -474,7 +493,7 @@ toggleMenu() {
   }
   verifyMenu(name:any){
     
-    var check=this.user.userprestation.find((e:any) => e.prestation.slug==name)
+    var check=this.user.user_prestations.find((e:any) => e.prestation.slug==name)
     
     return check==undefined || check==null ?false:true
   }
@@ -484,6 +503,32 @@ toggleMenu() {
     if(check){
       check.collapse = !check.collapse
     }
+  }
+
+
+   toggleSubmenu(index: number, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Fermer tous les autres sous-menus
+    this.menu.forEach((item, i) => {
+      if (i !== index && item.children) {
+        item.expanded = false;
+      }
+    });
+    
+    // Basculer le sous-menu actuel
+    if (this.menu[index].children) {
+      this.menu[index].expanded = !this.menu[index].expanded;
+    }
+  }
+
+  isMenuActive(menuItem: any): boolean {
+    if (!menuItem.children) return false;
+    
+    return menuItem.children.some((subItem:any) => 
+      this.router.url.includes(subItem.link || '')
+    );
   }
 
 }

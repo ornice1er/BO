@@ -96,6 +96,8 @@ export class EspaceSignatureComponent implements OnInit {
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
   is_active=false;
+    showLastLevel=false;
+      selectedFilter = '';
 
       constructor(
         private activatedRoute:ActivatedRoute ,
@@ -810,6 +812,13 @@ resetSearch() {
     } else {
           this.pg.p=event
     }
+  }
+
+   store(value:any){
+
+  }
+  update(value:any){
+
   }
 
 }

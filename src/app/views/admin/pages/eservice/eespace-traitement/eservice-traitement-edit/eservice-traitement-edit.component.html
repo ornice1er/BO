@@ -345,47 +345,6 @@
         </div>
     </div>
 
-<!--div class="card" *ngIf="showPreview2">
-<div class="card-header d-flex justify-content-around">
-    <button class="btn btn-dark mb-3 " (click)="back2()">Fermer le prévisualiseur</button>
-    <button type="button" (click)="transUp()" [disabled]="loading" *ngIf="isTreated && !isSigner()" class="btn  btn-primary ">
-        Soumettre mon avis
-         <app-loading [isVisible]="loading"></app-loading> 
-        </button>
-        <button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && !isSigner()" class="btn  btn-primary ">
-           Donner mon avis
-             <app-loading [isVisible]="loading"></app-loading> 
-            </button>
-            <button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && isSigner()" class="btn  btn-primary ">
-                Décider
-                  <app-loading [isVisible]="loading"></app-loading> 
-                 </button>
-                 <button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5" (click)="validate()">
-                   Envoyer une notification provisoire de demande acceptée
-               </button>
-               <button type="button" (click)="deliveryrDoc()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.content_type==1 && selected_data.status==5">Envoyer le document sur le portail <app-loading [isVisible]="loading"></app-loading> </button>
-
-    <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized && isTreated" (click)="open(dialogAffectation)">Signer l'attestation</button>
-    <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized && isTreated" (click)="delivered()">Délivrer l'attestation</button>
-
-</div>
-   
-</!--div-->
-<!--div class="d-flex"  *ngIf="btnShow=='0'">
-    <div class=" me-3">
-        <button class="btn  btn-info " nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension')" nbTooltipPlacement="top" (click)="open(dialogSuspension)">
-            <i icon="info"></i>Suspension
-        </button>
-    </div>
-    <div class="">
-
-        <button  *ngIf="selected_data!=null" class="btn  btn-danger " nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
-            <i icon="close-outline"></i> Rejet
-        </button>
-        </div>
-</div-->
-
-
 
 
 <ng-template #dialogAffectation  let-c="close" let-d="dismiss" >

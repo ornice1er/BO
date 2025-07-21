@@ -190,52 +190,17 @@
   <ng-template #addContent let-c="close" let-d="dismiss">
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
 
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Enregistrement d'un nouvel agent</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="typeLabel">Matricule</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #numero_matricule="ngModel" name="numero_matricule" ngModel>
-        <span *ngIf="numero_matricule.invalid && (numero_matricule.dirty || numero_matricule.touched)" class="text-danger">
-            <small *ngIf="numero_matricule.errors?.['required']" id="typeLabelHelp" class="form-text">Le matricule est requis.</small>
-        </span>
-
-    </div>
-    <div class="form-group">
-        <label for="typeLabel">Nom</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #lastname="ngModel" name="lastname" ngModel>
-        <span *ngIf="lastname.invalid && (lastname.dirty || 	lastname.touched)" class="text-danger">
-            <small *ngIf="	lastname.errors?.['required']" id="typeLabelHelp" class="form-text">Le nom est requis.</small>
-        </span>
-
-    </div>
-    <div class="form-group">
-        <label for="typeLabel">Prénoms</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #firstname="ngModel" name="firstname" ngModel>
-        <span *ngIf="	firstname.invalid && (	firstname.dirty || 	firstname.touched)" class="text-danger">
-            <small *ngIf="	firstname.errors?.['required']" id="typeLabelHelp" class="form-text">Le prénom est requis.</small>
-        </span>
-
-    </div>
-   <div class="form-group">
-    <label for="typeLabel">Unite administrative</label>
-    <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" ngModel>
-        <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-    </select>
-   </div>
-   <div class="form-group">
-    <label for="typeLabel">Fonction</label>
-    <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="fonction_agent_id" ngModel>
-        <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
-    </select>
-   </div>
- </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-    </div>
-</form>
+        <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Enregistrement d'un nouvel agent</h4>
+        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+    
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+    </form>
 
   </ng-template>
 
@@ -249,42 +214,7 @@
       <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label for="typeLabel">Matricule</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #numero_matricule="ngModel" name="numero_matricule" [(ngModel)]="selected_data.numero_matricule">
-        <span *ngIf="numero_matricule.invalid && (numero_matricule.dirty || numero_matricule.touched)" class="text-danger">
-            <small *ngIf="numero_matricule.errors?.['required']" id="typeLabelHelp" class="form-text">Le matricule est requis.</small>
-        </span>
-
-    </div>
-    <div class="form-group">
-        <label for="typeLabel">Nom</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #lastname="ngModel" name="lastname" [(ngModel)]="selected_data.lastname">
-        <span *ngIf="lastname.invalid && (lastname.dirty || 	lastname.touched)" class="text-danger">
-            <small *ngIf="	lastname.errors?.['required']" id="typeLabelHelp" class="form-text">Le nom est requis.</small>
-        </span>
-
-    </div>
-    <div class="form-group">
-        <label for="typeLabel">Prénoms</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #firstname="ngModel" name="firstname" [(ngModel)]="selected_data.firstname">
-        <span *ngIf="	firstname.invalid && (	firstname.dirty || 	firstname.touched)" class="text-danger">
-            <small *ngIf="	firstname.errors?.['required']" id="typeLabelHelp" class="form-text">Le prénom est requis.</small>
-        </span>
-
-    </div>
-   <div class="form-group">
-    <label for="typeLabel">Unite administrative</label>
-    <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id">
-        <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-    </select>
-   </div>
-   <div class="form-group">
-    <label for="typeLabel">Fonction</label>
-    <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="fonction_agent_id" [(ngModel)]="selected_data.fonction_agent_id">
-        <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
-    </select>
-   </div>
+    
  </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>

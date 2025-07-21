@@ -1,0 +1,37 @@
+ <div class="pdf-viewer-container">
+      <div class="d-flex justify-content-end mb-3">
+        <button 
+          class="btn-custom-secondary" 
+          (click)="onBack()">
+          Retourner aux détails de la demande
+        </button>
+      </div>
+      
+      <div class="card-custom" *ngIf="pdfSrc">
+        <div class="card-header-custom d-flex justify-content-center align-items-center">
+          <h5 class="mb-0 text-primary-custom">Prévisualisation du document</h5>
+        </div>
+        <div class="card-body p-0">
+          <object 
+            [data]="pdfSrc" 
+            type="application/pdf" 
+            width="100%" 
+            height="800px"
+            class="pdf-object">
+            <p class="p-4 text-center">
+              Impossible d'afficher le PDF. 
+              <a [href]="pdfSrc" target="_blank" class="text-primary-custom">
+                Cliquez ici pour l'ouvrir dans un nouvel onglet
+              </a>
+            </p>
+          </object>
+        </div>
+      </div>
+      
+      <div class="text-center p-4" *ngIf="!pdfSrc">
+        <div class="spinner-border text-primary-custom" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2 text-secondary">Chargement du document...</p>
+      </div>
+    </div>

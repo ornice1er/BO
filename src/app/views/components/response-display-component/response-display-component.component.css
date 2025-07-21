@@ -1,0 +1,77 @@
+ .decision-section {
+      background-color: var(--light-color);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .decision-label {
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+    
+    .decision-value {
+      margin-left: 1.5rem;
+      font-size: 1.2rem;
+    }
+    
+    .content-section {
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 1rem;
+    }
+    
+    .content-section:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .content-text {
+      margin-left: 1.5rem;
+      padding: 0.75rem;
+      background-color: #f8f9fa;
+      border-radius: 0.375rem;
+      border-left: 3px solid #dee2e6;
+    }
+    
+    .actions-section {
+      padding-top: 1rem;
+      border-top: 1px solid #dee2e6;
+    }
+    
+    .status-favorable {
+      color: var(--success-color);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .status-favorable::before {
+      content: "✓";
+      margin-right: 0.5rem;
+      font-weight: bold;
+    }
+    
+    .status-defavorable {
+      color: var(--danger-color);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .status-defavorable::before {
+      content: "✗";
+      margin-right: 0.5rem;
+      font-weight: bold;
+    }
+    
+    .status-attente {
+      color: var(--warning-color);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .status-attente::before {
+      content: "⏳";
+      margin-right: 0.5rem;
+    }

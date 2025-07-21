@@ -1,161 +1,181 @@
- <div class="row">
-    <div class="col-lg-12 mb-3">
-        <div class="card p-1">
-        <div class="d-flex justify-content-between">
-            <button *ngIf="buttonsPermission.add" class="btn btn-sm btn-info"  (click)="add(addContent)">Ajouter</button>
-            
-            <div class="align-self-center d-flex">
-                <div class="input-group">
-                    <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-                    <option value="">Filtrer Par</option>
-                    </select>
-                    <input type="text" class="form-control" name="search_text" [(ngModel)]="search_text"   (ngModelChange)="onSearchChange()" placeholder="Rechercher..">
-                    <button (click)="resetSearch()" class="btn btn-outline-primary" type="button"><i class="fa fa-rotate-left" aria-hidden="true"></i> </button>
-                </div>
+    
+<h2 class="text-center mb-4 page-subtitle">Liste des demandes à signer</h2>
+
+<div class="row" >
+<div class="col-lg-12">
+    <div class="card custom-card">
+    <!-- Card Header with Actions -->
+    <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>
+            Ajouter
+        </button>
+        
+        <div class="search-controls d-flex align-items-center">
+            <div class="input-group">
+            <select class="form-select filter-select" [(ngModel)]="selectedFilter">
+                <option value="">Filtrer Par</option>
+                <option value="role">Rôle</option>
+                <option value="status">Statut</option>
+            </select>
+            <input 
+                type="text" 
+                class="form-control search-input" 
+                name="search_text" 
+                [(ngModel)]="search_text"   
+                (ngModelChange)="onSearchChange()" 
+                placeholder="Rechercher...">
+            <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+                <i class="fa fa-rotate-left"></i>
+            </button>
             </div>
         </div>
-            <div class="card-body">
+        </div>
+    </div>
 
-                        <p>{{isPaginate ? pg.total : data.length}} élément(s)</p>
-                        <div class="table-responsive">
-                        <table class="table" >
-                            <thead class="">
-                                <tr>
-                                    <th style="width: 10px;">#</th>
-                                    <th>Identité</th>
-                                    <th>email</th>
-                                    <th>Rôle</th>
-                                    <th>status</th>
-                        
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let d of data | paginate: {
+    <div class="card-body">
+        <div class="results-info mb-3">
+        <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            {{data.length}} élément(s)
+        </p>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                <th scope="col">Code demande</th>
+                <th scope="col">Date Enreg.</th>
+                <th scope="col">Nom structure</th>
+                <th scope="col">Rccm</th>
+                <th scope="col">Ifu</th>
+                <th scope="col" >Livrable disponible (Oui/Non)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
                                     currentPage: pg.p,
-                                    totalItems: pg.total } | sampleSearch:search_text">
-                                <td class="position-relative" style="z-index: 10;"> 
-                                    <div class="form-check mb-2">
-                                        <input
-                                        (click)="checked(d)"
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="selectedDoc"
-                                        [value]="d.id"
-                                        [(ngModel)]="selectedId"
-                                        id="radio-{{ d.id }}"
-                                        />
-                                    </div>
+                                    totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+                <td class="position-relative checkbox-cell">
+                <div class="form-check">
+                    <input
+                    (click)="checked(d)"
+                    class="form-check-input custom-radio"
+                    type="radio"
+                    name="selectedDoc"
+                    [value]="d.id"
+                    [(ngModel)]="selectedId"
+                    id="radio-{{ d.id }}"
+                    />
+                </div>
 
-                                    <!-- <div *ngIf="selectedId === d.id" class="overlay-panel-right">
-                                        <button
-                                        class="btn btn-info btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                        (click)="add(addContent)"
-                                        title="Ajouter"
-                                        matTooltip="Ajouter"
-                                        [disabled]="loading"
-                                        >
-                                        <i class="bi bi-plus-lg"></i>
-                                        </button>
+                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                    <button
+                        class="btn btn-action btn-add"
+                        (click)="add(addContent)"
+                        title="Ajouter"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
 
-                                        <button
-                                        *ngIf="buttonsPermission.show"
-                                        (click)="show(showContent)"
-                                        type="button"
-                                        class="btn btn-outline-primary btn-sm btn-label waves-effect waves-light mb-1 me-3"
-                                        title="Consulter"
-                                        matTooltip="Consulter"
-                                        [disabled]="loading"
-                                        >
-                                        <i class="bi bi-eye"></i>
-                                        </button>
+                    <button
+                        (click)="show()"
+                        type="button"
+                        class="btn btn-action btn-view"
+                        title="Consulter"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
 
-                                        <button
-                                        *ngIf="buttonsPermission.edit"
-                                        (click)="edit(editContent)"
-                                        type="button"
-                                        class="btn btn-outline-warning btn-sm btn-label waves-effect waves-light mb-1 me-3"
-                                        title="Éditer"
-                                        matTooltip="Éditer"
-                                        [disabled]="loading"
-                                        >
-                                        <i class="bi bi-pencil"></i>
-                                        </button>
+                    <button
+                        (click)="edit(editContent)"
+                        type="button"
+                        class="btn btn-action btn-edit"
+                        title="Éditer"
+                    >
+                        <i class="bi bi-pencil"></i>
+                    </button>
 
-                                        <button
-                                        *ngIf="buttonsPermission.delete"
-                                        (click)="delete()"
-                                        type="button"
-                                        class="btn btn-outline-danger btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                        title="Supprimer"
-                                        matTooltip="Supprimer"
-                                        [disabled]="loading"
+                    <button
+                        (click)="delete()"
+                        type="button"
+                        class="btn btn-action btn-delete"
+                        title="Supprimer"
+                    >
+                        <i class="bi bi-trash"></i>
+                    </button>
 
-                                        >
-                                        <i class="bi bi-trash"></i>
-                                        </button>
+                    <button
+                        *ngIf="!d.is_active"
+                        (click)="setStatus(1)"
+                        type="button"
+                        class="btn btn-action btn-activate"
+                        title="Activer"
+                    >
+                        <i class="bi bi-toggle-on"></i>
+                    </button>
 
-                                        <button
-                                        *ngIf="is_active != null && !is_active"
-                                        (click)="setStatus(1)"
-                                        type="button"
-                                        class="btn btn-outline-success btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                        title="Activer"
-                                        matTooltip="Activer"
-                                        [disabled]="loading"
-                                        >
-                                        <i class="bi bi-toggle-on"></i>
-                                        </button>
+                    <button
+                        *ngIf="d.is_active"
+                        (click)="setStatus(0)"
+                        type="button"
+                        class="btn btn-action btn-deactivate"
+                        title="Désactiver"
+                    >
+                        <i class="bi bi-toggle-off"></i>
+                    </button>
 
-                                        <button
-                                        *ngIf="is_active != null && is_active"
-                                        (click)="setStatus(0)"
-                                        type="button"
-                                        class="btn btn-outline-danger btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                        title="Désactiver"
-                                        matTooltip="Désactiver"
-                                        [disabled]="loading"
+                    <button
+                        type="button"
+                        class="btn btn-action btn-close-panel"
+                        (click)="selectedId = null"
+                        title="Fermer"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    </div>
+                </div>
+                </td>
+                 <td>{{d?.code}}</td>
+                <td>{{d?.created_at | date: "dd-MM-yyyy HH:mm:ss"}}</td>
+                <td>{{d?.name_structure}}</td>
+                <td>{{d?.rccm}}</td>
+                <td>{{d?.ifu}}</td>
+                <td *ngIf="d?.filename!=null">
+                <span class="badge bg-warning text-white">oui</span>
+                </td>
+                <td *ngIf="d?.filename==null">
+                <span class="badge bg-secondary text-white">non</span>
+                </td>
+                <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
+            </tr>
 
-                                        >
-                                        <i class="bi bi-toggle-off"></i>
-                                        </button>
+            <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
+                <td colspan="5" class="text-center py-4">
+                <div class="no-results">
+                    <i class="bi bi-search mb-3"></i>
+                    <p class="text-muted mb-3">Recherche avancée en cours...</p>
+                    <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>
+                    Réinitialiser la recherche
+                    </button>
+                </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
 
-                                    
-
-                                        <button
-                                        type="button"
-                                        class="btn-close float-end"
-                                        (click)="selectedId = null"
-                                        title="Fermer"
-                                        matTooltip="Fermer"
-                                        ></button>
-                                    </div> -->
-                                    </td>
-
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-
-                                    <td>
-                                        <span *ngIf="d.is_active" class="p-1 rounded text-white  bg-success">Actif</span>
-                                        <span *ngIf="!d.is_active" class="p-1 rounded text-white bg-danger">Bloqué</span>
-
-                                        </td>
-                                </tr>
-
-                            <tr *ngIf="search_text !== '' && (data | sampleSearch:search_text).length === 0">
-                                <td colspan="5" class="text-center">
-                                    <p class="text-muted">Recherche avancée en cours...</p>
-                                    <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
-                                        Réinitialiser la recherche
-                                        </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                        <pagination-controls 
+        <!-- Pagination placeholder -->
+        <div class="pagination-container mt-4">
+        
+        <pagination-controls 
                         id="ngxP1"
                         (pageChange)="getPage($event)"
                         [maxSize]="9"
@@ -168,131 +188,14 @@
                         [screenReaderPageLabel]="'page'"
                         [screenReaderCurrentLabel]="'Vous êtes sur la page'">
                     </pagination-controls>
-
-            </div><!-- end card -->
         </div>
     </div>
+    </div>
+</div>
 </div>
 
 
-<div  *ngIf="!showPreview2">
-    <!--div>
-      Gestion des demandes {{prestationName}}
 
-    </div-->
-  
-    <div >
-        
-        <div class="row">
-            <div class="col-lg-12 mb-3">
-                <div class="buttons-row">
-
-                    <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('consultation')" (click)="show()" >
-                        <i icon="eye-outline"></i> consultation
-                    </button>
-
-                    <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification')"  (click)="openWindow(contentTemplate)" >
-                        <i icon="edit-2-outline"></i> Projet de réponse
-                    </button-->
-
-                    <button class="btn btn-sm btn-danger mx-1" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')"  (click)="open3()">
-                        <i icon="trash-2-outline"></i> Suppression
-                    </button>
-
-                    <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation')" (click)="open(dialogAffectation)">
-                        <i icon="corner-right-down-outline"></i> Affectation
-                    </button-->
-
-                    <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('transmission')" (click)="transUp()">
-                        <i icon="corner-right-up-outline"></i> Transmission
-                    </button-->
-
-                    <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
-                        <i icon="info"></i>Suspension
-                    </button-->
-                    <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
-                        <i icon="info"></i>Suspension pour accord à l'amiable
-                    </button-->
-                    <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Autoriser la délivrance du livrable" nbTooltipPlacement="top" *ngIf="hasPermission('autorisation') && selected_data?.content!=null" (click)="authorized()" >
-                        <i icon="checkmark-outline"></i> Autorisation
-                    </button-->
-                    <button class="btn btn-sm btn-info mx-1" nbTooltip="Télécharger le livrable" nbTooltipPlacement="top" *ngIf="hasPermission('impression')" >
-                        <i icon="download-outline"></i> Téléchargement
-                    </button>
-                    <!--button class="btn btn-sm btn-info mx-1"  *ngIf="responseUA.hasPermission" nbTooltip="Générer le contenu du livrable" nbTooltipPlacement="top"  (click)="open2(dialogAttestation)">
-                        <i icon="pantone-outline"></i>Contenu livrable
-                    </button-->
-                    <!--button  *ngIf="selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-light"   (click)="showFile2()">Visualiser le document à délivrer</!--button-->
-                    <!--button  *ngIf="(prestation=='visa-reglement-interieur-entreprise' || prestation=='visa-contrat-apprentisage') && selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser l'élément" nbTooltipPlacement="top"  (click)="authorized()">
-                        <i icon="checkmark-outline"></i>
-                    </button-->
-                    <!--button  *ngIf="selected_data!=null && responseUA.hasPermission==false" class="btn btn-sm btn-danger mx-1" nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
-                        <i icon="close-outline"></i> Rejet
-                    </button-->
-                    <!--button class="btn btn-sm btn-dark mx-1"  *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltip="Simuler les indemnités" nbTooltipPlacement="top"  (click)="open(dialogSimulation)">
-                        <i icon="hash-outline"></i>
-                    </button-->
-                </div>
-            </div>
-        </div>
-        <div class="card card-body">
- 
-    </div>
-    <div class="row">
-        <div class="col-lg-12 mb-3">
-            <div class="buttons-row">
-
-                <button class="btn btn-sm btn-primary mx-1" nbTooltip="Consulter l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('consultation')" (click)="show()" >
-                    <i icon="eye-outline"></i> consultation
-                </button>
-
-                <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Editer un projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('modification')"  (click)="openWindow(contentTemplate)" >
-                    <i icon="edit-2-outline"></i> Projet de réponse
-                </button-->
-
-                <button class="btn btn-sm btn-danger mx-1" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" *ngIf="hasPermission('suppression')"  (click)="open3()">
-                    <i icon="trash-2-outline"></i> Suppression
-                </button>
-
-                <!--button class="btn btn-sm btn-warning mx-1" nbTooltip="Affecter cette demande" nbTooltipPlacement="top" *ngIf="hasPermission('affectation')" (click)="open(dialogAffectation)">
-                    <i icon="corner-right-down-outline"></i> Affectation
-                </button-->
-
-                <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Transmettre mon projet de réponse" nbTooltipPlacement="top" *ngIf="hasPermission('transmission')" (click)="transUp()">
-                    <i icon="corner-right-up-outline"></i> Transmission
-                </button-->
-
-                <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && !responseUA.hasPermission " nbTooltipPlacement="top" (click)="open(dialogSuspension)">
-                    <i icon="info"></i>Suspension
-                </button-->
-                <!--button class="btn btn-sm btn-info mx-1" nbTooltip="Demander correction de la demande" *ngIf="hasPermission('suspension') && prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltipPlacement="top" (click)="sendReachedAgreement()">
-                    <i icon="info"></i>Suspension pour accord à l'amiable
-                </button-->
-                <!--button class="btn btn-sm btn-success mx-1" nbTooltip="Autoriser la délivrance du livrable" nbTooltipPlacement="top" *ngIf="hasPermission('autorisation') && selected_data?.content!=null" (click)="authorized()" >
-                    <i icon="checkmark-outline"></i> Autorisation
-                </button-->
-                <button class="btn btn-sm btn-info mx-1" nbTooltip="Télécharger le livrable" nbTooltipPlacement="top" *ngIf="hasPermission('impression')" >
-                    <i icon="download-outline"></i> Téléchargement
-                </button>
-                <!--button class="btn btn-sm btn-info mx-1"  *ngIf="responseUA.hasPermission" nbTooltip="Générer le contenu du livrable" nbTooltipPlacement="top"  (click)="open2(dialogAttestation)">
-                    <i icon="pantone-outline"></i>Contenu livrable
-                </button-->
-                <!--button  *ngIf="selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-light"   (click)="showFile2()">Visualiser le document à délivrer</!--button-->
-                <!--button  *ngIf="(prestation=='visa-reglement-interieur-entreprise' || prestation=='visa-contrat-apprentisage') && selected_data!=null && selected_data.filename!=null" class="btn btn-sm btn-success mx-1" nbTooltip="Valider/Autoriser l'élément" nbTooltipPlacement="top"  (click)="authorized()">
-                    <i icon="checkmark-outline"></i>
-                </button-->
-                <!--button  *ngIf="selected_data!=null && responseUA.hasPermission==false" class="btn btn-sm btn-danger mx-1" nbTooltip="Rejeter la demande" nbTooltipPlacement="top"  (click)="open(dialogRejet)">
-                    <i icon="close-outline"></i> Rejet
-                </button-->
-                <!--button class="btn btn-sm btn-dark mx-1"  *ngIf="prestation=='autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel'" nbTooltip="Simuler les indemnités" nbTooltipPlacement="top"  (click)="open(dialogSimulation)">
-                    <i icon="hash-outline"></i>
-                </button-->
-            </div>
-        </div>
-    </div>
-    </div>
-
-  </div>
   
 <div *ngIf="showPreview2"  class="container">
     <div>
@@ -639,6 +542,57 @@
 
 </ng-template>
 <ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
+
+
+  <ng-template #addContent let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+        <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Enregistrement d'un nouvel agent</h4>
+        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+    
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+    </form>
+
+  </ng-template>
+
+  
+ 
+  <ng-template #editContent let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification d'un agent</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+    
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+  <ng-template #showContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>

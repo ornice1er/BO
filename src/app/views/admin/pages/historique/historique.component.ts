@@ -54,7 +54,9 @@ remoteSearchData: any[] = []
   showPreview=false;
   pdfSrc :SafeResourceUrl | undefined | undefined
   selectedId: number | null = null;
-  
+  showLastLevel=false;
+  selectedFilter = '';
+
   constructor(
     private activatedRoute:ActivatedRoute,
      private requeteService:RequeteService, 

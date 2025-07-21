@@ -95,7 +95,8 @@ export class EspaceValidationComponent implements OnInit {
   remoteSearchData: any[] = []
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
-
+   showLastLevel=false;
+  selectedFilter = '';
       constructor(
         private activatedRoute:ActivatedRoute ,
          private locService:LocalStorageService,
@@ -732,6 +733,13 @@ export class EspaceValidationComponent implements OnInit {
     }
     this.locService.set("selected_data",this.selected_data)
     this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selected_data.code+'/'+this.prestation])
+  }
+
+  store(value:any){
+
+  }
+  update(value:any){
+
   }
 
   

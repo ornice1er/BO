@@ -93,7 +93,8 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
   is_active=false;
-
+  showLastLevel=false;
+  selectedFilter = '';
       constructor(
         private activatedRoute:ActivatedRoute ,
         private prestationService:PrestationService ,
@@ -825,6 +826,13 @@ resetSearch() {
     } else {
           this.pg.p=event
     }
+  }
+
+   store(value:any){
+
+  }
+  update(value:any){
+
   }
 
 }

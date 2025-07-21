@@ -94,7 +94,8 @@ export class EspaceFinishComponent implements OnInit {
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
     is_active=false;
-
+      showLastLevel=false;
+  selectedFilter = '';
       constructor(
         private activatedRoute:ActivatedRoute ,
          private locService:LocalStorageService,
@@ -789,5 +790,12 @@ resetSearch() {
     } else {
           this.pg.p=event
     }
+  }
+
+   store(value:any){
+
+  }
+  update(value:any){
+
   }
 }

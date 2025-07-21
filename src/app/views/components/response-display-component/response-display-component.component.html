@@ -1,0 +1,65 @@
+ <div class="card-custom mb-4" *ngIf="responseData">
+      <div class="card-header-info">
+        <h4 class="mb-0">
+          <i class="fas fa-user-check me-2"></i>
+          Avis du collaborateur
+        </h4>
+      </div>
+      <div class="card-body p-4">
+        <!-- Décision -->
+        <div class="decision-section mb-4">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-gavel me-2 text-primary-custom"></i>
+            <strong class="decision-label">Décision</strong>
+          </div>
+          <div class="decision-value">
+            <span [class]="getDecisionClass()">
+              {{ getDecisionText() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Motif (pour décision défavorable) -->
+        <div class="content-section mb-4" *ngIf="responseData.hasPermission === 0 && responseData.motif">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-exclamation-triangle me-2 text-danger-custom"></i>
+            <strong>Motif</strong>
+          </div>
+          <div class="content-text">
+            <p class="mb-0">{{ responseData.motif }}</p>
+          </div>
+        </div>
+
+        <!-- Note (pour décision favorable) -->
+        <div class="content-section mb-4" *ngIf="responseData.hasPermission === 1 && responseData.reason">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-sticky-note me-2 text-success-custom"></i>
+            <strong>Note</strong>
+          </div>
+          <div class="content-text">
+            <p class="mb-0">{{ responseData.reason }}</p>
+          </div>
+        </div>
+
+        <!-- Observation (pour décision favorable) -->
+        <div class="content-section mb-4" *ngIf="responseData.hasPermission === 1 && responseData.observation">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-clipboard-list me-2 text-primary-custom"></i>
+            <strong>Observation complète sur l'analyse de la demande</strong>
+          </div>
+          <div class="content-text">
+            <p class="mb-0">{{ responseData.observation }}</p>
+          </div>
+        </div>
+
+        <!-- Note de service -->
+        <div class="actions-section" *ngIf="responseData.note">
+          <button 
+            class="btn-custom-primary"
+            (click)="onShowNote()">
+            <i class="fas fa-file-pdf me-2"></i>
+            Voir la note de service
+          </button>
+        </div>
+      </div>
+    </div>

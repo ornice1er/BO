@@ -52,8 +52,10 @@ selectedId: number | null = null;
 
   showPreview2=false;
   showPreview=false;
-    pdfSrc :SafeResourceUrl | undefined | undefined
-  
+  pdfSrc :SafeResourceUrl | undefined | undefined
+  showLastLevel=false;
+  selectedFilter = '';
+
   constructor(private activatedRoute:ActivatedRoute, private requeteService:RequeteService, private route:ActivatedRoute,
     private _sanitizationService: DomSanitizer,      
     private locService:LocalStorageService,
@@ -105,6 +107,8 @@ add(content:any){
     this.modalService.open(content,{size:'lg'});
   }
 
+
+
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
     this.modalService.open(content,{size:'lg'});
@@ -141,6 +145,10 @@ add(content:any){
           })
       }
       
+
+      delete(){
+
+      }
 
    onSearchChange() {
   const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
@@ -242,5 +250,12 @@ resetSearch() {
 
   showFile2(el:any){
     this.selected_data=el.code+"/"+el.filename
+  }
+
+    store(value:any){
+
+  }
+  update(value:any){
+
   }
 }

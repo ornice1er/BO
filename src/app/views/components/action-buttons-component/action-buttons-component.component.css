@@ -1,0 +1,19 @@
+ .card-header-custom {
+      background: linear-gradient(135deg, var(--light-color) 0%, #e9ecef 100%);
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    @media (max-width: 768px) {
+      .card-header-custom {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .card-header-custom button {
+        margin-bottom: 0.5rem;
+      }
+      
+      .card-header-custom button:last-child {
+        margin-bottom: 0;
+      }
+    }

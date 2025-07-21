@@ -96,7 +96,8 @@ export class EspaceSignedComponent implements OnInit {
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
   is_active=false;
-
+  showLastLevel=false;
+    selectedFilter = '';
       constructor(
         private activatedRoute:ActivatedRoute ,
          private locService:LocalStorageService,
@@ -293,6 +294,14 @@ export class EspaceSignedComponent implements OnInit {
     })
   }
 
+
+   store(value:any){
+
+  }
+  update(value:any){
+
+  }
+  
   deliveryrDoc(value:any, ref:any){
  /*   this.dialogService.open(DialogNamePromptComponent)
     .onClose.subscribe(result =>{

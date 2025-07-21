@@ -115,3 +115,85 @@
 .bg-mat-primary{
     background-color: #1F0761 !important
   }
+
+
+  .nav-item-dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.submenu-arrow {
+  font-size: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.submenu-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  background: rgba(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.submenu.show {
+  display: block;
+}
+
+.submenu-link {
+  padding: 0.5rem 1.5rem 0.5rem 3rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.submenu-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.submenu-link.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-right: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.submenu .nav-icon {
+  font-size: 0.75rem;
+  width: 16px;
+  margin-right: 0.5rem;
+}
+
+
+
+    .slim-scroll-container {
+      overflow-y: auto;
+      border: 1px solid #ccc;
+    }
+
+    .slim-scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .slim-scroll-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .slim-scroll-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    .slim-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }

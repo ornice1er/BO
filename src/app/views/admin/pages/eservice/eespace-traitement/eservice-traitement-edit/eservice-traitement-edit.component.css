@@ -1,0 +1,17 @@
+ .container-fluid {
+      max-width: 1400px;
+    }
+    
+    h1 {
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+    
+    .card-custom {
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      transition: box-shadow 0.15s ease-in-out;
+    }
+    
+    .card-custom:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }

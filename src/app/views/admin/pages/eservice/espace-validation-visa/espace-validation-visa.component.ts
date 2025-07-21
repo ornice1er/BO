@@ -95,6 +95,8 @@ export class EspaceValidationVisaComponent implements OnInit {
   isPaginate=true
   selectedId: number | null = null;
   buttonsPermission :any|undefined;
+  showLastLevel=false;
+  selectedFilter = '';
 
       constructor(
         private activatedRoute:ActivatedRoute ,
@@ -729,6 +731,13 @@ export class EspaceValidationVisaComponent implements OnInit {
     }
     this.locService.set("selected_data",this.selected_data)
     this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selected_data.code+'/'+this.prestation])
+  }
+
+    store(value:any){
+
+  }
+  update(value:any){
+
   }
 
       setStatus(value:any){

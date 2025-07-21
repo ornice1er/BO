@@ -1,0 +1,29 @@
+  .alert {
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .alert-success {
+      background-color: rgba(31, 136, 63, 0.1);
+      color: var(--success-color);
+    }
+    
+    .alert-danger {
+      background-color: rgba(235, 0, 0, 0.1);
+      color: var(--danger-color);
+    }
+    
+    .alert-warning {
+      background-color: rgba(252, 211, 67, 0.1);
+      color: #856404;
+    }
+    
+    .form-label {
+      color: var(--dark-color);
+      margin-bottom: 0.5rem;
+    }
+    
+    .text-danger {
+      color: var(--danger-color) !important;
+    }
