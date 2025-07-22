@@ -1,37 +1,98 @@
-<div class=" " style="min-height: 100vh; width: 100%;">
 
-    <div class="container d-flex flex-column justify-content-start h-100">
 
-        <div class="col-12 col-md-5 mx-auto align-self-center ">
-            <div class="card rounded-0">
-                <div class="card-body">
-                    <p class="text-center h4 mb-5">CONNEXION</p>
-                    <form class="" #loginForm="ngForm" (ngSubmit)="login(loginForm.value)">
-                        <div class="form-row">
-                <div class="col-12 mb-3">
-                <div class="form-group">
-                <input name="email" id="exampleEmail" placeholder="Email ici..." type="email" class="form-control"  required ngModel>
-                </div>
-                </div>
-                <div class="col-12  mb-3">
-                <div class="form-group">
-                <input name="password" id="examplePassword" placeholder="Mot de passe ici..." type="password" class="form-control"  required ngModel>
-                </div>
-                </div>
-                </div>
-                <div class="divider row"></div>
-                <div class="text-center mb-5">
-                    <button class="btn btn-sm btn-primary text-white" [disabled]="loginForm.invalid || loading">Se connecter <app-loading [isVisible]="loading"></app-loading></button>
-                </div>
+ <div class="login-card p-4 p-md-5 fade-in-up">
+          <div class="text-center mb-4">
+            <h3 class="h4 fw-bold text-dark mb-3">CONNEXION</h3>
+            <div class="mx-auto" style="width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); border-radius: 2px;"></div>
+          </div>
 
-                <p class="text-center mb-3">
-                    <span>Avez vous oublié votre mot de passe ? </span>
-                     <span class="ag-text-danger"><a routerLink="/forget-password" class="text-decoration-none pointer ag-text-red "><b>Cliquez ici</b></a></span>
-                </p>
-                </form>
-                </div>
+          <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+            <!-- Champ Email -->
+            <div class="mb-4">
+              <label for="email" class="form-label fw-medium text-dark">Adresse email</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </span>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="exemple@gouv.bj"
+                  formControlName="email"
+                  [class.is-invalid]="email?.invalid && email?.touched"
+                >
+              </div>
+              <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback d-block">
+                <small *ngIf="email?.errors?.['required']">L'adresse email est requise</small>
+                <small *ngIf="email?.errors?.['email']">Veuillez saisir une adresse email valide</small>
+              </div>
             </div>
-        </div>
 
-    </div>
-</div>
+            <!-- Champ Mot de passe -->
+            <div class="mb-4">
+              <label for="password" class="form-label fw-medium text-dark">Mot de passe</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <circle cx="12" cy="16" r="1"></circle>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  class="form-control"
+                  placeholder="••••••••"
+                  formControlName="password"
+                  [class.is-invalid]="password?.invalid && password?.touched"
+                >
+                <button
+                  type="button"
+                  class="password-toggle position-absolute end-0 top-50 translate-middle-y me-3"
+                  style="z-index: 10; border: none; background: none;"
+                  (click)="togglePasswordVisibility()"
+                >
+                  <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                </button>
+              </div>
+              <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback d-block">
+                <small *ngIf="password?.errors?.['required']">Le mot de passe est requis</small>
+                <small *ngIf="password?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</small>
+              </div>
+            </div>
+
+            <!-- Bouton de connexion -->
+            <div class="d-grid mb-4">
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg"
+                [disabled]="loginForm.invalid || isLoading"
+              >
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+              </button>
+            </div>
+
+            <!-- Lien mot de passe oublié -->
+            <div class="text-center">
+              <p class="mb-0 text-muted">
+                Avez-vous oublié votre mot de passe ?
+                <a routerLink="/forget-password" class="forgot-password ms-1">
+                  Cliquez ici
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>

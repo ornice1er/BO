@@ -1,4 +1,38 @@
-<div class="main p-3">
-    <h1 class="text-center text-white mb-3">Espace de traitement des e-services</h1>
-    <router-outlet></router-outlet>
+<div class="login-container d-flex align-items-center justify-content-center">
+  <!-- Overlay -->
+  <div class="login-overlay"></div>
+  
+  <!-- Éléments décoratifs -->
+  <div class="decorative-elements">
+    <div class="decorative-circle" style="top: 10%; left: 10%; width: 120px; height: 120px;"></div>
+    <div class="decorative-circle" style="bottom: 15%; right: 15%; width: 80px; height: 80px;"></div>
+    <div class="decorative-square" style="top: 50%; left: 5%; width: 60px; height: 60px;"></div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <!-- Titre principal -->
+        <div class="text-center mb-5 fade-in-up">
+          <div class="logo-container pulse-animation">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h1 class="main-title">Espace de traitement des</h1>
+          <h2 class="subtitle">e-services</h2>
+        </div>
+
+        <!-- Carte de connexion -->
+       
+            <router-outlet></router-outlet>
+
+        <!-- Footer -->
+        <div class="footer-text">
+          © 2025 Gouvernement du Bénin - Tous droits réservés
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

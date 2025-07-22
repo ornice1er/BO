@@ -6,36 +6,56 @@ import { AppRedirect } from '../../../core/utils/app-redirect';
 import { GlobalName } from '../../../core/utils/global-name';
 import { LocalStorageService } from '../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../components/loading/loading.component';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone:true,
-  imports:[ CommonModule,LoadingComponent,FormsModule,RouterModule],
+  imports:[ CommonModule,LoadingComponent,FormsModule,RouterModule,ReactiveFormsModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  loginForm: FormGroup;
+  showPassword = false;
+  isLoading = false;
   loading=false
  
   constructor(
     private authService:AuthService,
     private lsService:LocalStorageService,
     private router: Router,
-    private toastr: ToastrService
-    ) { }
+    private toastr: ToastrService,
+    private fb: FormBuilder
+    ) { 
+      this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      device: ['web', []]
+    });
+    }
 
   ngOnInit(): void {
   }
 
+    togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
-  login(value:any){
+
+    get email() {
+    return this.loginForm?.get('email');
+  }
+
+  get password() {
+    return this.loginForm?.get('password');
+  }
+
+  login(){
 
     this.loading=true
-    value['device']="web"
-    this.authService.login(value).subscribe((res:any)=>{
+    this.authService.login(this.loginForm?.value).subscribe((res:any)=>{
 
       this.lsService.set(GlobalName.tokenName,res.data?.access_token)
       this.lsService.set(GlobalName.refreshTokenName,res.data?.refresh_token)
