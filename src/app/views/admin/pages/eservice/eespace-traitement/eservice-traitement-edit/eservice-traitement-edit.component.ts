@@ -225,7 +225,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
-      this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
+      this.myPrestation=this.user.user_prestations.find((el:any)=>el.prestation.code ==this.prestation)?.prestation
       this.responseUaCode=this.activatedRoute.snapshot.paramMap.get('isTreated')
       console.log(this.myPrestation)
      });  
@@ -239,7 +239,7 @@ export class EserviceTraitementEditComponent implements OnInit {
     
   }
    get(){
-    this.requeteService.get(this.code,this.prestation,this.myPrestation.code).subscribe((res:any)=>{
+    this.requeteService.get(this.code,this.prestation,this.myPrestation?.code).subscribe((res:any)=>{
       this.selected_data=res.data
       this.docs[0].content=this.selected_data.content
       this.docs[1].content=this.selected_data.content2
@@ -248,7 +248,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       if(this.selected_data.reponses.length !=0){
         if(this.selected_data.reponses.length > 0) {
           if(this.responseUaCode==undefined){
-            var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+            var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user?.agent?.unite_admin?.id)
             if(check) {
 
              // this.showFile2()
@@ -266,7 +266,7 @@ export class EserviceTraitementEditComponent implements OnInit {
          
             this.responseUATreated= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.responseUaCode)
             this.responseUA.motif=this.responseUATreated.motif
-            var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+            var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user?.agent?.unite_admin?.id)
             
             if(check) {
 
@@ -313,7 +313,7 @@ export class EserviceTraitementEditComponent implements OnInit {
    storeResponse(value:any){
     this.loading=true;
 
-    this.responseUA.unite_admin_id=this.user.agent.unite_admin.id
+    this.responseUA.unite_admin_id=this.user?.agent?.unite_admin?.id
     this.responseUA.requete_id=this.selected_data.id
     var formData=new FormData();
     formData.append('responseUA',JSON.stringify(this.responseUA))
@@ -511,12 +511,12 @@ export class EserviceTraitementEditComponent implements OnInit {
 
         this.affService.store({
           requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
+          unite_admin_id:this.user?.agent?.unite_admin?.id,
           sens:-1
         }).subscribe(
             (res:any)=>{
               this.loading=false;
-              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation+'/'+this.myPrestation.code])
+              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation+'/'+this.myPrestation?.code])
               this.toastrService.info(`La demande ${this.selected_data.code} a été transmise avec succès`)
         },
         (err:any)=>{
@@ -594,7 +594,7 @@ export class EserviceTraitementEditComponent implements OnInit {
           formData.append('id',JSON.stringify(this.selected_data.id))
           this.responseService.storeContent(formData).subscribe(
               (res:any)=>{
-                  var index2= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+                  var index2= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user?.agent?.unite_admin?.id)
                   if(index2>=0){
                     this.selected_data.reponses[index2]=res
                   }
@@ -639,7 +639,7 @@ export class EserviceTraitementEditComponent implements OnInit {
           }).subscribe((res:any)=>{
     
             this.loading=false;
-            this.router.navigate(['admin/eservice/espace-signature/'+this.prestation+'/'+this.myPrestation.code])
+            this.router.navigate(['admin/eservice/espace-signature/'+this.prestation+'/'+this.myPrestation?.code])
 
             this.toastrService.success(`L'attestaion issue de la demande ${this.selected_data.code} a été envoyéee avec succès`)
 
@@ -751,7 +751,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       }
    
     isSigner(){
-      if(this.myPrestation.signer2.id == this.user.agent.unite_admin.id){
+      if(this.myPrestation?.signer2?.id == this.user?.agent?.unite_admin?.id){
         return true;
         
       }else{
@@ -770,9 +770,9 @@ export class EserviceTraitementEditComponent implements OnInit {
   this.loading=true
   this.toastrService.info("Opération en cours",'Info')
   if (this.responseUA.hasPermission==1 && !this.isTreated) {
-    if (this.myPrestation.content_type==0 && this.selected_data.content != this.desc) {
+    if (this.myPrestation?.content_type==0 && this.selected_data.content != this.desc) {
          this.genActionState=true
-    }else if(this.myPrestation.content_type==2 && this.selected_data.file== null && this.myPrestation.from_pns){
+    }else if(this.myPrestation?.content_type==2 && this.selected_data.file== null && this.myPrestation?.from_pns){
 
       this.genActionState=true
 
@@ -781,9 +781,9 @@ export class EserviceTraitementEditComponent implements OnInit {
     this.storeResponse(value)
 
   }else   if (this.responseUA.hasPermission==1 && this.isTreated) {
-    if (this.myPrestation.content_type==0 && this.selected_data.content != this.desc) {
+    if (this.myPrestation?.content_type==0 && this.selected_data.content != this.desc) {
       this.genActionState=true
-    }else if(this.myPrestation.content_type==2 && this.selected_data.file== null && this.myPrestation.from_pns){
+    }else if(this.myPrestation?.content_type==2 && this.selected_data.file== null && this.myPrestation?.from_pns){
       this.genActionState=true
 
     }

@@ -191,21 +191,13 @@ toggleMenu() {
               element?.prestation?.start_point2?.id == this.user.agent.unite_admin.id 
               || 
               element?.prestation?.start_points.findIndex((el:any)=>el.unite_admin_id == this.user.agent.unite_admin.id)!=-1) {
-              newCount=this.data.find((el:any) =>el.slug==element.prestation.slug)?.new
+             // newCount=this.data.find((el:any) =>el.code==element.prestation.code)?.new
 
-              if (element?.prestation?.from_pns){
-                children.push( {
+             children.push( {
                         title: 'Demandes en attente',
-                        link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+                        link: '/admin/eservice/espace-traitement/'+element?.prestation?.code,
                         
                       })
-              }else{
-                children.push( {
-                  title: 'Demandes en attente',
-                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
-                  
-                })
-              }
 
          
          
@@ -218,43 +210,43 @@ toggleMenu() {
                 children.push( {
              
                   title: 'Demandes à signer',
-                  link: '/admin/eservice/espace-signature/'+element?.prestation?.slug,
+                  link: '/admin/eservice/espace-signature/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes signées',
-                  link: '/admin/eservice/espace-signed/'+element?.prestation?.slug,
+                  link: '/admin/eservice/espace-signed/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes à rejeter',
-                  link: '/admin/eservice/espace-reject/'+element?.prestation?.slug,
+                  link: '/admin/eservice/espace-reject/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes rejetées',
-                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.slug,
+                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.code,
                 })
               }else{
                 children.push( {
              
                   title: 'Demandes à signer',
-                  link: '/admin/eservice/espace-signature/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/espace-signature/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes signées',
-                  link: '/admin/eservice/espace-signed/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/espace-signed/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes à rejeter',
-                  link: '/admin/eservice/espace-reject/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/espace-reject/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
                 children.push( {
                 
                   title: 'Demandes rejetées',
-                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/espace-rejected/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
               }
             
@@ -264,14 +256,14 @@ toggleMenu() {
             if (this.role=="Chef Division" || this.role=="Collaborateur"  ) {
               children.push( {
                 title: 'Demande à traiter',
-                link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+                link: '/admin/eservice/espace-traitement/'+element?.prestation?.code,
               })
             }
            }else{
             if (this.role=="Chef Division" || this.role=="Collaborateur"  ) {
               children.push( {
                 title: 'Demande à traiter',
-                link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                link: '/admin/eservice/espace-traitement/'+element?.prestation?.code+'/'+element?.prestation?.code,
               })
             }
            }
@@ -282,38 +274,38 @@ toggleMenu() {
 
                children.push( {
              title: 'Demande à valider',
-             link: '/admin/eservice/espace-validation/'+element?.prestation?.slug,
+             link: '/admin/eservice/espace-validation/'+element?.prestation?.code,
            })
            children.push( {
              title: 'Demandes mise en attente',
-             link: '/admin/eservice/correction/'+element?.prestation?.slug,
+             link: '/admin/eservice/correction/'+element?.prestation?.code,
            })
            children.push( {
              title: 'Demandes corrigées',
-             link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.slug,
+             link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.code,
            })
            children.push( {
              title: 'Demandes finalisées',
-             link: '/admin/eservice/finished/'+element?.prestation?.slug,
+             link: '/admin/eservice/finished/'+element?.prestation?.code,
            })
             }else{
               
 
               children.push( {
                 title: 'Demande à valider',
-                link: '/admin/eservice/espace-validation/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                link: '/admin/eservice/espace-validation/'+element?.prestation?.code+'/'+element?.prestation?.code,
               })
               children.push( {
                 title: 'Demandes mise en attente',
-                link: '/admin/eservice/correction/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                link: '/admin/eservice/correction/'+element?.prestation?.code+'/'+element?.prestation?.code,
               })
               children.push( {
                 title: 'Demandes corrigées',
-                link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                link: '/admin/eservice/espace-traitement-retour-correction/'+element?.prestation?.code+'/'+element?.prestation?.code,
               })
               children.push( {
                 title: 'Demandes finalisées',
-                link: '/admin/eservice/finished/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                link: '/admin/eservice/finished/'+element?.prestation?.code+'/'+element?.prestation?.code,
               })
             }
           
@@ -325,7 +317,7 @@ toggleMenu() {
             children.push(
             {
               title: 'Rendez-vous',
-              link: '/admin/agenda/'+element?.prestation?.slug,
+              link: '/admin/agenda/'+element?.prestation?.code,
             }
             )
           }
@@ -333,21 +325,21 @@ toggleMenu() {
             children.push(
             {
               title: 'Demande validée pour visa',
-              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.slug,
+              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.code,
             }
             )
           }
 
           children.push( {
             title: 'Parcours demandes',
-            link: '/admin/eservice/historique/'+element?.prestation?.slug,
+            link: '/admin/eservice/historique/'+element?.prestation?.code,
           })
          } else {
           if ( element?.prestation?.need_meeting) {
             children.push(
             {
               title: 'Rendez-vous',
-              link: '/admin/agenda/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              link: '/admin/agenda/'+element?.prestation?.code+'/'+element?.prestation?.code,
             }
             )
           }
@@ -355,14 +347,14 @@ toggleMenu() {
             children.push(
             {
               title: 'Demande validée pour visa',
-              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+              link: '/admin/eservice/espace-validation-visa/'+element?.prestation?.code+'/'+element?.prestation?.code,
             }
             )
           }
 
           children.push( {
             title: 'Parcours demandes',
-            link: '/admin/eservice/historique/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+            link: '/admin/eservice/historique/'+element?.prestation?.code+'/'+element?.prestation?.code,
           })
          }
 
@@ -376,20 +368,20 @@ toggleMenu() {
                 if (element?.prestation?.from_pns) {
                children.push( {
                   title: 'Demandes finalisées',
-                  link: '/admin/eservice/finished/'+element?.prestation?.slug,
+                  link: '/admin/eservice/finished/'+element?.prestation?.code,
                 })
                 children.push( {
                   title: 'Parcours demandes',
-                  link: '/admin/eservice/historique/'+element?.prestation?.slug,
+                  link: '/admin/eservice/historique/'+element?.prestation?.code,
                 })
                 }else{
                 children.push( {
                   title: 'Demandes finalisées',
-                  link: '/admin/eservice/finished/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/finished/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
                 children.push( {
                   title: 'Parcours demandes',
-                  link: '/admin/eservice/historique/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/historique/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
                 }
               
@@ -403,12 +395,12 @@ toggleMenu() {
               if (element?.prestation?.from_pns) {
                 children.push( {
                   title: 'Demandes à confirmer',
-                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug,
+                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.code,
                 })
               }else{
                 children.push( {
                   title: 'Demandes à confirmer',
-                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.slug+'/'+element?.prestation?.code,
+                  link: '/admin/eservice/espace-traitement/'+element?.prestation?.code+'/'+element?.prestation?.code,
                 })
               }
            
@@ -424,7 +416,7 @@ toggleMenu() {
             children.push( {
               
               title: element?.prestation?.signer2?.id == this.user.agent.unite_admin.id?'Demande à signer':!isCol?'Demande à traiter':'Demandes à valider',
-              link: '/admin/eservice/espace-validation/'+element?.prestation?.slug,
+              link: '/admin/eservice/espace-validation/'+element?.prestation?.code,
             })
             }*/
 
@@ -434,7 +426,7 @@ toggleMenu() {
            
            /* children.push( {
               title: 'Statistiques e-services',
-              link: '/admin/eservice/statistiques/'+element?.prestation?.slug,
+              link: '/admin/eservice/statistiques/'+element?.prestation?.code,
             })*/
           
           
@@ -446,7 +438,7 @@ toggleMenu() {
               isTitle:false,
             hasChildren:true, 
             collapse:false,
-            slug:element.prestation.slug,
+            code:element.prestation.code,
             children:children,
             newCount:newCount 
             })
@@ -460,7 +452,7 @@ toggleMenu() {
               title: 'Statistiques Globales',
               isTitle:false,
               hasChildren:false, collapse:false,
-              slug:'',
+              code:'',
               link: '/admin/eservice/statistiques',
             }
           );
@@ -493,13 +485,13 @@ toggleMenu() {
   }
   verifyMenu(name:any){
     
-    var check=this.user.user_prestations.find((e:any) => e.prestation.slug==name)
+    var check=this.user.user_prestations.find((e:any) => e.prestation.code==name)
     
     return check==undefined || check==null ?false:true
   }
 
-  toggle(slug:any){
-    var check=this.menu.find((e:any) => e.slug == slug)
+  toggle(code:any){
+    var check=this.menu.find((e:any) => e.code == code)
     if(check){
       check.collapse = !check.collapse
     }

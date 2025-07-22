@@ -1,371 +1,555 @@
-<div  #pdfView  class="container mb-5">
- <div class="d-flex justify-content-end">
-    <button class="btn btn-dark mb-3" (click)="back()">Retourner aux détails de la demande</button>
-
-</div>   
+<!-- Header avec bouton retour -->
+<div class="container mb-4">
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-dark" (click)="back()">
+      <i class="bi bi-arrow-left me-2"></i>
+      Retourner aux détails de la demande
+    </button>
+  </div>
 </div>
-<div >
-    <div  >
-        <div class="" *ngIf="selected_data!=undefined">
-            <div class="card">
-                <div class="card-header d-flex justify-content-around">
-                    <!--button class="btn btn-dark mb-3 " (click)="back2()">Fermer le prévisualiseur</!--button-->
-                    <button type="button" (click)="transUp()" [disabled]="loading" *ngIf="isTreated && !isSigner()" class="btn  btn-primary ">
-                        Soumettre mon avis
-                         <app-loading [isVisible]="loading"></app-loading> 
-                        </button>
-                        <!--button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && !isSigner()" class="btn  btn-primary ">
-                           Donner mon avis
-                             <app-loading [isVisible]="loading"></app-loading> 
-                            </!--button-->
-                            <!--button type="button" (click)="back2()" [disabled]="loading" *ngIf="!isTreated && isSigner()" class="btn  btn-primary ">
-                                Décider
-                                  <app-loading [isVisible]="loading"></app-loading> 
-                                 </!--button-->
-                                 <button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5 && hasPermission('validation')" (click)="validate()">
-                                   Envoyer une notification provisoire de demande acceptée
-                               </button>
-                                  <!--button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission && selected_data.status!=5" (click)="validate()">
-                         Valider provisoirement la demande
-                    </!--button-->
-                               <button type="button" (click)="delivered()" class="btn  btn-primary " [disabled]="!isTreated || loading" *ngIf="myPrestation.need_validation && selected_data.status==5">Clôturer la demande<app-loading [isVisible]="loading"></app-loading> </button>
-               
-                    <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized && isTreated && !myPrestation.need_validation" (click)="open(dialogAffectation)">Signer l'attestation / Délivrer mon visa</button>
-                    <button class="btn btn-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized && isTreated && !myPrestation.need_validation" (click)="delivered()"  [disabled]="loading">Délivrer l'attestation / le document visé</button>
-                
-                </div>
-                    <div class="card-body"  *ngIf="selected_data.filename!= null">
-                        <object [data]="pdfSrc" type="application/pdf" width="100%" height="1000px"></object>
-                    </div>
-                </div>
-        <div class="container card p-3"  *ngIf="responseUA != undefined"> 
-            <div class="col-12 mb-5" *ngIf="responseUaCode!=undefined">
-                <h4>Avis du collaborateur</h4>
-        
-                <dl >
-                    <dt class="dt"><strong>Décison</strong></dt><br>
-                    <dd class="dd">{{getDecision(responseUATreated.hasPermission)}}</dd>
-                </dl>
-                <dl *ngIf="responseUATreated.hasPermission==0">
-                    <dt class="dt"><strong>Motif</strong></dt><br>
-                    <dd class="dd"><p>{{responseUATreated.motif}}</p></dd>
-                </dl>
-                <dl *ngIf="responseUATreated.hasPermission!=0">
-                    <dt class="dt"><strong>Note</strong></dt><br>
-                    <dd class="dd"><p>{{responseUATreated.reason}}</p></dd>
-                </dl>
-                <dl *ngIf="responseUATreated.hasPermission!=0">
-                    <dt class="dt"><strong>observation complète sur l'analyse de la demande</strong></dt><br>
-                    <dd class="dd"><p>{{responseUATreated.observation}}</p></dd>
-                </dl>
-                <div class="d-flex justify-content-between">
-                    <button *ngIf="responseUATreated.note != null" class="btn btn-primary "   (click)="showResponseFile(responseUATreated.note)">Voir la note de service</button>
-                    <!--button *ngIf="responseUATreated.preview_file != null"  class="btn btn-primary "  (click)="showResponseFile(responseUATreated.preview_file)">Voir le prototype livrable</!--button-->
-                    <div class="card" *ngIf="showResponseFilePreview">
-                        <div class="card-header text-center">
-                            <button type="button" class="btn btn-secondary" (click)="back()">Fermer</button>
-                        </div>
-                        <div class="card-body">
-                            <object [data]="pdfSrc" type="application/pdf" width="100%" height="1000px"></object>
-                        
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="{{responseUaCode==undefined ? 'col-12':'col-12'}}">
-                <h4>{{isSigner() ? 'Décision finale':'Mon Avis'}}</h4>
-                <div class="form-group">
-                    <label for="">Décision</label>
-                <select  [(ngModel)]="responseUA.hasPermission" name="hasPermission"  class="form-control mb-3" (change)="btnChange($event)">
-                    <option   [value]="2" *ngIf="!isSigner()">Mise en attente</option>
-                    <option   [value]="1">Favorable</option>
-                    <option  [value]="0">Défavorable</option>
-                </select>
-            </div>
-        <ng-container *ngIf="responseUA.hasPermission==1"> 
-        <form #addResponse="ngForm" (ngSubmit)="stepAction(addResponse.value)">
-            <div class="form-group">
-                <label for="">Note</label>
-                <textarea name="" id="" cols="30" class="form-control" rows="2" [(ngModel)]="responseUA.reason" name="reason"></textarea>
-            </div>
-        
-            <div class="form-group">
-                <label for="">observation complète sur l'analyse de la demande</label>
-                <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="responseUA.observation" name="observation"
-                ></textarea>
-            </div>
-        
-            <div *ngIf="selected_data!=null && responseUA.hasPermission==true && prestation=='autorisation-de-stage'" >
-                <hr>
-                <h6>Complèter ces informations</h6>
-                <hr>
-                <div class="row">
-                <div class="col-12 col-md-6">
+
+<!-- Contenu principal -->
+<div class="container-fluid">
+  <div *ngIf="selectedData">
+    <!-- Card principale avec actions -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <div class="d-flex flex-wrap justify-content-center gap-3 align-items-center">
           
-                    <div class="form-group">
-                         <label for="">Direction</label>
-                         <input type="text" class="form-control" required [(ngModel)]="selected_data.ads.structure" name="structure">
-                    </div>
-                </div>
-                <!-- <div class="col-12 col-md-6">
-                    <div class="form-group">
-                         <label for="">Service</label>
-                         <input type="text" class="form-control" [(ngModel)]="selected_data.ads.service" name="service">
-                    </div>
-                </div> -->
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                         <label for="">Date début de stage</label>
-                         <input type="date" required class="form-control" [(ngModel)]="selected_data.ads.date_start" name="date_start">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                         <label for="">Date fin de stage</label>
-                         <input type="date" required class="form-control" [(ngModel)]="selected_data.ads.date_end" name="date_end">
-                    </div>
+          <!-- Bouton Soumettre mon avis -->
+          <button 
+            type="button" 
+            (click)="transUp()" 
+            [disabled]="loading" 
+            *ngIf="isTreated && !isSigner()" 
+            class="btn btn-primary">
+            <i class="bi bi-send me-2"></i>
+            Soumettre mon avis
+            <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </button>
+
+          <!-- Bouton Notification provisoire -->
+          <button 
+            type="button" 
+            class="btn btn-success" 
+            data-bs-toggle="tooltip" 
+            data-bs-placement="top" 
+            title="Valider réponse"
+            *ngIf="isTreated && myPrestation?.need_validation && responseUA?.hasPermission && selected_data?.status!=5 && hasPermission('validation')" 
+            (click)="validate()">
+            <i class="bi bi-check-circle me-2"></i>
+            Envoyer une notification provisoire de demande acceptée
+          </button>
+
+          <!-- Bouton Clôturer -->
+          <button 
+            type="button" 
+            (click)="delivered()" 
+            class="btn btn-primary" 
+            [disabled]="!isTreated || loading" 
+            *ngIf="myPrestation?.need_validation && selected_data?.status==5">
+            <i class="bi bi-check-square me-2"></i>
+            Clôturer la demande
+            <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </button>
+
+          <!-- Bouton Signer l'attestation -->
+          <button 
+            class="btn btn-success" 
+            *ngIf="hasPermission('autorisation') && !selected_data?.isAutorized && isTreated && !myPrestation?.need_validation" 
+            (click)="open(dialogAffectation)">
+            <i class="bi bi-pen me-2"></i>
+            Signer l'attestation / Délivrer mon visa
+          </button>
+
+          <!-- Bouton Délivrer l'attestation -->
+          <button 
+            class="btn btn-success" 
+            *ngIf="hasPermission('autorisation') && selected_data?.isAutorized && isTreated && !myPrestation?.need_validation" 
+            (click)="delivered()" 
+            [disabled]="loading">
+            <i class="bi bi-file-earmark-check me-2"></i>
+            Délivrer l'attestation / le document visé
+          </button>
+        </div>
+      </div>
+
+      <!-- Visualiseur PDF -->
+      <div class="card-body p-0" *ngIf="selected_data?.filename != null">
+        <div class="pdf-viewer">
+          <object [data]="pdfSrc" type="application/pdf" width="100%" height="800px">
+            <p class="text-center p-4">
+              <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 3rem;"></i><br>
+              Impossible d'afficher le PDF. 
+              <a [href]="pdfSrc" target="_blank" class="btn btn-primary btn-sm mt-2">
+                Ouvrir dans un nouvel onglet
+              </a>
+            </p>
+          </object>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Avis et Formulaires -->
+    <div class="container mt-4">
+      <div class="card shadow-sm" *ngIf="responseUA">
+        <div class="card-body">
+          
+          <!-- Avis du collaborateur -->
+          <div class="mb-5" *ngIf="responseUaCode">
+            <h4 class="text-primary mb-4">
+              <i class="bi bi-person-check me-2"></i>
+              Avis du collaborateur
+            </h4>
+            
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="info-card">
+                  <dt class="fw-bold text-secondary mb-2">Décision</dt>
+                  <dd class="fs-5" [class]="responseUATreated.hasPermission ? 'text-success' : 'text-danger'">
+                    <i [class]="responseUATreated.hasPermission ? 'bi bi-check-circle' : 'bi bi-x-circle'" class="me-2"></i>
+                    {{getDecision(responseUATreated.hasPermission)}}
+                  </dd>
                 </div>
               </div>
-          </div>
-          <div *ngIf="selected_data!=null && responseUA.hasPermission==true && prestation=='attestation-de-presence-au-poste'" >
-            <hr>
-            <h4 class="fw-bold">Complèter ces informations</h4>
-            <hr>
-            <div class="row">
-            <div class="col-12 col-md-6">
-        
-                <div class="form-group">
-                     <label for="">Statut</label>
-                     <select required name="status" class="form-control" [(ngModel)]="selected_data.adpap.status" >
-                        <option value="Fontionnaire">Fontionnaire</option>
-                        <option value="ACE">ACE</option>
-                     </select>
+              
+              <div class="col-12" *ngIf="!responseUATreated.hasPermission">
+                <div class="info-card">
+                  <dt class="fw-bold text-secondary mb-2">Motif</dt>
+                  <dd>{{responseUATreated.motif}}</dd>
                 </div>
-            </div>
-                <div class="col-12 col-md-6">
-        
-                <div class="form-group">
-                    <label for="">Date de naissance</label>
-                    <input type="date" class="form-control" [(ngModel)]="selected_data.adpap.birthday" name="birthday">
-               </div>
-            </div>
-               <div class="col-12 col-md-6">
-        
-               <div class="form-group">
-                <label for="">Lieu de naissance</label>
-                <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.birthplace" name="birthplace">
+              </div>
+              
+              <div class="col-12" *ngIf="responseUATreated.hasPermission">
+                <div class="info-card">
+                  <dt class="fw-bold text-secondary mb-2">Note</dt>
+                  <dd>{{responseUATreated.reason}}</dd>
                 </div>
-            </div>
-                <div class="col-12 col-md-4">
-        
-                <div class="form-group">
-                    <label for="">Civilité</label>
-                    <select required name="sex" class="form-control" [(ngModel)]="selected_data.adpap.sex" >
-                       <option value="Monsieur">Monsieur</option>
-                       <option value="Madame">Madame</option>
-                    </select>
-               </div>
-            </div>
-               <div class="col-12 col-md-6">
-        
-               <div class="form-group">
-                <label for="">Corps</label>
-                <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.corporate" name="corporate">
+              </div>
+              
+              <div class="col-12" *ngIf="responseUATreated.hasPermission">
+                <div class="info-card">
+                  <dt class="fw-bold text-secondary mb-2">Observation complète sur l'analyse de la demande</dt>
+                  <dd>{{responseUATreated.observation}}</dd>
                 </div>
+              </div>
             </div>
-                <div class="col-12 col-md-6">
-        
-                <div class="form-group">
-                    <label for="">Poste occupé</label>
-                    <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.function" name="function">
-                    </div>
-            </div>
-         
-            <div class="col-12 col-md-4">
-        
-                <div class="form-group">
-                    <label for="">Grade</label>
-                    <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.category" name="category">
-                    </div>
-            </div>
-         
-            <div class="col-12 col-md-4">
-        
-                <div class="form-group">
-                    <label for="">Echelle</label>
-                    <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.scale" name="scale">
-                    </div>
-            </div>
-         
-            <div class="col-12 col-md-4">
-        
-                <div class="form-group">
-                    <label for="">Echelon</label>
-                    <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.level" name="level">
-                    </div>
-            </div>
-         
-           
-          </div>
-        </div>
-        <fieldset  *ngIf="selected_data!=null && myPrestation.content_type==2 && contractFiles?.length!=0">
-            <legend class="bg-info p-1 text-white">Charger les contrats</legend>
-            <div class="row">
-                <dl *ngFor="let f of contractFiles; let i=index" class="col-12">
-                    <dt class="dt">{{f.identity}}</dt>
-                    <dd class="dd">
-                        <div class="form-group" *ngIf="!f.has_contract">
-                            <label class="" >Charger le contrat</label>
-                            <input type="file" (change)="upload2($event,i,f.identity)">
-                        </div>
-                        <div class="form-group" *ngIf="f.has_contract">
-                           <button  (click)="openContract(f.file?.file)" class="btn btn-sm btn-primary">Ouvrir le fichier</button>
-                        </div>
-                    </dd>
-                </dl>
-            </div>
-        </fieldset>
 
-          <hr *ngIf="responseUA.note != null ">
-          <dl *ngIf="responseUA.note != null " >
-            <dt class="dt">Une note disponible</dt>
-            <button type="button" class="btn btn-primary "   (click)="showResponseFile(responseUA.note)">Voir la note de service</button>
-            <div class="card" *ngIf="showResponseFilePreview">
-                <div class="card-header text-center">
-                    <button type="button" class="btn btn-secondary" (click)="back()">Fermer</button>
-                </div>
-                <div class="card-body">
-                    <object [data]="pdfSrc" type="application/pdf" width="100%" height="1000px"></object>
-                
-                </div>
+            <div class="d-flex gap-3 mt-4">
+              <button 
+                *ngIf="responseUATreated.note" 
+                class="btn btn-primary" 
+                (click)="showResponseFile(responseUATreated.note!)">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                Voir la note de service
+              </button>
             </div>
-          </dl>
-          <hr>
-          <div class="form-group">
-            <label for="">Attacher une note si disponible</label>
-            <input type="file" class="form-control" (change)="upload($event)">
-        </div>
-          <!-- <div class="form-group" *ngIf="myPrestation.content_type==2 && myPrestation.need_meeting">
-            <label for="">Attacher le document visé</label>
-            <input type="file" class="form-control" (change)="upload2($event)">
-        </div> -->
-        <hr>
-        <ng-container>
-            <!--div class="" *ngIf="prestation=='autorisation-de-stage'">
-                <h6>Point des contenus générés</h6>
-                <ul>
-                    <li *ngFor="let d of docs"><strong class="mr-2">{{d?.name}}</strong> <i class="fa fa-check" *ngIf="d?.content != null"></i></li>
-        
-                </ul>
-                <div class="form-group" >
-                    <label for="">Veuillez sélection le contenu à générer</label>
-                    <select class="form-control" (change)="changeDesc($event)">
-                        <option value="0">Lettre d'acception</option>
-                        <option value="1">Lettre d'agrément</option>
-                        <option value="2">Autorisation de stage</option>
-                      </select>
-                </div>
-            </!--div-->
-            <div class="form-group text-center" *ngIf="myPrestation.content_type==0">
-                <angular-editor name="desc" [placeholder]="'Enter text here...'" [(ngModel)]="desc" [config]="editorConfig"></angular-editor>
-        
-                <!--ckeditor  [config]="{ extraPlugins: 'divarea', height: '600',width:'1000'}" name="contenu" [(ngModel)]="desc"></ckeditor-->
+
+            <!-- Prévisualisation fichier -->
+            <div class="card mt-4" *ngIf="showResponseFilePreview">
+              <div class="card-header text-center bg-light">
+                <button type="button" class="btn btn-secondary" (click)="back()">
+                  <i class="bi bi-x-lg me-2"></i>
+                  Fermer
+                </button>
+              </div>
+              <div class="card-body p-0">
+                <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+              </div>
             </div>
-            
-              <p *ngIf="myPrestation.content_type==2" class="h4 text-center text-info p-5">Pas de contenu à éditer pour cette prestation, Vous pouvez prodéder à la génération du document</p>
-              <!--hr *ngIf="selected_data.content != null ">
-              <dl-- *ngIf="selected_data.content != null " class="p-5" >
-                <dt class="dt">Un livrable disponible</dt>
-                <button type="button" class="btn btn-primary "   (click)="showResponseFile(responseUA.note)">Voir le livrable</button>
-            
-              </dl-->
-              <div  class="form-group text-center p-5" *ngIf="myPrestation.content_type==1 && isTreated && selected_data.status==5">
-                <p>Chargement du document final scanné (PDF)</p>
-                <input type="file" class="form-control" (change)="upload($event)" accept="application/pdf">
+          </div>
+
+          <!-- Mon Avis / Décision finale -->
+          <div>
+            <h4 class="text-primary mb-4">
+              <i class="bi bi-clipboard-check me-2"></i>
+              {{isSigner() ? 'Décision finale' : 'Mon Avis'}}
+            </h4>
+
+            <!-- Sélection de décision -->
+            <div class="form-group mb-4">
+              <label class="form-label fw-semibold">Décision</label>
+              <select 
+                [(ngModel)]="responseUA.hasPermission" 
+                name="hasPermission" 
+                class="form-select" 
+                (change)="btnChange($event)">
+                <option [value]="2" *ngIf="!isSigner()">Mise en attente</option>
+                <option [value]="1">Favorable</option>
+                <option [value]="0">Défavorable</option>
+              </select>
             </div>
-        </ng-container>
-        <div class="d-flex justify-content-between">
-          
-                <button type="submit" class="btn  btn-primary " [disabled]="loading || addResponse.invalid">
-                    {{getText()}}
-                     <app-loading [isVisible]="loading"></app-loading> 
-                    </button>
-               
-                    <!--button type="button" class="btn  btn-success "  nbTooltip="Valider réponse" nbTooltipPlacement="top" *ngIf="isTreated && myPrestation.need_validation && responseUA?.hasPermission" (click)="validate()">
-                         Valider provisoirement la demande
-                    </!button-->
-        
-                <!--button class="btn  btn-primary mx-1" type="button"  *ngIf="selected_data!=null && selected_data.filename!=null"   (click)="showFile2()">Visualiser le document disponible</!--button-->
-        
-        </div> 
-        </form>
-        </ng-container>
-           <ng-container  *ngIf="responseUA.hasPermission==0">
-                <form #addRejet="ngForm" (ngSubmit)="stepAction(addRejet.value)">
-                <div class="modal-body">
+
+            <!-- Formulaire Favorable -->
+            <ng-container *ngIf="responseUA.hasPermission==1">
+              <form #addResponse="ngForm" (ngSubmit)="stepAction(addResponse.value)">
+                <div class="row g-4">
+                  <div class="col-12">
                     <div class="form-group">
-                        <label for="">Laissez le motif du rejet</label>
-                        <textarea name="commentaire" rows="3" class="form-control" required [(ngModel)]="responseUA.motif"></textarea>
-                    </div>    </div>
-                <div class="modal-footer">
-                   
-                <button type="submit" class="btn  btn-primary " [disabled]="loading">
-                    {{getText()}}
-                     <app-loading [isVisible]="loading"></app-loading> 
-                    </button>
-                </div>
-            </form>
-        </ng-container>
-        
-        <ng-container *ngIf="responseUA.hasPermission==2">
-                <form #addSusp="ngForm" (ngSubmit)="stepAction(addSusp.value)">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="">Laissez le motif de mise en attente </label>
-                        <textarea name="commentaire" rows="3" class="form-control" required [(ngModel)]="responseUA.motif"></textarea>
+                      <label class="form-label fw-semibold">Note</label>
+                      <textarea 
+                        class="form-control" 
+                        rows="3" 
+                        [(ngModel)]="responseUA.reason" 
+                        name="reason"
+                        placeholder="Saisissez votre note..."></textarea>
                     </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="form-label fw-semibold">Observation complète sur l'analyse de la demande</label>
+                      <textarea 
+                        class="form-control" 
+                        rows="5" 
+                        [(ngModel)]="responseUA.observation" 
+                        name="observation"
+                        placeholder="Saisissez votre observation détaillée..."></textarea>
+                    </div>
+                  </div>
                 </div>
-                <div class="modal-footer">
-              
-                    <button type="submit" class="btn  btn-primary " [disabled]="loading">
-                        {{getText()}}
-                         <app-loading [isVisible]="loading"></app-loading> 
-                        </button>
+
+                <!-- Informations spécifiques pour autorisation de stage -->
+                <div *ngIf="selected_data && responseUA.hasPermission==1 && prestation=='autorisation-de-stage'" class="mt-4">
+                  <hr>
+                  <h6 class="text-info mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complèter ces informations
+                  </h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Direction</label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          required 
+                          [(ngModel)]="selected_data.structure" 
+                          name="structure">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Date début de stage</label>
+                        <input 
+                          type="date" 
+                          required 
+                          class="form-control" 
+                          [(ngModel)]="selected_data.date_start" 
+                          name="date_start">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Date fin de stage</label>
+                        <input 
+                          type="date" 
+                          required 
+                          class="form-control" 
+                          [(ngModel)]="selected_data.date_end" 
+                          name="date_end">
+                      </div>
+                    </div>
+                  </div>
                 </div>
-            </form>
-                </ng-container>
-            </div>
-           
-              
+
+                <!-- Informations spécifiques pour attestation de présence -->
+                <div *ngIf="selectedData && responseUA.hasPermission==1 && prestation=='attestation-de-presence-au-poste'" class="mt-4">
+                  <hr>
+                  <h6 class="text-info mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complèter ces informations
+                  </h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Statut</label>
+                        <select required name="status" class="form-control" [(ngModel)]="selected_data.adpap.status">
+                          <option value="Fontionnaire">Fontionnaire</option>
+                          <option value="ACE">ACE</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Date de naissance</label>
+                        <input type="date" class="form-control" [(ngModel)]="selected_data.adpap.birthday" name="birthday">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Lieu de naissance</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.birthplace" name="birthplace">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Civilité</label>
+                        <select required name="sex" class="form-control" [(ngModel)]="selected_data.adpap.sex">
+                          <option value="Monsieur">Monsieur</option>
+                          <option value="Madame">Madame</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Corps</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.corporate" name="corporate">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Poste occupé</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.function" name="function">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Grade</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.category" name="category">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Echelle</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.scale" name="scale">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Echelon</label>
+                        <input type="text" class="form-control" [(ngModel)]="selected_data.adpap.level" name="level">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section Contrats -->
+                <fieldset *ngIf="selectedData && myPrestation?.content_type==2 && contractFiles?.length!=0" class="mt-4">
+                  <legend class="bg-info p-2 text-white rounded mb-3">
+                    <i class="bi bi-file-earmark-contract me-2"></i>
+                    Charger les contrats
+                  </legend>
+                  <div class="row g-3">
+                    <div *ngFor="let f of contractFiles; let i=index" class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <h6 class="card-title">{{f.identity}}</h6>
+                          <div *ngIf="!f.has_contract">
+                            <label class="form-label">Charger le contrat</label>
+                            <input type="file" class="form-control" (change)="upload2($event,i,f.identity)">
+                          </div>
+                          <div *ngIf="f.has_contract">
+                            <button (click)="openContract(f.file?.file!)" class="btn btn-sm btn-primary">
+                              <i class="bi bi-file-earmark me-2"></i>
+                              Ouvrir le fichier
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Note existante -->
+                <div *ngIf="responseUA.note" class="mt-4">
+                  <hr>
+                  <div class="alert alert-info">
+                    <h6 class="alert-heading">
+                      <i class="bi bi-file-earmark-text me-2"></i>
+                      Une note disponible
+                    </h6>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="showResponseFile(responseUA.note!)">
+                      Voir la note de service
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Upload note -->
+                <div class="form-group mt-4">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-paperclip me-2"></i>
+                    Attacher une note si disponible
+                  </label>
+                  <input type="file" class="form-control" (change)="upload($event)">
+                </div>
+
+                <!-- Éditeur de contenu -->
+                <div class="form-group text-center mt-4" *ngIf="myPrestation?.content_type==0">
+                  <label class="form-label fw-semibold">Contenu du document</label>
+                  <textarea 
+                    class="form-control" 
+                    rows="10" 
+                    [(ngModel)]="desc" 
+                    name="desc"
+                    placeholder="Saisissez le contenu du document..."></textarea>
+                </div>
+
+                <div *ngIf="myPrestation?.content_type==2" class="alert alert-info text-center mt-4">
+                  <h5 class="text-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Pas de contenu à éditer pour cette prestation
+                  </h5>
+                  <p class="mb-0">Vous pouvez procéder à la génération du document</p>
+                </div>
+
+                <!-- Upload document final -->
+                <div class="form-group text-center mt-4" *ngIf="myPrestation?.content_type==1 && isTreated && selected_data?.status==5">
+                  <div class="alert alert-warning">
+                    <h6 class="alert-heading">
+                      <i class="bi bi-upload me-2"></i>
+                      Chargement du document final scanné (PDF)
+                    </h6>
+                    <input type="file" class="form-control mt-2" (change)="upload($event)" accept="application/pdf">
+                  </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="d-flex justify-content-center mt-4">
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary btn-lg" 
+                    [disabled]="loading || addResponse.invalid">
+                    <i class="bi bi-send me-2"></i>
+                    {{getText()}}
+                    <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+                      <span class="visually-hidden">Chargement...</span>
+                    </div>
+                  </button>
+                </div>
+              </form>
+            </ng-container>
+
+            <!-- Formulaire Rejet -->
+            <ng-container *ngIf="responseUA.hasPermission==0">
+              <form #addRejet="ngForm" (ngSubmit)="stepAction(addRejet.value)">
+                <div class="alert alert-danger">
+                  <h6 class="alert-heading">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Motif du rejet
+                  </h6>
+                  <div class="form-group mt-3">
+                    <label class="form-label">Laissez le motif du rejet</label>
+                    <textarea 
+                      name="commentaire" 
+                      rows="4" 
+                      class="form-control" 
+                      required 
+                      [(ngModel)]="responseUA.motif"
+                      placeholder="Expliquez les raisons du rejet..."></textarea>
+                  </div>
+                  <div class="text-center mt-3">
+                    <button 
+                      type="submit" 
+                      class="btn btn-danger" 
+                      [disabled]="loading || addRejet.invalid">
+                      <i class="bi bi-x-circle me-2"></i>
+                      {{getText()}}
+                      <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </ng-container>
+
+            <!-- Formulaire Mise en attente -->
+            <ng-container *ngIf="responseUA.hasPermission==2">
+              <form #addSusp="ngForm" (ngSubmit)="stepAction(addSusp.value)">
+                <div class="alert alert-warning">
+                  <h6 class="alert-heading">
+                    <i class="bi bi-pause-circle me-2"></i>
+                    Mise en attente
+                  </h6>
+                  <div class="form-group mt-3">
+                    <label class="form-label">Laissez le motif de mise en attente</label>
+                    <textarea 
+                      name="commentaire" 
+                      rows="4" 
+                      class="form-control" 
+                      required 
+                      [(ngModel)]="responseUA.motif"
+                      placeholder="Expliquez les raisons de la mise en attente..."></textarea>
+                  </div>
+                  <div class="text-center mt-3">
+                    <button 
+                      type="submit" 
+                      class="btn btn-warning" 
+                      [disabled]="loading || addSusp.invalid">
+                      <i class="bi bi-pause-circle me-2"></i>
+                      {{getText()}}
+                      <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </ng-container>
+          </div>
         </div>
-        </div>
-        <div class="text-center"  *ngIf="selected_data==undefined">
-            <img src="assets/spinner.gif" alt="" height="50">
-        </div>
-        </div>
+      </div>
     </div>
+  </div>
 
+  <!-- Loading state -->
+  <div class="text-center py-5" *ngIf="!selectedData">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-3 text-muted">Chargement des données...</p>
+  </div>
+</div>
 
-
-<ng-template #dialogAffectation  let-c="close" let-d="dismiss" >
-    <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
-
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Signer ce document</h4>
-            <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-        </div>
-      <div class="modal-body">
-            <div class="form-group">
-                <label for="">Saisissez votre mot de passe de délivrance</label>
-                <input name="password" type="password" class="form-control" required ngModel>
-            </div>
-        </div>
+<!-- Modal de signature -->
+<ng-template #dialogAffectation let-modal>
+  <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
+    <div class="modal-header bg-primary text-white">
+      <h4 class="modal-title">
+        <i class="bi bi-pen me-2"></i>
+        Signer ce document
+      </h4>
+      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()"></button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-key me-2"></i>
+          Saisissez votre mot de passe de délivrance
+        </label>
+        <input 
+          name="password" 
+          type="password" 
+          class="form-control" 
+          required 
+          ngModel
+          placeholder="Mot de passe sécurisé">
+      </div>
+    </div>
+    
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="addInstruction.invalid || loading">Signer <app-loading [isVisible]="loading"></app-loading> </button>
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="modal.dismiss()">
+        Annuler
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="addInstruction.invalid || loading">
+        <i class="bi bi-pen me-2"></i>
+        Signer
+        <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </button>
     </div>
-
-</form>
-
+  </form>
 </ng-template>
-
-

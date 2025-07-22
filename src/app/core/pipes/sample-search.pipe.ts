@@ -11,6 +11,7 @@ export class SampleSearchPipe implements PipeTransform {
     
     return (searchText != '') ? value.filter((item:any) => {  
         return item?.lastname?.toLowerCase().includes(searchText.toLowerCase()) || 
+              item?.code?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.firstname?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.birthdate?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.birthplace?.toLowerCase().includes(searchText.toLowerCase()) ||

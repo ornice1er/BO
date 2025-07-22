@@ -157,8 +157,7 @@ export class EspaceRejectedComponent implements OnInit {
       console.log(this.prestation)
       this.loading2=true;
       this.requeteService.getByPrestationRejected(this.prestation).subscribe((res:any)=>{
-        this.data.length=0
-        this.data=res
+        this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
       },

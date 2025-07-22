@@ -158,8 +158,7 @@ export class EspaceValidationComponent implements OnInit {
       console.log(this.prestation)
       this.loading2=true;
       this.requeteService.getByPrestationTreated(this.prestation,this.myPrestation.code).subscribe((res:any)=>{
-        this.data.length=0
-        this.data=res
+        this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
       },

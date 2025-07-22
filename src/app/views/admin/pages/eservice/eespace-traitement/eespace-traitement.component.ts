@@ -34,6 +34,7 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
+  stepContents:any[]=[]
   loading=false
   loading2=false
   permissions:any[]=[];
@@ -165,8 +166,7 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
       console.log(this.prestation)
       this.loading2=true;
       this.requeteService.getByPrestationNew(this.prestation,this.code).subscribe((res:any)=>{
-        this.data.length=0
-        this.data=res
+        this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
       },

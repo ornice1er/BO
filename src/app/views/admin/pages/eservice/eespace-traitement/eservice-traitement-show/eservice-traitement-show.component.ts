@@ -1,4 +1,4 @@
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, formatDate, Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -19,6 +19,7 @@ import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { PrestationDetails } from '../../prestation-details';
+import { Prestation, SelectedData } from '../../../../../../core/Models/interface.model';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
@@ -34,12 +35,11 @@ export class EserviceTraitementShowComponent implements OnInit {
   selected_data:any
   user:any;
   selected_file:any
-  prestation:any;
+  myPrestation:any
+  //prestation:any;
   code:any;
   fileUploaded:any;
   prestationName:any
-  isTreated=false
-  isMyTreated=false
   permissions:any[]=[]
   doc_path:any
   showPreview2=false;
@@ -48,13 +48,9 @@ export class EserviceTraitementShowComponent implements OnInit {
     pdfSrc :SafeResourceUrl | undefined | undefined
   activeobsPanel=false
   observation:any
-  responseUA={
-    hasPermission:null,
-    reason:"",
-    observation:"",
-    unite_admin_id:"",
-    requete_id:""
-  }
+    stepContents:any[]=[]
+
+
   currentDescId:any=0
   docs=[
     {
@@ -76,7 +72,24 @@ export class EserviceTraitementShowComponent implements OnInit {
   ]
   loading=false
   uas:any[]=[]
-  myPrestation:any;
+
+
+
+
+  responseUA = {
+     hasPermission: true,
+    reason:"",
+    motif:"",
+    observation:"",
+    unite_admin_id:"",
+    requete_id:"",
+    note:null,
+    preview_file:null
+    };
+  isTreated = false;
+  isMyTreated = false;
+  prestation:any = "autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel";
+  
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -104,7 +117,7 @@ export class EserviceTraitementShowComponent implements OnInit {
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
-      this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
+      this.myPrestation=this.user.user_prestations.find((el:any)=>el.prestation.code ==this.prestation).prestation
       console.log(this.myPrestation)
       this.getName(this.prestation);
      });  
@@ -113,8 +126,8 @@ export class EserviceTraitementShowComponent implements OnInit {
      this.get()
      this.getMyCollab()
   }
-  getName(slug:any){
-    let check=PrestationDetails.find((e:any)=> e.slug == slug);
+  getName(code:any){
+    let check=PrestationDetails.find((e:any)=> e.code == code);
     if (check) {
       this.prestationName=check.name
       this.doc_path=check.doc_path
@@ -124,14 +137,16 @@ export class EserviceTraitementShowComponent implements OnInit {
     this.requeteService.get(this.code,this.prestation,this.myPrestation.code).subscribe((res:any)=>{
       this.modalService.dismissAll()
       this.selected_data=res.data
+      this.stepContents=res.data?.step_contents
+
      if(this.selected_data.reponses.length > 0) {
-      this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+      this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
       this.isTreated=true
         if( this.responseUA){
           this.isMyTreated=true
         }else{
-          this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin.ua_parent_code ==this.user.agent.unite_admin.id)
-          console.log("orceeeeeeeeeee",this.responseUA,this.user.agent.unite_admin.id)
+          this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin.ua_parent_code ==this.user.agent?.unite_admin?.id)
+          console.log("orceeeeeeeeeee",this.responseUA,this.user.agent?.unite_admin?.id)
         }
       }
     
@@ -216,7 +231,7 @@ this.modalService.open(content);
   
         if(this.selected_data.reponses.length !=0){
           if (this.user.roles[0].name!= "Directeur") {
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
       if(check == null) {
         this.toastrService.warning("`Votre projet de réponse est requis");
         return ;
@@ -259,7 +274,7 @@ this.modalService.open(content);
 
         this.affService.store({
           requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
+          unite_admin_id:this.user.agent?.unite_admin?.id,
           unite_admin_down_id:value.ua_down_id,
           sens:1,
           instruction:value.instruction,
@@ -341,7 +356,7 @@ this.modalService.open(content);
       return ;
     }
     if(this.selected_data.reponses.length !=0){
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
       if(check == null) {
         this.toastrService.warning("`Votre projet de réponse est requis");
         return ;
@@ -356,7 +371,7 @@ this.modalService.open(content);
         this.toastrService.info("Opération en cours")
         this.affService.store({
           requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
+          unite_admin_id:this.user.agent?.unite_admin?.id,
           sens:-1
         }).subscribe(
             (res:any)=>{
@@ -446,7 +461,7 @@ this.modalService.open(content);
     }
 
     if(this.selected_data.reponses.length !=0){
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
       if(check) this.responseUA=check;
 
       
@@ -463,7 +478,7 @@ this.modalService.open(content);
 
   back2(){
   /*  this._location.back();
-   if( this.myPrestation.start_point.id == this.user.agent.unite_admin.id){
+   if( this.myPrestation.start_point.id == this.user.agent?.unite_admin?.id){
   this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
    }else{
   this.router.navigate(['admin/eservice/espace-validation/'+this.prestation])
@@ -588,7 +603,7 @@ deliveryrDoc(value:any){
 
 
 isSigner(){
-  if(this.myPrestation.signer2.id == this.user.agent.unite_admin.id){
+  if(this.myPrestation?.signer2?.id == this.user.agent?.unite_admin?.id){
     return true;
     
   }else{
@@ -596,4 +611,16 @@ isSigner(){
 
   }
 }
+
+ getDecision(hasPermission: boolean): string {
+    return hasPermission ? "Favorable" : "Défavorable";
+  }
+
+  getDecisionClass(hasPermission: boolean): string {
+    return hasPermission ? "text-success" : "text-danger";
+  }
+
+  getDecisionIcon(hasPermission: boolean): string {
+    return hasPermission ? "✓" : "✗";
+  }
 }

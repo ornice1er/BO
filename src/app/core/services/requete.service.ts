@@ -25,7 +25,7 @@ export class RequeteService {
   }*/
 
   getByPrestationNew(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/new'+'?code='+code, );
+    return this.http.get<any>(this.url+'/byPrestation/pending/'+slug+'/new'+'?code='+code, );
   }
   getByPrestationTreated(slug:any,code?:any): any {
     return this.http.get<any>(this.url+'/byPrestation/'+slug+'/treated'+'?code='+code, );

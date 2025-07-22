@@ -160,8 +160,7 @@ export class EspaceSignatureComponent implements OnInit {
       console.log(this.prestation)
       this.loading2=true;
       this.requeteService.getByPrestationToSign(this.prestation,this.code).subscribe((res:any)=>{
-        this.data.length=0
-        this.data=res
+        this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
       },

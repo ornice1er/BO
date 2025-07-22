@@ -80,7 +80,6 @@ remoteSearchData: any[] = []
      this.slug= this.route.snapshot.paramMap.get('slug');
      this.prestation=this.slug
       this.all()
-      this.getName();
     })
     this.user=this.locService.get(GlobalName.userName);
      this.buttonsPermission = {
@@ -95,7 +94,7 @@ remoteSearchData: any[] = []
     this.loading2=true;
     this.requeteService.getByPrestationAll(this.slug).subscribe((res:any)=>{
       this.loading2=false;
-     this.data=res;
+     this.data=res.data;
     },
     (error:any)=>{
       this.loading2=false;
@@ -233,67 +232,6 @@ resetSearch() {
       //ref.close()
    /* var url=ConfigService.toFile('litige/files')+name;
     window.open(url, '_blank');*/
-  }
-  getName(){
-
-    switch (this.prestation) {
-      case "attestation-de-non-litige":
-        this.prestationName="d'attestation de non litige"
-        this.doc_path="docs/atn"
-        break;
-      case "declaration-etablissement":
-        this.prestationName="de déclaration d'établissements"
-        this.doc_path="docs/detab"
-        break;
-        case "autorisation-de-stage":
-          this.prestationName="d'autorisation de stage"
-          this.doc_path="docs/ads"
-          break;
-          case "attestation-de-stage":
-            this.prestationName="d'attestation de stage"
-            this.doc_path="docs/as"
-            break;
-            case "attestation-de-service-fait":
-              this.prestationName="d'attestation de service fait"
-              this.doc_path="docs/asf"
-                           break;
-              case "visa-reglement-interieur-entreprise":
-                this.prestationName="de délivrance de visa sur les règlements intérieurs d’entreprises"
-                this.doc_path="docs/ri"
-                this.doc_prefix="ri"
-                break;
-                case "autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel":
-                  this.prestationName="d'autorisation de licenciement pour motif économique ou motif personnel (DGT) (Salaires protégés ou non)"
-                  this.doc_path="docs/al"; this.doc_prefix="al";
-                  break;
-                  case "visa-contrat-apprentisage":
-                    this.prestationName="de visa de contrat d’apprentissage "
-                         this.doc_path="docs/vca" ;  this.doc_prefix="vca"
-                    break;
-                    case "decision-agrement-exercice-medecin":
-                      this.prestationName="délivrance de décision d’agrément d’exercice en qualité de médecin d’entreprise "
-                      this.doc_path="docs/am"; this.doc_prefix="am";
-                      break;
-                    case "decision-agrement-exercice-medecin":
-                      this.prestationName="délivrance de décision d’agrément d’exercice en qualité de médecin d’entreprise "
-                      this.doc_path="docs/am"; this.doc_prefix="am";
-                      break;
-                      case "attestation-existence":
-                        this.prestationName="délivrance dattestation d'existence "
-                        this.doc_path="docs/ae"; this.doc_prefix="ae";
-                        break;
-                        case "certificat-de-non-radiation":
-                          this.prestationName="délivrance dattestation d'existence "
-                          this.doc_path="docs/cnr"; this.doc_prefix="ae";
-                          break;
-                          case "attestation-de-validite-des-services":
-                            this.prestationName="délivrance dattestation d'existence "
-                            this.doc_path="docs/vsa"; this.doc_prefix="ae";
-                            break;
-      default:
-        break;
-    }
-
   }
 
   ngOnDestroy(): void {
