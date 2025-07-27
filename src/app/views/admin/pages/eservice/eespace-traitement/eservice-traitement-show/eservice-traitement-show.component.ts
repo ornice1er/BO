@@ -137,7 +137,7 @@ export class EserviceTraitementShowComponent implements OnInit {
     this.requeteService.get(this.code,this.prestation,this.myPrestation.code).subscribe((res:any)=>{
       this.modalService.dismissAll()
       this.selected_data=res.data
-      this.stepContents=res.data?.step_contents
+      this.stepContents=res.data?.step_contents.steps
 
      if(this.selected_data.reponses.length > 0) {
       this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
@@ -157,14 +157,16 @@ export class EserviceTraitementShowComponent implements OnInit {
   }
 
   showFile(el:any){
-    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+el.filename;
-    this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
-    this.showPreview=true;
-    this.observation="";
-    this.selected_file=el;
+    var url=el.url;
+
+    window.open(url,'_blank')
+    // this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
+    // this.showPreview=true;
+    // this.observation="";
+    // this.selected_file=el;
     
-     // $('#cBtn').trigger('click');
-      this.activeobsPanel=true;
+    //  // $('#cBtn').trigger('click');
+    //   this.activeobsPanel=true;
 
   }
 
