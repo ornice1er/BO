@@ -195,7 +195,39 @@
         <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
         </div>
         <div class="modal-body">
-    
+          <div class=" form-group col-12 mb-3">
+                <label for="">Matricule <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="numero_matricule" class="form-control" ngModel>
+            </div>
+          <div class=" form-group col-12 mb-3">
+                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="lastname" class="form-control" ngModel>
+            </div>
+              <div class=" form-group col-12 mb-3">
+                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="firstname" class="form-control" ngModel>
+            </div>
+
+             <div class=" form-group col-12 mb-3">
+                <label for="">Fonction <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="fonction_agent_id" ngModel>
+                    <ng-option *ngFor="let o of data3" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+          <div class="form-group col-12 mb-3">
+            <label for="">Entité administrative <span class="text-danger ml-2">(*)</span></label>
+            <ng-select name="entite_admin_id" ngModel (change)="loadUas($event)">
+                <ng-option *ngFor="let o of data2" [value]="o.id">{{ o.libelle }}</ng-option>
+            </ng-select>
+        </div>
+
+
+              <div class=" form-group col-12 mb-3">
+                <label for="">Unité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="unite_admin_id" ngModel>
+                    <ng-option *ngFor="let o of uas" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
         </div>
         <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
@@ -215,6 +247,38 @@
     </div>
     <div class="modal-body">
     
+          <div class=" form-group col-12 mb-3">
+                <label for="">Matricule <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="numero_matricule" class="form-control" [(ngModel)]="selected_data.numero_matricule">
+            </div>
+          <div class=" form-group col-12 mb-3">
+                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="lastname" class="form-control" [(ngModel)]="selected_data.lastname">
+            </div>
+              <div class=" form-group col-12 mb-3">
+                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="firstname" class="form-control" [(ngModel)]="selected_data.firstname">
+            </div>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Fonction <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="fonction_agent_id" [(ngModel)]="selected_data.fonction_agent_id">
+                    <ng-option *ngFor="let o of data3" [value]="o.id">{{o.name}}</ng-option>
+                </ng-select>
+            </div>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Entité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id">
+                    <ng-option *ngFor="let o of data2" [value]="d.id">{{o.name}}</ng-option>
+                </ng-select>
+            </div>
+
+                <div class=" form-group col-12 mb-3">
+                <label for="">Unité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id">
+                    <ng-option *ngFor="let o of uas" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+         
  </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>

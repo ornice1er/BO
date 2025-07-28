@@ -230,26 +230,7 @@
     </div>
     <div class="modal-body" >
         <div class="row mb-3" >
-              <div class=" form-group col-12 mb-3">
-                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="lastname" class="form-control" ngModel>
-            </div>
-              <div class=" form-group col-12 mb-3">
-                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="firstname" class="form-control" ngModel>
-            </div>
-              <div class=" form-group col-12 mb-3">
-                <label for="">Date de naissance <span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="birthdate" class="form-control" ngModel>
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Lieu de naissance <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="birthplace" class="form-control" ngModel>
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Adresse<span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="address" class="form-control" ngModel>
-            </div>
+            
             <div class=" form-group col-12 mb-3">
                 <label for="">Email <span class="text-danger ml-2">(*)</span></label>
                 <input type="text" name="email" class="form-control" ngModel>
@@ -258,12 +239,50 @@
                 <label for="">Contact <span class="text-danger ml-2">(*)</span></label>
                 <input type="text" name="phone" class="form-control" ngModel>
             </div>
+                <div class="form-group" *ngIf="role!='Admin national'">
+                <label for="typeLabel">Agent</label>
+                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="agent_id" ngModel>
+                    <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
+                </ng-select>
+            </div>
             <div class=" form-group col-12 mb-3">
                 <label for="">Rôle <span class="text-danger ml-2">(*)</span></label>
                 <ng-select name="roles" ngModel [multiple]="true">
                     <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
                 </ng-select>
             </div>
+
+              <div class="d-flex justify-content-between">
+          <p>Acteur métier :</p>
+          <ng-toggle
+          ngModel
+
+          name="is_trade"
+          [color]="{
+              unchecked: '#939da2',
+              checked: '#0C574E'
+          }"
+          [values]="{
+              checked: true, unchecked: false
+          }"
+  
+          ></ng-toggle>
+        </div>
+        <div class="" *ngIf="role != 'Admin national'">
+          <h4>Affectation des prestations au compte utilisateur</h4>
+          <h6>Ce compte aura accès aux prestations suivantes</h6>
+          <div class="container">
+            <div class="row">
+              <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
+                <input class="form-check-input" type="checkbox" name="state"  [(ngModel)]="p.state" >
+                <label class="form-check-label">
+                  {{p.name}}
+                </label>
+              </div>
+            </div>
+          </div>
+          
+        </div>
         </div>
        
     </div>
@@ -281,33 +300,20 @@
     </div>
     <div class="modal-body" >
         <div class="row mb-3">
-                  <div class=" form-group col-12 mb-3">
-                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="lastname" class="form-control" [(ngModel)]="selected_data.lastname">
-            </div>
-              <div class=" form-group col-12 mb-3">
-                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="firstname" class="form-control" [(ngModel)]="selected_data.firstname">
-            </div>
-              <div class=" form-group col-12 mb-3">
-                <label for="">Date de naissance <span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="birthdate" class="form-control" [(ngModel)]="selected_data.birthdate">
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Lieu de naissance <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="birthplace" class="form-control" [(ngModel)]="selected_data.birthplace">
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Adresse<span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="address" class="form-control" [(ngModel)]="selected_data.address">
-            </div>
+          
             <div class=" form-group col-12 mb-3">
                 <label for="">Email <span class="text-danger ml-2">(*)</span></label>
                 <input type="text" name="email" class="form-control" [(ngModel)]="selected_data.email">
             </div>
             <div class=" form-group col-12 mb-3">
                 <label for="">Contact <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="phone" class="form-control" [(ngModel)]="selected_data.email">
+                <input type="text" name="phone" class="form-control" [(ngModel)]="selected_data.phone">
+            </div>
+            <div class="form-group" *ngIf="role!='Admin national'">
+                <label for="typeLabel">Agent</label>
+                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="agent_id" [(ngModel)]="selected_data.agent_id">
+                    <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
+                </ng-select>
             </div>
             <div class=" form-group col-12 mb-3">
                 <label for="">rôle <span class="text-danger ml-2">(*)</span></label>
@@ -315,6 +321,39 @@
                     <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
                 </ng-select>  
              </div>
+
+
+        <div class="d-flex justify-content-between">
+          <p>Acteur métier :</p>
+          <ng-toggle
+          ngModel
+
+          name="is_trade"
+          [color]="{
+              unchecked: '#939da2',
+              checked: '#0C574E'
+          }"
+          [values]="{
+              checked: true, unchecked: false
+          }"
+  
+          ></ng-toggle>
+        </div>
+        <div class="" *ngIf="role != 'Admin national'">
+          <h4>Affectation des prestations au compte utilisateur</h4>
+          <h6>Ce compte aura accès aux prestations suivantes</h6>
+          <div class="container">
+            <div class="row">
+              <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
+                <input class="form-check-input" type="checkbox" name="state"  [(ngModel)]="p.state" >
+                <label class="form-check-label">
+                  {{p.name}}
+                </label>
+              </div>
+            </div>
+          </div>
+          
+        </div>
 
            
         </div>
@@ -348,6 +387,37 @@
             </div> 
            
           
+             <div class="d-flex justify-content-between">
+          <p>Acteur métier :</p>
+          <ng-toggle
+          [(ngModel)]="selected_data.is_trade"
+          name="is_trade"
+          [color]="{
+              unchecked: '#939da2',
+              checked: '#0C574E'
+          }"
+          [values]="{
+              checked: true, unchecked: false
+          }"
+          ></ng-toggle>
+        </div>
+        <div class="" *ngIf="role != 'Admin national'">
+          <h4>Affectation des prestations au compte utilisateur</h4>
+
+          <h6>Ce compte aura accès aux prestations suivantes</h6>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
+              <input class="form-check-input" type="checkbox" [checked]="p.state" name="state{{i}}"  [(ngModel)]="p.state" >
+              <label class="form-check-label">
+                {{p.name}}
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        </div>
         </div>
        
     </div>

@@ -433,12 +433,12 @@ toggleMenu() {
            
 
             this.menu.push({
-              title:element.prestation.name,
+              title:element.prestation?.name,
               icon:"",
               isTitle:false,
             hasChildren:true, 
             collapse:false,
-            code:element.prestation.code,
+            code:element.prestation?.code,
             children:children,
             newCount:newCount 
             })

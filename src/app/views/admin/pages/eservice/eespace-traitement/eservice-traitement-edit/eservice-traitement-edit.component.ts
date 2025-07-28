@@ -751,7 +751,7 @@ export class EserviceTraitementEditComponent implements OnInit {
       }
    
     isSigner(){
-      if(this.myPrestation?.signer2?.id == this.user?.agent?.unite_admin?.id){
+      if(this.myPrestation?.signer == this.user?.agent?.unite_admin?.id){
         return true;
         
       }else{

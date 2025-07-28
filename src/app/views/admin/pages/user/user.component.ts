@@ -15,6 +15,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UserService } from '../../../../core/services/user.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PrestationService } from '../../../../core/services/prestation.service';
+import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
+import { OfficerService } from '../../../../core/services/officer.service';
 declare var bootstrap: any;
 
 
@@ -22,7 +25,7 @@ declare var bootstrap: any;
   selector: 'app-user',
   templateUrl: './user.component.html',
   standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,NgToggleModule,NgToggleComponent],
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit,AfterViewInit  {
@@ -39,12 +42,15 @@ selectedId: number | null = null;
   roles:any[] =[]
   selectedRoles:any[] =[]
   data:any[] =[]
+    data2:any[]=[]
+
   dashTags:any[] =AppDashBloc
   selected_data:any;
   modalOption:any; 
   isDtInitialized:boolean = false
   is_active=null
   loading=false
+  loading2=false
   role_name=""
   role:any
   user:any
@@ -56,12 +62,17 @@ selectedId: number | null = null;
   isPaginate=true
   tag="admin-users"
     selectedFilter = '';
+  prestations:any[]=[]
+  data4:any[]=[]
 
   constructor(
     private userService:UserService,
     private roleService:RoleService,
     private toastrService:ToastrService,
       config: NgbModalConfig,
+              private officerService:OfficerService,
+
+              private prestationService:PrestationService,
       private lsService:LocalStorageService,
     private modalService: NgbModal) {
      config.backdrop = 'static';
@@ -91,8 +102,34 @@ selectedId: number | null = null;
   init(){
     this.getAll()
     this.getRoles()
+    this.getPrestation()
+    this.getOfficers()
   }
 
+
+      getOfficers(){
+      this.officerService.getAll().subscribe((res:any)=>{
+        this.data2=res.data
+        console.log(res)
+      },
+      (error:any)=>{
+        
+      })
+    }
+
+     getPrestation() {
+      this.loading2=true;
+      this.prestationService.getAll().subscribe((res:any)=>{
+        this.data4=res.data
+        this.prestations=res.data
+        this.prestations.forEach((e:any)=> e.state=false);
+        this.loading2=false;
+      },
+      (error:any)=>{
+        
+        this.loading2=false;
+      })
+    }
 
   getRoles(){
     this.roleService.getAll().subscribe((res:any)=>{
@@ -116,7 +153,8 @@ selectedId: number | null = null;
       this.pg.p=1
       this.pg.total=res.data.length
       }
-     
+             this.selectedId=null
+
       this.modalService.dismissAll()
     },
     (err:any)=>{
@@ -129,7 +167,13 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   store(value:any){
     this.loading=true
     if(value.is_signer=="")value.is_signer=false
-    console.log(value)
+      var choices:any[]=[]
+     this.prestations.forEach((e:any)=>{
+          if( e.state==true){
+            choices.push(e.id)
+          }
+      });
+      value['choices']=choices
     this.userService.store(value).subscribe((res:any)=>{
       this.loading=false
 
@@ -166,6 +210,14 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.loading=true
     if(value.is_signer=="")value.is_signer=false
 
+      var choices:any[]=[]
+    this.prestations.forEach((e:any)=>{
+        if( e.state==true){
+          choices.push(e.id)
+        }
+    });
+    value['choices']=choices
+
     this.userService.update(this.selected_data.id,value).subscribe((res:any)=>{
       this.loading=false
 
@@ -200,6 +252,10 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.selected_data=el;
     this.selected_data?.roles?.forEach((el:any) => this.selectedRoles.push(el.name));
     this.is_active=el.is_active
+  this.prestations.forEach((e: any) => {
+    const match = this.selected_data?.user_prestations?.some((p: any) => p.prestation_id === e.id);
+    e.state = match ? true : false;
+  });
   }
   verifyIfElementChecked(){
     console.log(this.selected_data)
@@ -223,6 +279,12 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
   add(content:any){
+       if(this.selected_data!= undefined){
+         this.selected_data?.userprestation.forEach((e:any)=> {
+        var check=  this.prestations.find((f:any)=> f.id==e.prestation_id);
+        if(check !=null) this.prestations[this.prestations.findIndex((f:any)=> f.id==e.prestation_id)].state = true;
+      });
+       }
     this.modalService.open(content,{size:'lg'});
   }
 

@@ -183,15 +183,13 @@
   
   <ng-template #addContent  let-ref="dialogRef">
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value,ref)">
-    <div>
-      <div>Enregistrement d' entité
+    <div >
+      <div class="modal-header">Enregistrement d' entité
 
         <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
       </div>
-      <div>
-                <p class="lead mb-3" *ngIf="error != ''">
-                    <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
-                </p>
+      <div class="modal-body">
+    
                <div class="form-group">
                 <label for="typeLabel">Type</label>
                 <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="type_entity_id" ngModel>
@@ -215,7 +213,7 @@
     
                 </div>
       </div>
-      <div>
+      <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
       </div>
     
@@ -226,12 +224,12 @@
 
   <ng-template #editContent  let-ref="dialogRef">
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value,ref)">
-    <div>
-      <div>Modification d' entité
+    <div >
+      <div class="modal-header">Modification d' entité
 
         <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
       </div>
-      <div>
+      <div class="modal-body">
                 <p class="lead mb-3" *ngIf="error != ''">
                     <ngb-alert [dismissible]="false" type="danger">{{ error }}</ngb-alert>
                 </p>
@@ -258,7 +256,7 @@
     
                 </div>
       </div>
-      <div>
+      <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
       </div>
     

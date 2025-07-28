@@ -88,6 +88,8 @@ permissions=[]
       this.unityAdminService.getAll().subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
+                this.selectedId=null
+
       },
       (error:any)=>{
         

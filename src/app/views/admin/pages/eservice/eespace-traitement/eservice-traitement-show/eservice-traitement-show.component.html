@@ -16,13 +16,12 @@
       data-bs-toggle="tooltip" 
       data-bs-placement="top" 
       title="Affecter cette demande"
-      *ngIf="hasPermission('affectation') && (!isTreated || !isMyTreated) && selected_data?.status!=7 && uas.length!=0 && selected_data?.status!=6" 
-      (click)="open('dialogAffectation')">
+      *ngIf=" (!isTreated || !isMyTreated) && selected_data?.status!=7 && uas.length!=0 && selected_data?.status!=6" 
+      (click)="open(dialogAffectation)">
       <i class="bi bi-arrow-down-right me-2"></i>
       {{isTreated && !isMyTreated ? 'Retourner pour correction':'Affecter'}}
     </button>
   </div>
-
   <!-- Bouton Traiter la demande -->
   <div>
     <button 

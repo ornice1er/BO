@@ -59,6 +59,8 @@ selectedFilter = '';
   
     ngOnInit(): void {
       this.all();
+              this.selectedId=null
+
       this.getTypeBillings()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;

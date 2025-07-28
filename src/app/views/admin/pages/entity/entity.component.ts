@@ -126,7 +126,7 @@ add(content:any){
         this.entityService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
-            ref.close()
+            this.modalService.dismissAll()
             this.all();
             //MyToastr.make('success',"Entité","Enregistrement effectuté avec succès",this.toastrService)
 
@@ -142,7 +142,7 @@ add(content:any){
       this.entityService.update(value, this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
-          ref.close()
+            this.modalService.dismissAll()
           this.all();
           //MyToastr.make('success',"Entité","Enregistrement effectuté avec succès",this.toastrService)
 

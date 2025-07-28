@@ -287,6 +287,30 @@
         </select>
        </div>
 
+        <div class="form-group">
+        <label for="typeLabel">Délivrance automatique</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class=" form-group col-12 mb-3">
+                <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="signer" ngModel>
+                    <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Génération de librable nécessaire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+
        <div class="form-group">
         <label for="typeLabel">Délai avant mise en abandon</label>
         <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" ngModel min="1" max="30">
@@ -296,7 +320,7 @@
     <div class="d-flex justify-content-between">
       <span>Formulaire sur le portail national ?</span>
       <ng-toggle
-      name="form_pns"
+      name="from_pns"
       ngModel
       [color]="{
           unchecked: '#939da2',
@@ -358,18 +382,13 @@
 
         <!--ckeditor [config]="{ extraPlugins: 'divarea', height: '100' }" name="desc" [(ngModel)]="selected_data.desc" required></ckeditor-->
       </div>
-      <div class="form-group" *ngIf="selected_data.signer!=null">
-        <label for="typeLabel">Signataire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer"  [(ngModel)]="selected_data.signer2.id">
-            <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-        </select>
-       </div>
-      <div class="form-group" *ngIf="selected_data.signer==null">
-        <label for="typeLabel">Signataire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer"  ngModel>
-            <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-        </select>
-       </div>
+
+        <div class=" form-group col-12 mb-3">
+            <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
+            <ng-select name="signer" name="signer"  [(ngModel)]="selected_data.signer2.id">
+                <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
+            </ng-select>
+        </div>
        <div class="form-group" *ngIf="selected_data.start_point!=null">
         <label for="typeLabel">Point d'entrée</label>
         <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point"  [(ngModel)]="selected_data.start_point2.id">
@@ -391,6 +410,7 @@
             <option value="2">Pas de contenu</option>
         </select>
        </div>
+
        <div class="form-group">
         <label for="typeLabel">Nécessité de rendez vous pour cette prestation ?</label>
         <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_meeting"  [(ngModel)]="selected_data.need_meeting">
@@ -405,6 +425,33 @@
           <option value="0">NON</option>
         </select>
        </div>
+
+
+        <div class="form-group">
+        <label for="typeLabel">Délivrance automatique</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  [(ngModel)]="selected_data.is_automatic_delivered">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Unité signataire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer"  [(ngModel)]="selected_data.signer">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Génération de librable nécessaire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  [(ngModel)]="selected_data.needOut">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+
        <div class="form-group">
         <label for="typeLabel">Délai avant mise en abandon</label>
         <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" [(ngModel)]="selected_data.delay" min="1" max="30">
@@ -429,8 +476,8 @@
     <div class="d-flex justify-content-between">
       <span>Formulaire sur le portail national ?</span>
       <ng-toggle
-      name="form_pns"
-      [(ngModel)]="selected_data.form_pns"
+      name="from_pns"
+      [(ngModel)]="selected_data.from_pns"
       [color]="{
           unchecked: '#939da2',
           checked: '#0C574E'

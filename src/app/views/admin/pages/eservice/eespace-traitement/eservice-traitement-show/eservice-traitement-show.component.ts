@@ -19,7 +19,6 @@ import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { PrestationDetails } from '../../prestation-details';
-import { Prestation, SelectedData } from '../../../../../../core/Models/interface.model';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
@@ -137,7 +136,7 @@ export class EserviceTraitementShowComponent implements OnInit {
     this.requeteService.get(this.code,this.prestation,this.myPrestation.code).subscribe((res:any)=>{
       this.modalService.dismissAll()
       this.selected_data=res.data
-      this.stepContents=res.data?.step_contents.steps
+      this.stepContents=res.data?.step_contents
 
      if(this.selected_data.reponses.length > 0) {
       this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
@@ -534,7 +533,7 @@ getMyCollab(){
   this.uaService.getUaCollabs().subscribe((res:any)=>{
     this.loading=false;
    this.modalService.dismissAll()
-    this.uas=res
+    this.uas=res.data
     console.log(res)
   },
   (error:any)=>{

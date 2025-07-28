@@ -103,7 +103,7 @@ export class EspaceSignatureShowComponent implements OnInit {
       this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
-      this.myPrestation=this.user.userprestation.find((el:any)=>el.prestation.slug ==this.prestation).prestation
+      this.myPrestation=this.user.user_prestations.find((el:any)=>el.prestation.code==this.prestation).prestation
       this.getName(this.prestation);
      });  
      

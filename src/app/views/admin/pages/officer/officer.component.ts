@@ -9,11 +9,11 @@ import { ToastrService } from 'ngx-toastr';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { FonctionAgentService } from '../../../../core/services/fonction-agent.service';
 import { OfficerService } from '../../../../core/services/officer.service';
-import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { EntityService } from '../../../../core/services/entity.service';
 
 @Component({
   selector: 'ngx-officer',
@@ -31,6 +31,7 @@ export class OfficerComponent implements OnInit {
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
+  uas:any[]=[]
   permissions:any[]=[]
   loading=false
   loading2=false
@@ -50,7 +51,7 @@ remoteSearchData: any[] = []
 
       constructor(
         private offcerService:OfficerService,
-        private unityAdminService:UnityAdminService,
+        private entityAdminService:EntityService,
         
         private fonctionAgentService:FonctionAgentService,
          private locService:LocalStorageService,
@@ -64,7 +65,7 @@ remoteSearchData: any[] = []
     ngOnInit(): void {
       this.all();
       this.getFonctionAgent()
-      this.geteUnityAdmin()
+      this.getEntityAdmin()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
        this.buttonsPermission = {
@@ -81,6 +82,8 @@ remoteSearchData: any[] = []
       this.offcerService.getAll().subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
+                this.selectedId=null
+
 
       },
       (error:any)=>{
@@ -89,8 +92,13 @@ remoteSearchData: any[] = []
       })
     }
 
-    geteUnityAdmin(){
-      this.unityAdminService.getAll().subscribe((res:any)=>{
+    loadUas(ev :any){
+      this.uas=this.data2.find((ea:any)=> ea.id == ev)?.uas
+      console.log(this.uas,ev)
+    }
+
+    getEntityAdmin(){
+      this.entityAdminService.getAll().subscribe((res:any)=>{
         this.data2=res.data
       },
       (error:any)=>{
@@ -109,6 +117,8 @@ remoteSearchData: any[] = []
   
     checked(el:any){
       this.selected_data=el
+      this.uas=this.data2.find((ea:any)=> ea.id == el.entite_admin_id)?.uas
+
     }
   
     
