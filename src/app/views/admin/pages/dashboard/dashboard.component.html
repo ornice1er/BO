@@ -1,0 +1,144 @@
+<div class=""  *ngIf="role == 'Admin Sectoriel' || role=='Admin national'">
+    <div class="row">
+        <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden bg-primary  border-0  p-3 ">
+                    
+            <h6 class="text-center text-white">Nombre d'tilisateurs</h6>
+            <p class="text-center text-white">{{data?.users}}</p> 
+            </div>
+         </div>
+         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
+                <div class="card overflow-hidden bg-warning  border-0  p-3 ">
+                        
+                <h6 class="text-center text-white">Nombre de prestations</h6>
+                <p class="text-center text-white">{{data?.prestations}}</p> 
+                </div>
+             </div>
+         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
+                <div class="card overflow-hidden bg-danger  border-0  p-3 ">
+                        
+                <h6 class="text-center text-white">Nombre d'unité administrative</h6>
+                <p class="text-center text-white">{{data?.ua}}</p> 
+                </div>
+             </div>
+</div>
+</div>
+<div class="card" *ngIf="role != 'Admin Sectoriel' && role!='Admin national'">
+    <!--div class="card-header d-flex justify-content-end">
+        <button class="btn btn-sm btn-info">Exporter en PDF</button>
+    </!div-->
+<div class="card-body" *ngIf="role != 'Directeur'">
+    <div class="form-group mb-5">
+        <label for="">Sélectionner une prestation</label>
+        <select class="form-control" (change)="getNewStat($event)">
+                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
+        </select>
+    </div>
+
+
+    <div class="row">
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden  border-0 bg-primary p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes Totales</h6>
+            <p class="text-center text-white">{{data?.total}}</p> 
+            </div>
+         </div>
+         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+                <div class="card overflow-hidden bg-secondary  border-0  p-3 ">
+                        
+                <h6 class="text-center text-white">Nouvelles demandes</h6>
+                <p class="text-center text-white">{{data?.news}}</p> 
+                </div>
+             </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes Traitées</h6>
+            <p class="text-center text-white">{{data?.treated}}</p> 
+            </div>
+         </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden bg-warning border-0 dash3 p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes mise en attente</h6>
+            <p class="text-center text-white">{{data?.pending}}</p> 
+            </div>
+         </div> 
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3"   >
+            <div class="card overflow-hidden bg-danger  border-0  p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes suspendues pour accord à l'amiable</h6>
+            <p class="text-center text-white">{{data?.pending}}</p> 
+            </div>
+         </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden  border-0  p-3 bg-danger">
+                    
+            <h6 class="text-center text-white">Demandes Rejetées</h6>
+            <p class="text-center text-white">{{data?.rejected}}</p> 
+            </div>
+         </div>
+         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+                <div class="card overflow-hidden  border-0 bg-success p-3 ">
+                        
+                <h6 class="text-center text-white">Demandes accordées</h6>
+                <p class="text-center text-white">{{data?.signed}}</p> 
+                </div>
+             </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes Finalisées</h6>
+            <p class="text-center text-white">{{data?.finished}}</p> 
+            </div>
+         </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" *ngIf="currentPrestation?.need_validation" >
+            <div class="card overflow-hidden bg-success border-0 dash3 p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes Validées</h6>
+            <p class="text-center text-white">{{data?.validated}}</p> 
+            </div>
+         </div>
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden  bg-secondary border-0 bg-secondary p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes Abandonnées</h6>
+            <p class="text-center text-white">{{data?.leaved}}</p> 
+            </div>
+         </div>
+    </div>
+
+    <div class="" >
+
+        <h4>Graphe d'évolution des demandes au cours des mois</h4>
+
+        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
+            <canvas baseChart
+            [type]="'line'"
+            [data]="{ labels: chartLabels, datasets: chartData }"
+            [options]="chartOptions"
+      ></canvas>
+          </div>
+    </div>
+</div>
+
+<div class="card-body" *ngIf="role == 'Directeur'">
+    <div class="form-group mb-5">
+        <label for="">Sélectionner une prestation</label>
+        <select class="form-control" (change)="getNewStat($event)">
+                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
+        </select>
+    </div>
+
+    <div class="row">
+        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
+            <div class="card overflow-hidden bg-warning border-0  p-3 ">
+                    
+            <h6 class="text-center text-white">Demandes en attente de confirmation</h6>
+            <p class="text-center text-white">{{data?.pending}}</p> 
+            </div>
+         </div> 
+    </div>
+</div>
+</div>

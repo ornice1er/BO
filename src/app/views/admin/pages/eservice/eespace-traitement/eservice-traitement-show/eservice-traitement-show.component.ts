@@ -187,8 +187,7 @@ export class EserviceTraitementShowComponent implements OnInit {
 
   }
   showResponseFile(name:any){
-    var url=ConfigService.toFile("docs/responses/"+name);
-    this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
+    this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(name)
     
     this.showResponseFilePreview=true;
     this.showPreview=true

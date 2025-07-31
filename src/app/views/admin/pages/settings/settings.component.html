@@ -54,14 +54,14 @@
                     </form>
                 </ng-template>
             </ng-container>
-            <ng-container [ngbNavItem]="3" *ngIf="role=='Directeur'">
+            <ng-container [ngbNavItem]="3" >
                 <a ngbNavLink>Mon code de signature</a>
                 <ng-template ngbNavContent>
-                    <div class="text-center p-5" *ngIf="token ==undefined">
+                    <div class="text-center p-5" >
                             <button class="btn btn-sm btn-primary" [disabled]="loading" (click)="generateCode()">Envoyer le lien de génération du code de signature <app-loading [isVisible]="loading"></app-loading> </button>
                     </div>
     
-                    <div class="" *ngIf="token !=undefined">
+                    <div class="" >
                         <form #codeForm="ngForm" (ngSubmit)="changeCode(codeForm.value,codeForm)">                     
                             <div class="form-group">
                                 <label for="typeLabel">Saisissez le code</label>

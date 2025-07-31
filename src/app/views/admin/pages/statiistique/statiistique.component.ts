@@ -13,13 +13,18 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
-
+import {
+  ChartDataset,
+  ChartOptions,
+  ChartType
+} from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-statiistique',
   templateUrl: './statiistique.component.html',
         standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,BaseChartDirective],
     
   styleUrls: ['./statiistique.component.css']
 })
@@ -27,19 +32,19 @@ export class StatiistiqueComponent implements OnInit {
   user:any
   userprestations:any[]=[]
   data:any
-  // chartData: ChartDataset[] = [];
-  // chartLabels: string[] = [];
-  // chartOptions: ChartOptions = {
-  //     // ⤵️ Fill the wrapper
-  //     responsive: true,
-  //     maintainAspectRatio: true,
-  //     // ⤵️ Remove the main legend
-  //     plugins: {
-  //       legend: {
-  //         display: true
-  //       }
-  //     }
-  // };
+  chartData: ChartDataset[] = [];
+  chartLabels: string[] = [];
+  chartOptions: ChartOptions = {
+      // ⤵️ Fill the wrapper
+      responsive: true,
+      maintainAspectRatio: true,
+      // ⤵️ Remove the main legend
+      plugins: {
+        legend: {
+          display: true
+        }
+      }
+  };
 
     pg={
     pageSize:10,
@@ -72,16 +77,16 @@ export class StatiistiqueComponent implements OnInit {
       edit:true,
       delete:true
     };
-      // this.data.forEach((el:any)=>{
-      //   this.chartData.push({
-      //     label:el.name,
-      //     data:el.stats_by_month,
-      //     pointHitRadius: 15, // expands the hover 'detection' area
-      //     pointHoverRadius: 8,
-      //   })
-      // })
+      this.data.forEach((el:any)=>{
+        this.chartData.push({
+          label:el.name,
+          data:el.stats_by_month,
+          pointHitRadius: 15, // expands the hover 'detection' area
+          pointHoverRadius: 8,
+        })
+      })
     
-      // this.chartLabels=res.months
+      this.chartLabels=res.data?.months
     })
   }
 

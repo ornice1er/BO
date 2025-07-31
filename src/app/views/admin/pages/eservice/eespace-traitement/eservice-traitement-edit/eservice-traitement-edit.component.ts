@@ -238,6 +238,10 @@ export class EserviceTraitementEditComponent implements OnInit {
   getPrestation(){
     
   }
+
+  showResponseFile(name:any){
+    
+  }
    get(){
     this.requeteService.get(this.code,this.prestation,this.myPrestation?.code).subscribe((res:any)=>{
       this.selected_data=res.data
@@ -578,10 +582,8 @@ export class EserviceTraitementEditComponent implements OnInit {
       }
     
 
-      var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
-      this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
+      this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(this.selected_data.filename)
       this.showPreview2=true;
-      console.log(url)
     }
 
      deliveryrDoc(){
@@ -717,13 +719,7 @@ export class EserviceTraitementEditComponent implements OnInit {
         }
       }
 
-      showResponseFile(name:any){
-        var url=ConfigService.toFile("docs/responses/"+name);
-        this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
-        console.log(this.pdfSrc)
-        this.showResponseFilePreview=true
-      }
-
+  
       validate(){
         if(confirm("Envoyer le mail de validation")){
               //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)

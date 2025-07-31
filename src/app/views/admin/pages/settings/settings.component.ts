@@ -47,12 +47,12 @@ export class SettingsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-   if(this.router.snapshot.paramMap.get('token')){
-    this.token=this.router.snapshot.paramMap.get('token')
-    this.active=3
-   }
-    this.role= this.localService.get(GlobalName.role)
-    this.user= this.localService.get(GlobalName.user)
+  //  if(this.router.snapshot.paramMap.get('token')){
+  //   this.token=this.router.snapshot.paramMap.get('token')
+  //   this.active=3
+  //  }
+    this.user= this.localService.get(GlobalName.userName)
+    this.role=this.user?.roles[0].name
     this.selected_data=this.user?.agent;
      this.buttonsPermission = {
       show:true,
