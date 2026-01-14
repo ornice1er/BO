@@ -137,6 +137,9 @@ toggleMenu() {
       getUserMenu(){
    
     switch (this.role) {
+       case "Super Admin":
+            this.menu=MENU_ADMIN_NATIONAL;
+        break;
       case "Admin national":
             this.menu=MENU_ADMIN_NATIONAL;
         break;
