@@ -245,7 +245,7 @@
             </div>
                 <div class="form-group" *ngIf="role!='Admin national'">
                 <label for="typeLabel">Agent</label>
-                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="agent_id" ngModel>
+                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #type="ngModel" name="agent_id" ngModel>
                     <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
                 </ng-select>
             </div>
@@ -315,7 +315,7 @@
             </div>
             <div class="form-group" *ngIf="role!='Admin national'">
                 <label for="typeLabel">Agent</label>
-                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="agent_id" [(ngModel)]="selected_data.agent_id">
+                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #type="ngModel" name="agent_id" [(ngModel)]="selected_data.agent_id">
                     <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
                 </ng-select>
             </div>
