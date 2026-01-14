@@ -147,6 +147,10 @@ toggleMenu() {
           
             this.menu=MENU_ADMIN_SECTORIEL;
         break;
+         case "Administrateur Sectoriel":
+          
+            this.menu=MENU_ADMIN_SECTORIEL;
+        break;
         case "Decisionnel":
           this.menu=MENU_DECISIONNEL;
       break;
