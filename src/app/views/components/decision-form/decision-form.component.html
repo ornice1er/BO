@@ -1,0 +1,114 @@
+ <div class="card-custom">
+      <div class="card-header-primary">
+        <h4 class="mb-0">{{ isSigner ? 'Décision finale' : 'Mon Avis' }}</h4>
+      </div>
+      <div class="card-body p-4">
+        <form #decisionForm="ngForm" (ngSubmit)="onSubmit(decisionForm.value)">
+          <!-- Sélection de la décision -->
+          <div class="form-group mb-4">
+            <label for="decision" class="form-label fw-bold">Décision</label>
+            <select 
+              id="decision"
+              [(ngModel)]="responseData.hasPermission" 
+              name="hasPermission"  
+              class="form-control-custom form-select" 
+              (change)="onDecisionChange($event)"
+              required>
+              <option value="" disabled>Sélectionnez une décision</option>
+              <option [value]="2" *ngIf="!isSigner">Mise en attente</option>
+              <option [value]="1">Favorable</option>
+              <option [value]="0">Défavorable</option>
+            </select>
+          </div>
+
+          <!-- Formulaire pour décision favorable -->
+          <ng-container *ngIf="responseData.hasPermission === 1">
+            <div class="alert alert-success border-0" role="alert">
+              <i class="fas fa-check-circle me-2"></i>
+              <strong>Décision favorable sélectionnée</strong>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="reason" class="form-label">Note</label>
+              <textarea 
+                id="reason"
+                class="form-control-custom" 
+                rows="3" 
+                [(ngModel)]="responseData.reason" 
+                name="reason"
+                placeholder="Ajoutez une note explicative..."></textarea>
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="observation" class="form-label">Observation complète sur l'analyse de la demande</label>
+              <textarea 
+                id="observation"
+                class="form-control-custom" 
+                rows="5" 
+                [(ngModel)]="responseData.observation" 
+                name="observation"
+                placeholder="Détaillez votre analyse..."></textarea>
+            </div>
+          </ng-container>
+
+          <!-- Formulaire pour décision défavorable -->
+          <ng-container *ngIf="responseData.hasPermission === 0">
+            <div class="alert alert-danger border-0" role="alert">
+              <i class="fas fa-times-circle me-2"></i>
+              <strong>Décision défavorable sélectionnée</strong>
+            </div>
+            
+            <div class="form-group mb-4">
+              <label for="motif" class="form-label">Motif du rejet <span class="text-danger">*</span></label>
+              <textarea 
+                id="motif"
+                class="form-control-custom" 
+                rows="4" 
+                [(ngModel)]="responseData.motif" 
+                name="motif"
+                required
+                placeholder="Expliquez les raisons du rejet..."></textarea>
+            </div>
+          </ng-container>
+
+          <!-- Formulaire pour mise en attente -->
+          <ng-container *ngIf="responseData.hasPermission === 2">
+            <div class="alert alert-warning border-0" role="alert">
+              <i class="fas fa-clock me-2"></i>
+              <strong>Mise en attente sélectionnée</strong>
+            </div>
+            
+            <div class="form-group mb-4">
+              <label for="motifAttente" class="form-label">Motif de mise en attente <span class="text-danger">*</span></label>
+              <textarea 
+                id="motifAttente"
+                class="form-control-custom" 
+                rows="4" 
+                [(ngModel)]="responseData.motif" 
+                name="motif"
+                required
+                placeholder="Expliquez les raisons de la mise en attente..."></textarea>
+            </div>
+          </ng-container>
+
+          <!-- Boutons d'action -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button 
+              type="button" 
+              class="btn-custom-secondary"
+              (click)="onCancel()">
+              Annuler
+            </button>
+            <button 
+              type="submit" 
+              class="btn-custom-primary" 
+              [disabled]="loading || decisionForm.invalid">
+              <span class="loading-container">
+                {{ getSubmitButtonText() }}
+                <app-loading-component2 [isVisible]="loading"></app-loading-component2>
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>

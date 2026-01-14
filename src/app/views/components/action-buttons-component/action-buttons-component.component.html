@@ -1,0 +1,56 @@
+<div class="card-header-custom d-flex flex-wrap justify-content-center gap-2 p-3">
+      <!-- Soumettre mon avis -->
+      <button 
+        type="button" 
+        (click)="onSubmitAdvice()" 
+        [disabled]="config.loading" 
+        *ngIf="config.isTreated && !config.isSigner" 
+        class="btn-custom-primary">
+        <span class="loading-container">
+          Soumettre mon avis
+          <app-loading-component2 [isVisible]="config.loading"></app-loading-component2>
+        </span>
+      </button>
+
+      <!-- Validation provisoire -->
+      <button 
+        type="button" 
+        class="btn-custom-success" 
+        *ngIf="showValidationButton()" 
+        (click)="onValidate()">
+        Envoyer une notification provisoire de demande acceptée
+      </button>
+
+      <!-- Clôturer la demande -->
+      <button 
+        type="button" 
+        (click)="onDeliver()" 
+        class="btn-custom-primary" 
+        [disabled]="!config.isTreated || config.loading" 
+        *ngIf="config.needValidation && config.status === 5">
+        <span class="loading-container">
+          Clôturer la demande
+          <app-loading-component2 [isVisible]="config.loading"></app-loading-component2>
+        </span>
+      </button>
+
+      <!-- Signer l'attestation -->
+      <button 
+        class="btn-custom-success" 
+        *ngIf="showSignButton()" 
+        (click)="onOpenDialog()">
+        Signer l'attestation / Délivrer mon visa
+      </button>
+
+      <!-- Délivrer l'attestation -->
+      <button 
+        class="btn-custom-success" 
+        *ngIf="showDeliverButton()" 
+        (click)="onDeliver()" 
+        [disabled]="config.loading">
+        <span class="loading-container">
+          Délivrer l'attestation / le document visé
+          <app-loading-component2 [isVisible]="config.loading"></app-loading-component2>
+        </span>
+      </button>
+    </div>

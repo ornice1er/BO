@@ -1,0 +1,12 @@
+ .pdf-viewer-container {
+      margin-bottom: 2rem;
+    }
+    
+    .pdf-object {
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+    
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }

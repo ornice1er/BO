@@ -1,0 +1,302 @@
+   
+<h2 class="text-center mb-4 page-subtitle">Liste des agents</h2>
+
+<div class="row">
+<div class="col-lg-12">
+    <div class="card custom-card">
+    <!-- Card Header with Actions -->
+    <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>
+            Ajouter
+        </button>
+        
+        <div class="search-controls d-flex align-items-center">
+            <div class="input-group">
+            <select class="form-select filter-select" [(ngModel)]="selectedFilter">
+                <option value="">Filtrer Par</option>
+                <option value="role">Rôle</option>
+                <option value="status">Statut</option>
+            </select>
+            <input 
+                type="text" 
+                class="form-control search-input" 
+                name="search_text" 
+                [(ngModel)]="search_text"   
+                (ngModelChange)="onSearchChange()" 
+                placeholder="Rechercher...">
+            <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+                <i class="fa fa-rotate-left"></i>
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="results-info mb-3">
+        <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            {{data.length}} élément(s)
+        </p>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                  <th scope="col">Matricule</th>
+                                    <th scope="col">Identité</th>
+                                    <th scope="col">Fonction</th>
+                                    <th scope="col">Unité administrative</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | paginate: {
+                                    id:'ngxP1',
+                                    itemsPerPage: pg.pageSize,
+                                    currentPage: pg.p,
+                                    totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+                <td class="position-relative checkbox-cell">
+                <div class="form-check">
+                    <input
+                    (click)="checked(d)"
+                    class="form-check-input custom-radio"
+                    type="radio"
+                    name="selectedDoc"
+                    [value]="d.id"
+                    [(ngModel)]="selectedId"
+                    id="radio-{{ d.id }}"
+                    />
+                </div>
+
+                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                    <button
+                        class="btn btn-action btn-add"
+                        (click)="add(addContent)"
+                        title="Ajouter"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+
+                    <button
+                        (click)="show(showContent)"
+                        type="button"
+                        class="btn btn-action btn-view"
+                        title="Consulter"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                        (click)="edit(editContent)"
+                        type="button"
+                        class="btn btn-action btn-edit"
+                        title="Éditer"
+                    >
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button
+                        (click)="delete()"
+                        type="button"
+                        class="btn btn-action btn-delete"
+                        title="Supprimer"
+                    >
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    <button
+                        *ngIf="!d.is_active"
+                        (click)="setStatus(1)"
+                        type="button"
+                        class="btn btn-action btn-activate"
+                        title="Activer"
+                    >
+                        <i class="bi bi-toggle-on"></i>
+                    </button>
+
+                    <button
+                        *ngIf="d.is_active"
+                        (click)="setStatus(0)"
+                        type="button"
+                        class="btn btn-action btn-deactivate"
+                        title="Désactiver"
+                    >
+                        <i class="bi bi-toggle-off"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-action btn-close-panel"
+                        (click)="selectedId = null"
+                        title="Fermer"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    </div>
+                </div>
+                </td>
+
+                 <td>{{d?.numero_matricule}}</td>
+                                <td>{{d?.lastname}} {{d?.firstname}}</td>
+                                <td>{{d?.fonction_agent?.libelle}}</td>
+                                <td>{{d?.unite_admin?.libelle}}</td>
+            </tr>
+
+            <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
+                <td colspan="5" class="text-center py-4">
+                <div class="no-results">
+                    <i class="bi bi-search mb-3"></i>
+                    <p class="text-muted mb-3">Recherche avancée en cours...</p>
+                    <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>
+                    Réinitialiser la recherche
+                    </button>
+                </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Pagination placeholder -->
+        <div class="pagination-container mt-4">
+        
+        <pagination-controls 
+                        id="ngxP1"
+                        (pageChange)="getPage($event)"
+                        [maxSize]="9"
+                        [directionLinks]="true"
+                        [autoHide]="true"
+                        [responsive]="true"
+                        [previousLabel]="'Précédent'"
+                        [nextLabel]="'Suivant'"
+                        [screenReaderPaginationLabel]="'Pagination'"
+                        [screenReaderPageLabel]="'page'"
+                        [screenReaderCurrentLabel]="'Vous êtes sur la page'">
+                    </pagination-controls>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+  
+ 
+
+  <ng-template #addContent let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+        <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Enregistrement d'un nouvel agent</h4>
+        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class=" form-group col-12 mb-3">
+                <label for="">Matricule <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="numero_matricule" class="form-control" ngModel>
+            </div>
+          <div class=" form-group col-12 mb-3">
+                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="lastname" class="form-control" ngModel>
+            </div>
+              <div class=" form-group col-12 mb-3">
+                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="firstname" class="form-control" ngModel>
+            </div>
+
+             <div class=" form-group col-12 mb-3">
+                <label for="">Fonction <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="fonction_agent_id" ngModel>
+                    <ng-option *ngFor="let o of data3" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+          <div class="form-group col-12 mb-3">
+            <label for="">Entité administrative <span class="text-danger ml-2">(*)</span></label>
+            <ng-select name="entite_admin_id" ngModel (change)="loadUas($event)">
+                <ng-option *ngFor="let o of data2" [value]="o.id">{{ o.libelle }}</ng-option>
+            </ng-select>
+        </div>
+
+
+              <div class=" form-group col-12 mb-3">
+                <label for="">Unité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="unite_admin_id" ngModel>
+                    <ng-option *ngFor="let o of uas" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+    </form>
+
+  </ng-template>
+
+  
+ 
+  <ng-template #editContent let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification d'un agent</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+    
+          <div class=" form-group col-12 mb-3">
+                <label for="">Matricule <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="numero_matricule" class="form-control" [(ngModel)]="selected_data.numero_matricule">
+            </div>
+          <div class=" form-group col-12 mb-3">
+                <label for="">Nom <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="lastname" class="form-control" [(ngModel)]="selected_data.lastname">
+            </div>
+              <div class=" form-group col-12 mb-3">
+                <label for="">Prénoms <span class="text-danger ml-2">(*)</span></label>
+                <input type="text" name="firstname" class="form-control" [(ngModel)]="selected_data.firstname">
+            </div>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Fonction <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="fonction_agent_id" [(ngModel)]="selected_data.fonction_agent_id">
+                    <ng-option *ngFor="let o of data3" [value]="o.id">{{o.name}}</ng-option>
+                </ng-select>
+            </div>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Entité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id">
+                    <ng-option *ngFor="let o of data2" [value]="d.id">{{o.name}}</ng-option>
+                </ng-select>
+            </div>
+
+                <div class=" form-group col-12 mb-3">
+                <label for="">Unité administrative <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id">
+                    <ng-option *ngFor="let o of uas" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+         
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+  <ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>

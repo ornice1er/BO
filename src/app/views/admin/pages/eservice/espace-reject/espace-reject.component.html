@@ -1,0 +1,601 @@
+    
+<h2 class="text-center mb-4 page-subtitle">Liste des demandes à signer</h2>
+
+<div class="row" >
+<div class="col-lg-12">
+    <div class="card custom-card">
+    <!-- Card Header with Actions -->
+    <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>
+            Ajouter
+        </button>
+        
+        <div class="search-controls d-flex align-items-center">
+            <div class="input-group">
+            <select class="form-select filter-select" [(ngModel)]="selectedFilter">
+                <option value="">Filtrer Par</option>
+                <option value="role">Rôle</option>
+                <option value="status">Statut</option>
+            </select>
+            <input 
+                type="text" 
+                class="form-control search-input" 
+                name="search_text" 
+                [(ngModel)]="search_text"   
+                (ngModelChange)="onSearchChange()" 
+                placeholder="Rechercher...">
+            <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+                <i class="fa fa-rotate-left"></i>
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="results-info mb-3">
+        <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            {{data.length}} élément(s)
+        </p>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                <th scope="col">Code demande</th>
+                <th scope="col">Date Enreg.</th>
+               <th scope="col">Email</th>
+                <th scope="col">Contact</th>
+                <th scope="col" >Livrable disponible (Oui/Non)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | paginate: {
+                                    id:'ngxP1',
+                                    itemsPerPage: pg.pageSize,
+                                    currentPage: pg.p,
+                                    totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+                <td class="position-relative checkbox-cell">
+                <div class="form-check">
+                    <input
+                    (click)="checked(d)"
+                    class="form-check-input custom-radio"
+                    type="radio"
+                    name="selectedDoc"
+                    [value]="d.id"
+                    [(ngModel)]="selectedId"
+                    id="radio-{{ d.id }}"
+                    />
+                </div>
+
+                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                    <button
+                        class="btn btn-action btn-add"
+                        (click)="add(addContent)"
+                        title="Ajouter"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+
+                    <button
+                        (click)="show()"
+                        type="button"
+                        class="btn btn-action btn-view"
+                        title="Consulter"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                        (click)="edit(editContent)"
+                        type="button"
+                        class="btn btn-action btn-edit"
+                        title="Éditer"
+                    >
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button
+                        (click)="delete()"
+                        type="button"
+                        class="btn btn-action btn-delete"
+                        title="Supprimer"
+                    >
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    <button
+                        *ngIf="!d.is_active"
+                        (click)="setStatus(1)"
+                        type="button"
+                        class="btn btn-action btn-activate"
+                        title="Activer"
+                    >
+                        <i class="bi bi-toggle-on"></i>
+                    </button>
+
+                    <button
+                        *ngIf="d.is_active"
+                        (click)="setStatus(0)"
+                        type="button"
+                        class="btn btn-action btn-deactivate"
+                        title="Désactiver"
+                    >
+                        <i class="bi bi-toggle-off"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-action btn-close-panel"
+                        (click)="selectedId = null"
+                        title="Fermer"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    </div>
+                </div>
+                </td>
+                 <td>{{d?.code}}</td>
+                <td>{{d?.created_at | date: "dd-MM-yyyy HH:mm:ss"}}</td>
+                 <td>{{d?.email}}</td>
+                <td>{{d?.phone}}</td>
+                <td *ngIf="d?.filename!=null">
+                <span class="badge bg-warning text-white">oui</span>
+                </td>
+                <td *ngIf="d?.filename==null">
+                <span class="badge bg-secondary text-white">non</span>
+                </td>
+                <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
+            </tr>
+
+            <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
+                <td colspan="5" class="text-center py-4">
+                <div class="no-results">
+                    <i class="bi bi-search mb-3"></i>
+                    <p class="text-muted mb-3">Recherche avancée en cours...</p>
+                    <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>
+                    Réinitialiser la recherche
+                    </button>
+                </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Pagination placeholder -->
+        <div class="pagination-container mt-4">
+        
+        <pagination-controls 
+                        id="ngxP1"
+                        (pageChange)="getPage($event)"
+                        [maxSize]="9"
+                        [directionLinks]="true"
+                        [autoHide]="true"
+                        [responsive]="true"
+                        [previousLabel]="'Précédent'"
+                        [nextLabel]="'Suivant'"
+                        [screenReaderPaginationLabel]="'Pagination'"
+                        [screenReaderPageLabel]="'page'"
+                        [screenReaderCurrentLabel]="'Vous êtes sur la page'">
+                    </pagination-controls>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+
+<div *ngIf="showPreview2"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Fermer le prévisualiseur</button>
+                <!--button class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && !selected_data.isAutorized" (click)="open(dialogPass)">Signer l'attestation</button>
+                <button-- class="btn btn-outline-success mb-3 " *ngIf="hasPermission('autorisation') && selected_data.isAutorized" (click)="delivered()">Délivrer l'attestation</button-->
+                
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+  <ng-template #addContent  let-ref="dialogRef">
+    <button id="cBtn"  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+</ng-template>
+
+
+  <ng-template #dialogEdit  let-ref="dialogRef">
+    <div>
+      <div>Projet de réponse de la demande
+
+        <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div>
+      
+      </div>    
+    </div>
+  </ng-template>
+
+  <ng-template #contentTemplate let-ref="windowRef" >
+          <form #addResponse="ngForm" (ngSubmit)="storeResponse(ref,addResponse.value)">
+          <div size="large">
+         
+                <div class="form-group">
+                    <label for="">Argumentaire</label>
+                    <textarea name="" id="" cols="30" class="form-control" rows="2" [(ngModel)]="responseUA.reason" name="reason"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="">observation</label>
+                    <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="responseUA.observation" name="observation"
+                    ></textarea>
+                </div>
+
+                <h6>Décision finale</h6>
+                <!--div [(value:any)]="radioGroupValue" [(ngModel)]="responseUA.hasPermission" name="hasPermission" >
+                    <div
+                      [value]="true" >
+                      favorable
+                    </div>
+                    <div
+                      [value]="false"  >
+                      Défavorable
+                    </div>
+                  </div-->
+          </div>
+  
+          <div *ngIf="selected_data!=null && responseUA.hasPermission==true && prestation=='autorisation-de-stage'" >
+            <hr>
+            <h6>Complèter ces informations</h6>
+            <hr>
+            <div class="row">
+            <div class="col-12 col-md-6">
+
+                <div class="form-group">
+                     <label for="">Direction</label>
+                     <input type="text" class="form-control" [(ngModel)]="selected_data.ads.structure" name="structure">
+                </div>
+            </div>
+            <!-- <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Service</label>
+                     <input type="text" class="form-control" [(ngModel)]="selected_data.ads.service" name="service">
+                </div>
+            </div> -->
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Date début de stage</label>
+                     <input type="date" class="form-control" [(ngModel)]="selected_data.ads.date_start" name="date_start">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                     <label for="">Date fin de stage</label>
+                     <input type="date" class="form-control" [(ngModel)]="selected_data.ads.date_end" name="date_end">
+                </div>
+            </div>
+                </div>
+          </div>
+            <button type="submit" class="btn btn-outline-primary" [disabled]="addResponse.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+           
+        </form>
+
+  
+  </ng-template>
+
+
+  <ng-template #dialogAffectation let-ref="dialogRef">
+    <form #addInstruction="ngForm" (ngSubmit)="transDown(addInstruction.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez une instruction</label>
+                <textarea name="instruction" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+            <div class="form-group">
+                <label for="">Pour au plus tard, le </label>
+                <input type="date" nbInput name="delay" required ngModel>
+            </div>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+<ng-template #dialogSuspension let-ref="dialogRef">
+    <form #addSusp="ngForm" (ngSubmit)="needCorrection(addSusp.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez le motif</label>
+                <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+    
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addSusp.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+<ng-template #dialogRejet let-ref="dialogRef">
+    <form #addRejet="ngForm" (ngSubmit)="decline(addRejet.value,ref)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Laissez le motif</label>
+                <textarea name="commentaire" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+    
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addRejet.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+  <ng-template #dialogAttestation let-ref="dialogRef">
+    <form #addAttestation="ngForm" (ngSubmit)="deliveryrDoc(addAttestation.value,ref)">
+    <div style="height: 90vh; width: 800px; margin-left: 10%; margin-right: 10%;"> 
+        <div>
+            Création du document
+            <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+        </div>
+        <div class="p-3">
+            <div class="" *ngIf="prestation=='autorisation-de-stage'">
+                <h6>Point des contenus générés</h6>
+                <ul>
+                    <li *ngFor="let d of docs"><strong class="mr-2">{{d?.name}}</strong> <i class="fa fa-check" *ngIf="d?.content != null"></i></li>
+
+                </ul>
+                <div class="form-group" >
+                    <label for="">Veuillez sélection le contenu à générer</label>
+                    <select class="form-control" (change)="changeDesc($event)">
+                        <option value="0">Lettre d'acception</option>
+                        <option value="1">Lettre d'agrément</option>
+                        <option value="2">Autorisation de stage</option>
+                      </select>
+                </div>
+            </div>
+          
+            <!-- <div *ngIf="content !=null">
+                <div>
+                    <div class="mb-3" >
+                <h6 class="mb-3"><strong>Un contenu déjà disponible</strong></h6>
+                <p  [innerHTML]="content"></p>
+            </div>
+                </div>
+            </div> -->
+            <div class="form-group" >
+                <!--ckeditor  [config]="{ extraPlugins: 'divarea', height: '400',width:'800'}" name="contenu" [(ngModel)]="desc"></ckeditor-->
+            </div>
+          
+        </div>
+        
+         
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addAttestation.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+  <ng-template #dialogSimulation let-ref="dialogRef">
+    <form>
+    <div style="height: 90vh; width: 80%; margin-left: 10%; margin-right: 10%;"> 
+        <div>
+            Simuler d'indenminité
+            <button  class="btn-sm float-right" (click)="ref.close()"><span aria-hidden="true">&times;</span></button>
+
+        </div>
+        
+        <div>  
+
+            <i icon="shopping-bag-outline">Informations sur le contrat de travail</i>
+       
+           <div class="row">
+               <div class="col-12 col-md-6">
+                   <div class="form-group">
+                        <label for="">Date d'entrée dans l'entreprise</label>
+                        <input type="date" class="form-control">
+                   </div>
+               </div>
+               <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Date de cessation des fonctions</label>
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group row">
+                    <span>Contrat de travail écrit</span>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                        <label class="form-check-label" for="inlineRadio1">Oui</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <label class="form-check-label" for="inlineRadio2">Non</label>
+                      </div>
+                   
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Dernier salaire net</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Montant moyen des 3 derniers mois de salaire net</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label for="">Nombre de salariés</label>
+                    <select name="" class="form-control" id="">
+                        <option value="">Moins de 11</option>
+                        <option value="">Entre 11 et 49</option>
+                        <option value="">Moins 50 et 499</option>
+                        <option value="">500 et plus</option>
+                    </select>
+                </div>
+            </div>
+           </div>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" >Calculer  </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+
+
+<div *ngIf="showPreview"  class="container">
+    <div>
+        <div>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-dark mb-3 " (click)="back()">Retour</button>
+                <button class="btn btn-outline-success mb-3 " [disabled]="!activeobsPanel"  (click)="openWindow(contentTemplateAmendement)">Faire des observations</button>
+        
+            </div>
+        </div>
+
+        <div>
+         
+            <object [data]="pdfSrc" type="application/pdf" width="100%" height="600px"></object>
+        </div>
+    </div>
+  
+    
+  </div>
+
+  <ng-template #contentTemplateAmendement let-ref="windowRef">
+    <div class="list-card"> 
+        <form #addAmend="ngForm" (ngSubmit)="storeAmend(ref)">
+        <div size="large">
+              <div class="form-group">
+                  <label for="">observation</label>
+                  <textarea name="" id="" cols="30" class="form-control" rows="5" [(ngModel)]="observation" name="observation"
+                  ></textarea>
+              </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addAmend.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+        </div>
+      </form>
+
+    </div>
+
+</ng-template>
+
+<ng-template #dialogPass let-ref="dialogRef">
+    <form #addInstruction="ngForm" (ngSubmit)="authorized(addInstruction.value)">
+    <div > 
+        <div>
+            <div class="form-group">
+                <label for="">Saisissez votre mot de passe de délivrance</label>
+                <textarea name="password" rows="3" class="form-control" required ngModel></textarea>
+            </div>
+          
+        </div>
+        <div>
+          <button type="submit" class="btn btn-outline-primary" [disabled]="addInstruction.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+
+    </div>
+</form>
+
+</ng-template>
+
+<ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
+
+
+  <ng-template #addContent let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+        <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Enregistrement d'un nouvel agent</h4>
+        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+    
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+        </div>
+    </form>
+
+  </ng-template>
+
+  
+ 
+  <ng-template #editContent let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification d'un agent</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+    
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+  <ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>

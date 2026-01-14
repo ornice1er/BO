@@ -1,0 +1,78 @@
+
+<div class="card">
+    <div class="card-header d-flex justify-content-end">
+        <button (click)="export()" class="btn btn-sm btn-info">Exporter en PDF</button>
+    </div>
+<div class="card-body">
+
+    <table class="table table-bordred mb-3 table-sm">
+        <thead>
+            <th>Libellé</th>
+            <th>Totales</th>
+            <th>Traitées</th>
+            <th>Rejetées</th>
+            <th>Délivrées</th>
+            <th>Finalisées</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let d of data">
+                <td>{{d.name}}</td>
+                <td>{{d.total}}</td>
+                <td>{{d.treated}}</td>
+                <td>{{d.rejected}}</td>
+                <td>{{d.signed}}</td>
+                <td>{{d.finished}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="">
+
+        <h4>Graphe d'évolution des demandes au cours des mois</h4>
+
+        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
+         <canvas baseChart
+            [type]="'line'"
+            [data]="{ labels: chartLabels, datasets: chartData }"
+            [options]="chartOptions"
+      ></canvas>
+          </div>
+    </div>
+</div>
+</div>
+
+<ng-template #addContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
+<ng-template #editContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
+<ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>

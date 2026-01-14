@@ -1,0 +1,549 @@
+   
+<h2 class="text-center mb-4 page-subtitle">Liste des agents</h2>
+
+<div class="row">
+<div class="col-lg-12">
+    <div class="card custom-card">
+    <!-- Card Header with Actions -->
+    <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>
+            Ajouter
+        </button>
+          <button class=" btn btn-sm btn-secondary" (click)="open(dialogSP)">Ajouter de nouveaux points d'entrées</button>
+
+        
+        <div class="search-controls d-flex align-items-center">
+            <div class="input-group">
+            <select class="form-select filter-select" [(ngModel)]="selectedFilter">
+                <option value="">Filtrer Par</option>
+                <option value="role">Rôle</option>
+                <option value="status">Statut</option>
+            </select>
+            <input 
+                type="text" 
+                class="form-control search-input" 
+                name="search_text" 
+                [(ngModel)]="search_text"   
+                (ngModelChange)="onSearchChange()" 
+                placeholder="Rechercher...">
+            <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+                <i class="fa fa-rotate-left"></i>
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="results-info mb-3">
+        <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            {{data.length}} élément(s)
+        </p>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                    <th scope="col">Libellé</th>
+                    <th scope="col">Description</th>
+              <th scope="col">type de contenu</th>
+              <th scope="col">Structure</th>
+              <th scope="col">Signataire</th>
+              <th scope="col">Point d'entrée</th>
+              <th scope="col">Néceesité de rencontre</th>
+              <th scope="col">Besoin de validation</th>
+              <th scope="col">Mise en abandon</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of data | paginate: {
+                                    id:'ngxP1',
+                                    itemsPerPage: pg.pageSize,
+                                    currentPage: pg.p,
+                                    totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+                <td class="position-relative checkbox-cell">
+                <div class="form-check">
+                    <input
+                    (click)="checked(d)"
+                    class="form-check-input custom-radio"
+                    type="radio"
+                    name="selectedDoc"
+                    [value]="d.id"
+                    [(ngModel)]="selectedId"
+                    id="radio-{{ d.id }}"
+                    />
+                </div>
+
+                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                    <button
+                        class="btn btn-action btn-add"
+                        (click)="add(addContent)"
+                        title="Ajouter"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+
+                    <button
+                        (click)="show(showContent)"
+                        type="button"
+                        class="btn btn-action btn-view"
+                        title="Consulter"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                        (click)="edit(editContent)"
+                        type="button"
+                        class="btn btn-action btn-edit"
+                        title="Éditer"
+                    >
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button
+                        (click)="delete()"
+                        type="button"
+                        class="btn btn-action btn-delete"
+                        title="Supprimer"
+                    >
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    <button
+                        *ngIf="!d.is_active"
+                        (click)="setStatus(1)"
+                        type="button"
+                        class="btn btn-action btn-activate"
+                        title="Activer"
+                    >
+                        <i class="bi bi-toggle-on"></i>
+                    </button>
+
+                    <button
+                        *ngIf="d.is_active"
+                        (click)="setStatus(0)"
+                        type="button"
+                        class="btn btn-action btn-deactivate"
+                        title="Désactiver"
+                    >
+                        <i class="bi bi-toggle-off"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-action btn-close-panel"
+                        (click)="selectedId = null"
+                        title="Fermer"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    </div>
+                </div>
+                </td>
+
+                <td>{{d?.name}}</td>
+              <td><p [innerHTML]="d?.desc"></p> </td>
+              <td>{{getContentType(d?.content_type)}}</td>
+              <td>{{d?.unite_admin?.libelle}}</td>
+              <td>{{d?.signer2?.libelle}}</td>
+              <td>
+                  <b>Point d'entrée central</b>
+                  <br>
+                  {{d?.start_point2?.libelle}}
+                  <br>
+                  <b>Point d'entrée Secondaire</b>
+                  <br>
+                  <br>
+                 
+                  <ul>
+                    <li *ngFor="let sp of d?.start_points">{{sp?.unite_admin?.libelle}}</li>
+                  </ul>
+                
+                </td>
+              <td>{{d?.need_meeting ?'oui':'non'}}</td>
+              <td>{{d?.need_validation ?'oui':'non'}}</td>
+              <td>{{d?.delay}} jr(s)</td>
+            </tr>
+
+            <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
+                <td colspan="5" class="text-center py-4">
+                <div class="no-results">
+                    <i class="bi bi-search mb-3"></i>
+                    <p class="text-muted mb-3">Recherche avancée en cours...</p>
+                    <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>
+                    Réinitialiser la recherche
+                    </button>
+                </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Pagination placeholder -->
+        <div class="pagination-container mt-4">
+        
+        <pagination-controls 
+                        id="ngxP1"
+                        (pageChange)="getPage($event)"
+                        [maxSize]="9"
+                        [directionLinks]="true"
+                        [autoHide]="true"
+                        [responsive]="true"
+                        [previousLabel]="'Précédent'"
+                        [nextLabel]="'Suivant'"
+                        [screenReaderPaginationLabel]="'Pagination'"
+                        [screenReaderPageLabel]="'page'"
+                        [screenReaderCurrentLabel]="'Vous êtes sur la page'">
+                    </pagination-controls>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+   
+ 
+
+
+  <ng-template #addContent let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Enregistrement de prestation</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="typeLabel">Code de la prestation</label>
+        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="code" ngModel>
+    </div>
+      <div class="form-group" *ngIf="roles=='Admin national'">
+        <label for="typeLabel">Entité Admin</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" ngModel>
+            <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
+        </select>
+       </div>
+     <div class="form-group">
+      <label for="typeLabel">Structure</label>
+      <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" ngModel>
+          <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+      </select>
+     </div>
+      <div class="form-group">
+          <label for="typeLabel">Libellé</label>
+          <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" ngModel>
+          <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+              <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+          </span>
+
+      </div>
+      <div class="form-group">
+        <label for="">Laissez une description de la prestation</label>
+        <textarea name="desc" class="form-control" ngModel></textarea>
+        <!--ckeditor [config]="{ extraPlugins: 'divarea', height: '100' }" name="desc" ngModel="desc" required></ckeditor-->
+
+      </div>
+      <div class="form-group">
+        <label for="typeLabel">Signataire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer" ngModel>
+            <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Point d'entrée</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point" ngModel>
+            <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Type de contenu</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="content_type" ngModel>
+           
+          <option value="0">A éditer</option>
+            <option value="1">A Charger</option>
+            <option value="2">Pas de contenu</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Nécessité de rendez vous pour cette prestation ?</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_meeting" ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Besoin de validation pour chargement de pièce finale</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_validation" ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Délivrance automatique</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class=" form-group col-12 mb-3">
+                <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="signer" ngModel>
+                    <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
+                </ng-select>
+            </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Génération de librable nécessaire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  ngModel>
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+
+       <div class="form-group">
+        <label for="typeLabel">Délai avant mise en abandon</label>
+        <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" ngModel min="1" max="30">
+    
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <span>Formulaire sur le portail national ?</span>
+      <ng-toggle
+      name="from_pns"
+      ngModel
+      [color]="{
+          unchecked: '#939da2',
+          checked: '#0C574E'
+      }"
+      [values]="{
+          checked: true, 
+          unchecked: false
+      }"
+      ></ng-toggle>
+    </div>
+ </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+
+
+  
+
+  <ng-template #editContent let-c="close" let-d="dismiss">
+    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Modification de prestation</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="typeLabel">Code de la prestation</label>
+        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="code" [(ngModel)]="selected_data.code">
+    </div>
+      <div class="form-group" *ngIf="roles=='Admin national'">
+        <label for="typeLabel">Entité Admin</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id">
+            <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
+        </select>
+       </div>
+     <div class="form-group">
+      <label for="typeLabel">Structure</label>
+      <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id">
+          <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
+      </select>
+     </div>
+      <div class="form-group">
+          <label for="typeLabel">Libellé</label>
+          <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" [(ngModel)]="selected_data.name">
+          <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+              <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
+          </span>
+
+      </div>
+      <div class="form-group">
+        <label for="">Laissez une description de la prestation</label>
+        <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc"></textarea>
+
+        <!--ckeditor [config]="{ extraPlugins: 'divarea', height: '100' }" name="desc" [(ngModel)]="selected_data.desc" required></ckeditor-->
+      </div>
+
+        <div class=" form-group col-12 mb-3">
+            <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
+            <ng-select name="signer" name="signer"  [(ngModel)]="selected_data.signer2.id">
+                <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
+            </ng-select>
+        </div>
+       <div class="form-group" *ngIf="selected_data.start_point!=null">
+        <label for="typeLabel">Point d'entrée</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point"  [(ngModel)]="selected_data.start_point2.id">
+            <option [value]="t2.id" *ngFor="let t2 of data4">{{t2.libelle}}</option>
+        </select>
+       </div>
+       <div class="form-group"  *ngIf="selected_data.start_point==null">
+        <label for="typeLabel">Point d'entrée</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point"  ngModel>
+            <option [value]="t2.id" *ngFor="let t2 of data4">{{t2.libelle}}</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Type de contenu</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="content_type"  [(ngModel)]="selected_data.content_type">
+           
+          <option value="0">A éditer</option>
+            <option value="1">A Charger</option>
+            <option value="2">Pas de contenu</option>
+        </select>
+       </div>
+
+       <div class="form-group">
+        <label for="typeLabel">Nécessité de rendez vous pour cette prestation ?</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_meeting"  [(ngModel)]="selected_data.need_meeting">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Besoin de validation pour chargement de pièce finale</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_validation"  [(ngModel)]="selected_data.need_validation">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+
+        <div class="form-group">
+        <label for="typeLabel">Délivrance automatique</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  [(ngModel)]="selected_data.is_automatic_delivered">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Unité signataire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer"  [(ngModel)]="selected_data.signer">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+        <div class="form-group">
+        <label for="typeLabel">Génération de librable nécessaire</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  [(ngModel)]="selected_data.needOut">
+          <option value="1">OUI</option>
+          <option value="0">NON</option>
+        </select>
+       </div>
+
+
+       <div class="form-group">
+        <label for="typeLabel">Délai avant mise en abandon</label>
+        <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" [(ngModel)]="selected_data.delay" min="1" max="30">
+    </div>
+
+    <div class="d-flex justify-content-between mb-3">
+      <span>Prestation à délivrance auto</span>
+      <ng-toggle
+      name="is_automatic_delivered"
+      [(ngModel)]="selected_data.is_automatic_delivered"
+      [color]="{
+          unchecked: '#939da2',
+          checked: '#0C574E'
+      }"
+      [values]="{
+          checked: true, 
+          unchecked: false
+      }"
+      ></ng-toggle>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <span>Formulaire sur le portail national ?</span>
+      <ng-toggle
+      name="from_pns"
+      [(ngModel)]="selected_data.from_pns"
+      [color]="{
+          unchecked: '#939da2',
+          checked: '#0C574E'
+      }"
+      [values]="{
+          checked: true, 
+          unchecked: false
+      }"
+      ></ng-toggle>
+    </div>
+     </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+</form>
+
+  </ng-template>
+<ng-template #dialogSP let-c="close" let-d="dismiss">
+  <form #addSPForm="ngForm" (ngSubmit)="addSP(addSPForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Ajout des points d'entrée</h4>
+      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="typeLabel">Prestation</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="prestation_id" ngModel>
+            <option [value]="t.id" *ngFor="let t of data">{{t.name}}</option>
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="typeLabel">Unité administrative</label>
+        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" ngModel>
+            <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
+        </select>
+       </div>
+       <!--div class="form-group">
+        <ng-select2
+        *ngIf="exampleData.length >0"
+          name="value"
+           [data]="exampleData"
+            [options]="options"
+            [(ngModel)]="value">
+        </ng-select2>
+       </!--div-->
+
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addSPForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+
+    </div>
+
+  </form>
+
+</ng-template>
+<ng-template #showContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive table-card">
+       
+        </div>
+      </div>
+</ng-template>
