@@ -176,6 +176,15 @@ toggleMenu() {
         hasChildren:false,
   
       })
+       this.menu.push(  {
+        title: 'Déclaration périodique ',
+        icon: 'home-outline',
+        link: '/admin/projects',
+        home: true,
+        isTitle:false,
+        hasChildren:false,
+  
+      })
       this.menu.push(  {
         title: 'Mes e-Services',
         icon: 'home-outline',

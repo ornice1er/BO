@@ -58,13 +58,13 @@
           </button>
 
           <!-- Bouton Signer l'attestation -->
-          <button 
+          <!-- <button 
             class="btn btn-success" 
             *ngIf="hasPermission('autorisation') && !selected_data?.isAutorized && isTreated && !myPrestation?.need_validation" 
             (click)="open(dialogAffectation)">
             <i class="bi bi-pen me-2"></i>
             Signer l'attestation / Délivrer mon visa
-          </button>
+          </button> -->
 
           <!-- Bouton Délivrer l'attestation -->
           <button 
@@ -79,7 +79,7 @@
       </div>
 
       <!-- Visualiseur PDF -->
-      <div class="card-body p-0" *ngIf="selected_data?.filename != null">
+      <!-- <div class="card-body p-0" *ngIf="selected_data?.filename != null">
         <div class="pdf-viewer" #pdfView>
           <object [data]="pdfSrc" type="application/pdf" width="100%" height="800px">
             <p class="text-center p-4">
@@ -91,7 +91,7 @@
             </p>
           </object>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Section Avis et Formulaires -->
@@ -173,7 +173,21 @@
             <!-- Sélection de décision -->
             <div class="form-group mb-4">
               <label class="form-label fw-semibold">Décision</label>
-              <select 
+              <ng-container *ngIf="selected_data?.project!=null">
+             <select 
+                [(ngModel)]="responseUA.hasPermission" 
+                name="hasPermission" 
+                class="form-select" 
+                (change)="btnChange($event)">
+                  <option [value]="3">Mettre à jour</option>
+                <option [value]="4">Demande acceptée pour étude </option>
+                <option [value]="5" *ngIf="!isSigner()">Demande rejetée pour étude </option>
+                <option [value]="6">Demande validée</option>
+                <option [value]="7">Demande rejetée définitivement</option>
+              </select>
+              </ng-container>
+                <ng-container *ngIf="selected_data?.project==null">
+               <select 
                 [(ngModel)]="responseUA.hasPermission" 
                 name="hasPermission" 
                 class="form-select" 
@@ -182,10 +196,12 @@
                 <option [value]="1">Favorable</option>
                 <option [value]="0">Défavorable</option>
               </select>
+              </ng-container>
+             
             </div>
 
             <!-- Formulaire Favorable -->
-            <ng-container *ngIf="responseUA.hasPermission==1">
+            <ng-container *ngIf="responseUA.hasPermission==1 || responseUA.hasPermission==3 || responseUA.hasPermission==4 || responseUA.hasPermission==6">
               <form #addResponse="ngForm" (ngSubmit)="stepAction(addResponse.value)">
                 <div class="row g-4">
                   <div class="col-12">
@@ -425,7 +441,7 @@
             </ng-container>
 
             <!-- Formulaire Rejet -->
-            <ng-container *ngIf="responseUA.hasPermission==0">
+            <ng-container *ngIf="responseUA.hasPermission==0 || responseUA.hasPermission==5">
               <form #addRejet="ngForm" (ngSubmit)="stepAction(addRejet.value)">
                 <div class="alert alert-danger">
                   <h6 class="alert-heading">
@@ -459,7 +475,7 @@
             </ng-container>
 
             <!-- Formulaire Mise en attente -->
-            <ng-container *ngIf="responseUA.hasPermission==2">
+            <ng-container *ngIf="responseUA.hasPermission==2  || responseUA.hasPermission==7">
               <form #addSusp="ngForm" (ngSubmit)="stepAction(addSusp.value)">
                 <div class="alert alert-warning">
                   <h6 class="alert-heading">

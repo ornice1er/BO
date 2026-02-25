@@ -712,7 +712,21 @@ export class EserviceTraitementEditComponent implements OnInit {
                 return"Mise en attente"
 
                 break;
-        
+          case 3:
+              return"Mettre à jour"
+            break;
+              case 4:
+              return"Demande acceptée pour étude"
+            break;
+              case 5:
+              return"Demande rejetée pour étude"
+            break;
+              case 6:
+              return"Demande validée"
+            break;
+              case 7:
+              return"Demande rejetée définitivement"
+            break;
           default:
             return "";
             break;
@@ -765,7 +779,7 @@ export class EserviceTraitementEditComponent implements OnInit {
 
   this.loading=true
   this.toastrService.info("Opération en cours",'Info')
-  if (this.responseUA.hasPermission==1 && !this.isTreated) {
+  if ((this.responseUA.hasPermission==1 || this.responseUA.hasPermission==3 || this.responseUA.hasPermission==4 || this.responseUA.hasPermission==6)&& !this.isTreated) {
     if (this.myPrestation?.content_type==0 && this.selected_data.content != this.desc) {
          this.genActionState=true
     }else if(this.myPrestation?.content_type==2 && this.selected_data.file== null && this.myPrestation?.from_pns){
@@ -805,7 +819,7 @@ export class EserviceTraitementEditComponent implements OnInit {
 getText(){
   if (this.responseUA.hasPermission==1  && !this.isSigner() && !this.isTreated){
     return "Enregistrer mon avis"
-  }else   if (this.responseUA.hasPermission==1  && !this.isSigner() && this.isTreated){
+  }else   if ((this.responseUA.hasPermission==1 || this.responseUA.hasPermission==3  || this.responseUA.hasPermission==4  || this.responseUA.hasPermission==6) && !this.isSigner() && this.isTreated){
     return "Modifier mon avis"
   }else  if((this.responseUA.hasPermission==1 || this.responseUA.hasPermission==0 || this.responseUA.hasPermission==2)  && this.isSigner()){
     return "Confirmer ma décision finale" 

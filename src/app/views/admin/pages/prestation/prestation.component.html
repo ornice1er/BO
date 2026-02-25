@@ -49,8 +49,9 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                    <th scope="col">Libellé</th>
-                    <th scope="col">Description</th>
+                <th scope="col">Code</th>
+                <th scope="col">Libellé</th>
+                <th scope="col">Description</th>
               <th scope="col">type de contenu</th>
               <th scope="col">Structure</th>
               <th scope="col">Signataire</th>
@@ -147,7 +148,7 @@
                     </div>
                 </div>
                 </td>
-
+            <td>{{d?.code}}</td>
                 <td>{{d?.name}}</td>
               <td><p [innerHTML]="d?.desc"></p> </td>
               <td>{{getContentType(d?.content_type)}}</td>

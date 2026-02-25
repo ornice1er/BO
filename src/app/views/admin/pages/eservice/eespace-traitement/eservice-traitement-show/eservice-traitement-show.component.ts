@@ -155,6 +155,16 @@ export class EserviceTraitementShowComponent implements OnInit {
     })
   }
 
+  prendreEnCharge(){
+     this.requeteService.prendreEnCharge(this.selected_data.id).subscribe((res:any)=>{
+      this.modalService.dismissAll()
+      this.get()
+    },
+    (error:any)=>{
+      
+    })
+  }
+
   showFile(el:any){
     var url=el.url;
 
@@ -366,7 +376,7 @@ this.modalService.open(content);
       return ;
     }
 
-    AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cet enregistrement ?").then((result:any) =>{
+    AppSweetAlert.confirmBox('warning',"Voulez vous vraiment transmettre cet enregistrement ?",'Transmission').then((result:any) =>{
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
         this.affService.store({

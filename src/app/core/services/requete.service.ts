@@ -18,7 +18,12 @@ export class RequeteService {
   get(code:any,slug:any,prestation_code?:any): any {
     return this.http.get<any>(`${this.url}/get-one/${code}/${slug}?prestation_code=${prestation_code}`, );
   }
+   prendreEnCharge(id:any): any {
+    return this.http.get<any>(`${ConfigService.toApiUrl('requete-prise-en-charge')}/${id}`, );
+  }
 
+
+  
   /*getByPrestationPending(id:any){
     return this.http.get<any>(this.url+'/byPrestationPending/'+id, );
 

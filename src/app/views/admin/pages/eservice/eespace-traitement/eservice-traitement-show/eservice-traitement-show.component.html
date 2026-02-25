@@ -29,10 +29,22 @@
       data-bs-toggle="tooltip" 
       data-bs-placement="top" 
       title="Traiter la demande"
-      *ngIf="hasPermission('modification') && !isTreated && selected_data?.status!=7" 
+      *ngIf="(hasPermission('modification') && !isTreated && selected_data?.status!=7  && selected_data?.project==null)|| (hasPermission('modification') && !isTreated && selected_data?.status!=7 && selected_data?.project!=null && selected_data?.pris_en_charge)" 
       (click)="open2()">
       <i class="bi bi-pencil me-2"></i>
       Traiter la demande
+    </button>
+  </div>
+<div>
+    <button 
+      class="btn btn-warning" 
+      data-bs-toggle="tooltip" 
+      data-bs-placement="top" 
+      title="Prendre en charge"
+      *ngIf="hasPermission('modification') && !isTreated && selected_data?.status!=7 && selected_data?.project!=null && !selected_data?.pris_en_charge" 
+      (click)="prendreEnCharge()">
+      <i class="bi bi-pencil me-2"></i>
+      Prendre en charge
     </button>
   </div>
 

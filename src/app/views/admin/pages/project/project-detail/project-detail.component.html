@@ -1,0 +1,79 @@
+  
+   <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary-custom" (click)="export()">
+            <i class="bi bi-plus-lg me-2"></i>
+            Exporter
+        </button>
+        </div>
+    </div>
+
+  <div class="card-body">
+        <div class="results-info mb-3">
+        <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            {{data.length}} élément(s)
+        </p>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                  <th scope="col">Code PS</th>
+                <th scope="col">Code Demande</th>
+                <th scope="col">Demandeur</th>
+                <th scope="col">Statut</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of requetes | paginate: {
+                                    id:'ngxP1',
+                                    itemsPerPage: pg.pageSize,
+                                    currentPage: pg.p,
+                                    totalItems: pg.total } | sampleSearch:search_text; let i =index" class="table-row">
+                <td>{{i+1}}</td>
+                <td>{{d?.prestation?.code}}</td>
+                   <td>{{d?.code}}</td>
+                      <td>
+                        <ul>
+                            <li><strong>Email:</strong> {{d?.email}}</li>
+
+                            <li><strong>Téléphone:</strong> {{d?.phone}}</li>
+                        </ul>
+                      </td>
+                      <td>
+                        <span *ngIf="d?.status==0" class="bg-secondary px-2 py-1"> Nouvelle demande</span>
+                            <span *ngIf="d?.status==1 && d?.project==null" class="bg-warning rounded text-white px-2 py-1"> En cours de traitement</span>
+                            <span *ngIf="d?.status==0 && d?.project!=null && d?.pris_en_charge" class="bg-warning rounded text-white px-2 py-1"> Pris en charge</span>
+                            <span *ngIf="d?.status==1 && d?.project!=null && d?.last_reponse?.hasPermission==3" class="bg-warning rounded text-white px-2 py-1"> En attente de l’entretien</span>
+                            <span *ngIf="d?.status==1 && d?.project!=null && d?.last_reponse?.hasPermission==4" class="bg-warning rounded text-white px-2 py-1">En attente de finalisation</span>
+                            <span *ngIf="d?.status==1 && d?.project!=null && d?.last_reponse?.hasPermission==6" class="bg-success rounded text-white px-2 py-1">Demande validée</span>
+
+                      </td>
+            </tr>
+
+           
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Pagination placeholder -->
+        <div class="pagination-container mt-4">
+        
+        <pagination-controls 
+                        id="ngxP1"
+                        (pageChange)="getPage($event)"
+                        [maxSize]="9"
+                        [directionLinks]="true"
+                        [autoHide]="true"
+                        [responsive]="true"
+                        [previousLabel]="'Précédent'"
+                        [nextLabel]="'Suivant'"
+                        [screenReaderPaginationLabel]="'Pagination'"
+                        [screenReaderPageLabel]="'page'"
+                        [screenReaderCurrentLabel]="'Vous êtes sur la page'">
+                    </pagination-controls>
+        </div>
+    </div>

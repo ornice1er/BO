@@ -94,6 +94,11 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         icon: 'award-outline',
         link: '/admin/prestations',
       },
+       {
+        title: 'Déclaration périodique',
+        icon: 'award-outline',
+        link: '/admin/projects',
+      },
     /*  {
         title: 'Pièce à fournir',
         icon: 'attach-2-outline',

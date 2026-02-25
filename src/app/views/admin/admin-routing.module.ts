@@ -28,6 +28,8 @@ import { PermissionComponent } from "./pages/permission/permission.component";
 import { PostComponent } from "./pages/post/post.component";
 import { PrestationComponent } from "./pages/prestation/prestation.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
+import { ProjectDetailComponent } from "./pages/project/project-detail/project-detail.component";
+import { ProjectComponent } from "./pages/project/project.component";
 import { RoleComponent } from "./pages/role/role.component";
 import { SettingsComponent } from "./pages/settings/settings.component";
 import { StatiistiqueComponent } from "./pages/statiistique/statiistique.component";
@@ -140,6 +142,14 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
             {
                 path: 'prestations',
                 component: PrestationComponent,
+            },
+            {
+                path: 'projects',
+                component: ProjectComponent,
+            },
+             {
+                path: 'projects/:id',
+                component: ProjectDetailComponent,
             },
             {
                 path: 'eservice/espace-traitement/:slug',
