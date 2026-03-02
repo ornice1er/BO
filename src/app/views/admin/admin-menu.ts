@@ -121,6 +121,28 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         icon: 'options-outline',
         link: '/admin/posts',
       },
+       {
+      title: 'Configuration eServices',
+      icon: 'award-outline',
+      children: [
+        {
+          title: 'Gestion des Statuts',
+          link: '/admin/eservice/configurations/status',
+        },
+        {
+          title: 'Gestion des étapes',
+          link: '/admin/eservice/configurations/etapes',
+        },
+         {
+          title: 'Gestion Status par prestations',
+          link: '/admin/eservice/configurations/prestation-status',
+        },
+         {
+          title: 'Gestion des status par étape',
+          link: '/admin/eservice/configurations/etape-prestation-status',
+        },
+      ]
+      },
       {
         title: 'Statistiques',
         isTitle:false,

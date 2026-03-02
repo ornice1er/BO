@@ -21,11 +21,14 @@ import { EspaceSignedComponent } from "./pages/eservice/espace-signed/espace-sig
 import { EspaceValidationVisaComponent } from "./pages/eservice/espace-validation-visa/espace-validation-visa.component";
 import { EspaceValidationComponent } from "./pages/eservice/espace-validation/espace-validation.component";
 import { StatistiquesComponent } from "./pages/eservice/statistiques/statistiques.component";
+import { EtapePrestationStatusComponent } from "./pages/etape-prestation-status/etape-prestation-status.component";
+import { EtapeComponent } from "./pages/etape/etape.component";
 import { FilesComponent } from "./pages/files/files.component";
 import { HistoriqueComponent } from "./pages/historique/historique.component";
 import { OfficerComponent } from "./pages/officer/officer.component";
 import { PermissionComponent } from "./pages/permission/permission.component";
 import { PostComponent } from "./pages/post/post.component";
+import { PrestationStatusComponent } from "./pages/prestation-status/prestation-status.component";
 import { PrestationComponent } from "./pages/prestation/prestation.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { ProjectDetailComponent } from "./pages/project/project-detail/project-detail.component";
@@ -33,6 +36,7 @@ import { ProjectComponent } from "./pages/project/project.component";
 import { RoleComponent } from "./pages/role/role.component";
 import { SettingsComponent } from "./pages/settings/settings.component";
 import { StatiistiqueComponent } from "./pages/statiistique/statiistique.component";
+import { StatusComponent } from "./pages/status/status.component";
 import { SupportDetailsComponent } from "./pages/support-details/support-details.component";
 import { SupportComponent } from "./pages/support/support.component";
 import { TypeBillingComponent } from "./pages/type-billing/type-billing.component";
@@ -151,6 +155,25 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'projects/:id',
                 component: ProjectDetailComponent,
             },
+
+             {
+                path: 'eservice/configurations/status',
+                component: StatusComponent,
+            },
+             {
+                path: 'eservice/configurations/etapes',
+                component: EtapeComponent,
+            },
+             {
+                path: 'eservice/configurations/prestation-status',
+                component: PrestationStatusComponent,
+            },
+             {
+                path: 'eservice/configurations/etape-prestation-status',
+                component: EtapePrestationStatusComponent,
+            },
+
+
             {
                 path: 'eservice/espace-traitement/:slug',
                 component: EespaceTraitementComponent,
