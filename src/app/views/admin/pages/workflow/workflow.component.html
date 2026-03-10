@@ -1,5 +1,5 @@
    
-<h2 class="text-center mb-4 page-subtitle">Liste des statuts par prestations</h2>
+<h2 class="text-center mb-4 page-subtitle">Workflow de traitement</h2>
 
 <div class="row">
 <div class="col-lg-12">
@@ -48,7 +48,9 @@
             <tr>
                 <th style="width: 50px;">#</th>
                 <th scope="col">Prestation</th>
-                <th scope="col">Statut</th>
+                <th scope="col">Etape actuelle</th>
+                <th scope="col">Prochaines étapes</th>
+                <th scope="col">Prédente étapes</th>
             </tr>
             </thead>
             <tbody>
@@ -140,7 +142,17 @@
                 </td>
 
                 <td>{{d?.prestation?.name}}</td>
-                <td>{{d?.status?.name}}</td>
+                <td>{{d?.etape?.name}}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let etape of d?.next">{{etape?.name}}</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li *ngFor="let etape of d?.preview">{{etape?.name}}</li>
+                    </ul>
+                </td>
             </tr>
 
            
@@ -176,25 +188,40 @@
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
 
         <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Association d'une statut à une prestation</h4>
+        <h4 class="modal-title" id="modal-basic-title">Enregistrement des flux</h4>
         <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
         </div>
         <div class="modal-body">
-          <div class=" form-group col-12 mb-3">
+            <div class=" form-group col-12 mb-3">
                 <label for="">Prestation <span class="text-danger ml-2">(*)</span></label>
                 <ng-select ngModel name="prestation_id">
                     <ng-option selected  disabled></ng-option>
                     <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
                 </ng-select>
             </div>
-                <div class=" form-group col-12 mb-3">
-                <label for="">Statut <span class="text-danger ml-2">(*)</span></label>
-                <ng-select ngModel name="status_id">
+             <div class=" form-group col-12 mb-3">
+                <label for="">Etape actuel <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel name="etape_id">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let s of status" [value]="s.id">{{s?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
 
+               <div class=" form-group col-12 mb-3">
+                <label for="">Prochaines étapes <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel [multiple]="true" name="next_etapes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                </ng-select>
+            </div>
+
+               <div class=" form-group col-12 mb-3">
+                <label for="">Précédentes étapes <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel [multiple]="true" name="preview_etapes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                </ng-select>
+            </div>
         </div>
         <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
@@ -209,25 +236,42 @@
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification de l'association</h4>
+      <h4 class="modal-title" id="modal-basic-title">Modification des flux</h4>
       <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
     </div>
     <div class="modal-body">
     
-               <div class=" form-group col-12 mb-3">
+         <div class=" form-group col-12 mb-3">
                 <label for="">Prestation <span class="text-danger ml-2">(*)</span></label>
-                <ng-select [(ngModel)]="selected_data.prestation_id" name="prestation_id">
+                <ng-select  [(ngModel)]="selected_data.prestation_id" name="prestation_id">
                     <ng-option selected  disabled></ng-option>
                     <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
                 </ng-select>
             </div>
-                <div class=" form-group col-12 mb-3">
-                <label for="">Statut <span class="text-danger ml-2">(*)</span></label>
-                <ng-select [(ngModel)]="selected_data.status_id" name="status_id">
+             <div class=" form-group col-12 mb-3">
+                <label for="">Etape actuel <span class="text-danger ml-2">(*)</span></label>
+                <ng-select [(ngModel)]="selected_data.etape_id" name="etape_id">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let s of status" [value]="s.id">{{s?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
+
+               <div class=" form-group col-12 mb-3">
+                <label for="">Prochaines étapes <span class="text-danger ml-2">(*)</span></label>
+                <ng-select [(ngModel)]="selected_data.next_etapes" [multiple]="true" name="next_etapes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                </ng-select>
+            </div>
+
+               <div class=" form-group col-12 mb-3">
+                <label for="">Précédentes étapes <span class="text-danger ml-2">(*)</span></label>
+                <ng-select [(ngModel)]="selected_data.preview_etapes" [multiple]="true" name="preview_etapes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                </ng-select>
+            </div>
+
          
  </div>
     <div class="modal-footer">

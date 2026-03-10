@@ -145,7 +145,10 @@
                 <td>{{d?.description}}</td>
                 <td>Du {{d?.date_start | date:"dd-MM-yyyy"}} au {{d?.date_end | date:"dd-MM-yyyy"}}</td>
                 <td>
-                    <a href="{{getLink(d.filename)}}" target="_blank">Lire l'arrêté</a>
+                    <ul>
+                        <li *ngIf="d.filename"> <strong>Arrêté d'ouverture:</strong> <a href="{{getLink(d.filename)}}" target="_blank">Lire l'arrêté</a></li>
+                        <li *ngIf="d.closing_filename"> <strong>Arrêté de clotûre:</strong> <a href="{{getLink(d.closing_filename)}}" target="_blank">Lire l'arrêté</a></li>
+                    </ul>
                 </td>
             </tr>
 
@@ -207,6 +210,7 @@
                 <input type="file" class="form-control" (change)="uploadFile($event)">
             </div>
 
+
         </div>
         <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
@@ -245,6 +249,19 @@
                 <div class=" form-group col-12 mb-3">
                 <label for="">Arrếté portant création <span class="text-danger ml-2">(*)</span></label>
                 <input type="file" class="form-control" (change)="uploadFile($event)">
+            </div>
+
+              <div class=" form-group col-12 mb-3">
+                <label for="">Arrếté de clôture <span class="text-danger ml-2">(*)</span></label>
+                <input type="file" class="form-control" (change)="uploadFile2($event)">
+            </div>
+
+            <div class=" form-group col-12 mb-3">
+                <label for="">Statut<span class="text-danger ml-2">(*)</span></label>
+                <select name="selected_data.status" id=""  class="form-control">
+                    <option value="open">Ouvert</option>
+                    <option value="close">Cloturé</option>
+                </select>
             </div>
          
  </div>

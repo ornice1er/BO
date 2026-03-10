@@ -1,17 +1,23 @@
 import { Component } from '@angular/core';
 import { StatusService } from '../../../../core/services/status.service';
-import { formatDate } from '@angular/common';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule, formatDate } from '@angular/common';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-status',
   standalone: true,
-  imports: [],
+  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
   templateUrl: './status.component.html',
   styleUrl: './status.component.css'
 })
@@ -127,32 +133,7 @@ add(content:any){
   
     store(value:any) {
       this.loading=true;
-
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
-
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      
-
-        this.statusService.store(formData).subscribe(
+        this.statusService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
             this.modalService.dismissAll()
@@ -169,30 +150,7 @@ add(content:any){
   update(value:any) {
     this.loading=true;
 
-
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
-
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      this.statusService.update(formData,this.selected_data.id).subscribe(
+      this.statusService.update(value,this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()

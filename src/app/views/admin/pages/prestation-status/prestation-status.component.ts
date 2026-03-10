@@ -1,6 +1,6 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { EtapeService } from '../../../../core/services/etape.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
@@ -10,11 +10,17 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { StatusService } from '../../../../core/services/status.service';
 import { PrestationService } from '../../../../core/services/prestation.service';
 import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-prestation-status',
   standalone: true,
-  imports: [],
+  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
   templateUrl: './prestation-status.component.html',
   styleUrl: './prestation-status.component.css'
 })
@@ -24,8 +30,8 @@ isDtInitialized:boolean = false
   selected_data:any
   user:any
   data:any[]=[]
-  data2:any[]=[]
-  data3:any[]=[]
+  status:any[]=[]
+  prestations:any[]=[]
   uas:any[]=[]
   permissions:any[]=[]
   loading=false
@@ -70,12 +76,41 @@ remoteSearchData: any[] = []
       edit:true,
       delete:true
     };
+
+    this.getStatus()
+    this.getPrestations()
+    
     }
+
+
+  getStatus() {
+      this.loading2=true;
+      this.statusService.getAll().subscribe((res:any)=>{
+        this.status=res.data
+
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+
+    getPrestations() {
+      this.loading2=true;
+      this.prestationService.getAll().subscribe((res:any)=>{
+        this.prestations=res.data
+
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+
+ 
  
   
     all() {
       this.loading2=true;
-      this.statusService.getAll().subscribe((res:any)=>{
+      this.psStatus.getAll().subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
                 this.selectedId=null
@@ -92,7 +127,6 @@ remoteSearchData: any[] = []
   
     checked(el:any){
       this.selected_data=el
-      this.uas=this.data2.find((ea:any)=> ea.id == el.entite_admin_id)?.uas
 
     }
   
@@ -133,31 +167,8 @@ add(content:any){
     store(value:any) {
       this.loading=true;
 
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
 
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      
-
-        this.statusService.store(formData).subscribe(
+        this.psStatus.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
             this.modalService.dismissAll()
@@ -175,29 +186,8 @@ add(content:any){
     this.loading=true;
 
 
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
 
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      this.statusService.update(formData,this.selected_data.id).subscribe(
+      this.psStatus.update(value,this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()

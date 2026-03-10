@@ -43,6 +43,7 @@ import { TypeBillingComponent } from "./pages/type-billing/type-billing.componen
 import { UnityAdminTypeComponent } from "./pages/unity-admin-type/unity-admin-type.component";
 import { UnityAdminComponent } from "./pages/unity-admin/unity-admin.component";
 import { UserComponent } from "./pages/user/user.component";
+import { WorkflowComponent } from "./pages/workflow/workflow.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -171,6 +172,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
              {
                 path: 'eservice/configurations/etape-prestation-status',
                 component: EtapePrestationStatusComponent,
+            },
+             {
+                path: 'eservice/configurations/workflows',
+                component: WorkflowComponent,
             },
 
 

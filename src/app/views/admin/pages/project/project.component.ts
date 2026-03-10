@@ -52,6 +52,7 @@ remoteSearchData: any[] = []
 
 
          fileInput:any
+         fileInput2:any
 
       constructor(
         private projectService:ProjectService,
@@ -131,6 +132,12 @@ remoteSearchData: any[] = []
         this.fileInput=ev.target.files[0]
       }
     }
+
+     uploadFile2(ev:any){
+      if (ev.target.files.length!=0) {
+        this.fileInput2=ev.target.files[0]
+      }
+    }
   
     
 add(content:any){
@@ -174,6 +181,8 @@ add(content:any){
         this.toastrService.warning('Fichier requis')
         return
       }
+
+     
       let formData = new FormData()
       for (const key in value) {
         if (Object.prototype.hasOwnProperty.call(value, key)) {
@@ -212,10 +221,9 @@ add(content:any){
         return
       }
 
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
+    
+
+
       let formData = new FormData()
       for (const key in value) {
         if (Object.prototype.hasOwnProperty.call(value, key)) {
@@ -224,7 +232,16 @@ add(content:any){
         }
       }
 
-      formData.append('file',this.fileInput)
+        if (this.fileInput!=undefined) {
+             formData.append('file',this.fileInput)
+
+      }
+
+       if (this.fileInput2!=undefined) {
+             formData.append('closing_filename',this.fileInput)
+
+      }
+
 
       this.projectService.update(formData,this.selected_data.id).subscribe(
           (res:any)=>{

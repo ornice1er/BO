@@ -3,18 +3,25 @@ import { EtapePrestationStatusService } from '../../../../core/services/etape-pr
 import { StatusService } from '../../../../core/services/status.service';
 import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
 import { EtapeService } from '../../../../core/services/etape.service';
-import { formatDate } from '@angular/common';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule, formatDate } from '@angular/common';
+import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import { LoadingComponent } from '../../../components/loading/loading.component';
+import { PrestationService } from '../../../../core/services/prestation.service';
 
 @Component({
   selector: 'app-etape-prestation-status',
   standalone: true,
-  imports: [],
+  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
   templateUrl: './etape-prestation-status.component.html',
   styleUrl: './etape-prestation-status.component.css'
 })
@@ -24,9 +31,9 @@ isDtInitialized:boolean = false
   selected_data:any
   user:any
   data:any[]=[]
-  data2:any[]=[]
-  data3:any[]=[]
-  uas:any[]=[]
+  etapes:any[]=[]
+  prestations:any[]=[]
+  prestationStatus:any[]=[]
   permissions:any[]=[]
   loading=false
   loading2=false
@@ -50,6 +57,7 @@ remoteSearchData: any[] = []
       constructor(
         private ePSService:EtapePrestationStatusService,
         private pStatusService:PrestationStatusService,
+        private prestationService:PrestationService,
         private etapeService:EtapeService,
         private locService:LocalStorageService,
         config: NgbModalConfig, 
@@ -70,7 +78,42 @@ remoteSearchData: any[] = []
       edit:true,
       delete:true
     };
+
+    this.getEtapes()
+    this.getPrestations()
+    this.getPrestationStatus()
     }
+
+
+    getEtapes() {
+      this.loading2=true;
+      this.etapeService.getAll().subscribe((res:any)=>{
+        this.etapes=res.data
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+  getPrestations() {
+      this.loading2=true;
+      this.prestationService.getAll().subscribe((res:any)=>{
+        this.prestations=res.data
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+
+    getPrestationStatus() {
+      this.loading2=true;
+      this.pStatusService.getAll().subscribe((res:any)=>{
+        this.prestationStatus=res.data
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+
  
   
     all() {
@@ -79,8 +122,6 @@ remoteSearchData: any[] = []
         this.data=res.data
         this.loading2=false;
                 this.selectedId=null
-
-
       },
       (error:any)=>{
         
@@ -92,7 +133,6 @@ remoteSearchData: any[] = []
   
     checked(el:any){
       this.selected_data=el
-      this.uas=this.data2.find((ea:any)=> ea.id == el.entite_admin_id)?.uas
 
     }
   
@@ -131,33 +171,9 @@ add(content:any){
   }
   
     store(value:any) {
-      this.loading=true;
+      this.loading=true; 
 
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
-
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      
-
-        this.ePSService.store(formData).subscribe(
+        this.ePSService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
             this.modalService.dismissAll()
@@ -175,29 +191,7 @@ add(content:any){
     this.loading=true;
 
 
-      let date_start = formatDate(value.date_start,'yyyy-MM-dd','en_US');
-      let date_end =formatDate(value.date_end,'yyyy-MM-dd','en_US');
-
-      if (date_start > date_end) {
-         this.toastrService.warning('Date fin ne peut être antérieur à la date début')
-        return
-      }
-
-      if (this.fileInput==undefined) {
-        this.toastrService.warning('Fichier requis')
-        return
-      }
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
-
-      formData.append('file',this.fileInput)
-
-      this.ePSService.update(formData,this.selected_data.id).subscribe(
+      this.ePSService.update(value,this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()

@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { EtapeService } from '../../../../core/services/etape.service';
-import { CommonModule, formatDate } from '@angular/common';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { EtapePrestationStatusService } from '../../../../core/services/etape-prestation-status.service';
+import { EtapeService } from '../../../../core/services/etape.service';
+import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
+import { PrestationService } from '../../../../core/services/prestation.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
+import { WorkflowService } from '../../../../core/services/workflow.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -15,22 +19,24 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-etape',
+  selector: 'app-workflow',
   standalone: true,
   imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './etape.component.html',
-  styleUrl: './etape.component.css'
+  templateUrl: './workflow.component.html',
+  styleUrl: './workflow.component.css'
 })
-export class EtapeComponent {
+export class WorkflowComponent {
 isDtInitialized:boolean = false
 
   selected_data:any
   user:any
   data:any[]=[]
-  data2:any[]=[]
-  data3:any[]=[]
-  uas:any[]=[]
+  eps:any[]=[]
+  prestations:any[]=[]
+  prestationStatus:any[]=[]
   permissions:any[]=[]
+    etapes:any[]=[]
+
   loading=false
   loading2=false
   error:any=""
@@ -51,7 +57,9 @@ remoteSearchData: any[] = []
          fileInput:any
 
       constructor(
+        private wService:WorkflowService,
         private etapeService:EtapeService,
+        private prestationService:PrestationService,
         private locService:LocalStorageService,
         config: NgbModalConfig, 
         private modalService: NgbModal,
@@ -71,17 +79,42 @@ remoteSearchData: any[] = []
       edit:true,
       delete:true
     };
+
+     this.getEtapes()
+    this.getPrestations()
     }
+
+
+
+     getEtapes() {
+      this.loading2=true;
+      this.etapeService.getAll().subscribe((res:any)=>{
+        this.etapes=res.data
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+   
+  getPrestations() {
+      this.loading2=true;
+      this.prestationService.getAll().subscribe((res:any)=>{
+        this.prestations=res.data
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
+
+
  
   
     all() {
       this.loading2=true;
-      this.etapeService.getAll().subscribe((res:any)=>{
+      this.wService.getAll().subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
                 this.selectedId=null
-
-
       },
       (error:any)=>{
         
@@ -93,7 +126,6 @@ remoteSearchData: any[] = []
   
     checked(el:any){
       this.selected_data=el
-      this.uas=this.data2.find((ea:any)=> ea.id == el.entite_admin_id)?.uas
 
     }
   
@@ -132,11 +164,9 @@ add(content:any){
   }
   
     store(value:any) {
-      this.loading=true;
+      this.loading=true; 
 
-      
-
-        this.etapeService.store(value).subscribe(
+        this.wService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
             this.modalService.dismissAll()
@@ -154,7 +184,7 @@ add(content:any){
     this.loading=true;
 
 
-      this.etapeService.update(value,this.selected_data.id).subscribe(
+      this.wService.update(value,this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()
@@ -172,7 +202,7 @@ add(content:any){
 delete() {
   this.loading=true;
   if(confirm('Voulez vous supprimer cet élément')){
-    this.etapeService.delete(this.selected_data.id).subscribe(
+    this.wService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
       this.all();
@@ -190,7 +220,7 @@ delete() {
 
     this.toastrService.warning("Opération en cours")
       this.loading=true
-        this.etapeService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
+        this.wService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
           this.toastrService.success(res.message)
           this.loading=false
           this.all()
@@ -215,7 +245,7 @@ delete() {
 
   this.loading = true;
 
-  this.etapeService.search({search:this.search_text}).subscribe({
+  this.wService.search({search:this.search_text}).subscribe({
     next: (result:any) => {
       this.remoteSearchData = result.data;
       this.data = this.remoteSearchData;

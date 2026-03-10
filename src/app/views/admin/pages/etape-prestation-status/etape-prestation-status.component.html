@@ -47,10 +47,9 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                  <th scope="col">Libellé</th>
-                <th scope="col">Description</th>
-                <th scope="col">Période</th>
-                <th scope="col">Arrêté</th>
+                <th scope="col">Prestation</th>
+                <th scope="col">Etape</th>
+                <th scope="col">Statut</th>
             </tr>
             </thead>
             <tbody>
@@ -83,7 +82,7 @@
                     </button>
 
                     <button
-                        (click)="show()"
+                        (click)="show(showContent)"
                         type="button"
                         class="btn btn-action btn-view"
                         title="Consulter"
@@ -141,12 +140,9 @@
                 </div>
                 </td>
 
-                <td>{{d?.title}}</td>
-                <td>{{d?.description}}</td>
-                <td>Du {{d?.date_start | date:"dd-MM-yyyy"}} au {{d?.date_end | date:"dd-MM-yyyy"}}</td>
-                <td>
-                    <a href="{{getLink(d.filename)}}" target="_blank">Lire l'arrêté</a>
-                </td>
+                <td>{{d?.ps?.prestation?.name}}</td>
+                <td>{{d?.etape?.name}}</td>
+                <td>{{d?.ps?.status?.name}}</td>
             </tr>
 
            
@@ -186,25 +182,26 @@
         <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
         </div>
         <div class="modal-body">
-          <div class=" form-group col-12 mb-3">
-                <label for="">libellé <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="title" class="form-control" ngModel>
-            </div>
-          <div class=" form-group col-12 mb-3">
-                <label for="">Description <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="description" class="form-control" ngModel>
-            </div>
             <div class=" form-group col-12 mb-3">
-                <label for="">Date début <span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="date_start" class="form-control" ngModel>
+                <label for="">Prestation <span class="text-danger ml-2">(*)</span></label>
+                <ng-select >
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
+                </ng-select>
             </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Date  fin<span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="date_end" class="form-control" ngModel>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Etape <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel name="etape_id">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
+                </ng-select>
             </div>
                 <div class=" form-group col-12 mb-3">
-                <label for="">Arrếté portant création <span class="text-danger ml-2">(*)</span></label>
-                <input type="file" class="form-control" (change)="uploadFile($event)">
+                <label for="">Statut <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel name="ps_id">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ps of prestationStatus" [value]="ps.id">{{ps?.status?.name}}</ng-option>
+                </ng-select>
             </div>
 
         </div>
@@ -226,26 +223,28 @@
     </div>
     <div class="modal-body">
     
-           <div class=" form-group col-12 mb-3">
-                <label for="">libellé <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="title" class="form-control" [(ngModel)]="selected_data.title">
+        <div class=" form-group col-12 mb-3">
+                <label for="">Prestation <span class="text-danger ml-2">(*)</span></label>
+                <ng-select >
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
+                </ng-select>
             </div>
-          <div class=" form-group col-12 mb-3">
-                <label for="">Description <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="description" class="form-control" [(ngModel)]="selected_data.description">
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Date début <span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="date_start" class="form-control" [(ngModel)]="selected_data.date_start">
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Date  fin<span class="text-danger ml-2">(*)</span></label>
-                <input type="date" name="date_end" class="form-control" [(ngModel)]="selected_data.date_end">
+             <div class=" form-group col-12 mb-3">
+                <label for="">Etape <span class="text-danger ml-2">(*)</span></label>
+                <ng-select [(ngModel)]="selected_data.etape_id" name="etape_id">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
+                </ng-select>
             </div>
                 <div class=" form-group col-12 mb-3">
-                <label for="">Arrếté portant création <span class="text-danger ml-2">(*)</span></label>
-                <input type="file" class="form-control" (change)="uploadFile($event)">
+                <label for="">Statut <span class="text-danger ml-2">(*)</span></label>
+                <ng-select [(ngModel)]="selected_data.ps_id" name="ps_id">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ps of prestationStatus" [value]="ps.id">{{ps?.status?.name}}</ng-option>
+                </ng-select>
             </div>
+
          
  </div>
     <div class="modal-footer">

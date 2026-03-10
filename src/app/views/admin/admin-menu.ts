@@ -108,7 +108,6 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         title: 'Paramètre',
         icon: 'home-outline',
         link: '',
-        home: true,
         isTitle:true
       },
       {
@@ -124,6 +123,9 @@ export const MENU_ADMIN_NATIONAL: any[] = [
        {
       title: 'Configuration eServices',
       icon: 'award-outline',
+      isTitle:false,
+      hasChildren:true,
+      collapse:false,
       children: [
         {
           title: 'Gestion des Statuts',
@@ -140,6 +142,11 @@ export const MENU_ADMIN_NATIONAL: any[] = [
          {
           title: 'Gestion des status par étape',
           link: '/admin/eservice/configurations/etape-prestation-status',
+        },
+
+          {
+          title: 'Workflow',
+          link: '/admin/eservice/configurations/workflows',
         },
       ]
       },
