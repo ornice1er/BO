@@ -11,19 +11,7 @@
 
   <!-- Bouton Affecter -->
   <div>
-  <div>
     <button 
-      class="btn btn-warning" 
-      data-bs-toggle="tooltip" 
-      data-bs-placement="top" 
-      title="Traiter la demande"
-      (click)="open2()">
-      <i class="bi bi-pencil me-2"></i>
-      Traiter la demande
-    </button>
-  </div>
-
-    <!-- <button 
       class="btn btn-primary" 
       data-bs-toggle="tooltip" 
       data-bs-placement="top" 
@@ -32,7 +20,7 @@
       (click)="open(dialogAffectation)">
       <i class="bi bi-arrow-down-right me-2"></i>
       {{isTreated && !isMyTreated ? 'Retourner pour correction':'Affecter'}}
-    </button> -->
+    </button>
   </div>
   <!-- Bouton Traiter la demande -->
   <div>
@@ -62,7 +50,7 @@
 
   <!-- Bouton Modifier/Voir réponse -->
   <div>
-    <!-- <button 
+    <button 
       class="btn btn-warning" 
       data-bs-toggle="tooltip" 
       data-bs-placement="top" 
@@ -71,7 +59,7 @@
       (click)="open2()">
       <i class="bi bi-pencil me-2"></i>
       {{isMyTreated ? 'Modifier mon avis':'Voir la réponse du collaborateur'}}
-    </button> -->
+    </button>
   </div>
 
   <!-- Bouton Transmettre -->
@@ -190,20 +178,25 @@
         <div class="card border shadow-sm">
           <div class="card-body p-4">
             <div class="d-flex align-items-center mb-3">
-              <h5 class="text-primary mb-0">{{r.unite_admin.libelle}} [ {{r?.eps?.ps?.status?.name}}]</h5>
+              <span class="badge me-3 fs-6" [ngClass]="getDecisionClass(r.hasPermission)">
+                {{getDecisionIcon(r.hasPermission)}}
+              </span>
+              <h5 class="text-primary mb-0">{{r.unite_admin.libelle}}</h5>
             </div>
             
             <div class="mb-3">
-              <dl>
-                <dt> <strong class="text-secondary me-1">Etat/Statut :</strong></dt>
-                <dd>
-                  <ul>
-                    <li><strong>Etape:</strong> {{r?.eps?.etape?.name}}</li>
-                      <li><strong>Statut:</strong> {{r?.eps?.ps?.status?.name}}</li>
-                  </ul>
-                </dd>
-              </dl>
-        
+              <h6 class="mb-2">
+                <strong class="text-secondary me-1">Accord :</strong>
+                <span [ngClass]="getDecisionClass(r.hasPermission)">
+                  {{getDecision(r.hasPermission)}}
+                </span>
+              </h6>
+              
+              <div class="mb-3">
+                <strong class="text-secondary me-1">Argumentaire :</strong>
+                <p class="mb-0 mt-1">{{r.reason}}</p>
+              </div>
+              
               <div class="mb-3">
                 <strong class="text-secondary me-1">Observation :</strong>
                 <p class="mb-0 mt-1">{{r.observation}}</p>

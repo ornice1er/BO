@@ -280,7 +280,7 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
 
     console.log(value)
     
-    this.requeteService.storeResponse(formData).subscribe(
+    this.responseService.store(formData).subscribe(
         (res:any)=>{
         this.loading=false;
         ref.close()

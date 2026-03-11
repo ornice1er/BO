@@ -316,3 +316,11 @@ textarea.form-control {
   padding-top: 3rem !important;
   padding-bottom: 3rem !important;
 }
+
+.details-panel {
+    width: 70% !important;
+}
+
+.details-panel2 {
+    width: 50% !important;
+}

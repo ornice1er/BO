@@ -21,6 +21,14 @@ export class ProjectService {
   show(id: any) {
     return this.http.get(`${this.url}/${id}`, );
   }
+
+  exportList(id:any,ressource:any){
+    return this.http.post<any>(`${ConfigService.toApiUrl('projects-export')}`, ressource,
+     ConfigService.addAction('status'));
+  }
+
+  
+
   update(ressource: any, id: number) {
     ressource.append('_method','patch')
     return this.http.post(`${this.url}/${id}`, ressource, );

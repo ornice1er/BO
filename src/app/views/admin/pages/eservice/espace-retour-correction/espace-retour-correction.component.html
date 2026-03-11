@@ -49,8 +49,8 @@
                 <th style="width: 50px;">#</th>
                 <th scope="col">Code demande</th>
                 <th scope="col">Date Enreg.</th>
-               
-                <th scope="col" >Livrable disponible (Oui/Non)</th>
+                <th scope="col" >Etape</th>
+                <th scope="col" >Statut</th>
             </tr>
             </thead>
             <tbody>
@@ -144,13 +144,13 @@
                 <td>{{d?.created_at | date: "dd-MM-yyyy HH:mm:ss"}}</td>
                <td>{{d?.email}}</td>
                 <td>{{d?.phone}}</td>
-                <td *ngIf="d?.filename!=null">
-                <span class="badge bg-warning text-white">oui</span>
+                <td>  
+                     <span class="badge bg-info">{{d?.eps?.etape?.name}}</span>
+                 </td>
+                 <td> 
+                    <span class="badge bg-info">{{d?.eps?.ps?.status?.name}}</span>
+    
                 </td>
-                <td *ngIf="d?.filename==null">
-                <span class="badge bg-secondary text-white">non</span>
-                </td>
-                <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
             </tr>
 
             <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">

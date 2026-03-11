@@ -10,8 +10,11 @@ export class WorkflowService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): any {
-    return this.http.get<any>(this.url, );
+  getAll(prestationId?:any,etapeId?:any): any {
+    if (prestationId!=null && etapeId!=null) {
+          return this.http.get<any>(this.url+`?prestation_id=${prestationId}&etape_id=${etapeId}`, );
+    }
+    return this.http.get<any>(this.url );
   }
 
   store(ressource: any) {

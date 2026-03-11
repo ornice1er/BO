@@ -53,6 +53,7 @@ data:any
     
       get() {
         this.loading2=true;
+
         this.projectService.show(this.id).subscribe((res:any)=>{
           this.data=res.data
           this.requetes=this.data?.requetes
@@ -69,7 +70,16 @@ data:any
   this.pg.p=event
   }
 
-  export(){
-    
+  exportList(){
+      this.loading2=true;
+      const ids = this.data.requetes.map((req:any) => req.id);
+        this.projectService.exportList(this.id,{ids:ids}).subscribe((res:any)=>{
+          window.open(res.data,'_blank')
+      
+        },
+        (error:any)=>{
+          
+          this.loading2=false;
+        })
   }
 }

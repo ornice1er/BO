@@ -211,7 +211,7 @@
                 <label for="">Prochaines étapes <span class="text-danger ml-2">(*)</span></label>
                 <ng-select ngModel [multiple]="true" name="next_etapes">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
 
@@ -219,7 +219,7 @@
                 <label for="">Précédentes étapes <span class="text-danger ml-2">(*)</span></label>
                 <ng-select ngModel [multiple]="true" name="preview_etapes">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
         </div>
@@ -260,7 +260,7 @@
                 <label for="">Prochaines étapes <span class="text-danger ml-2">(*)</span></label>
                 <ng-select [(ngModel)]="selected_data.next_etapes" [multiple]="true" name="next_etapes">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
 
@@ -268,7 +268,7 @@
                 <label for="">Précédentes étapes <span class="text-danger ml-2">(*)</span></label>
                 <ng-select [(ngModel)]="selected_data.preview_etapes" [multiple]="true" name="preview_etapes">
                     <ng-option selected  disabled></ng-option>
-                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.etape?.name}} => {{e?.ps?.status?.name}}</ng-option>
+                    <ng-option *ngFor="let e of etapes" [value]="e.id">{{e?.name}}</ng-option>
                 </ng-select>
             </div>
 

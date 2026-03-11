@@ -15,6 +15,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { NgToggleComponent } from 'ng-toggle-button';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { EtapePrestationStatusService } from '../../../../core/services/etape-prestation-status.service';
 
 @Component({
   selector: 'ngx-prestation',
@@ -34,6 +35,8 @@ export class PrestationComponent implements OnInit {
   data2:any[]=[]
   data3:any[]=[]
   data4:any[]=[]
+  etapes:any[]=[]
+  eps_id:any
   loading=false
   loading2=false
   error:any=""
@@ -52,12 +55,12 @@ remoteSearchData: any[] = []
   public options: any;
   public value: any[]=[];
   selectedFilter = '';
-
+  public eps: any[]=[];
 
       constructor(
         private unityAdminService:UnityAdminService,
         private prestationService:PrestationService,
-        
+        private epsService:EtapePrestationStatusService,
          private locService:LocalStorageService,
         
         private entityService:EntityService,
@@ -74,6 +77,7 @@ remoteSearchData: any[] = []
       this.getUnityAdmins()
       this.getEntities()
       this.getUnityAdminsAll()
+      this.getEps()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
        this.buttonsPermission = {
@@ -89,6 +93,21 @@ remoteSearchData: any[] = []
         tags: true
       };
     }
+
+     getEps() {
+      this.loading2=true;
+      this.epsService.getAll().subscribe((res:any)=>{
+        this.etapes=res.data
+        this.loading2=false;
+        this.selectedId=null
+
+      },
+      (error:any)=>{
+        
+        this.loading2=false;
+      })
+    }
+
     all() {
       this.loading2=true;
       this.prestationService.getAll().subscribe((res:any)=>{

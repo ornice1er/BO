@@ -89,9 +89,6 @@ export class RequeteService {
   concat(ressource: any) {
     return this.http.post(this.url+"/concat", ressource, );
   }
-  storeResponse(ressource: any) {
-    return this.http.post(this.url+"/response/store", ressource, );
-  }
 
   show(id: any) {
     return this.http.get(`${this.url}/${id}`, );
