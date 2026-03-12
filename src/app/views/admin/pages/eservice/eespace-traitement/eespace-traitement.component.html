@@ -146,14 +146,8 @@
                 <td>{{d?.email}}</td>
                 <td>{{d?.phone}}</td>
                  <td>
-                    <span *ngIf="d?.status==0" class="bg-secondary px-2 py-1"> Nouvelle demande</span>
-                     <span *ngIf="d?.status==1 && d?.project==null" class="bg-warning rounded text-white px-2 py-1"> En cours de traitement</span>
-                    <span *ngIf="d?.status==0 && d?.project!=null && d?.pris_en_charge" class="bg-warning rounded text-white px-2 py-1"> Pris en charge</span>
-                     <span *ngIf="d?.status==1 && d?.project!=null && d?.last_reponse?.hasPermission==3" class="bg-warning rounded text-white px-2 py-1"> En attente de l’entretien</span>
-                     <span *ngIf="d?.status==1 && d?.project!=null && d?.last_reponse?.hasPermission==4" class="bg-warning rounded text-white px-2 py-1">En attente de finalisation</span>
-
+                   {{d?.eps?.ps?.status?.name}}
                </td>
-                <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
             </tr>
 
             <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
