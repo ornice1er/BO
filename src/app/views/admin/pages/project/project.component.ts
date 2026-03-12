@@ -238,7 +238,7 @@ add(content:any){
       }
 
        if (this.fileInput2!=undefined) {
-             formData.append('closing_filename',this.fileInput)
+             formData.append('closing_filename',this.fileInput2)
 
       }
 

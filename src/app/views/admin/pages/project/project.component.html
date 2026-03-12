@@ -51,6 +51,8 @@
                 <th scope="col">Description</th>
                 <th scope="col">Période</th>
                 <th scope="col">Arrêté</th>
+                                <th scope="col">Statut</th>
+
             </tr>
             </thead>
             <tbody>
@@ -150,6 +152,7 @@
                         <li *ngIf="d.closing_filename"> <strong>Arrêté de clotûre:</strong> <a href="{{getLink(d.closing_filename)}}" target="_blank">Lire l'arrêté</a></li>
                     </ul>
                 </td>
+                <td>{{d?.status =='open'? "Ouvert":"Fermé"}}</td>
             </tr>
 
            
@@ -225,7 +228,7 @@
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification d'un agent</h4>
+      <h4 class="modal-title" id="modal-basic-title">Modification d'une déclaration périodique</h4>
       <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
     </div>
     <div class="modal-body">
@@ -258,9 +261,9 @@
 
             <div class=" form-group col-12 mb-3">
                 <label for="">Statut<span class="text-danger ml-2">(*)</span></label>
-                <select name="selected_data.status" id=""  class="form-control">
+                <select [(ngModel)]="selected_data.status" name="status" id=""  class="form-control">
                     <option value="open">Ouvert</option>
-                    <option value="close">Cloturé</option>
+                    <option value="closed">Cloturé</option>
                 </select>
             </div>
          
