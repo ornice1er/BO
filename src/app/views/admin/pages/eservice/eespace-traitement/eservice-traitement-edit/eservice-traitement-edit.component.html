@@ -48,9 +48,9 @@
     <dd>{{selectedData?.user_reponse?.observation}}</dd>
    </dl>
 
-   <dl>
+   <dl *ngIf="selectedData?.user_reponse?.note">
     <dt>Fiche de note</dt>
-    <dd>
+    <dd >
            <button type="button" class="btn btn-primary btn-sm" (click)="showResponseFile(selectedData?.user_reponse?.note!)">
                       Voir la note
                     </button>
@@ -115,11 +115,11 @@
       Mettre à jour un nouvel état
     </button>
 
-    <button class="btn btn-warning me-2"
+    <!-- <button class="btn btn-warning me-2"
                 *ngIf="selectedData?.user_reponse?.unite_admin_id== user?.agent?.unite_admin?.id  && !isSigner()"
             (click)="updateResponse(responseData)">
       Modifier ma réponse
-    </button>
+    </button> -->
 
     <button class="btn btn-primary"
             *ngIf="selectedData?.affectation?.unite_admin_down== user?.agent?.unite_admin?.id  && selectedData?.user_reponse!=null && !isSigner()"

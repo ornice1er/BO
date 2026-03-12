@@ -168,6 +168,7 @@ rdvDate: string | null = null;
     this.responseService.store(formData).subscribe(
         (res:any)=>{  
           this.get()
+          this.router.navigate(['/admin/eservice/espace-traitement-show/'+this.selectedData.code+'/'+this.myPrestation.code])
     },
     (err:any)=>{
 
