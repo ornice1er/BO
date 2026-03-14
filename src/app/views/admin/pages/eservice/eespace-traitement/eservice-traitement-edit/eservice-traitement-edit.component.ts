@@ -80,7 +80,11 @@ export class EserviceTraitementEditComponent implements OnInit {
   @ViewChild('contentFiche') contentFiche:TemplateRef<any> | undefined
 pdfSrc: string | null = null;
 rdvDate: string | null = null;
-
+showAddingField={
+  rdv:false,
+  observation:false,
+  note_file:false
+}
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -332,6 +336,24 @@ rdvDate: string | null = null;
 
 }
 
+
+checkShowAddingField(ev:any){
+  switch (ev) {
+    case 'rdv':
+      this.showAddingField.rdv=true
+      break;
+  
+       case 'observation':
+       this.showAddingField.observation=true
+      break;
+       case 'note_file':
+       this.showAddingField.note_file=true
+      break;
+      
+    default:
+      break;
+  }
+}
 
 
 }

@@ -71,19 +71,19 @@
 
     <div class="form-group mb-3">
         <label for="">Statut</label>
-    <ng-select name="eps_id" [(ngModel)]="responseData.eps_id">
+    <ng-select name="eps_id" [(ngModel)]="responseData.eps_id" (change)="checkShowAddingField($event)">
       <ng-option *ngFor="let w of workflow?.next" [value]="w.id">{{w?.etape?.name}}=> {{w?.ps?.status?.name}}</ng-option>
     </ng-select>
     </div>
-      <div class="form-group mb-3">
+      <div class="form-group mb-3" *ngIf="showAddingField.rdv">
         <label for="">Date et heure (Prise de RDV)</label>
         <input type="datetime-local" class="form-control" [(ngModel)]="rdvDate" (change)="generateMessage()">
     </div>
-    <div class="form-group mb-3">
+    <div class="form-group mb-3" *ngIf="showAddingField.observation">
         <label for="">Observation</label>
         <textarea class="form-control" name="observation" [(ngModel)]="responseData.observation"></textarea>
     </div>
-     <div class="form-group mb-3">
+     <div class="form-group mb-3" *ngIf="showAddingField.note_file">
 
       <label>Joindre une note ou PJ</label>
 

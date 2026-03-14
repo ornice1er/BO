@@ -210,10 +210,13 @@
   <ng-template #editContent let-c="close" let-d="dismiss">
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
+    <div class="modal-header d-flex align-items-center">
+  <h4 class="modal-title">Modification</h4>
+
+  <button type="button" class="btn btn-dark ms-auto" (click)="d('Cross click')">
+    <i class="fa fa-times"></i>
+  </button>
+</div>
     <div class="modal-body">
       <div class="form-group">
         <label for="typeLabel">Libellé</label>

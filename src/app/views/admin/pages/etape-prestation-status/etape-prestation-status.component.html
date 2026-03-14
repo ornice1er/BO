@@ -50,6 +50,9 @@
                 <th scope="col">Prestation</th>
                 <th scope="col">Etape</th>
                 <th scope="col">Statut</th>
+                <th scope="col">Champs supplémentaires</th>
+                <th scope="col">Déclencheur</th>
+                <th scope="col">Banette</th>
             </tr>
             </thead>
             <tbody>
@@ -143,6 +146,21 @@
                 <td>{{d?.ps?.prestation?.name}}</td>
                 <td>{{d?.etape?.name}}</td>
                 <td>{{d?.ps?.status?.name}}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let ad of d?.adding_fields">{{getName2(ad,"adding_fields")}}</li>
+                    </ul>
+                </td>
+                 <td>
+                    <ul>
+                        <li *ngFor="let e of d?.events">{{getName2(e,"events")}}</li>
+                    </ul>
+                </td>
+                 <td>
+                    <ul>
+                        <li *ngFor="let b of d?.banettes">{{getName2(b,"banettes")}}</li>
+                    </ul>
+                </td>
             </tr>
 
            
@@ -204,6 +222,30 @@
                 </ng-select>
             </div>
 
+               <div class=" form-group col-12 mb-3">
+                <label for="">Champs supplémentaires</label>
+                <ng-select [multiple]="true" ngModel name="adding_fields">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ad of addingFields" [value]="ad.key">{{ad?.value}}</ng-option>
+                </ng-select>
+            </div>
+
+               <div class=" form-group col-12 mb-3">
+                <label for="">Evènement à déclencher</label>
+                <ng-select [multiple]="true" ngModel name="events">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ev of events" [value]="ev.key">{{ev?.value}}</ng-option>
+                </ng-select>
+            </div>
+
+              <div class=" form-group col-12 mb-3">
+                <label for="">Afficher dans la banette </label>
+                <ng-select [multiple]="true" ngModel name="banettes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let b of banettes" [value]="b.key">{{b?.value}}</ng-option>
+                </ng-select>
+            </div>
+
         </div>
         <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
@@ -217,15 +259,18 @@
   <ng-template #editContent let-c="close" let-d="dismiss">
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification d'un agent</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
+    <div class="modal-header d-flex align-items-center">
+  <h4 class="modal-title">Modification</h4>
+
+  <button type="button" class="btn btn-dark ms-auto" (click)="d('Cross click')">
+    <i class="fa fa-times"></i>
+  </button>
+</div>
     <div class="modal-body">
     
         <div class=" form-group col-12 mb-3">
                 <label for="">Prestation <span class="text-danger ml-2">(*)</span></label>
-                <ng-select >
+                <ng-select  [(ngModel)]="selected_data.ps.prestation_id" name="prestation_id">
                     <ng-option selected  disabled></ng-option>
                     <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
                 </ng-select>
@@ -245,6 +290,29 @@
                 </ng-select>
             </div>
 
+               <div class=" form-group col-12 mb-3">
+                <label for="">Champs supplémentaires</label>
+                <ng-select [multiple]="true" [(ngModel)]="selected_data.adding_fields" name="adding_fields">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ad of addingFields" [value]="ad.key">{{ad?.value}}</ng-option>
+                </ng-select>
+            </div>
+
+               <div class=" form-group col-12 mb-3">
+                <label for="">Evènement à déclencher</label>
+                <ng-select [multiple]="true" [(ngModel)]="selected_data.events" name="events">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let ev of events" [value]="ev.key">{{ev?.value}}</ng-option>
+                </ng-select>
+            </div>
+
+              <div class=" form-group col-12 mb-3">
+                <label for="">Afficher dans la banette </label>
+                <ng-select [multiple]="true" [(ngModel)]="selected_data.banettes" name="banettes">
+                    <ng-option selected  disabled></ng-option>
+                    <ng-option *ngFor="let b of banettes" [value]="b.key">{{b?.value}}</ng-option>
+                </ng-select>
+            </div>
          
  </div>
     <div class="modal-footer">

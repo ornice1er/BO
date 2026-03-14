@@ -17,6 +17,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { PrestationService } from '../../../../core/services/prestation.service';
+import { ADDING_FIELDS, BANETTES, EVENTS } from '../../../../core/utils/DATA';
 
 @Component({
   selector: 'app-etape-prestation-status',
@@ -49,10 +50,16 @@ remoteSearchData: any[] = []
   }
   isPaginate=true
   selectedId: number | null = null;
-         selectedFilter = '';
+  selectedFilter = '';
+  fileInput:any
+
+  addingFields:any[]=ADDING_FIELDS
+
+  events:any[]=EVENTS
+
+  banettes:any[]=BANETTES
 
 
-         fileInput:any
 
       constructor(
         private ePSService:EtapePrestationStatusService,
@@ -295,4 +302,20 @@ resetSearch() {
     return ConfigService.toFile(`storage/${filename}`)
   }
 
+  getName2(key:any,step:any){
+    switch (step) {
+    case 'adding_fields':
+      return this.addingFields.find((el:any)=>el.key==key)?.value
+    break;
+    case 'events':
+      return this.events.find((el:any)=>el.key==key)?.value
+    break;
+    case 'banettes':
+    return this.banettes.find((el:any)=>el.key==key)?.value
+    break;
+      default:
+        return 'Non défini'
+        break;
+    }
+  }
 }
