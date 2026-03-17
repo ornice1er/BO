@@ -1,4 +1,119 @@
-.chart-wrapper{
-    width: 800px;
-    height: 400px;
+/* Page header */
+.stat-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.dash-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 2px;
+  letter-spacing: -0.02em;
+}
+.dash-subtitle {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Export button */
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0.55rem 1.1rem;
+  background: white;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.export-btn:hover {
+  background: #f9fafb;
+  border-color: #0A3764;
+  color: #0A3764;
+  box-shadow: 0 2px 8px rgba(10,55,100,0.1);
+}
+.export-btn i { font-size: 0.9rem; }
+
+/* Table section header */
+.table-section-header {
+  padding: 0.9rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+  border-bottom: 1px solid #f0f2f5;
+  display: flex;
+  align-items: center;
+}
+
+/* Prestation name in table */
+.stat-prestation-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.875rem;
+}
+.stat-prestation-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0A3764;
+  flex-shrink: 0;
+}
+
+/* Value pills */
+.val-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.val-blue   { background: rgba(10,55,100,0.1);  color: #0A3764; }
+.val-green  { background: rgba(31,136,63,0.1);  color: #1a7a35; }
+.val-red    { background: rgba(235,0,0,0.09);   color: #c20000; }
+.val-teal   { background: rgba(13,148,136,0.1); color: #0d9488; }
+.val-indigo { background: rgba(79,70,229,0.1);  color: #4f46e5; }
+
+/* Chart card */
+.chart-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f0f2f5;
+}
+.chart-card-icon { color: #0A3764; font-size: 1rem; }
+.chart-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+.chart-card-body {
+  padding: 1.25rem;
+  height: 380px;
+  position: relative;
+}
+.chart-card-body canvas {
+  width: 100% !important;
+  height: 100% !important;
 }

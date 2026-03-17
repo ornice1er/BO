@@ -33,15 +33,24 @@ export class StatiistiqueComponent implements OnInit {
   chartData: ChartDataset[] = [];
   chartLabels: string[] = [];
   chartOptions: ChartOptions = {
-      // ⤵️ Fill the wrapper
-      responsive: true,
-      maintainAspectRatio: true,
-      // ⤵️ Remove the main legend
-      plugins: {
-        legend: {
-          display: true
-        }
-      }
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
+      },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false }, border: { display: false } },
+      y: { grid: { color: '#f0f2f5' }, border: { display: false }, beginAtZero: true }
+    },
+    elements: {
+      line: { tension: 0.4, borderWidth: 2 },
+      point: { radius: 4, hoverRadius: 7 }
+    }
   };
 
     pg={
@@ -67,6 +76,14 @@ export class StatiistiqueComponent implements OnInit {
 
   ngOnInit(): void {
     this.user=this.locService.get(GlobalName.userName);
+    const PALETTE = [
+      { border:'#0A3764', bg:'rgba(10,55,100,0.08)' },
+      { border:'#1F883F', bg:'rgba(31,136,63,0.08)' },
+      { border:'#4f46e5', bg:'rgba(79,70,229,0.08)' },
+      { border:'#0d9488', bg:'rgba(13,148,136,0.08)' },
+      { border:'#ea580c', bg:'rgba(234,88,12,0.08)' },
+      { border:'#9333ea', bg:'rgba(147,51,234,0.08)' },
+    ];
     this.dashService.getAll().subscribe((res:any)=>{
       this.data=res.data.data
        this.buttonsPermission = {
@@ -75,12 +92,17 @@ export class StatiistiqueComponent implements OnInit {
       edit:true,
       delete:true
     };
-      this.data.forEach((el:any)=>{
+      this.data.forEach((el:any, i:number)=>{
+        const c = PALETTE[i % PALETTE.length];
         this.chartData.push({
-          label:el.name,
-          data:el.stats_by_month,
-          pointHitRadius: 15, // expands the hover 'detection' area
-          pointHoverRadius: 8,
+          label: el.name,
+          data: el.stats_by_month,
+          borderColor: c.border,
+          backgroundColor: c.bg,
+          pointBackgroundColor: c.border,
+          fill: true,
+          pointHitRadius: 15,
+          pointHoverRadius: 7,
         })
       })
     

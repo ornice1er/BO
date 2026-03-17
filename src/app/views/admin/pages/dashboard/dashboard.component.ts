@@ -36,15 +36,24 @@ export class DashboardComponent {
   chartData: ChartDataset[] = [];
   chartLabels: string[] = [];
   chartOptions: ChartOptions = {
-      // ⤵️ Fill the wrapper
-      responsive: true,
-      maintainAspectRatio: true,
-      // ⤵️ Remove the main legend
-      plugins: {
-        legend: {
-          display: true
-        }
-      }
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
+      },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false }, border: { display: false } },
+      y: { grid: { color: '#f0f2f5' }, border: { display: false }, beginAtZero: true }
+    },
+    elements: {
+      line: { tension: 0.4, borderWidth: 2 },
+      point: { radius: 4, hoverRadius: 7 }
+    }
   };
   currentPrestation:any
 
@@ -78,10 +87,14 @@ export class DashboardComponent {
         this.dashService.get(this.user_prestations[0].prestation.code).subscribe((res:any)=>{
           this.data=res.data.stats
           this.chartData.push({
-            label:this.user_prestations[0].prestation.name,
-            data:res.data.stats_by_month,
-            pointHitRadius: 15, // expands the hover 'detection' area
-            pointHoverRadius: 8,
+            label: this.user_prestations[0].prestation.name,
+            data: res.data.stats_by_month,
+            borderColor: '#0A3764',
+            backgroundColor: 'rgba(10,55,100,0.08)',
+            fill: true,
+            pointBackgroundColor: '#0A3764',
+            pointHitRadius: 15,
+            pointHoverRadius: 7,
           })
           this.chartLabels=res.data.months
         })

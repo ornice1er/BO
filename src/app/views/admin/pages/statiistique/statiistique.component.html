@@ -1,78 +1,79 @@
+<!-- ===== PAGE HEADER ===== -->
+<div class="stat-page-header">
+  <div>
+    <h2 class="dash-title">Statistiques globales</h2>
+    <p class="dash-subtitle">Récapitulatif de toutes les prestations</p>
+  </div>
+  <button (click)="export()" class="export-btn">
+    <i class="bi bi-download"></i>
+    <span>Exporter PDF</span>
+  </button>
+</div>
 
-<div class="card">
-    <div class="card-header d-flex justify-content-end">
-        <button (click)="export()" class="btn btn-sm btn-info">Exporter en PDF</button>
-    </div>
-<div class="card-body">
-
-    <table class="table table-bordred mb-3 table-sm">
-        <thead>
-            <th>Libellé</th>
-            <th>Totales</th>
-            <th>Traitées</th>
-            <th>Rejetées</th>
-            <th>Délivrées</th>
-            <th>Finalisées</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let d of data">
-                <td>{{d.name}}</td>
-                <td>{{d.total}}</td>
-                <td>{{d.treated}}</td>
-                <td>{{d.rejected}}</td>
-                <td>{{d.signed}}</td>
-                <td>{{d.finished}}</td>
-            </tr>
-        </tbody>
+<!-- ===== TABLEAU DE SYNTHÈSE ===== -->
+<div class="custom-card mb-4">
+  <div class="table-section-header">
+    <i class="bi bi-table me-2"></i>
+    Synthèse par prestation
+  </div>
+  <div class="table-responsive">
+    <table class="table custom-table stat-table">
+      <thead>
+        <tr>
+          <th>Prestation</th>
+          <th class="text-center">Totales</th>
+          <th class="text-center">Traitées</th>
+          <th class="text-center">Rejetées</th>
+          <th class="text-center">Délivrées</th>
+          <th class="text-center">Finalisées</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of data" class="table-row">
+          <td>
+            <div class="stat-prestation-name">
+              <div class="stat-prestation-dot"></div>
+              {{ d.name }}
+            </div>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-blue">{{ d.total }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-green">{{ d.treated }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-red">{{ d.rejected }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-teal">{{ d.signed }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-indigo">{{ d.finished }}</span>
+          </td>
+        </tr>
+        <tr *ngIf="!data || data.length === 0">
+          <td colspan="6" class="text-center py-5 text-muted" style="font-size:0.875rem;">
+            <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:0.5rem; opacity:0.3;"></i>
+            Aucune donnée disponible
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <div class="">
-
-        <h4>Graphe d'évolution des demandes au cours des mois</h4>
-
-        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
-         <canvas baseChart
-            [type]="'line'"
-            [data]="{ labels: chartLabels, datasets: chartData }"
-            [options]="chartOptions"
-      ></canvas>
-          </div>
-    </div>
-</div>
+  </div>
 </div>
 
-<ng-template #addContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>
-<ng-template #editContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>
-<ng-template #showContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>
+<!-- ===== GRAPHIQUE ===== -->
+<div class="chart-card" *ngIf="data && data.length > 0">
+  <div class="chart-card-header">
+    <i class="bi bi-graph-up-arrow chart-card-icon"></i>
+    <span class="chart-card-title">Évolution mensuelle par prestation</span>
+  </div>
+  <div class="chart-card-body">
+    <canvas baseChart
+      [type]="'line'"
+      [data]="{ labels: chartLabels, datasets: chartData }"
+      [options]="chartOptions"
+    ></canvas>
+  </div>
+</div>

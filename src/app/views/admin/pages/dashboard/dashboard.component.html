@@ -1,144 +1,210 @@
-<div class=""  *ngIf="role == 'Admin Sectoriel' || role=='Admin national'">
-    <div class="row">
-        <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-primary  border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Nombre d'tilisateurs</h6>
-            <p class="text-center text-white">{{data?.users}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-warning  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nombre de prestations</h6>
-                <p class="text-center text-white">{{data?.prestations}}</p> 
-                </div>
-             </div>
-         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-danger  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nombre d'unité administrative</h6>
-                <p class="text-center text-white">{{data?.ua}}</p> 
-                </div>
-             </div>
-</div>
-</div>
-<div class="card" *ngIf="role != 'Admin Sectoriel' && role!='Admin national'">
-    <!--div class="card-header d-flex justify-content-end">
-        <button class="btn btn-sm btn-info">Exporter en PDF</button>
-    </!div-->
-<div class="card-body" *ngIf="role != 'Directeur'">
-    <div class="form-group mb-5">
-        <label for="">Sélectionner une prestation</label>
-        <select class="form-control" (change)="getNewStat($event)">
-                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
-        </select>
+<!-- ========================================================
+   VUE ADMIN (Admin Sectoriel / Admin national)
+   ======================================================== -->
+<div *ngIf="role == 'Admin Sectoriel' || role=='Admin national'">
+
+  <div class="dash-header">
+    <div>
+      <h2 class="dash-title">Tableau de bord</h2>
+      <p class="dash-subtitle">Vue d'ensemble de l'administration</p>
     </div>
+  </div>
 
-
-    <div class="row">
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-primary p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Totales</h6>
-            <p class="text-center text-white">{{data?.total}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-secondary  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nouvelles demandes</h6>
-                <p class="text-center text-white">{{data?.news}}</p> 
-                </div>
-             </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Traitées</h6>
-            <p class="text-center text-white">{{data?.treated}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-warning border-0 dash3 p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes mise en attente</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div> 
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3"   >
-            <div class="card overflow-hidden bg-danger  border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes suspendues pour accord à l'amiable</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0  p-3 bg-danger">
-                    
-            <h6 class="text-center text-white">Demandes Rejetées</h6>
-            <p class="text-center text-white">{{data?.rejected}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden  border-0 bg-success p-3 ">
-                        
-                <h6 class="text-center text-white">Demandes accordées</h6>
-                <p class="text-center text-white">{{data?.signed}}</p> 
-                </div>
-             </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Finalisées</h6>
-            <p class="text-center text-white">{{data?.finished}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" *ngIf="currentPrestation?.need_validation" >
-            <div class="card overflow-hidden bg-success border-0 dash3 p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Validées</h6>
-            <p class="text-center text-white">{{data?.validated}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  bg-secondary border-0 bg-secondary p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Abandonnées</h6>
-            <p class="text-center text-white">{{data?.leaved}}</p> 
-            </div>
-         </div>
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.users ?? '—' }}</div>
+          <div class="stat-label">Utilisateurs</div>
+        </div>
+        <div class="stat-decor stat-decor-blue"></div>
+      </div>
     </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-orange">
+          <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.prestations ?? '—' }}</div>
+          <div class="stat-label">Prestations</div>
+        </div>
+        <div class="stat-decor stat-decor-orange"></div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-purple">
+          <i class="bi bi-building-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.ua ?? '—' }}</div>
+          <div class="stat-label">Unités Administratives</div>
+        </div>
+        <div class="stat-decor stat-decor-purple"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <div class="" >
 
-        <h4>Graphe d'évolution des demandes au cours des mois</h4>
+<!-- ========================================================
+   VUE AGENTS & DIRECTEUR
+   ======================================================== -->
+<div *ngIf="role != 'Admin Sectoriel' && role!='Admin national'">
 
-        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
-            <canvas baseChart
-            [type]="'line'"
-            [data]="{ labels: chartLabels, datasets: chartData }"
-            [options]="chartOptions"
-      ></canvas>
+  <div class="dash-header">
+    <div>
+      <h2 class="dash-title">Tableau de bord</h2>
+      <p class="dash-subtitle">Suivi de l'activité de traitement</p>
+    </div>
+  </div>
+
+  <!-- Sélecteur prestation -->
+  <div class="selector-card mb-4">
+    <div class="selector-inner">
+      <div class="selector-label-wrap">
+        <i class="bi bi-funnel-fill selector-icon"></i>
+        <label class="selector-label">Sélectionner une prestation</label>
+      </div>
+      <select class="selector-select" (change)="getNewStat($event)">
+        <option *ngFor="let el of user_prestations" [value]="el.prestation.code">
+          {{ el.prestation.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ===== VUE DIRECTEUR ===== -->
+  <div *ngIf="role == 'Directeur'" class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-yellow">
+          <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.pending ?? '—' }}</div>
+          <div class="stat-label">Demandes en attente de confirmation</div>
+        </div>
+        <div class="stat-decor stat-decor-yellow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VUE AGENT (plein dashboard) ===== -->
+  <div *ngIf="role != 'Directeur'">
+
+    <!-- KPI Grid -->
+    <div class="row g-3 mb-4" *ngIf="data">
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.total }}</div>
+            <div class="stat-label">Totales</div>
           </div>
+          <div class="stat-decor stat-decor-blue"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-indigo"><i class="bi bi-stars"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.news }}</div>
+            <div class="stat-label">Nouvelles</div>
+          </div>
+          <div class="stat-decor stat-decor-indigo"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-green"><i class="bi bi-check2-circle"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.treated }}</div>
+            <div class="stat-label">Traitées</div>
+          </div>
+          <div class="stat-decor stat-decor-green"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-yellow"><i class="bi bi-pause-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.pending }}</div>
+            <div class="stat-label">En attente</div>
+          </div>
+          <div class="stat-decor stat-decor-yellow"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-red"><i class="bi bi-x-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.rejected }}</div>
+            <div class="stat-label">Rejetées</div>
+          </div>
+          <div class="stat-decor stat-decor-red"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-teal"><i class="bi bi-patch-check-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.signed }}</div>
+            <div class="stat-label">Accordées</div>
+          </div>
+          <div class="stat-decor stat-decor-teal"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-green"><i class="bi bi-bag-check-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.finished }}</div>
+            <div class="stat-label">Finalisées</div>
+          </div>
+          <div class="stat-decor stat-decor-green"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3" *ngIf="currentPrestation?.need_validation">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-indigo"><i class="bi bi-shield-check"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.validated }}</div>
+            <div class="stat-label">Validées</div>
+          </div>
+          <div class="stat-decor stat-decor-indigo"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-gray"><i class="bi bi-dash-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.leaved }}</div>
+            <div class="stat-label">Abandonnées</div>
+          </div>
+          <div class="stat-decor stat-decor-gray"></div>
+        </div>
+      </div>
     </div>
-</div>
 
-<div class="card-body" *ngIf="role == 'Directeur'">
-    <div class="form-group mb-5">
-        <label for="">Sélectionner une prestation</label>
-        <select class="form-control" (change)="getNewStat($event)">
-                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
-        </select>
+    <!-- Graphique -->
+    <div class="chart-card" *ngIf="data">
+      <div class="chart-card-header">
+        <i class="bi bi-graph-up-arrow chart-card-icon"></i>
+        <span class="chart-card-title">Évolution mensuelle des demandes</span>
+      </div>
+      <div class="chart-card-body">
+        <canvas baseChart
+          [type]="'line'"
+          [data]="{ labels: chartLabels, datasets: chartData }"
+          [options]="chartOptions"
+        ></canvas>
+      </div>
     </div>
 
-    <div class="row">
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-warning border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes en attente de confirmation</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div> 
-    </div>
-</div>
+  </div>
 </div>

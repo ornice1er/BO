@@ -116126,38 +116126,62 @@ var CorrectionComponent = class _CorrectionComponent {
 var _c017 = (a0, a1) => ({ labels: a0, datasets: a1 });
 function DashboardComponent_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 2)(1, "div", 3)(2, "div", 4)(3, "div", 5)(4, "h6", 6);
-    \u0275\u0275text(5, "Nombre d'tilisateurs");
+    \u0275\u0275elementStart(0, "div")(1, "div", 1)(2, "div")(3, "h2", 2);
+    \u0275\u0275text(4, "Tableau de bord");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "p", 6);
-    \u0275\u0275text(7);
+    \u0275\u0275elementStart(5, "p", 3);
+    \u0275\u0275text(6, "Vue d'ensemble de l'administration");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(8, "div", 4)(9, "div", 7)(10, "h6", 6);
-    \u0275\u0275text(11, "Nombre de prestations");
+    \u0275\u0275elementStart(7, "div", 4)(8, "div", 5)(9, "div", 6)(10, "div", 7);
+    \u0275\u0275element(11, "i", 8);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(12, "p", 6);
-    \u0275\u0275text(13);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(14, "div", 4)(15, "div", 8)(16, "h6", 6);
-    \u0275\u0275text(17, "Nombre d'unit\xE9 administrative");
+    \u0275\u0275elementStart(12, "div", 9)(13, "div", 10);
+    \u0275\u0275text(14);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(18, "p", 6);
-    \u0275\u0275text(19);
-    \u0275\u0275elementEnd()()()()();
+    \u0275\u0275elementStart(15, "div", 11);
+    \u0275\u0275text(16, "Utilisateurs");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(17, "div", 12);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(18, "div", 5)(19, "div", 6)(20, "div", 13);
+    \u0275\u0275element(21, "i", 14);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(22, "div", 9)(23, "div", 10);
+    \u0275\u0275text(24);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(25, "div", 11);
+    \u0275\u0275text(26, "Prestations");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(27, "div", 15);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(28, "div", 5)(29, "div", 6)(30, "div", 16);
+    \u0275\u0275element(31, "i", 17);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(32, "div", 9)(33, "div", 10);
+    \u0275\u0275text(34);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(35, "div", 11);
+    \u0275\u0275text(36, "Unit\xE9s Administratives");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(37, "div", 18);
+    \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
+    let tmp_1_0;
+    let tmp_2_0;
+    let tmp_3_0;
     const ctx_r0 = \u0275\u0275nextContext();
-    \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.users);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.prestations);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.ua);
+    \u0275\u0275advance(14);
+    \u0275\u0275textInterpolate((tmp_1_0 = ctx_r0.data == null ? null : ctx_r0.data.users) !== null && tmp_1_0 !== void 0 ? tmp_1_0 : "\u2014");
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate((tmp_2_0 = ctx_r0.data == null ? null : ctx_r0.data.prestations) !== null && tmp_2_0 !== void 0 ? tmp_2_0 : "\u2014");
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate((tmp_3_0 = ctx_r0.data == null ? null : ctx_r0.data.ua) !== null && tmp_3_0 !== void 0 ? tmp_3_0 : "\u2014");
   }
 }
-function DashboardComponent_div_1_div_1_option_5_Template(rf, ctx) {
+function DashboardComponent_div_1_option_14_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 25);
+    \u0275\u0275elementStart(0, "option", 27);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -116165,193 +116189,228 @@ function DashboardComponent_div_1_div_1_option_5_Template(rf, ctx) {
     const el_r3 = ctx.$implicit;
     \u0275\u0275property("value", el_r3.prestation.code);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1("", el_r3.prestation.name, " ");
+    \u0275\u0275textInterpolate1(" ", el_r3.prestation.name, " ");
   }
 }
-function DashboardComponent_div_1_div_1_div_55_Template(rf, ctx) {
+function DashboardComponent_div_1_div_15_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 16)(1, "div", 26)(2, "h6", 6);
-    \u0275\u0275text(3, "Demandes Valid\xE9es");
+    \u0275\u0275elementStart(0, "div", 4)(1, "div", 5)(2, "div", 6)(3, "div", 28);
+    \u0275\u0275element(4, "i", 29);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "p", 6);
-    \u0275\u0275text(5);
+    \u0275\u0275elementStart(5, "div", 9)(6, "div", 10);
+    \u0275\u0275text(7);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "div", 11);
+    \u0275\u0275text(9, "Demandes en attente de confirmation");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(10, "div", 30);
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const ctx_r0 = \u0275\u0275nextContext(3);
-    \u0275\u0275advance(5);
+    let tmp_2_0;
+    const ctx_r0 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance(7);
+    \u0275\u0275textInterpolate((tmp_2_0 = ctx_r0.data == null ? null : ctx_r0.data.pending) !== null && tmp_2_0 !== void 0 ? tmp_2_0 : "\u2014");
+  }
+}
+function DashboardComponent_div_1_div_16_div_1_div_71_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 34)(1, "div", 6)(2, "div", 36);
+    \u0275\u0275element(3, "i", 54);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(4, "div", 9)(5, "div", 10);
+    \u0275\u0275text(6);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "div", 11);
+    \u0275\u0275text(8, "Valid\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(9, "div", 38);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext(4);
+    \u0275\u0275advance(6);
     \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.validated);
   }
 }
-function DashboardComponent_div_1_div_1_div_65_Template(rf, ctx) {
+function DashboardComponent_div_1_div_16_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 27);
-    \u0275\u0275element(1, "canvas", 28);
+    \u0275\u0275elementStart(0, "div", 33)(1, "div", 34)(2, "div", 6)(3, "div", 7);
+    \u0275\u0275element(4, "i", 35);
     \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "div", 9)(6, "div", 10);
+    \u0275\u0275text(7);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "div", 11);
+    \u0275\u0275text(9, "Totales");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(10, "div", 12);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(11, "div", 34)(12, "div", 6)(13, "div", 36);
+    \u0275\u0275element(14, "i", 37);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(15, "div", 9)(16, "div", 10);
+    \u0275\u0275text(17);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(18, "div", 11);
+    \u0275\u0275text(19, "Nouvelles");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(20, "div", 38);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(21, "div", 34)(22, "div", 6)(23, "div", 39);
+    \u0275\u0275element(24, "i", 40);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(25, "div", 9)(26, "div", 10);
+    \u0275\u0275text(27);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(28, "div", 11);
+    \u0275\u0275text(29, "Trait\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(30, "div", 41);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(31, "div", 34)(32, "div", 6)(33, "div", 28);
+    \u0275\u0275element(34, "i", 42);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(35, "div", 9)(36, "div", 10);
+    \u0275\u0275text(37);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(38, "div", 11);
+    \u0275\u0275text(39, "En attente");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(40, "div", 30);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(41, "div", 34)(42, "div", 6)(43, "div", 43);
+    \u0275\u0275element(44, "i", 44);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(45, "div", 9)(46, "div", 10);
+    \u0275\u0275text(47);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(48, "div", 11);
+    \u0275\u0275text(49, "Rejet\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(50, "div", 45);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(51, "div", 34)(52, "div", 6)(53, "div", 46);
+    \u0275\u0275element(54, "i", 47);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(55, "div", 9)(56, "div", 10);
+    \u0275\u0275text(57);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(58, "div", 11);
+    \u0275\u0275text(59, "Accord\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(60, "div", 48);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(61, "div", 34)(62, "div", 6)(63, "div", 39);
+    \u0275\u0275element(64, "i", 49);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(65, "div", 9)(66, "div", 10);
+    \u0275\u0275text(67);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(68, "div", 11);
+    \u0275\u0275text(69, "Finalis\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(70, "div", 41);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275template(71, DashboardComponent_div_1_div_16_div_1_div_71_Template, 10, 1, "div", 50);
+    \u0275\u0275elementStart(72, "div", 34)(73, "div", 6)(74, "div", 51);
+    \u0275\u0275element(75, "i", 52);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(76, "div", 9)(77, "div", 10);
+    \u0275\u0275text(78);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(79, "div", 11);
+    \u0275\u0275text(80, "Abandonn\xE9es");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275element(81, "div", 53);
+    \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
     const ctx_r0 = \u0275\u0275nextContext(3);
-    \u0275\u0275advance();
+    \u0275\u0275advance(7);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.total);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.news);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.treated);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.pending);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.rejected);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.signed);
+    \u0275\u0275advance(10);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.finished);
+    \u0275\u0275advance(4);
+    \u0275\u0275property("ngIf", ctx_r0.currentPrestation == null ? null : ctx_r0.currentPrestation.need_validation);
+    \u0275\u0275advance(7);
+    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.leaved);
+  }
+}
+function DashboardComponent_div_1_div_16_div_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 55)(1, "div", 56);
+    \u0275\u0275element(2, "i", 57);
+    \u0275\u0275elementStart(3, "span", 58);
+    \u0275\u0275text(4, "\xC9volution mensuelle des demandes");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(5, "div", 59);
+    \u0275\u0275element(6, "canvas", 60);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext(3);
+    \u0275\u0275advance(6);
     \u0275\u0275property("type", "line")("data", \u0275\u0275pureFunction2(3, _c017, ctx_r0.chartLabels, ctx_r0.chartData))("options", ctx_r0.chartOptions);
   }
 }
-function DashboardComponent_div_1_div_1_Template(rf, ctx) {
+function DashboardComponent_div_1_div_16_Template(rf, ctx) {
   if (rf & 1) {
-    const _r2 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 11)(1, "div", 12)(2, "label", 13);
-    \u0275\u0275text(3, "S\xE9lectionner une prestation");
+    \u0275\u0275elementStart(0, "div");
+    \u0275\u0275template(1, DashboardComponent_div_1_div_16_div_1_Template, 82, 9, "div", 31)(2, DashboardComponent_div_1_div_16_div_2_Template, 7, 6, "div", 32);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "select", 14);
-    \u0275\u0275listener("change", function DashboardComponent_div_1_div_1_Template_select_change_4_listener($event) {
-      \u0275\u0275restoreView(_r2);
-      const ctx_r0 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r0.getNewStat($event));
-    });
-    \u0275\u0275template(5, DashboardComponent_div_1_div_1_option_5_Template, 2, 2, "option", 15);
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(6, "div", 3)(7, "div", 16)(8, "div", 17)(9, "h6", 6);
-    \u0275\u0275text(10, "Demandes Totales");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "p", 6);
-    \u0275\u0275text(12);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(13, "div", 16)(14, "div", 18)(15, "h6", 6);
-    \u0275\u0275text(16, "Nouvelles demandes");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(17, "p", 6);
-    \u0275\u0275text(18);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(19, "div", 16)(20, "div", 19)(21, "h6", 6);
-    \u0275\u0275text(22, "Demandes Trait\xE9es");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(23, "p", 6);
-    \u0275\u0275text(24);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(25, "div", 16)(26, "div", 20)(27, "h6", 6);
-    \u0275\u0275text(28, "Demandes mise en attente");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(29, "p", 6);
-    \u0275\u0275text(30);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(31, "div", 16)(32, "div", 8)(33, "h6", 6);
-    \u0275\u0275text(34, "Demandes suspendues pour accord \xE0 l'amiable");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(35, "p", 6);
-    \u0275\u0275text(36);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(37, "div", 16)(38, "div", 21)(39, "h6", 6);
-    \u0275\u0275text(40, "Demandes Rejet\xE9es");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(41, "p", 6);
-    \u0275\u0275text(42);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(43, "div", 16)(44, "div", 19)(45, "h6", 6);
-    \u0275\u0275text(46, "Demandes accord\xE9es");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(47, "p", 6);
-    \u0275\u0275text(48);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(49, "div", 16)(50, "div", 19)(51, "h6", 6);
-    \u0275\u0275text(52, "Demandes Finalis\xE9es");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(53, "p", 6);
-    \u0275\u0275text(54);
-    \u0275\u0275elementEnd()()();
-    \u0275\u0275template(55, DashboardComponent_div_1_div_1_div_55_Template, 6, 1, "div", 22);
-    \u0275\u0275elementStart(56, "div", 16)(57, "div", 23)(58, "h6", 6);
-    \u0275\u0275text(59, "Demandes Abandonn\xE9es");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(60, "p", 6);
-    \u0275\u0275text(61);
-    \u0275\u0275elementEnd()()()();
-    \u0275\u0275elementStart(62, "div", 2)(63, "h4");
-    \u0275\u0275text(64, "Graphe d'\xE9volution des demandes au cours des mois");
-    \u0275\u0275elementEnd();
-    \u0275\u0275template(65, DashboardComponent_div_1_div_1_div_65_Template, 2, 6, "div", 24);
-    \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
     const ctx_r0 = \u0275\u0275nextContext(2);
-    \u0275\u0275advance(5);
-    \u0275\u0275property("ngForOf", ctx_r0.user_prestations);
-    \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.total);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.news);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.treated);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.pending);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.pending);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.rejected);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.signed);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.finished);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r0.currentPrestation == null ? null : ctx_r0.currentPrestation.need_validation);
-    \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.leaved);
-    \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r0.data != void 0);
-  }
-}
-function DashboardComponent_div_1_div_2_option_5_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 25);
-    \u0275\u0275text(1);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    const el_r5 = ctx.$implicit;
-    \u0275\u0275property("value", el_r5.prestation.code);
+    \u0275\u0275property("ngIf", ctx_r0.data);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1("", el_r5.prestation.name, " ");
-  }
-}
-function DashboardComponent_div_1_div_2_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 11)(1, "div", 12)(2, "label", 13);
-    \u0275\u0275text(3, "S\xE9lectionner une prestation");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "select", 14);
-    \u0275\u0275listener("change", function DashboardComponent_div_1_div_2_Template_select_change_4_listener($event) {
-      \u0275\u0275restoreView(_r4);
-      const ctx_r0 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r0.getNewStat($event));
-    });
-    \u0275\u0275template(5, DashboardComponent_div_1_div_2_option_5_Template, 2, 2, "option", 15);
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(6, "div", 3)(7, "div", 16)(8, "div", 7)(9, "h6", 6);
-    \u0275\u0275text(10, "Demandes en attente de confirmation");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "p", 6);
-    \u0275\u0275text(12);
-    \u0275\u0275elementEnd()()()()();
-  }
-  if (rf & 2) {
-    const ctx_r0 = \u0275\u0275nextContext(2);
-    \u0275\u0275advance(5);
-    \u0275\u0275property("ngForOf", ctx_r0.user_prestations);
-    \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate(ctx_r0.data == null ? null : ctx_r0.data.pending);
+    \u0275\u0275property("ngIf", ctx_r0.data);
   }
 }
 function DashboardComponent_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 9);
-    \u0275\u0275template(1, DashboardComponent_div_1_div_1_Template, 66, 12, "div", 10)(2, DashboardComponent_div_1_div_2_Template, 13, 2, "div", 10);
+    const _r2 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div")(1, "div", 1)(2, "div")(3, "h2", 2);
+    \u0275\u0275text(4, "Tableau de bord");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "p", 3);
+    \u0275\u0275text(6, "Suivi de l'activit\xE9 de traitement");
+    \u0275\u0275elementEnd()()();
+    \u0275\u0275elementStart(7, "div", 19)(8, "div", 20)(9, "div", 21);
+    \u0275\u0275element(10, "i", 22);
+    \u0275\u0275elementStart(11, "label", 23);
+    \u0275\u0275text(12, "S\xE9lectionner une prestation");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(13, "select", 24);
+    \u0275\u0275listener("change", function DashboardComponent_div_1_Template_select_change_13_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r0 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r0.getNewStat($event));
+    });
+    \u0275\u0275template(14, DashboardComponent_div_1_option_14_Template, 2, 2, "option", 25);
+    \u0275\u0275elementEnd()()();
+    \u0275\u0275template(15, DashboardComponent_div_1_div_15_Template, 11, 1, "div", 26)(16, DashboardComponent_div_1_div_16_Template, 3, 2, "div", 0);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = \u0275\u0275nextContext();
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r0.role != "Directeur");
+    \u0275\u0275advance(14);
+    \u0275\u0275property("ngForOf", ctx_r0.user_prestations);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r0.role == "Directeur");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r0.role != "Directeur");
   }
 }
 var DashboardComponent = class _DashboardComponent {
@@ -116364,14 +116423,23 @@ var DashboardComponent = class _DashboardComponent {
   chartData = [];
   chartLabels = [];
   chartOptions = {
-    // ⤵️ Fill the wrapper
     responsive: true,
-    maintainAspectRatio: true,
-    // ⤵️ Remove the main legend
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true
-      }
+        display: true,
+        position: "top",
+        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
+      },
+      tooltip: { mode: "index", intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false }, border: { display: false } },
+      y: { grid: { color: "#f0f2f5" }, border: { display: false }, beginAtZero: true }
+    },
+    elements: {
+      line: { tension: 0.4, borderWidth: 2 },
+      point: { radius: 4, hoverRadius: 7 }
     }
   };
   currentPrestation;
@@ -116404,9 +116472,12 @@ var DashboardComponent = class _DashboardComponent {
           this.chartData.push({
             label: this.user_prestations[0].prestation.name,
             data: res.data.stats_by_month,
+            borderColor: "#0A3764",
+            backgroundColor: "rgba(10,55,100,0.08)",
+            fill: true,
+            pointBackgroundColor: "#0A3764",
             pointHitRadius: 15,
-            // expands the hover 'detection' area
-            pointHoverRadius: 8
+            pointHoverRadius: 7
           });
           this.chartLabels = res.data.months;
         });
@@ -116432,164 +116503,231 @@ var DashboardComponent = class _DashboardComponent {
   static \u0275fac = function DashboardComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _DashboardComponent)(\u0275\u0275directiveInject(LocalStorageService), \u0275\u0275directiveInject(DashService));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _DashboardComponent, selectors: [["app-dashboard"]], decls: 2, vars: 2, consts: [["class", "", 4, "ngIf"], ["class", "card", 4, "ngIf"], [1, ""], [1, "row"], [1, "col-12", "col-lg-4", "col-xxl-3", "mb-3"], [1, "card", "overflow-hidden", "bg-primary", "border-0", "p-3"], [1, "text-center", "text-white"], [1, "card", "overflow-hidden", "bg-warning", "border-0", "p-3"], [1, "card", "overflow-hidden", "bg-danger", "border-0", "p-3"], [1, "card"], ["class", "card-body", 4, "ngIf"], [1, "card-body"], [1, "form-group", "mb-5"], ["for", ""], [1, "form-control", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [1, "col-12", "col-sm-6", "col-md-3", "col-lg-3", "col-xxl-3", "mb-3"], [1, "card", "overflow-hidden", "border-0", "bg-primary", "p-3"], [1, "card", "overflow-hidden", "bg-secondary", "border-0", "p-3"], [1, "card", "overflow-hidden", "border-0", "bg-success", "p-3"], [1, "card", "overflow-hidden", "bg-warning", "border-0", "dash3", "p-3"], [1, "card", "overflow-hidden", "border-0", "p-3", "bg-danger"], ["class", " col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3", 4, "ngIf"], [1, "card", "overflow-hidden", "bg-secondary", "border-0", "bg-secondary", "p-3"], ["class", "chart-wrapper text-center", 4, "ngIf"], [3, "value"], [1, "card", "overflow-hidden", "bg-success", "border-0", "dash3", "p-3"], [1, "chart-wrapper", "text-center"], ["baseChart", "", 3, "type", "data", "options"]], template: function DashboardComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _DashboardComponent, selectors: [["app-dashboard"]], decls: 2, vars: 2, consts: [[4, "ngIf"], [1, "dash-header"], [1, "dash-title"], [1, "dash-subtitle"], [1, "row", "g-3"], [1, "col-12", "col-sm-6", "col-lg-4"], [1, "stat-card"], [1, "stat-icon", "stat-icon-blue"], [1, "bi", "bi-people-fill"], [1, "stat-body"], [1, "stat-value"], [1, "stat-label"], [1, "stat-decor", "stat-decor-blue"], [1, "stat-icon", "stat-icon-orange"], [1, "bi", "bi-briefcase-fill"], [1, "stat-decor", "stat-decor-orange"], [1, "stat-icon", "stat-icon-purple"], [1, "bi", "bi-building-fill"], [1, "stat-decor", "stat-decor-purple"], [1, "selector-card", "mb-4"], [1, "selector-inner"], [1, "selector-label-wrap"], [1, "bi", "bi-funnel-fill", "selector-icon"], [1, "selector-label"], [1, "selector-select", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], ["class", "row g-3", 4, "ngIf"], [3, "value"], [1, "stat-icon", "stat-icon-yellow"], [1, "bi", "bi-hourglass-split"], [1, "stat-decor", "stat-decor-yellow"], ["class", "row g-3 mb-4", 4, "ngIf"], ["class", "chart-card", 4, "ngIf"], [1, "row", "g-3", "mb-4"], [1, "col-6", "col-sm-4", "col-xl-3"], [1, "bi", "bi-file-earmark-text-fill"], [1, "stat-icon", "stat-icon-indigo"], [1, "bi", "bi-stars"], [1, "stat-decor", "stat-decor-indigo"], [1, "stat-icon", "stat-icon-green"], [1, "bi", "bi-check2-circle"], [1, "stat-decor", "stat-decor-green"], [1, "bi", "bi-pause-circle-fill"], [1, "stat-icon", "stat-icon-red"], [1, "bi", "bi-x-circle-fill"], [1, "stat-decor", "stat-decor-red"], [1, "stat-icon", "stat-icon-teal"], [1, "bi", "bi-patch-check-fill"], [1, "stat-decor", "stat-decor-teal"], [1, "bi", "bi-bag-check-fill"], ["class", "col-6 col-sm-4 col-xl-3", 4, "ngIf"], [1, "stat-icon", "stat-icon-gray"], [1, "bi", "bi-dash-circle-fill"], [1, "stat-decor", "stat-decor-gray"], [1, "bi", "bi-shield-check"], [1, "chart-card"], [1, "chart-card-header"], [1, "bi", "bi-graph-up-arrow", "chart-card-icon"], [1, "chart-card-title"], [1, "chart-card-body"], ["baseChart", "", 3, "type", "data", "options"]], template: function DashboardComponent_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275template(0, DashboardComponent_div_0_Template, 20, 3, "div", 0)(1, DashboardComponent_div_1_Template, 3, 2, "div", 1);
+      \u0275\u0275template(0, DashboardComponent_div_0_Template, 38, 3, "div", 0)(1, DashboardComponent_div_1_Template, 17, 3, "div", 0);
     }
     if (rf & 2) {
       \u0275\u0275property("ngIf", ctx.role == "Admin Sectoriel" || ctx.role == "Admin national");
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.role != "Admin Sectoriel" && ctx.role != "Admin national");
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, BaseChartDirective], encapsulation: 2 });
+  }, dependencies: [CommonModule, NgForOf, NgIf, BaseChartDirective], styles: ["\n\n.dash-header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  margin-bottom: 1.5rem;\n}\n.dash-title[_ngcontent-%COMP%] {\n  font-size: 1.35rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 2px;\n  letter-spacing: -0.02em;\n}\n.dash-subtitle[_ngcontent-%COMP%] {\n  font-size: 0.82rem;\n  color: #9ca3af;\n  margin: 0;\n  font-weight: 400;\n}\n.stat-card[_ngcontent-%COMP%] {\n  background: white;\n  border-radius: 14px;\n  padding: 1.2rem 1.25rem;\n  display: flex;\n  align-items: center;\n  gap: 1rem;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.03);\n  border: none;\n  transition: box-shadow 0.2s, transform 0.2s;\n  height: 100%;\n  position: relative;\n  overflow: hidden;\n}\n.stat-card[_ngcontent-%COMP%]:hover {\n  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);\n  transform: translateY(-2px);\n}\n.stat-icon[_ngcontent-%COMP%] {\n  width: 48px;\n  height: 48px;\n  border-radius: 12px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.35rem;\n  flex-shrink: 0;\n}\n.stat-icon-blue[_ngcontent-%COMP%] {\n  background: rgba(10, 55, 100, 0.1);\n  color: #0A3764;\n}\n.stat-icon-green[_ngcontent-%COMP%] {\n  background: rgba(31, 136, 63, 0.1);\n  color: #1F883F;\n}\n.stat-icon-red[_ngcontent-%COMP%] {\n  background: rgba(235, 0, 0, 0.1);\n  color: #cc0000;\n}\n.stat-icon-yellow[_ngcontent-%COMP%] {\n  background: rgba(252, 211, 67, 0.18);\n  color: #9a6c00;\n}\n.stat-icon-gray[_ngcontent-%COMP%] {\n  background: #f3f4f6;\n  color: #6b7280;\n}\n.stat-icon-indigo[_ngcontent-%COMP%] {\n  background: rgba(99, 102, 241, 0.1);\n  color: #4f46e5;\n}\n.stat-icon-teal[_ngcontent-%COMP%] {\n  background: rgba(13, 148, 136, 0.1);\n  color: #0d9488;\n}\n.stat-icon-orange[_ngcontent-%COMP%] {\n  background: rgba(234, 88, 12, 0.1);\n  color: #ea580c;\n}\n.stat-icon-purple[_ngcontent-%COMP%] {\n  background: rgba(147, 51, 234, 0.1);\n  color: #9333ea;\n}\n.stat-body[_ngcontent-%COMP%] {\n  flex: 1;\n  min-width: 0;\n}\n.stat-value[_ngcontent-%COMP%] {\n  font-size: 1.75rem;\n  font-weight: 800;\n  color: #111827;\n  line-height: 1;\n  margin-bottom: 4px;\n  letter-spacing: -0.03em;\n}\n.stat-label[_ngcontent-%COMP%] {\n  font-size: 0.75rem;\n  color: #6b7280;\n  font-weight: 500;\n  line-height: 1.3;\n}\n.stat-decor[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  width: 60px;\n  height: 4px;\n  border-radius: 4px 0 0 0;\n}\n.stat-decor-blue[_ngcontent-%COMP%] {\n  background: #0A3764;\n}\n.stat-decor-green[_ngcontent-%COMP%] {\n  background: #1F883F;\n}\n.stat-decor-red[_ngcontent-%COMP%] {\n  background: #EB0000;\n}\n.stat-decor-yellow[_ngcontent-%COMP%] {\n  background: #FCD343;\n}\n.stat-decor-gray[_ngcontent-%COMP%] {\n  background: #9ca3af;\n}\n.stat-decor-indigo[_ngcontent-%COMP%] {\n  background: #4f46e5;\n}\n.stat-decor-teal[_ngcontent-%COMP%] {\n  background: #0d9488;\n}\n.stat-decor-orange[_ngcontent-%COMP%] {\n  background: #ea580c;\n}\n.stat-decor-purple[_ngcontent-%COMP%] {\n  background: #9333ea;\n}\n.selector-card[_ngcontent-%COMP%] {\n  background: white;\n  border-radius: 12px;\n  padding: 1rem 1.25rem;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);\n}\n.selector-inner[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 1rem;\n  flex-wrap: wrap;\n}\n.selector-label-wrap[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex-shrink: 0;\n}\n.selector-icon[_ngcontent-%COMP%] {\n  color: #6b7280;\n  font-size: 0.85rem;\n}\n.selector-label[_ngcontent-%COMP%] {\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  margin: 0;\n  white-space: nowrap;\n}\n.selector-select[_ngcontent-%COMP%] {\n  flex: 1;\n  min-width: 200px;\n  height: 38px;\n  padding: 0 10px;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 8px;\n  font-size: 0.875rem;\n  color: #374151;\n  background: white;\n  outline: none;\n  cursor: pointer;\n  transition: border-color 0.2s;\n}\n.selector-select[_ngcontent-%COMP%]:focus {\n  border-color: #0A3764;\n}\n.chart-card[_ngcontent-%COMP%] {\n  background: white;\n  border-radius: 14px;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);\n  overflow: hidden;\n}\n.chart-card-header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 1rem 1.25rem;\n  border-bottom: 1px solid #f0f2f5;\n}\n.chart-card-icon[_ngcontent-%COMP%] {\n  color: #0A3764;\n  font-size: 1rem;\n}\n.chart-card-title[_ngcontent-%COMP%] {\n  font-size: 0.9rem;\n  font-weight: 700;\n  color: #1f2937;\n}\n.chart-card-body[_ngcontent-%COMP%] {\n  padding: 1.25rem;\n  height: 340px;\n  position: relative;\n}\n.chart-card-body[_ngcontent-%COMP%]   canvas[_ngcontent-%COMP%] {\n  width: 100% !important;\n  height: 100% !important;\n}\n/*# sourceMappingURL=dashboard.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DashboardComponent, [{
     type: Component,
-    args: [{ selector: "app-dashboard", imports: [CommonModule, SampleSearchPipe, BaseChartDirective], template: `<div class=""  *ngIf="role == 'Admin Sectoriel' || role=='Admin national'">
-    <div class="row">
-        <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-primary  border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Nombre d'tilisateurs</h6>
-            <p class="text-center text-white">{{data?.users}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-warning  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nombre de prestations</h6>
-                <p class="text-center text-white">{{data?.prestations}}</p> 
-                </div>
-             </div>
-         <div class=" col-12 col-lg-4 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-danger  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nombre d'unit\xE9 administrative</h6>
-                <p class="text-center text-white">{{data?.ua}}</p> 
-                </div>
-             </div>
-</div>
-</div>
-<div class="card" *ngIf="role != 'Admin Sectoriel' && role!='Admin national'">
-    <!--div class="card-header d-flex justify-content-end">
-        <button class="btn btn-sm btn-info">Exporter en PDF</button>
-    </!div-->
-<div class="card-body" *ngIf="role != 'Directeur'">
-    <div class="form-group mb-5">
-        <label for="">S\xE9lectionner une prestation</label>
-        <select class="form-control" (change)="getNewStat($event)">
-                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
-        </select>
+    args: [{ selector: "app-dashboard", imports: [CommonModule, SampleSearchPipe, BaseChartDirective], template: `<!-- ========================================================
+   VUE ADMIN (Admin Sectoriel / Admin national)
+   ======================================================== -->
+<div *ngIf="role == 'Admin Sectoriel' || role=='Admin national'">
+
+  <div class="dash-header">
+    <div>
+      <h2 class="dash-title">Tableau de bord</h2>
+      <p class="dash-subtitle">Vue d'ensemble de l'administration</p>
     </div>
+  </div>
 
-
-    <div class="row">
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-primary p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Totales</h6>
-            <p class="text-center text-white">{{data?.total}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden bg-secondary  border-0  p-3 ">
-                        
-                <h6 class="text-center text-white">Nouvelles demandes</h6>
-                <p class="text-center text-white">{{data?.news}}</p> 
-                </div>
-             </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Trait\xE9es</h6>
-            <p class="text-center text-white">{{data?.treated}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-warning border-0 dash3 p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes mise en attente</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div> 
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3"   >
-            <div class="card overflow-hidden bg-danger  border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes suspendues pour accord \xE0 l'amiable</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0  p-3 bg-danger">
-                    
-            <h6 class="text-center text-white">Demandes Rejet\xE9es</h6>
-            <p class="text-center text-white">{{data?.rejected}}</p> 
-            </div>
-         </div>
-         <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-                <div class="card overflow-hidden  border-0 bg-success p-3 ">
-                        
-                <h6 class="text-center text-white">Demandes accord\xE9es</h6>
-                <p class="text-center text-white">{{data?.signed}}</p> 
-                </div>
-             </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  border-0 bg-success  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Finalis\xE9es</h6>
-            <p class="text-center text-white">{{data?.finished}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" *ngIf="currentPrestation?.need_validation" >
-            <div class="card overflow-hidden bg-success border-0 dash3 p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Valid\xE9es</h6>
-            <p class="text-center text-white">{{data?.validated}}</p> 
-            </div>
-         </div>
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden  bg-secondary border-0 bg-secondary p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes Abandonn\xE9es</h6>
-            <p class="text-center text-white">{{data?.leaved}}</p> 
-            </div>
-         </div>
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.users ?? '\u2014' }}</div>
+          <div class="stat-label">Utilisateurs</div>
+        </div>
+        <div class="stat-decor stat-decor-blue"></div>
+      </div>
     </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-orange">
+          <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.prestations ?? '\u2014' }}</div>
+          <div class="stat-label">Prestations</div>
+        </div>
+        <div class="stat-decor stat-decor-orange"></div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-purple">
+          <i class="bi bi-building-fill"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.ua ?? '\u2014' }}</div>
+          <div class="stat-label">Unit\xE9s Administratives</div>
+        </div>
+        <div class="stat-decor stat-decor-purple"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <div class="" >
 
-        <h4>Graphe d'\xE9volution des demandes au cours des mois</h4>
+<!-- ========================================================
+   VUE AGENTS & DIRECTEUR
+   ======================================================== -->
+<div *ngIf="role != 'Admin Sectoriel' && role!='Admin national'">
 
-        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
-            <canvas baseChart
-            [type]="'line'"
-            [data]="{ labels: chartLabels, datasets: chartData }"
-            [options]="chartOptions"
-      ></canvas>
+  <div class="dash-header">
+    <div>
+      <h2 class="dash-title">Tableau de bord</h2>
+      <p class="dash-subtitle">Suivi de l'activit\xE9 de traitement</p>
+    </div>
+  </div>
+
+  <!-- S\xE9lecteur prestation -->
+  <div class="selector-card mb-4">
+    <div class="selector-inner">
+      <div class="selector-label-wrap">
+        <i class="bi bi-funnel-fill selector-icon"></i>
+        <label class="selector-label">S\xE9lectionner une prestation</label>
+      </div>
+      <select class="selector-select" (change)="getNewStat($event)">
+        <option *ngFor="let el of user_prestations" [value]="el.prestation.code">
+          {{ el.prestation.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ===== VUE DIRECTEUR ===== -->
+  <div *ngIf="role == 'Directeur'" class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-yellow">
+          <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ data?.pending ?? '\u2014' }}</div>
+          <div class="stat-label">Demandes en attente de confirmation</div>
+        </div>
+        <div class="stat-decor stat-decor-yellow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VUE AGENT (plein dashboard) ===== -->
+  <div *ngIf="role != 'Directeur'">
+
+    <!-- KPI Grid -->
+    <div class="row g-3 mb-4" *ngIf="data">
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.total }}</div>
+            <div class="stat-label">Totales</div>
           </div>
+          <div class="stat-decor stat-decor-blue"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-indigo"><i class="bi bi-stars"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.news }}</div>
+            <div class="stat-label">Nouvelles</div>
+          </div>
+          <div class="stat-decor stat-decor-indigo"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-green"><i class="bi bi-check2-circle"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.treated }}</div>
+            <div class="stat-label">Trait\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-green"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-yellow"><i class="bi bi-pause-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.pending }}</div>
+            <div class="stat-label">En attente</div>
+          </div>
+          <div class="stat-decor stat-decor-yellow"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-red"><i class="bi bi-x-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.rejected }}</div>
+            <div class="stat-label">Rejet\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-red"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-teal"><i class="bi bi-patch-check-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.signed }}</div>
+            <div class="stat-label">Accord\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-teal"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-green"><i class="bi bi-bag-check-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.finished }}</div>
+            <div class="stat-label">Finalis\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-green"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3" *ngIf="currentPrestation?.need_validation">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-indigo"><i class="bi bi-shield-check"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.validated }}</div>
+            <div class="stat-label">Valid\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-indigo"></div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-gray"><i class="bi bi-dash-circle-fill"></i></div>
+          <div class="stat-body">
+            <div class="stat-value">{{ data?.leaved }}</div>
+            <div class="stat-label">Abandonn\xE9es</div>
+          </div>
+          <div class="stat-decor stat-decor-gray"></div>
+        </div>
+      </div>
     </div>
-</div>
 
-<div class="card-body" *ngIf="role == 'Directeur'">
-    <div class="form-group mb-5">
-        <label for="">S\xE9lectionner une prestation</label>
-        <select class="form-control" (change)="getNewStat($event)">
-                <option *ngFor="let el of user_prestations; let i=index" [value]="el.prestation.code">{{el.prestation.name}} </option>
-        </select>
+    <!-- Graphique -->
+    <div class="chart-card" *ngIf="data">
+      <div class="chart-card-header">
+        <i class="bi bi-graph-up-arrow chart-card-icon"></i>
+        <span class="chart-card-title">\xC9volution mensuelle des demandes</span>
+      </div>
+      <div class="chart-card-body">
+        <canvas baseChart
+          [type]="'line'"
+          [data]="{ labels: chartLabels, datasets: chartData }"
+          [options]="chartOptions"
+        ></canvas>
+      </div>
     </div>
 
-    <div class="row">
-        <div class=" col-12 col-sm-6 col-md-3 col-lg-3 col-xxl-3 mb-3" >
-            <div class="card overflow-hidden bg-warning border-0  p-3 ">
-                    
-            <h6 class="text-center text-white">Demandes en attente de confirmation</h6>
-            <p class="text-center text-white">{{data?.pending}}</p> 
-            </div>
-         </div> 
-    </div>
+  </div>
 </div>
-</div>` }]
+`, styles: ["/* src/app/views/admin/pages/dashboard/dashboard.component.css */\n.dash-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  margin-bottom: 1.5rem;\n}\n.dash-title {\n  font-size: 1.35rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 2px;\n  letter-spacing: -0.02em;\n}\n.dash-subtitle {\n  font-size: 0.82rem;\n  color: #9ca3af;\n  margin: 0;\n  font-weight: 400;\n}\n.stat-card {\n  background: white;\n  border-radius: 14px;\n  padding: 1.2rem 1.25rem;\n  display: flex;\n  align-items: center;\n  gap: 1rem;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.03);\n  border: none;\n  transition: box-shadow 0.2s, transform 0.2s;\n  height: 100%;\n  position: relative;\n  overflow: hidden;\n}\n.stat-card:hover {\n  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);\n  transform: translateY(-2px);\n}\n.stat-icon {\n  width: 48px;\n  height: 48px;\n  border-radius: 12px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 1.35rem;\n  flex-shrink: 0;\n}\n.stat-icon-blue {\n  background: rgba(10, 55, 100, 0.1);\n  color: #0A3764;\n}\n.stat-icon-green {\n  background: rgba(31, 136, 63, 0.1);\n  color: #1F883F;\n}\n.stat-icon-red {\n  background: rgba(235, 0, 0, 0.1);\n  color: #cc0000;\n}\n.stat-icon-yellow {\n  background: rgba(252, 211, 67, 0.18);\n  color: #9a6c00;\n}\n.stat-icon-gray {\n  background: #f3f4f6;\n  color: #6b7280;\n}\n.stat-icon-indigo {\n  background: rgba(99, 102, 241, 0.1);\n  color: #4f46e5;\n}\n.stat-icon-teal {\n  background: rgba(13, 148, 136, 0.1);\n  color: #0d9488;\n}\n.stat-icon-orange {\n  background: rgba(234, 88, 12, 0.1);\n  color: #ea580c;\n}\n.stat-icon-purple {\n  background: rgba(147, 51, 234, 0.1);\n  color: #9333ea;\n}\n.stat-body {\n  flex: 1;\n  min-width: 0;\n}\n.stat-value {\n  font-size: 1.75rem;\n  font-weight: 800;\n  color: #111827;\n  line-height: 1;\n  margin-bottom: 4px;\n  letter-spacing: -0.03em;\n}\n.stat-label {\n  font-size: 0.75rem;\n  color: #6b7280;\n  font-weight: 500;\n  line-height: 1.3;\n}\n.stat-decor {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  width: 60px;\n  height: 4px;\n  border-radius: 4px 0 0 0;\n}\n.stat-decor-blue {\n  background: #0A3764;\n}\n.stat-decor-green {\n  background: #1F883F;\n}\n.stat-decor-red {\n  background: #EB0000;\n}\n.stat-decor-yellow {\n  background: #FCD343;\n}\n.stat-decor-gray {\n  background: #9ca3af;\n}\n.stat-decor-indigo {\n  background: #4f46e5;\n}\n.stat-decor-teal {\n  background: #0d9488;\n}\n.stat-decor-orange {\n  background: #ea580c;\n}\n.stat-decor-purple {\n  background: #9333ea;\n}\n.selector-card {\n  background: white;\n  border-radius: 12px;\n  padding: 1rem 1.25rem;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);\n}\n.selector-inner {\n  display: flex;\n  align-items: center;\n  gap: 1rem;\n  flex-wrap: wrap;\n}\n.selector-label-wrap {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex-shrink: 0;\n}\n.selector-icon {\n  color: #6b7280;\n  font-size: 0.85rem;\n}\n.selector-label {\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  margin: 0;\n  white-space: nowrap;\n}\n.selector-select {\n  flex: 1;\n  min-width: 200px;\n  height: 38px;\n  padding: 0 10px;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 8px;\n  font-size: 0.875rem;\n  color: #374151;\n  background: white;\n  outline: none;\n  cursor: pointer;\n  transition: border-color 0.2s;\n}\n.selector-select:focus {\n  border-color: #0A3764;\n}\n.chart-card {\n  background: white;\n  border-radius: 14px;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);\n  overflow: hidden;\n}\n.chart-card-header {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 1rem 1.25rem;\n  border-bottom: 1px solid #f0f2f5;\n}\n.chart-card-icon {\n  color: #0A3764;\n  font-size: 1rem;\n}\n.chart-card-title {\n  font-size: 0.9rem;\n  font-weight: 700;\n  color: #1f2937;\n}\n.chart-card-body {\n  padding: 1.25rem;\n  height: 340px;\n  position: relative;\n}\n.chart-card-body canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n/*# sourceMappingURL=dashboard.component.css.map */\n"] }]
   }], () => [{ type: LocalStorageService }, { type: DashService }], null);
 })();
 (() => {
@@ -171151,104 +171289,67 @@ var SettingsComponent = class _SettingsComponent {
 
 // src/app/views/admin/pages/statiistique/statiistique.component.ts
 var _c048 = (a0, a1) => ({ labels: a0, datasets: a1 });
-function StatiistiqueComponent_tr_20_Template(rf, ctx) {
+function StatiistiqueComponent_tr_31_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr")(1, "td");
-    \u0275\u0275text(2);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "td");
+    \u0275\u0275elementStart(0, "tr", 14)(1, "td")(2, "div", 15);
+    \u0275\u0275element(3, "div", 16);
     \u0275\u0275text(4);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "td");
-    \u0275\u0275text(6);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(7, "td");
-    \u0275\u0275text(8);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(9, "td");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(5, "td", 10)(6, "span", 17);
+    \u0275\u0275text(7);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(8, "td", 10)(9, "span", 18);
     \u0275\u0275text(10);
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "td");
-    \u0275\u0275text(12);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(11, "td", 10)(12, "span", 19);
+    \u0275\u0275text(13);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(14, "td", 10)(15, "span", 20);
+    \u0275\u0275text(16);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(17, "td", 10)(18, "span", 21);
+    \u0275\u0275text(19);
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const d_r1 = ctx.$implicit;
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", d_r1.name, " ");
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(d_r1.total);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(d_r1.treated);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(d_r1.rejected);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(d_r1.signed);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate(d_r1.finished);
+  }
+}
+function StatiistiqueComponent_tr_32_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "tr")(1, "td", 22);
+    \u0275\u0275element(2, "i", 23);
+    \u0275\u0275text(3, " Aucune donn\xE9e disponible ");
+    \u0275\u0275elementEnd()();
+  }
+}
+function StatiistiqueComponent_div_33_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 24)(1, "div", 25);
+    \u0275\u0275element(2, "i", 26);
+    \u0275\u0275elementStart(3, "span", 27);
+    \u0275\u0275text(4, "\xC9volution mensuelle par prestation");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(5, "div", 28);
+    \u0275\u0275element(6, "canvas", 29);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const d_r2 = ctx.$implicit;
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.name);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.total);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.treated);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.rejected);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.signed);
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r2.finished);
-  }
-}
-function StatiistiqueComponent_div_24_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 11);
-    \u0275\u0275element(1, "canvas", 12);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r2 = \u0275\u0275nextContext();
-    \u0275\u0275advance();
-    \u0275\u0275property("type", "line")("data", \u0275\u0275pureFunction2(3, _c048, ctx_r2.chartLabels, ctx_r2.chartData))("options", ctx_r2.chartOptions);
-  }
-}
-function StatiistiqueComponent_ng_template_25_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 13)(1, "h4", 14);
-    \u0275\u0275text(2, "D\xE9tails des informations");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "button", 15);
-    \u0275\u0275listener("click", function StatiistiqueComponent_ng_template_25_Template_button_click_3_listener() {
-      const modal_r5 = \u0275\u0275restoreView(_r4).$implicit;
-      return \u0275\u0275resetView(modal_r5.dismiss("Cross click"));
-    });
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(4, "div", 16);
-    \u0275\u0275element(5, "div", 17);
-    \u0275\u0275elementEnd();
-  }
-}
-function StatiistiqueComponent_ng_template_27_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r6 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 13)(1, "h4", 14);
-    \u0275\u0275text(2, "D\xE9tails des informations");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "button", 15);
-    \u0275\u0275listener("click", function StatiistiqueComponent_ng_template_27_Template_button_click_3_listener() {
-      const modal_r7 = \u0275\u0275restoreView(_r6).$implicit;
-      return \u0275\u0275resetView(modal_r7.dismiss("Cross click"));
-    });
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(4, "div", 16);
-    \u0275\u0275element(5, "div", 17);
-    \u0275\u0275elementEnd();
-  }
-}
-function StatiistiqueComponent_ng_template_29_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r8 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 13)(1, "h4", 14);
-    \u0275\u0275text(2, "D\xE9tails des informations");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "button", 15);
-    \u0275\u0275listener("click", function StatiistiqueComponent_ng_template_29_Template_button_click_3_listener() {
-      const modal_r9 = \u0275\u0275restoreView(_r8).$implicit;
-      return \u0275\u0275resetView(modal_r9.dismiss("Cross click"));
-    });
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(4, "div", 16);
-    \u0275\u0275element(5, "div", 17);
-    \u0275\u0275elementEnd();
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(6);
+    \u0275\u0275property("type", "line")("data", \u0275\u0275pureFunction2(3, _c048, ctx_r1.chartLabels, ctx_r1.chartData))("options", ctx_r1.chartOptions);
   }
 }
 var StatiistiqueComponent = class _StatiistiqueComponent {
@@ -171262,14 +171363,23 @@ var StatiistiqueComponent = class _StatiistiqueComponent {
   chartData = [];
   chartLabels = [];
   chartOptions = {
-    // ⤵️ Fill the wrapper
     responsive: true,
-    maintainAspectRatio: true,
-    // ⤵️ Remove the main legend
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true
-      }
+        display: true,
+        position: "top",
+        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
+      },
+      tooltip: { mode: "index", intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false }, border: { display: false } },
+      y: { grid: { color: "#f0f2f5" }, border: { display: false }, beginAtZero: true }
+    },
+    elements: {
+      line: { tension: 0.4, borderWidth: 2 },
+      point: { radius: 4, hoverRadius: 7 }
     }
   };
   pg = {
@@ -171293,6 +171403,14 @@ var StatiistiqueComponent = class _StatiistiqueComponent {
   }
   ngOnInit() {
     this.user = this.locService.get(GlobalName.userName);
+    const PALETTE = [
+      { border: "#0A3764", bg: "rgba(10,55,100,0.08)" },
+      { border: "#1F883F", bg: "rgba(31,136,63,0.08)" },
+      { border: "#4f46e5", bg: "rgba(79,70,229,0.08)" },
+      { border: "#0d9488", bg: "rgba(13,148,136,0.08)" },
+      { border: "#ea580c", bg: "rgba(234,88,12,0.08)" },
+      { border: "#9333ea", bg: "rgba(147,51,234,0.08)" }
+    ];
     this.dashService.getAll().subscribe((res) => {
       this.data = res.data.data;
       this.buttonsPermission = {
@@ -171301,13 +171419,17 @@ var StatiistiqueComponent = class _StatiistiqueComponent {
         edit: true,
         delete: true
       };
-      this.data.forEach((el) => {
+      this.data.forEach((el, i) => {
+        const c = PALETTE[i % PALETTE.length];
         this.chartData.push({
           label: el.name,
           data: el.stats_by_month,
+          borderColor: c.border,
+          backgroundColor: c.bg,
+          pointBackgroundColor: c.border,
+          fill: true,
           pointHitRadius: 15,
-          // expands the hover 'detection' area
-          pointHoverRadius: 8
+          pointHoverRadius: 7
         });
       });
       this.chartLabels = res.data?.months;
@@ -171412,133 +171534,142 @@ var StatiistiqueComponent = class _StatiistiqueComponent {
   static \u0275fac = function StatiistiqueComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _StatiistiqueComponent)(\u0275\u0275directiveInject(LocalStorageService), \u0275\u0275directiveInject(ToastrService), \u0275\u0275directiveInject(NgbModal), \u0275\u0275directiveInject(DashService));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _StatiistiqueComponent, selectors: [["app-statiistique"]], decls: 31, vars: 2, consts: [["addContent", ""], ["editContent", ""], ["showContent", ""], [1, "card"], [1, "card-header", "d-flex", "justify-content-end"], [1, "btn", "btn-sm", "btn-info", 3, "click"], [1, "card-body"], [1, "table", "table-bordred", "mb-3", "table-sm"], [4, "ngFor", "ngForOf"], [1, ""], ["class", "chart-wrapper text-center", 4, "ngIf"], [1, "chart-wrapper", "text-center"], ["baseChart", "", 3, "type", "data", "options"], [1, "modal-header"], ["id", "modal-basic-title", 1, "modal-title"], ["type", "button", "aria-label", "Close", 1, "btn-close", 3, "click"], [1, "modal-body"], [1, "table-responsive", "table-card"]], template: function StatiistiqueComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _StatiistiqueComponent, selectors: [["app-statiistique"]], decls: 34, vars: 3, consts: [[1, "stat-page-header"], [1, "dash-title"], [1, "dash-subtitle"], [1, "export-btn", 3, "click"], [1, "bi", "bi-download"], [1, "custom-card", "mb-4"], [1, "table-section-header"], [1, "bi", "bi-table", "me-2"], [1, "table-responsive"], [1, "table", "custom-table", "stat-table"], [1, "text-center"], ["class", "table-row", 4, "ngFor", "ngForOf"], [4, "ngIf"], ["class", "chart-card", 4, "ngIf"], [1, "table-row"], [1, "stat-prestation-name"], [1, "stat-prestation-dot"], [1, "val-pill", "val-blue"], [1, "val-pill", "val-green"], [1, "val-pill", "val-red"], [1, "val-pill", "val-teal"], [1, "val-pill", "val-indigo"], ["colspan", "6", 1, "text-center", "py-5", "text-muted", 2, "font-size", "0.875rem"], [1, "bi", "bi-inbox", 2, "font-size", "2rem", "display", "block", "margin-bottom", "0.5rem", "opacity", "0.3"], [1, "chart-card"], [1, "chart-card-header"], [1, "bi", "bi-graph-up-arrow", "chart-card-icon"], [1, "chart-card-title"], [1, "chart-card-body"], ["baseChart", "", 3, "type", "data", "options"]], template: function StatiistiqueComponent_Template(rf, ctx) {
     if (rf & 1) {
-      const _r1 = \u0275\u0275getCurrentView();
-      \u0275\u0275elementStart(0, "div", 3)(1, "div", 4)(2, "button", 5);
-      \u0275\u0275listener("click", function StatiistiqueComponent_Template_button_click_2_listener() {
-        \u0275\u0275restoreView(_r1);
-        return \u0275\u0275resetView(ctx.export());
+      \u0275\u0275elementStart(0, "div", 0)(1, "div")(2, "h2", 1);
+      \u0275\u0275text(3, "Statistiques globales");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(4, "p", 2);
+      \u0275\u0275text(5, "R\xE9capitulatif de toutes les prestations");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(6, "button", 3);
+      \u0275\u0275listener("click", function StatiistiqueComponent_Template_button_click_6_listener() {
+        return ctx.export();
       });
-      \u0275\u0275text(3, "Exporter en PDF");
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(4, "div", 6)(5, "table", 7)(6, "thead")(7, "th");
-      \u0275\u0275text(8, "Libell\xE9");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(9, "th");
-      \u0275\u0275text(10, "Totales");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "th");
-      \u0275\u0275text(12, "Trait\xE9es");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(13, "th");
-      \u0275\u0275text(14, "Rejet\xE9es");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(15, "th");
-      \u0275\u0275text(16, "D\xE9livr\xE9es");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(17, "th");
-      \u0275\u0275text(18, "Finalis\xE9es");
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(19, "tbody");
-      \u0275\u0275template(20, StatiistiqueComponent_tr_20_Template, 13, 6, "tr", 8);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(21, "div", 9)(22, "h4");
-      \u0275\u0275text(23, "Graphe d'\xE9volution des demandes au cours des mois");
-      \u0275\u0275elementEnd();
-      \u0275\u0275template(24, StatiistiqueComponent_div_24_Template, 2, 6, "div", 10);
+      \u0275\u0275element(7, "i", 4);
+      \u0275\u0275elementStart(8, "span");
+      \u0275\u0275text(9, "Exporter PDF");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275template(25, StatiistiqueComponent_ng_template_25_Template, 6, 0, "ng-template", null, 0, \u0275\u0275templateRefExtractor)(27, StatiistiqueComponent_ng_template_27_Template, 6, 0, "ng-template", null, 1, \u0275\u0275templateRefExtractor)(29, StatiistiqueComponent_ng_template_29_Template, 6, 0, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
+      \u0275\u0275elementStart(10, "div", 5)(11, "div", 6);
+      \u0275\u0275element(12, "i", 7);
+      \u0275\u0275text(13, " Synth\xE8se par prestation ");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(14, "div", 8)(15, "table", 9)(16, "thead")(17, "tr")(18, "th");
+      \u0275\u0275text(19, "Prestation");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(20, "th", 10);
+      \u0275\u0275text(21, "Totales");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(22, "th", 10);
+      \u0275\u0275text(23, "Trait\xE9es");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(24, "th", 10);
+      \u0275\u0275text(25, "Rejet\xE9es");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(26, "th", 10);
+      \u0275\u0275text(27, "D\xE9livr\xE9es");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(28, "th", 10);
+      \u0275\u0275text(29, "Finalis\xE9es");
+      \u0275\u0275elementEnd()()();
+      \u0275\u0275elementStart(30, "tbody");
+      \u0275\u0275template(31, StatiistiqueComponent_tr_31_Template, 20, 6, "tr", 11)(32, StatiistiqueComponent_tr_32_Template, 4, 0, "tr", 12);
+      \u0275\u0275elementEnd()()()();
+      \u0275\u0275template(33, StatiistiqueComponent_div_33_Template, 7, 6, "div", 13);
     }
     if (rf & 2) {
-      \u0275\u0275advance(20);
+      \u0275\u0275advance(31);
       \u0275\u0275property("ngForOf", ctx.data);
-      \u0275\u0275advance(4);
-      \u0275\u0275property("ngIf", ctx.data != void 0);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", !ctx.data || ctx.data.length === 0);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.data && ctx.data.length > 0);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgbModule, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective], styles: ["\n\n.chart-wrapper[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 400px;\n}\n/*# sourceMappingURL=statiistique.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgbModule, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective], styles: ["\n\n.stat-page-header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 1.5rem;\n  flex-wrap: wrap;\n  gap: 1rem;\n}\n.dash-title[_ngcontent-%COMP%] {\n  font-size: 1.35rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 2px;\n  letter-spacing: -0.02em;\n}\n.dash-subtitle[_ngcontent-%COMP%] {\n  font-size: 0.82rem;\n  color: #9ca3af;\n  margin: 0;\n}\n.export-btn[_ngcontent-%COMP%] {\n  display: inline-flex;\n  align-items: center;\n  gap: 7px;\n  padding: 0.55rem 1.1rem;\n  background: white;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 9px;\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  cursor: pointer;\n  transition:\n    background 0.15s,\n    border-color 0.15s,\n    box-shadow 0.15s;\n}\n.export-btn[_ngcontent-%COMP%]:hover {\n  background: #f9fafb;\n  border-color: #0A3764;\n  color: #0A3764;\n  box-shadow: 0 2px 8px rgba(10, 55, 100, 0.1);\n}\n.export-btn[_ngcontent-%COMP%]   i[_ngcontent-%COMP%] {\n  font-size: 0.9rem;\n}\n.table-section-header[_ngcontent-%COMP%] {\n  padding: 0.9rem 1.25rem;\n  font-size: 0.85rem;\n  font-weight: 700;\n  color: #374151;\n  border-bottom: 1px solid #f0f2f5;\n  display: flex;\n  align-items: center;\n}\n.stat-prestation-name[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-weight: 600;\n  color: #1f2937;\n  font-size: 0.875rem;\n}\n.stat-prestation-dot[_ngcontent-%COMP%] {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background: #0A3764;\n  flex-shrink: 0;\n}\n.val-pill[_ngcontent-%COMP%] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-width: 40px;\n  padding: 3px 10px;\n  border-radius: 20px;\n  font-size: 0.78rem;\n  font-weight: 700;\n}\n.val-blue[_ngcontent-%COMP%] {\n  background: rgba(10, 55, 100, 0.1);\n  color: #0A3764;\n}\n.val-green[_ngcontent-%COMP%] {\n  background: rgba(31, 136, 63, 0.1);\n  color: #1a7a35;\n}\n.val-red[_ngcontent-%COMP%] {\n  background: rgba(235, 0, 0, 0.09);\n  color: #c20000;\n}\n.val-teal[_ngcontent-%COMP%] {\n  background: rgba(13, 148, 136, 0.1);\n  color: #0d9488;\n}\n.val-indigo[_ngcontent-%COMP%] {\n  background: rgba(79, 70, 229, 0.1);\n  color: #4f46e5;\n}\n.chart-card[_ngcontent-%COMP%] {\n  background: white;\n  border-radius: 14px;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);\n  overflow: hidden;\n}\n.chart-card-header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 1rem 1.25rem;\n  border-bottom: 1px solid #f0f2f5;\n}\n.chart-card-icon[_ngcontent-%COMP%] {\n  color: #0A3764;\n  font-size: 1rem;\n}\n.chart-card-title[_ngcontent-%COMP%] {\n  font-size: 0.9rem;\n  font-weight: 700;\n  color: #1f2937;\n}\n.chart-card-body[_ngcontent-%COMP%] {\n  padding: 1.25rem;\n  height: 380px;\n  position: relative;\n}\n.chart-card-body[_ngcontent-%COMP%]   canvas[_ngcontent-%COMP%] {\n  width: 100% !important;\n  height: 100% !important;\n}\n/*# sourceMappingURL=statiistique.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(StatiistiqueComponent, [{
     type: Component,
-    args: [{ selector: "app-statiistique", imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective], template: `
-<div class="card">
-    <div class="card-header d-flex justify-content-end">
-        <button (click)="export()" class="btn btn-sm btn-info">Exporter en PDF</button>
-    </div>
-<div class="card-body">
+    args: [{ selector: "app-statiistique", imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective], template: `<!-- ===== PAGE HEADER ===== -->
+<div class="stat-page-header">
+  <div>
+    <h2 class="dash-title">Statistiques globales</h2>
+    <p class="dash-subtitle">R\xE9capitulatif de toutes les prestations</p>
+  </div>
+  <button (click)="export()" class="export-btn">
+    <i class="bi bi-download"></i>
+    <span>Exporter PDF</span>
+  </button>
+</div>
 
-    <table class="table table-bordred mb-3 table-sm">
-        <thead>
-            <th>Libell\xE9</th>
-            <th>Totales</th>
-            <th>Trait\xE9es</th>
-            <th>Rejet\xE9es</th>
-            <th>D\xE9livr\xE9es</th>
-            <th>Finalis\xE9es</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let d of data">
-                <td>{{d.name}}</td>
-                <td>{{d.total}}</td>
-                <td>{{d.treated}}</td>
-                <td>{{d.rejected}}</td>
-                <td>{{d.signed}}</td>
-                <td>{{d.finished}}</td>
-            </tr>
-        </tbody>
+<!-- ===== TABLEAU DE SYNTH\xC8SE ===== -->
+<div class="custom-card mb-4">
+  <div class="table-section-header">
+    <i class="bi bi-table me-2"></i>
+    Synth\xE8se par prestation
+  </div>
+  <div class="table-responsive">
+    <table class="table custom-table stat-table">
+      <thead>
+        <tr>
+          <th>Prestation</th>
+          <th class="text-center">Totales</th>
+          <th class="text-center">Trait\xE9es</th>
+          <th class="text-center">Rejet\xE9es</th>
+          <th class="text-center">D\xE9livr\xE9es</th>
+          <th class="text-center">Finalis\xE9es</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of data" class="table-row">
+          <td>
+            <div class="stat-prestation-name">
+              <div class="stat-prestation-dot"></div>
+              {{ d.name }}
+            </div>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-blue">{{ d.total }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-green">{{ d.treated }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-red">{{ d.rejected }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-teal">{{ d.signed }}</span>
+          </td>
+          <td class="text-center">
+            <span class="val-pill val-indigo">{{ d.finished }}</span>
+          </td>
+        </tr>
+        <tr *ngIf="!data || data.length === 0">
+          <td colspan="6" class="text-center py-5 text-muted" style="font-size:0.875rem;">
+            <i class="bi bi-inbox" style="font-size:2rem; display:block; margin-bottom:0.5rem; opacity:0.3;"></i>
+            Aucune donn\xE9e disponible
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <div class="">
-
-        <h4>Graphe d'\xE9volution des demandes au cours des mois</h4>
-
-        <div class="chart-wrapper text-center" *ngIf="data!=undefined">
-         <canvas baseChart
-            [type]="'line'"
-            [data]="{ labels: chartLabels, datasets: chartData }"
-            [options]="chartOptions"
-      ></canvas>
-          </div>
-    </div>
-</div>
+  </div>
 </div>
 
-<ng-template #addContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">D\xE9tails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>
-<ng-template #editContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">D\xE9tails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>
-<ng-template #showContent let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">D\xE9tails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
-</ng-template>`, styles: ["/* src/app/views/admin/pages/statiistique/statiistique.component.css */\n.chart-wrapper {\n  width: 800px;\n  height: 400px;\n}\n/*# sourceMappingURL=statiistique.component.css.map */\n"] }]
+<!-- ===== GRAPHIQUE ===== -->
+<div class="chart-card" *ngIf="data && data.length > 0">
+  <div class="chart-card-header">
+    <i class="bi bi-graph-up-arrow chart-card-icon"></i>
+    <span class="chart-card-title">\xC9volution mensuelle par prestation</span>
+  </div>
+  <div class="chart-card-body">
+    <canvas baseChart
+      [type]="'line'"
+      [data]="{ labels: chartLabels, datasets: chartData }"
+      [options]="chartOptions"
+    ></canvas>
+  </div>
+</div>
+`, styles: ["/* src/app/views/admin/pages/statiistique/statiistique.component.css */\n.stat-page-header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 1.5rem;\n  flex-wrap: wrap;\n  gap: 1rem;\n}\n.dash-title {\n  font-size: 1.35rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 2px;\n  letter-spacing: -0.02em;\n}\n.dash-subtitle {\n  font-size: 0.82rem;\n  color: #9ca3af;\n  margin: 0;\n}\n.export-btn {\n  display: inline-flex;\n  align-items: center;\n  gap: 7px;\n  padding: 0.55rem 1.1rem;\n  background: white;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 9px;\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  cursor: pointer;\n  transition:\n    background 0.15s,\n    border-color 0.15s,\n    box-shadow 0.15s;\n}\n.export-btn:hover {\n  background: #f9fafb;\n  border-color: #0A3764;\n  color: #0A3764;\n  box-shadow: 0 2px 8px rgba(10, 55, 100, 0.1);\n}\n.export-btn i {\n  font-size: 0.9rem;\n}\n.table-section-header {\n  padding: 0.9rem 1.25rem;\n  font-size: 0.85rem;\n  font-weight: 700;\n  color: #374151;\n  border-bottom: 1px solid #f0f2f5;\n  display: flex;\n  align-items: center;\n}\n.stat-prestation-name {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-weight: 600;\n  color: #1f2937;\n  font-size: 0.875rem;\n}\n.stat-prestation-dot {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background: #0A3764;\n  flex-shrink: 0;\n}\n.val-pill {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-width: 40px;\n  padding: 3px 10px;\n  border-radius: 20px;\n  font-size: 0.78rem;\n  font-weight: 700;\n}\n.val-blue {\n  background: rgba(10, 55, 100, 0.1);\n  color: #0A3764;\n}\n.val-green {\n  background: rgba(31, 136, 63, 0.1);\n  color: #1a7a35;\n}\n.val-red {\n  background: rgba(235, 0, 0, 0.09);\n  color: #c20000;\n}\n.val-teal {\n  background: rgba(13, 148, 136, 0.1);\n  color: #0d9488;\n}\n.val-indigo {\n  background: rgba(79, 70, 229, 0.1);\n  color: #4f46e5;\n}\n.chart-card {\n  background: white;\n  border-radius: 14px;\n  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);\n  overflow: hidden;\n}\n.chart-card-header {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 1rem 1.25rem;\n  border-bottom: 1px solid #f0f2f5;\n}\n.chart-card-icon {\n  color: #0A3764;\n  font-size: 1rem;\n}\n.chart-card-title {\n  font-size: 0.9rem;\n  font-weight: 700;\n  color: #1f2937;\n}\n.chart-card-body {\n  padding: 1.25rem;\n  height: 380px;\n  position: relative;\n}\n.chart-card-body canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n/*# sourceMappingURL=statiistique.component.css.map */\n"] }]
   }], () => [{ type: LocalStorageService }, { type: ToastrService }, { type: NgbModal }, { type: DashService }], null);
 })();
 (() => {
@@ -181612,4 +181743,4 @@ sweetalert2/dist/sweetalert2.esm.all.js:
    * found in the LICENSE file at https://angular.dev/license
    *)
 */
-//# sourceMappingURL=chunk-ZQPMME4O.mjs.map
+//# sourceMappingURL=chunk-FLMYNOVS.mjs.map
