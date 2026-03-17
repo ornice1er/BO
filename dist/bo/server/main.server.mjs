@@ -5,7 +5,7 @@ import {
   getOrCreateAngularServerApp,
   main_server_default,
   setAngularAppManifest
-} from "./chunk-5GNNS7EK.mjs";
+} from "./chunk-ZQPMME4O.mjs";
 import {
   resetCompiledComponents
 } from "./chunk-UGOUP4DL.mjs";

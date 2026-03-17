@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Espace de traitement des e-services</title>
+    <!-- <base href="https://preprodmemp.gouv.bj/pprod-bo/"> -->
+    <!-- <base href="https://preprodmtfp.gouv.bj/pprod-bo/"> -->
+
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@angular/material@15.0.0/prebuilt-themes/indigo-pink.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"><style ng-app-id="ng">
+
+[_nghost-ng-c1700266399] {
+  display: block;
+}
+.auth-split[_ngcontent-ng-c1700266399] {
+  display: flex;
+  min-height: 100vh;
+}
+.auth-left[_ngcontent-ng-c1700266399] {
+  position: relative;
+  width: 44%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      155deg,
+      #062848 0%,
+      #0A3764 45%,
+      #0d4e8a 100%);
+}
+.auth-blob[_ngcontent-ng-c1700266399] {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+.auth-blob-1[_ngcontent-ng-c1700266399] {
+  width: 320px;
+  height: 320px;
+  top: -80px;
+  right: -80px;
+  background: rgba(252, 211, 67, 0.12);
+}
+.auth-blob-2[_ngcontent-ng-c1700266399] {
+  width: 260px;
+  height: 260px;
+  bottom: 60px;
+  left: -60px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.auth-blob-3[_ngcontent-ng-c1700266399] {
+  width: 180px;
+  height: 180px;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  background: rgba(13, 78, 138, 0.5);
+}
+.auth-left-content[_ngcontent-ng-c1700266399] {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  flex: 1;
+  justify-content: center;
+}
+.auth-logo[_ngcontent-ng-c1700266399] {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+.auth-gov-label[_ngcontent-ng-c1700266399] {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #FCD343;
+  margin-bottom: 0.75rem;
+}
+.auth-app-name[_ngcontent-ng-c1700266399] {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+.auth-app-name[_ngcontent-ng-c1700266399]   em[_ngcontent-ng-c1700266399] {
+  font-style: normal;
+  color: #FCD343;
+}
+.auth-app-desc[_ngcontent-ng-c1700266399] {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.65;
+  margin: 0;
+  max-width: 320px;
+}
+.auth-stats[_ngcontent-ng-c1700266399] {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+.auth-stat[_ngcontent-ng-c1700266399] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.auth-stat-value[_ngcontent-ng-c1700266399] {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.02em;
+}
+.auth-stat-label[_ngcontent-ng-c1700266399] {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.auth-stat-divider[_ngcontent-ng-c1700266399] {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+.auth-left-footer[_ngcontent-ng-c1700266399] {
+  position: relative;
+  z-index: 1;
+  padding: 1.25rem 3rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.auth-right[_ngcontent-ng-c1700266399] {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 2rem;
+}
+.auth-right-inner[_ngcontent-ng-c1700266399] {
+  width: 100%;
+  max-width: 420px;
+}
+@media (max-width: 900px) {
+  .auth-split[_ngcontent-ng-c1700266399] {
+    flex-direction: column;
+  }
+  .auth-left[_ngcontent-ng-c1700266399] {
+    width: 100%;
+    min-height: 220px;
+  }
+  .auth-left-content[_ngcontent-ng-c1700266399] {
+    padding: 2rem 2rem 1.5rem;
+    gap: 1.5rem;
+    justify-content: flex-start;
+  }
+  .auth-app-name[_ngcontent-ng-c1700266399] {
+    font-size: 1.5rem;
+  }
+  .auth-app-desc[_ngcontent-ng-c1700266399] {
+    display: none;
+  }
+  .auth-stats[_ngcontent-ng-c1700266399] {
+    display: none;
+  }
+  .auth-left-footer[_ngcontent-ng-c1700266399] {
+    display: none;
+  }
+  .auth-right[_ngcontent-ng-c1700266399] {
+    padding: 2rem 1.25rem;
+    align-items: flex-start;
+    background: #f8fafc;
+  }
+}
+/*# sourceMappingURL=/layout.component.css.map */</style></head>
+<body><!--nghm-->
+  <app-root ng-version="19.2.20" ngh="3" ng-server-context="ssg"><router-outlet></router-outlet><app-layout _nghost-ng-c1700266399="" ngh="2"><div _ngcontent-ng-c1700266399="" class="auth-split"><div _ngcontent-ng-c1700266399="" class="auth-left"><div _ngcontent-ng-c1700266399="" class="auth-blob auth-blob-1"></div><div _ngcontent-ng-c1700266399="" class="auth-blob auth-blob-2"></div><div _ngcontent-ng-c1700266399="" class="auth-blob auth-blob-3"></div><div _ngcontent-ng-c1700266399="" class="auth-left-content"><div _ngcontent-ng-c1700266399="" class="auth-logo"><svg _ngcontent-ng-c1700266399="" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect _ngcontent-ng-c1700266399="" x="2" y="3" width="20" height="14" rx="2"></rect><path _ngcontent-ng-c1700266399="" d="M8 21h8M12 17v4"></path><path _ngcontent-ng-c1700266399="" d="M7 8h.01M11 8h.01M7 12h10"></path></svg></div><div _ngcontent-ng-c1700266399="" class="auth-headline"><span _ngcontent-ng-c1700266399="" class="auth-gov-label">République du Bénin</span><h1 _ngcontent-ng-c1700266399="" class="auth-app-name">Espace de traitement<br _ngcontent-ng-c1700266399="">des <em _ngcontent-ng-c1700266399="">e-services</em></h1><p _ngcontent-ng-c1700266399="" class="auth-app-desc"> Plateforme nationale de gestion et de traitement des services administratifs électroniques. </p></div><div _ngcontent-ng-c1700266399="" class="auth-stats"><div _ngcontent-ng-c1700266399="" class="auth-stat"><span _ngcontent-ng-c1700266399="" class="auth-stat-value">100%</span><span _ngcontent-ng-c1700266399="" class="auth-stat-label">Sécurisé</span></div><div _ngcontent-ng-c1700266399="" class="auth-stat-divider"></div><div _ngcontent-ng-c1700266399="" class="auth-stat"><span _ngcontent-ng-c1700266399="" class="auth-stat-value">24/7</span><span _ngcontent-ng-c1700266399="" class="auth-stat-label">Disponible</span></div><div _ngcontent-ng-c1700266399="" class="auth-stat-divider"></div><div _ngcontent-ng-c1700266399="" class="auth-stat"><span _ngcontent-ng-c1700266399="" class="auth-stat-value">GOV</span><span _ngcontent-ng-c1700266399="" class="auth-stat-label">Certifié</span></div></div></div><div _ngcontent-ng-c1700266399="" class="auth-left-footer"> © 2025 Gouvernement du Bénin — Tous droits réservés </div></div><div _ngcontent-ng-c1700266399="" class="auth-right"><div _ngcontent-ng-c1700266399="" class="auth-right-inner"><router-outlet _ngcontent-ng-c1700266399=""></router-outlet><app-forget-password ngh="1"><div style="min-height: 100vh; width: 100%;"><div class="container d-flex flex-column justify-content-start h-100"><div class="col-12 col-md-5 mx-auto align-self-center"><div class="card"><div class="card-body"><div><form novalidate="" class="ng-untouched ng-pristine ng-invalid"><div class="text-center mb-3"><img src="assets/template2/images/logo.png" alt="" class="img-fluid" style="height: 80px;"></div><h6><div class="mb-3 text-center fw-bold">Mot de passe oublié?</div><span>Renseignez votre email pour définir un nouveau mot de passe .</span></h6><div class="form-row"><div class="col-md-12"><div class="position-relative form-group"><label for="exampleEmail">Email</label><input name="email" id="exampleEmail" placeholder="Email ici..." type="email" ngmodel="" required="" class="form-control ng-untouched ng-pristine ng-invalid" ng-reflect-required="" ng-reflect-name="email" ng-reflect-model="" value=""></div></div></div><div class="mt-4 d-flex align-items-center justify-content-between"><h6 class="mb-0"><a routerlink="//login" class="text-primary" ng-reflect-router-link="//login" href="/login">Je dispose déjà d'un compte</a></h6><div class="ml-auto"><button type="submit" class="btn btn-primary btn-sm ag-" disabled="">Récupérer <app-loading ngh="0"><!--container--></app-loading></button></div></div></form></div><!--bindings={
+  "ng-reflect-ng-if": "true"
+}--><!--bindings={
+  "ng-reflect-ng-if": "false"
+}--></div></div></div></div></div></app-forget-password><!--container--></div></div></div></app-layout><!--container--><!--ng-container--><!--bindings={
+  "ng-reflect-ng-if-else": "[object Object]"
+}--><!--container--></app-root>
+<link rel="modulepreload" href="chunk-5T42IFEY.js"><script src="polyfills.js" type="module"></script><script src="scripts.js" defer=""></script><script src="main.js" type="module"></script>
+
+<script id="ng-state" type="application/json">{"__nghData__":[{"t":{"0":"t9"},"c":{"0":[]}},{"t":{"5":"t8","6":"t10"},"c":{"5":[{"i":"t8","r":1}],"6":[]}},{"c":{"44":[{"i":"c436276549","r":1}]}},{"t":{"0":"t0","1":"t7"},"c":{"0":[{"i":"t0","r":4,"e":{"0":3},"c":{"1":[{"i":"c1700266399","r":1}]}}],"1":[]}}]}</script></body></html>

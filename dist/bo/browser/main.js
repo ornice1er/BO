@@ -151658,24 +151658,24 @@ var ForgetPasswordComponent = class _ForgetPasswordComponent {
 })();
 
 // src/app/views/auth/login/login.component.ts
-function LoginComponent_div_15_span_1_Template(rf, ctx) {
+function LoginComponent_div_16_span_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "span");
     \u0275\u0275text(1, "L'adresse email est requise");
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent_div_15_span_2_Template(rf, ctx) {
+function LoginComponent_div_16_span_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "span");
-    \u0275\u0275text(1, "Veuillez saisir une adresse email valide");
+    \u0275\u0275text(1, "Adresse email invalide");
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent_div_15_Template(rf, ctx) {
+function LoginComponent_div_16_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 28);
-    \u0275\u0275template(1, LoginComponent_div_15_span_1_Template, 2, 0, "span", 29)(2, LoginComponent_div_15_span_2_Template, 2, 0, "span", 29);
+    \u0275\u0275elementStart(0, "div", 26);
+    \u0275\u0275template(1, LoginComponent_div_16_span_1_Template, 2, 0, "span", 27)(2, LoginComponent_div_16_span_2_Template, 2, 0, "span", 27);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -151686,40 +151686,40 @@ function LoginComponent_div_15_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r0.email == null ? null : ctx_r0.email.errors == null ? null : ctx_r0.email.errors["email"]);
   }
 }
-function LoginComponent__svg_svg_27_Template(rf, ctx) {
+function LoginComponent__svg_svg_31_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(0, "svg", 9);
-    \u0275\u0275element(1, "path", 30)(2, "circle", 31);
+    \u0275\u0275element(1, "path", 28)(2, "circle", 29);
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent__svg_svg_28_Template(rf, ctx) {
+function LoginComponent__svg_svg_32_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(0, "svg", 9);
-    \u0275\u0275element(1, "path", 32)(2, "line", 33);
+    \u0275\u0275element(1, "path", 30)(2, "line", 31);
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent_div_29_span_1_Template(rf, ctx) {
+function LoginComponent_div_33_span_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "span");
     \u0275\u0275text(1, "Le mot de passe est requis");
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent_div_29_span_2_Template(rf, ctx) {
+function LoginComponent_div_33_span_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "span");
-    \u0275\u0275text(1, "Le mot de passe doit contenir au moins 6 caract\xE8res");
+    \u0275\u0275text(1, "Minimum 6 caract\xE8res");
     \u0275\u0275elementEnd();
   }
 }
-function LoginComponent_div_29_Template(rf, ctx) {
+function LoginComponent_div_33_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 28);
-    \u0275\u0275template(1, LoginComponent_div_29_span_1_Template, 2, 0, "span", 29)(2, LoginComponent_div_29_span_2_Template, 2, 0, "span", 29);
+    \u0275\u0275elementStart(0, "div", 26);
+    \u0275\u0275template(1, LoginComponent_div_33_span_1_Template, 2, 0, "span", 27)(2, LoginComponent_div_33_span_2_Template, 2, 0, "span", 27);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -151730,9 +151730,17 @@ function LoginComponent_div_29_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r0.password == null ? null : ctx_r0.password.errors == null ? null : ctx_r0.password.errors["minlength"]);
   }
 }
-function LoginComponent_span_32_Template(rf, ctx) {
+function LoginComponent_span_35_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "span", 34);
+    \u0275\u0275element(0, "span", 32);
+  }
+}
+function LoginComponent__svg_svg_38_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275namespaceSVG();
+    \u0275\u0275elementStart(0, "svg", 33);
+    \u0275\u0275element(1, "path", 34);
+    \u0275\u0275elementEnd();
   }
 }
 var LoginComponent = class _LoginComponent {
@@ -151793,67 +151801,69 @@ var LoginComponent = class _LoginComponent {
   static \u0275fac = function LoginComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _LoginComponent)(\u0275\u0275directiveInject(AuthService), \u0275\u0275directiveInject(LocalStorageService), \u0275\u0275directiveInject(Router), \u0275\u0275directiveInject(ToastrService), \u0275\u0275directiveInject(FormBuilder));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LoginComponent, selectors: [["app-login"]], decls: 39, vars: 13, consts: [[1, "login-card-tw"], [1, "text-center", "mb-6"], [1, "text-xl", "font-bold", "mb-3", 2, "color", "#1a1a2e"], [1, "mx-auto", "h-1", "rounded-full", 2, "width", "56px", "background", "linear-gradient(90deg, #0A3764, #6c757d)"], ["novalidate", "", 3, "ngSubmit", "formGroup"], [1, "mb-5"], ["for", "email", 1, "block", "text-sm", "font-medium", "mb-2", 2, "color", "#374151"], [1, "relative"], [1, "absolute", "inset-y-0", "left-0", "flex", "items-center", "pl-3", "pointer-events-none", 2, "color", "#9ca3af"], ["width", "18", "height", "18", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2"], ["d", "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"], ["points", "22,6 12,13 2,6"], ["type", "email", "id", "email", "placeholder", "exemple@gouv.bj", "formControlName", "email", 1, "tw-input", "pl-10"], ["class", "mt-1 text-xs", "style", "color: #ef4444;", 4, "ngIf"], [1, "mb-6"], ["for", "password", 1, "block", "text-sm", "font-medium", "mb-2", 2, "color", "#374151"], ["x", "3", "y", "11", "width", "18", "height", "11", "rx", "2", "ry", "2"], ["cx", "12", "cy", "16", "r", "1"], ["d", "M7 11V7a5 5 0 0 1 10 0v4"], ["id", "password", "placeholder", "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022", "formControlName", "password", 1, "tw-input", "pl-10", "pr-10", 3, "type"], ["type", "button", 1, "absolute", "inset-y-0", "right-0", "flex", "items-center", "pr-3", "focus:outline-none", 2, "color", "#9ca3af", "background", "none", "border", "none", 3, "click"], ["width", "18", "height", "18", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 4, "ngIf"], [1, "mb-4"], ["type", "submit", 1, "tw-btn-primary", "w-full", 3, "disabled"], ["class", "tw-spinner", 4, "ngIf"], [1, "text-center"], [1, "text-sm", 2, "color", "#6b7280"], ["routerLink", "/forget-password", 1, "font-medium", "hover:underline", "ms-1", 2, "color", "#0A3764"], [1, "mt-1", "text-xs", 2, "color", "#ef4444"], [4, "ngIf"], ["d", "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"], ["cx", "12", "cy", "12", "r", "3"], ["d", "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"], ["x1", "1", "y1", "1", "x2", "23", "y2", "23"], [1, "tw-spinner"]], template: function LoginComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LoginComponent, selectors: [["app-login"]], decls: 39, vars: 14, consts: [[1, "login-panel"], [1, "login-head"], [1, "login-title"], [1, "login-subtitle"], ["novalidate", "", 1, "login-form", 3, "ngSubmit", "formGroup"], [1, "field-group"], ["for", "email", 1, "field-label"], [1, "field-wrap"], [1, "field-icon"], ["width", "16", "height", "16", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2"], ["d", "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"], ["points", "22,6 12,13 2,6"], ["type", "email", "id", "email", "placeholder", "exemple@gouv.bj", "formControlName", "email", "autocomplete", "email", 1, "field-input"], ["class", "field-error", 4, "ngIf"], [1, "field-label-row"], ["for", "password", 1, "field-label"], ["routerLink", "/forget-password", 1, "field-forgot"], ["x", "3", "y", "11", "width", "18", "height", "11", "rx", "2", "ry", "2"], ["cx", "12", "cy", "16", "r", "1"], ["d", "M7 11V7a5 5 0 0 1 10 0v4"], ["id", "password", "placeholder", "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022", "formControlName", "password", "autocomplete", "current-password", 1, "field-input", "field-input-password", 3, "type"], ["type", "button", "tabindex", "-1", 1, "field-toggle", 3, "click"], ["width", "16", "height", "16", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 4, "ngIf"], ["type", "submit", 1, "login-btn", 3, "disabled"], ["class", "login-spinner", 4, "ngIf"], ["width", "16", "height", "16", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2.5", 4, "ngIf"], [1, "field-error"], [4, "ngIf"], ["d", "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"], ["cx", "12", "cy", "12", "r", "3"], ["d", "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"], ["x1", "1", "y1", "1", "x2", "23", "y2", "23"], [1, "login-spinner"], ["width", "16", "height", "16", "viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2.5"], ["d", "M5 12h14M12 5l7 7-7 7"]], template: function LoginComponent_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "h3", 2);
-      \u0275\u0275text(3, "CONNEXION");
+      \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "h2", 2);
+      \u0275\u0275text(3, "Bienvenue");
       \u0275\u0275elementEnd();
-      \u0275\u0275element(4, "div", 3);
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(5, "form", 4);
-      \u0275\u0275listener("ngSubmit", function LoginComponent_Template_form_ngSubmit_5_listener() {
+      \u0275\u0275elementStart(4, "p", 3);
+      \u0275\u0275text(5, "Connectez-vous \xE0 votre espace de traitement");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(6, "form", 4);
+      \u0275\u0275listener("ngSubmit", function LoginComponent_Template_form_ngSubmit_6_listener() {
         return ctx.login();
       });
-      \u0275\u0275elementStart(6, "div", 5)(7, "label", 6);
-      \u0275\u0275text(8, "Adresse email");
+      \u0275\u0275elementStart(7, "div", 5)(8, "label", 6);
+      \u0275\u0275text(9, "Adresse email");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(9, "div", 7)(10, "span", 8);
+      \u0275\u0275elementStart(10, "div", 7)(11, "span", 8);
       \u0275\u0275namespaceSVG();
-      \u0275\u0275elementStart(11, "svg", 9);
-      \u0275\u0275element(12, "path", 10)(13, "polyline", 11);
+      \u0275\u0275elementStart(12, "svg", 9);
+      \u0275\u0275element(13, "path", 10)(14, "polyline", 11);
       \u0275\u0275elementEnd()();
       \u0275\u0275namespaceHTML();
-      \u0275\u0275element(14, "input", 12);
+      \u0275\u0275element(15, "input", 12);
       \u0275\u0275elementEnd();
-      \u0275\u0275template(15, LoginComponent_div_15_Template, 3, 2, "div", 13);
+      \u0275\u0275template(16, LoginComponent_div_16_Template, 3, 2, "div", 13);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(16, "div", 14)(17, "label", 15);
-      \u0275\u0275text(18, "Mot de passe");
+      \u0275\u0275elementStart(17, "div", 5)(18, "div", 14)(19, "label", 15);
+      \u0275\u0275text(20, "Mot de passe");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(19, "div", 7)(20, "span", 8);
+      \u0275\u0275elementStart(21, "a", 16);
+      \u0275\u0275text(22, "Mot de passe oubli\xE9 ?");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(23, "div", 7)(24, "span", 8);
       \u0275\u0275namespaceSVG();
-      \u0275\u0275elementStart(21, "svg", 9);
-      \u0275\u0275element(22, "rect", 16)(23, "circle", 17)(24, "path", 18);
+      \u0275\u0275elementStart(25, "svg", 9);
+      \u0275\u0275element(26, "rect", 17)(27, "circle", 18)(28, "path", 19);
       \u0275\u0275elementEnd()();
       \u0275\u0275namespaceHTML();
-      \u0275\u0275element(25, "input", 19);
-      \u0275\u0275elementStart(26, "button", 20);
-      \u0275\u0275listener("click", function LoginComponent_Template_button_click_26_listener() {
+      \u0275\u0275element(29, "input", 20);
+      \u0275\u0275elementStart(30, "button", 21);
+      \u0275\u0275listener("click", function LoginComponent_Template_button_click_30_listener() {
         return ctx.togglePasswordVisibility();
       });
-      \u0275\u0275template(27, LoginComponent__svg_svg_27_Template, 3, 0, "svg", 21)(28, LoginComponent__svg_svg_28_Template, 3, 0, "svg", 21);
+      \u0275\u0275template(31, LoginComponent__svg_svg_31_Template, 3, 0, "svg", 22)(32, LoginComponent__svg_svg_32_Template, 3, 0, "svg", 22);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(29, LoginComponent_div_29_Template, 3, 2, "div", 13);
+      \u0275\u0275template(33, LoginComponent_div_33_Template, 3, 2, "div", 13);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(30, "div", 22)(31, "button", 23);
-      \u0275\u0275template(32, LoginComponent_span_32_Template, 1, 0, "span", 24);
-      \u0275\u0275text(33);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(34, "div", 25)(35, "p", 26);
-      \u0275\u0275text(36, " Avez-vous oubli\xE9 votre mot de passe ? ");
-      \u0275\u0275elementStart(37, "a", 27);
-      \u0275\u0275text(38, " Cliquez ici ");
-      \u0275\u0275elementEnd()()()()();
+      \u0275\u0275elementStart(34, "button", 23);
+      \u0275\u0275template(35, LoginComponent_span_35_Template, 1, 0, "span", 24);
+      \u0275\u0275elementStart(36, "span");
+      \u0275\u0275text(37);
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(38, LoginComponent__svg_svg_38_Template, 2, 0, "svg", 25);
+      \u0275\u0275elementEnd()()();
     }
     if (rf & 2) {
-      \u0275\u0275advance(5);
+      \u0275\u0275advance(6);
       \u0275\u0275property("formGroup", ctx.loginForm);
       \u0275\u0275advance(9);
-      \u0275\u0275classProp("tw-input-error", (ctx.email == null ? null : ctx.email.invalid) && (ctx.email == null ? null : ctx.email.touched));
+      \u0275\u0275classProp("field-input-error", (ctx.email == null ? null : ctx.email.invalid) && (ctx.email == null ? null : ctx.email.touched));
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", (ctx.email == null ? null : ctx.email.invalid) && (ctx.email == null ? null : ctx.email.touched));
-      \u0275\u0275advance(10);
-      \u0275\u0275classProp("tw-input-error", (ctx.password == null ? null : ctx.password.invalid) && (ctx.password == null ? null : ctx.password.touched));
+      \u0275\u0275advance(13);
+      \u0275\u0275classProp("field-input-error", (ctx.password == null ? null : ctx.password.invalid) && (ctx.password == null ? null : ctx.password.touched));
       \u0275\u0275property("type", ctx.showPassword ? "text" : "password");
       \u0275\u0275advance(2);
       \u0275\u0275property("ngIf", !ctx.showPassword);
@@ -151861,34 +151871,36 @@ var LoginComponent = class _LoginComponent {
       \u0275\u0275property("ngIf", ctx.showPassword);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", (ctx.password == null ? null : ctx.password.invalid) && (ctx.password == null ? null : ctx.password.touched));
-      \u0275\u0275advance(2);
+      \u0275\u0275advance();
       \u0275\u0275property("disabled", ctx.loginForm.invalid || ctx.isLoading);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.isLoading);
+      \u0275\u0275advance(2);
+      \u0275\u0275textInterpolate(ctx.isLoading ? "Connexion en cours\u2026" : "Se connecter");
       \u0275\u0275advance();
-      \u0275\u0275textInterpolate1(" ", ctx.isLoading ? "Connexion..." : "Se connecter", " ");
+      \u0275\u0275property("ngIf", !ctx.isLoading);
     }
-  }, dependencies: [CommonModule, NgIf, FormsModule, \u0275NgNoValidate, DefaultValueAccessor, NgControlStatus, NgControlStatusGroup, RouterModule, RouterLink, ReactiveFormsModule, FormGroupDirective, FormControlName], styles: ["\n\n.login-card-tw[_ngcontent-%COMP%] {\n  background: rgba(255, 255, 255, 0.96);\n  backdrop-filter: blur(12px);\n  border: 1px solid rgba(255, 255, 255, 0.25);\n  border-radius: 20px;\n  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);\n  padding: 2rem 2.5rem;\n  width: 100%;\n  animation: _ngcontent-%COMP%_slideUp 0.5s ease-out;\n}\n@keyframes _ngcontent-%COMP%_slideUp {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.tw-input[_ngcontent-%COMP%] {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  border: 2px solid #e5e7eb;\n  border-radius: 12px;\n  font-size: 0.95rem;\n  background: rgba(255, 255, 255, 0.92);\n  transition: border-color 0.25s ease, box-shadow 0.25s ease;\n  outline: none;\n  display: block;\n}\n.tw-input[_ngcontent-%COMP%]:focus {\n  border-color: #0A3764;\n  box-shadow: 0 0 0 3px rgba(10, 55, 100, 0.12);\n  background: white;\n}\n.tw-input-error[_ngcontent-%COMP%] {\n  border-color: #ef4444 !important;\n}\n.tw-input-error[_ngcontent-%COMP%]:focus {\n  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;\n}\n.tw-btn-primary[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 0.5rem;\n  padding: 0.8rem 1.5rem;\n  background-color: #0A3764;\n  color: white;\n  border: none;\n  border-radius: 12px;\n  font-size: 1rem;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    background-color 0.25s ease,\n    box-shadow 0.25s ease,\n    opacity 0.25s ease;\n  letter-spacing: 0.02em;\n}\n.tw-btn-primary[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background-color: #062848;\n  box-shadow: 0 4px 16px rgba(10, 55, 100, 0.35);\n}\n.tw-btn-primary[_ngcontent-%COMP%]:disabled {\n  opacity: 0.55;\n  cursor: not-allowed;\n}\n.tw-spinner[_ngcontent-%COMP%] {\n  display: inline-block;\n  width: 16px;\n  height: 16px;\n  border: 2px solid rgba(255, 255, 255, 0.4);\n  border-top-color: white;\n  border-radius: 50%;\n  animation: _ngcontent-%COMP%_spin 0.7s linear infinite;\n}\n@keyframes _ngcontent-%COMP%_spin {\n  to {\n    transform: rotate(360deg);\n  }\n}\n/*# sourceMappingURL=login.component.css.map */"] });
+  }, dependencies: [CommonModule, NgIf, FormsModule, \u0275NgNoValidate, DefaultValueAccessor, NgControlStatus, NgControlStatusGroup, RouterModule, RouterLink, ReactiveFormsModule, FormGroupDirective, FormControlName], styles: ["\n\n.login-panel[_ngcontent-%COMP%] {\n  width: 100%;\n  animation: _ngcontent-%COMP%_loginIn 0.45s ease-out;\n}\n@keyframes _ngcontent-%COMP%_loginIn {\n  from {\n    opacity: 0;\n    transform: translateY(16px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.login-head[_ngcontent-%COMP%] {\n  margin-bottom: 2rem;\n}\n.login-title[_ngcontent-%COMP%] {\n  font-size: 1.7rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 0.35rem;\n  letter-spacing: -0.02em;\n}\n.login-subtitle[_ngcontent-%COMP%] {\n  font-size: 0.875rem;\n  color: #6b7280;\n  margin: 0;\n}\n.login-form[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 1.25rem;\n}\n.field-group[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.field-label[_ngcontent-%COMP%] {\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  margin: 0;\n}\n.field-label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.field-forgot[_ngcontent-%COMP%] {\n  font-size: 0.78rem;\n  font-weight: 500;\n  color: #0A3764;\n  text-decoration: none;\n  transition: color 0.2s;\n}\n.field-forgot[_ngcontent-%COMP%]:hover {\n  color: #062848;\n  text-decoration: underline;\n}\n.field-wrap[_ngcontent-%COMP%] {\n  position: relative;\n  display: flex;\n  align-items: center;\n}\n.field-icon[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 12px;\n  color: #9ca3af;\n  display: flex;\n  align-items: center;\n  pointer-events: none;\n}\n.field-input[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 44px;\n  padding: 0 12px 0 38px;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 10px;\n  font-size: 0.9rem;\n  color: #111827;\n  background: white;\n  outline: none;\n  transition: border-color 0.2s ease, box-shadow 0.2s ease;\n}\n.field-input[_ngcontent-%COMP%]:focus {\n  border-color: #0A3764;\n  box-shadow: 0 0 0 3px rgba(10, 55, 100, 0.1);\n}\n.field-input-password[_ngcontent-%COMP%] {\n  padding-right: 42px;\n}\n.field-input-error[_ngcontent-%COMP%] {\n  border-color: #f87171 !important;\n  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1) !important;\n}\n.field-toggle[_ngcontent-%COMP%] {\n  position: absolute;\n  right: 10px;\n  background: none;\n  border: none;\n  padding: 4px;\n  color: #9ca3af;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  border-radius: 4px;\n  transition: color 0.2s;\n}\n.field-toggle[_ngcontent-%COMP%]:hover {\n  color: #374151;\n}\n.field-error[_ngcontent-%COMP%] {\n  font-size: 0.75rem;\n  color: #ef4444;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.login-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 46px;\n  padding: 0 1.5rem;\n  background: #0A3764;\n  color: white;\n  border: none;\n  border-radius: 10px;\n  font-size: 0.9rem;\n  font-weight: 700;\n  letter-spacing: 0.01em;\n  cursor: pointer;\n  margin-top: 0.5rem;\n  transition:\n    background 0.2s ease,\n    box-shadow 0.2s ease,\n    transform 0.15s ease;\n}\n.login-btn[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background: #062848;\n  box-shadow: 0 4px 18px rgba(10, 55, 100, 0.3);\n  transform: translateY(-1px);\n}\n.login-btn[_ngcontent-%COMP%]:active:not(:disabled) {\n  transform: translateY(0);\n}\n.login-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n.login-spinner[_ngcontent-%COMP%] {\n  width: 16px;\n  height: 16px;\n  border: 2px solid rgba(255, 255, 255, 0.35);\n  border-top-color: white;\n  border-radius: 50%;\n  animation: _ngcontent-%COMP%_spinBtn 0.65s linear infinite;\n  flex-shrink: 0;\n}\n@keyframes _ngcontent-%COMP%_spinBtn {\n  to {\n    transform: rotate(360deg);\n  }\n}\n/*# sourceMappingURL=login.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(LoginComponent, [{
     type: Component,
-    args: [{ selector: "app-login", imports: [CommonModule, LoadingComponent, FormsModule, RouterModule, ReactiveFormsModule], template: `<div class="login-card-tw">
+    args: [{ selector: "app-login", imports: [CommonModule, LoadingComponent, FormsModule, RouterModule, ReactiveFormsModule], template: `<div class="login-panel">
 
   <!-- En-t\xEAte -->
-  <div class="text-center mb-6">
-    <h3 class="text-xl font-bold mb-3" style="color: #1a1a2e;">CONNEXION</h3>
-    <div class="mx-auto h-1 rounded-full" style="width: 56px; background: linear-gradient(90deg, #0A3764, #6c757d);"></div>
+  <div class="login-head">
+    <h2 class="login-title">Bienvenue</h2>
+    <p class="login-subtitle">Connectez-vous \xE0 votre espace de traitement</p>
   </div>
 
-  <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+  <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate class="login-form">
 
-    <!-- Champ Email -->
-    <div class="mb-5">
-      <label for="email" class="block text-sm font-medium mb-2" style="color: #374151;">Adresse email</label>
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" style="color: #9ca3af;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- Email -->
+    <div class="field-group">
+      <label for="email" class="field-label">Adresse email</label>
+      <div class="field-wrap">
+        <span class="field-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
           </svg>
@@ -151896,24 +151908,28 @@ var LoginComponent = class _LoginComponent {
         <input
           type="email"
           id="email"
-          class="tw-input pl-10"
+          class="field-input"
           placeholder="exemple@gouv.bj"
           formControlName="email"
-          [class.tw-input-error]="email?.invalid && email?.touched"
+          [class.field-input-error]="email?.invalid && email?.touched"
+          autocomplete="email"
         >
       </div>
-      <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-xs" style="color: #ef4444;">
+      <div *ngIf="email?.invalid && email?.touched" class="field-error">
         <span *ngIf="email?.errors?.['required']">L'adresse email est requise</span>
-        <span *ngIf="email?.errors?.['email']">Veuillez saisir une adresse email valide</span>
+        <span *ngIf="email?.errors?.['email']">Adresse email invalide</span>
       </div>
     </div>
 
-    <!-- Champ Mot de passe -->
-    <div class="mb-6">
-      <label for="password" class="block text-sm font-medium mb-2" style="color: #374151;">Mot de passe</label>
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" style="color: #9ca3af;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- Mot de passe -->
+    <div class="field-group">
+      <div class="field-label-row">
+        <label for="password" class="field-label">Mot de passe</label>
+        <a routerLink="/forget-password" class="field-forgot">Mot de passe oubli\xE9 ?</a>
+      </div>
+      <div class="field-wrap">
+        <span class="field-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <circle cx="12" cy="16" r="1"></circle>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -151922,58 +151938,42 @@ var LoginComponent = class _LoginComponent {
         <input
           [type]="showPassword ? 'text' : 'password'"
           id="password"
-          class="tw-input pl-10 pr-10"
+          class="field-input field-input-password"
           placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
           formControlName="password"
-          [class.tw-input-error]="password?.invalid && password?.touched"
+          [class.field-input-error]="password?.invalid && password?.touched"
+          autocomplete="current-password"
         >
-        <button
-          type="button"
-          class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
-          style="color: #9ca3af; background: none; border: none;"
-          (click)="togglePasswordVisibility()"
-        >
-          <svg *ngIf="!showPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button type="button" class="field-toggle" (click)="togglePasswordVisibility()" tabindex="-1">
+          <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
-          <svg *ngIf="showPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
             <line x1="1" y1="1" x2="23" y2="23"></line>
           </svg>
         </button>
       </div>
-      <div *ngIf="password?.invalid && password?.touched" class="mt-1 text-xs" style="color: #ef4444;">
+      <div *ngIf="password?.invalid && password?.touched" class="field-error">
         <span *ngIf="password?.errors?.['required']">Le mot de passe est requis</span>
-        <span *ngIf="password?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caract\xE8res</span>
+        <span *ngIf="password?.errors?.['minlength']">Minimum 6 caract\xE8res</span>
       </div>
     </div>
 
-    <!-- Bouton de connexion -->
-    <div class="mb-4">
-      <button
-        type="submit"
-        class="tw-btn-primary w-full"
-        [disabled]="loginForm.invalid || isLoading"
-      >
-        <span *ngIf="isLoading" class="tw-spinner"></span>
-        {{ isLoading ? 'Connexion...' : 'Se connecter' }}
-      </button>
-    </div>
-
-    <!-- Mot de passe oubli\xE9 -->
-    <div class="text-center">
-      <p class="text-sm" style="color: #6b7280;">
-        Avez-vous oubli\xE9 votre mot de passe ?
-        <a routerLink="/forget-password" class="font-medium hover:underline ms-1" style="color: #0A3764;">
-          Cliquez ici
-        </a>
-      </p>
-    </div>
+    <!-- Bouton -->
+    <button type="submit" class="login-btn" [disabled]="loginForm.invalid || isLoading">
+      <span *ngIf="isLoading" class="login-spinner"></span>
+      <span>{{ isLoading ? 'Connexion en cours\u2026' : 'Se connecter' }}</span>
+      <svg *ngIf="!isLoading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M5 12h14M12 5l7 7-7 7"></path>
+      </svg>
+    </button>
 
   </form>
+
 </div>
-`, styles: ["/* src/app/views/auth/login/login.component.css */\n.login-card-tw {\n  background: rgba(255, 255, 255, 0.96);\n  backdrop-filter: blur(12px);\n  border: 1px solid rgba(255, 255, 255, 0.25);\n  border-radius: 20px;\n  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);\n  padding: 2rem 2.5rem;\n  width: 100%;\n  animation: slideUp 0.5s ease-out;\n}\n@keyframes slideUp {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.tw-input {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  border: 2px solid #e5e7eb;\n  border-radius: 12px;\n  font-size: 0.95rem;\n  background: rgba(255, 255, 255, 0.92);\n  transition: border-color 0.25s ease, box-shadow 0.25s ease;\n  outline: none;\n  display: block;\n}\n.tw-input:focus {\n  border-color: #0A3764;\n  box-shadow: 0 0 0 3px rgba(10, 55, 100, 0.12);\n  background: white;\n}\n.tw-input-error {\n  border-color: #ef4444 !important;\n}\n.tw-input-error:focus {\n  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;\n}\n.tw-btn-primary {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 0.5rem;\n  padding: 0.8rem 1.5rem;\n  background-color: #0A3764;\n  color: white;\n  border: none;\n  border-radius: 12px;\n  font-size: 1rem;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    background-color 0.25s ease,\n    box-shadow 0.25s ease,\n    opacity 0.25s ease;\n  letter-spacing: 0.02em;\n}\n.tw-btn-primary:hover:not(:disabled) {\n  background-color: #062848;\n  box-shadow: 0 4px 16px rgba(10, 55, 100, 0.35);\n}\n.tw-btn-primary:disabled {\n  opacity: 0.55;\n  cursor: not-allowed;\n}\n.tw-spinner {\n  display: inline-block;\n  width: 16px;\n  height: 16px;\n  border: 2px solid rgba(255, 255, 255, 0.4);\n  border-top-color: white;\n  border-radius: 50%;\n  animation: spin 0.7s linear infinite;\n}\n@keyframes spin {\n  to {\n    transform: rotate(360deg);\n  }\n}\n/*# sourceMappingURL=login.component.css.map */\n"] }]
+`, styles: ["/* src/app/views/auth/login/login.component.css */\n.login-panel {\n  width: 100%;\n  animation: loginIn 0.45s ease-out;\n}\n@keyframes loginIn {\n  from {\n    opacity: 0;\n    transform: translateY(16px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.login-head {\n  margin-bottom: 2rem;\n}\n.login-title {\n  font-size: 1.7rem;\n  font-weight: 800;\n  color: #111827;\n  margin: 0 0 0.35rem;\n  letter-spacing: -0.02em;\n}\n.login-subtitle {\n  font-size: 0.875rem;\n  color: #6b7280;\n  margin: 0;\n}\n.login-form {\n  display: flex;\n  flex-direction: column;\n  gap: 1.25rem;\n}\n.field-group {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.field-label {\n  font-size: 0.82rem;\n  font-weight: 600;\n  color: #374151;\n  margin: 0;\n}\n.field-label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.field-forgot {\n  font-size: 0.78rem;\n  font-weight: 500;\n  color: #0A3764;\n  text-decoration: none;\n  transition: color 0.2s;\n}\n.field-forgot:hover {\n  color: #062848;\n  text-decoration: underline;\n}\n.field-wrap {\n  position: relative;\n  display: flex;\n  align-items: center;\n}\n.field-icon {\n  position: absolute;\n  left: 12px;\n  color: #9ca3af;\n  display: flex;\n  align-items: center;\n  pointer-events: none;\n}\n.field-input {\n  width: 100%;\n  height: 44px;\n  padding: 0 12px 0 38px;\n  border: 1.5px solid #e5e7eb;\n  border-radius: 10px;\n  font-size: 0.9rem;\n  color: #111827;\n  background: white;\n  outline: none;\n  transition: border-color 0.2s ease, box-shadow 0.2s ease;\n}\n.field-input:focus {\n  border-color: #0A3764;\n  box-shadow: 0 0 0 3px rgba(10, 55, 100, 0.1);\n}\n.field-input-password {\n  padding-right: 42px;\n}\n.field-input-error {\n  border-color: #f87171 !important;\n  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1) !important;\n}\n.field-toggle {\n  position: absolute;\n  right: 10px;\n  background: none;\n  border: none;\n  padding: 4px;\n  color: #9ca3af;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  border-radius: 4px;\n  transition: color 0.2s;\n}\n.field-toggle:hover {\n  color: #374151;\n}\n.field-error {\n  font-size: 0.75rem;\n  color: #ef4444;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.login-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 46px;\n  padding: 0 1.5rem;\n  background: #0A3764;\n  color: white;\n  border: none;\n  border-radius: 10px;\n  font-size: 0.9rem;\n  font-weight: 700;\n  letter-spacing: 0.01em;\n  cursor: pointer;\n  margin-top: 0.5rem;\n  transition:\n    background 0.2s ease,\n    box-shadow 0.2s ease,\n    transform 0.15s ease;\n}\n.login-btn:hover:not(:disabled) {\n  background: #062848;\n  box-shadow: 0 4px 18px rgba(10, 55, 100, 0.3);\n  transform: translateY(-1px);\n}\n.login-btn:active:not(:disabled) {\n  transform: translateY(0);\n}\n.login-btn:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}\n.login-spinner {\n  width: 16px;\n  height: 16px;\n  border: 2px solid rgba(255, 255, 255, 0.35);\n  border-top-color: white;\n  border-radius: 50%;\n  animation: spinBtn 0.65s linear infinite;\n  flex-shrink: 0;\n}\n@keyframes spinBtn {\n  to {\n    transform: rotate(360deg);\n  }\n}\n/*# sourceMappingURL=login.component.css.map */\n"] }]
   }], () => [{ type: AuthService }, { type: LocalStorageService }, { type: Router }, { type: ToastrService }, { type: FormBuilder }], null);
 })();
 (() => {
@@ -152610,82 +152610,64 @@ var LayoutComponent2 = class _LayoutComponent {
   static \u0275fac = function LayoutComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _LayoutComponent)();
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LayoutComponent, selectors: [["app-layout"]], decls: 21, vars: 0, consts: [[1, "relative", "min-h-screen", "flex", "items-center", "justify-center", "overflow-hidden", 2, "background-image", "url('./assets/bg.jpg')", "background-size", "cover", "background-position", "center", "background-attachment", "fixed"], [1, "absolute", "inset-0", 2, "background", "linear-gradient(135deg, rgba(10, 55, 100, 0.88) 0%, rgba(33, 37, 41, 0.78) 50%, rgba(10, 55, 100, 0.88) 100%)"], [1, "absolute", "inset-0", "overflow-hidden", "pointer-events-none"], [1, "absolute", "rounded-full", 2, "top", "10%", "left", "10%", "width", "120px", "height", "120px", "background", "rgba(255,255,255,0.06)", "animation", "pulse 3s ease-in-out infinite"], [1, "absolute", "rounded-full", 2, "bottom", "15%", "right", "15%", "width", "80px", "height", "80px", "background", "rgba(252,211,67,0.12)"], [1, "absolute", 2, "top", "60%", "left", "5%", "width", "60px", "height", "60px", "background", "rgba(255,255,255,0.05)", "transform", "rotate(12deg)"], [1, "absolute", "rounded-full", 2, "top", "20%", "right", "10%", "width", "200px", "height", "200px", "background", "rgba(10, 55, 100, 0.3)", "filter", "blur(60px)"], [1, "absolute", "rounded-full", 2, "bottom", "10%", "left", "20%", "width", "160px", "height", "160px", "background", "rgba(252,211,67,0.1)", "filter", "blur(40px)"], [1, "relative", "z-10", "w-full", "max-w-lg", "px-4", "py-10"], [1, "text-center", "mb-8", "auth-fade-in"], [1, "w-20", "h-20", "rounded-full", "flex", "items-center", "justify-center", "mx-auto", "mb-5", 2, "background", "rgba(255,255,255,0.12)", "backdrop-filter", "blur(12px)", "border", "2px solid rgba(255,255,255,0.25)"], ["width", "38", "height", "38", "viewBox", "0 0 24 24", "fill", "none", "stroke", "white", "stroke-width", "2"], ["d", "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"], ["cx", "12", "cy", "7", "r", "4"], [1, "text-3xl", "font-bold", "text-white", "mb-1", 2, "text-shadow", "0 2px 8px rgba(0,0,0,0.4)"], [1, "text-2xl", "font-semibold", 2, "color", "#FCD343", "text-shadow", "0 1px 4px rgba(0,0,0,0.4)"], [1, "mt-6", "text-center", "text-sm", 2, "color", "rgba(255,255,255,0.5)"]], template: function LayoutComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LayoutComponent, selectors: [["app-layout"]], decls: 45, vars: 0, consts: [[1, "auth-split"], [1, "auth-left"], [1, "auth-blob", "auth-blob-1"], [1, "auth-blob", "auth-blob-2"], [1, "auth-blob", "auth-blob-3"], [1, "auth-left-content"], [1, "auth-logo"], ["width", "36", "height", "36", "viewBox", "0 0 24 24", "fill", "none", "stroke", "white", "stroke-width", "2", "stroke-linecap", "round", "stroke-linejoin", "round"], ["x", "2", "y", "3", "width", "20", "height", "14", "rx", "2"], ["d", "M8 21h8M12 17v4"], ["d", "M7 8h.01M11 8h.01M7 12h10"], [1, "auth-headline"], [1, "auth-gov-label"], [1, "auth-app-name"], [1, "auth-app-desc"], [1, "auth-stats"], [1, "auth-stat"], [1, "auth-stat-value"], [1, "auth-stat-label"], [1, "auth-stat-divider"], [1, "auth-left-footer"], [1, "auth-right"], [1, "auth-right-inner"]], template: function LayoutComponent_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "div", 0);
-      \u0275\u0275element(1, "div", 1);
-      \u0275\u0275elementStart(2, "div", 2);
-      \u0275\u0275element(3, "div", 3)(4, "div", 4)(5, "div", 5)(6, "div", 6)(7, "div", 7);
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(8, "div", 8)(9, "div", 9)(10, "div", 10);
+      \u0275\u0275elementStart(0, "div", 0)(1, "div", 1);
+      \u0275\u0275element(2, "div", 2)(3, "div", 3)(4, "div", 4);
+      \u0275\u0275elementStart(5, "div", 5)(6, "div", 6);
       \u0275\u0275namespaceSVG();
-      \u0275\u0275elementStart(11, "svg", 11);
-      \u0275\u0275element(12, "path", 12)(13, "circle", 13);
+      \u0275\u0275elementStart(7, "svg", 7);
+      \u0275\u0275element(8, "rect", 8)(9, "path", 9)(10, "path", 10);
       \u0275\u0275elementEnd()();
       \u0275\u0275namespaceHTML();
-      \u0275\u0275elementStart(14, "h1", 14);
-      \u0275\u0275text(15, " Espace de traitement des ");
+      \u0275\u0275elementStart(11, "div", 11)(12, "span", 12);
+      \u0275\u0275text(13, "R\xE9publique du B\xE9nin");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(16, "h2", 15);
-      \u0275\u0275text(17, " e-services ");
+      \u0275\u0275elementStart(14, "h1", 13);
+      \u0275\u0275text(15, "Espace de traitement");
+      \u0275\u0275element(16, "br");
+      \u0275\u0275text(17, "des ");
+      \u0275\u0275elementStart(18, "em");
+      \u0275\u0275text(19, "e-services");
       \u0275\u0275elementEnd()();
-      \u0275\u0275element(18, "router-outlet");
-      \u0275\u0275elementStart(19, "div", 16);
-      \u0275\u0275text(20, " \xA9 2025 Gouvernement du B\xE9nin \u2014 Tous droits r\xE9serv\xE9s ");
+      \u0275\u0275elementStart(20, "p", 14);
+      \u0275\u0275text(21, " Plateforme nationale de gestion et de traitement des services administratifs \xE9lectroniques. ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(22, "div", 15)(23, "div", 16)(24, "span", 17);
+      \u0275\u0275text(25, "100%");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(26, "span", 18);
+      \u0275\u0275text(27, "S\xE9curis\xE9");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275element(28, "div", 19);
+      \u0275\u0275elementStart(29, "div", 16)(30, "span", 17);
+      \u0275\u0275text(31, "24/7");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(32, "span", 18);
+      \u0275\u0275text(33, "Disponible");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275element(34, "div", 19);
+      \u0275\u0275elementStart(35, "div", 16)(36, "span", 17);
+      \u0275\u0275text(37, "GOV");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(38, "span", 18);
+      \u0275\u0275text(39, "Certifi\xE9");
+      \u0275\u0275elementEnd()()()();
+      \u0275\u0275elementStart(40, "div", 20);
+      \u0275\u0275text(41, " \xA9 2025 Gouvernement du B\xE9nin \u2014 Tous droits r\xE9serv\xE9s ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(42, "div", 21)(43, "div", 22);
+      \u0275\u0275element(44, "router-outlet");
       \u0275\u0275elementEnd()()();
     }
-  }, dependencies: [RouterOutlet], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n  animation: _ngcontent-%COMP%_authFadeIn 0.6s ease-out;\n}\n@keyframes _ngcontent-%COMP%_authFadeIn {\n  from {\n    opacity: 0;\n    transform: translateY(8px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.auth-fade-in[_ngcontent-%COMP%] {\n  animation: _ngcontent-%COMP%_authFadeIn 0.8s ease-out;\n}\n/*# sourceMappingURL=layout.component.css.map */"] });
+  }, dependencies: [RouterOutlet], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n}\n.auth-split[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n}\n.auth-left[_ngcontent-%COMP%] {\n  position: relative;\n  width: 44%;\n  flex-shrink: 0;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  overflow: hidden;\n  background:\n    linear-gradient(\n      155deg,\n      #062848 0%,\n      #0A3764 45%,\n      #0d4e8a 100%);\n}\n.auth-blob[_ngcontent-%COMP%] {\n  position: absolute;\n  border-radius: 50%;\n  filter: blur(60px);\n  pointer-events: none;\n}\n.auth-blob-1[_ngcontent-%COMP%] {\n  width: 320px;\n  height: 320px;\n  top: -80px;\n  right: -80px;\n  background: rgba(252, 211, 67, 0.12);\n}\n.auth-blob-2[_ngcontent-%COMP%] {\n  width: 260px;\n  height: 260px;\n  bottom: 60px;\n  left: -60px;\n  background: rgba(255, 255, 255, 0.06);\n}\n.auth-blob-3[_ngcontent-%COMP%] {\n  width: 180px;\n  height: 180px;\n  top: 50%;\n  left: 60%;\n  transform: translate(-50%, -50%);\n  background: rgba(13, 78, 138, 0.5);\n}\n.auth-left-content[_ngcontent-%COMP%] {\n  position: relative;\n  z-index: 1;\n  padding: 3rem 3rem 2rem;\n  display: flex;\n  flex-direction: column;\n  gap: 2.5rem;\n  flex: 1;\n  justify-content: center;\n}\n.auth-logo[_ngcontent-%COMP%] {\n  width: 60px;\n  height: 60px;\n  border-radius: 16px;\n  background: rgba(255, 255, 255, 0.12);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  backdrop-filter: blur(8px);\n}\n.auth-gov-label[_ngcontent-%COMP%] {\n  display: inline-block;\n  font-size: 0.7rem;\n  font-weight: 700;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: #FCD343;\n  margin-bottom: 0.75rem;\n}\n.auth-app-name[_ngcontent-%COMP%] {\n  font-size: 2rem;\n  font-weight: 700;\n  color: white;\n  line-height: 1.25;\n  margin: 0 0 1rem;\n}\n.auth-app-name[_ngcontent-%COMP%]   em[_ngcontent-%COMP%] {\n  font-style: normal;\n  color: #FCD343;\n}\n.auth-app-desc[_ngcontent-%COMP%] {\n  font-size: 0.875rem;\n  color: rgba(255, 255, 255, 0.6);\n  line-height: 1.65;\n  margin: 0;\n  max-width: 320px;\n}\n.auth-stats[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 1.5rem;\n  padding: 1.25rem 1.5rem;\n  background: rgba(255, 255, 255, 0.07);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  border-radius: 14px;\n  backdrop-filter: blur(8px);\n}\n.auth-stat[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 2px;\n}\n.auth-stat-value[_ngcontent-%COMP%] {\n  font-size: 1.1rem;\n  font-weight: 800;\n  color: white;\n  letter-spacing: 0.02em;\n}\n.auth-stat-label[_ngcontent-%COMP%] {\n  font-size: 0.65rem;\n  font-weight: 500;\n  color: rgba(255, 255, 255, 0.5);\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.auth-stat-divider[_ngcontent-%COMP%] {\n  width: 1px;\n  height: 32px;\n  background: rgba(255, 255, 255, 0.15);\n  flex-shrink: 0;\n}\n.auth-left-footer[_ngcontent-%COMP%] {\n  position: relative;\n  z-index: 1;\n  padding: 1.25rem 3rem;\n  font-size: 0.72rem;\n  color: rgba(255, 255, 255, 0.35);\n  border-top: 1px solid rgba(255, 255, 255, 0.08);\n}\n.auth-right[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: #f8fafc;\n  padding: 2rem;\n}\n.auth-right-inner[_ngcontent-%COMP%] {\n  width: 100%;\n  max-width: 420px;\n}\n@media (max-width: 900px) {\n  .auth-split[_ngcontent-%COMP%] {\n    flex-direction: column;\n  }\n  .auth-left[_ngcontent-%COMP%] {\n    width: 100%;\n    min-height: 220px;\n  }\n  .auth-left-content[_ngcontent-%COMP%] {\n    padding: 2rem 2rem 1.5rem;\n    gap: 1.5rem;\n    justify-content: flex-start;\n  }\n  .auth-app-name[_ngcontent-%COMP%] {\n    font-size: 1.5rem;\n  }\n  .auth-app-desc[_ngcontent-%COMP%] {\n    display: none;\n  }\n  .auth-stats[_ngcontent-%COMP%] {\n    display: none;\n  }\n  .auth-left-footer[_ngcontent-%COMP%] {\n    display: none;\n  }\n  .auth-right[_ngcontent-%COMP%] {\n    padding: 2rem 1.25rem;\n    align-items: flex-start;\n    background: #f8fafc;\n  }\n}\n/*# sourceMappingURL=layout.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(LayoutComponent2, [{
     type: Component,
     args: [{ selector: "app-layout", imports: [
       RouterOutlet
-    ], template: `<div class="relative min-h-screen flex items-center justify-center overflow-hidden"
-     style="background-image: url('./assets/bg.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
-
-  <!-- Overlay gradient -->
-  <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(10, 55, 100, 0.88) 0%, rgba(33, 37, 41, 0.78) 50%, rgba(10, 55, 100, 0.88) 100%);"></div>
-
-  <!-- \xC9l\xE9ments d\xE9coratifs -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute rounded-full" style="top: 10%; left: 10%; width: 120px; height: 120px; background: rgba(255,255,255,0.06); animation: pulse 3s ease-in-out infinite;"></div>
-    <div class="absolute rounded-full" style="bottom: 15%; right: 15%; width: 80px; height: 80px; background: rgba(252,211,67,0.12);"></div>
-    <div class="absolute" style="top: 60%; left: 5%; width: 60px; height: 60px; background: rgba(255,255,255,0.05); transform: rotate(12deg);"></div>
-    <div class="absolute rounded-full" style="top: 20%; right: 10%; width: 200px; height: 200px; background: rgba(10, 55, 100, 0.3); filter: blur(60px);"></div>
-    <div class="absolute rounded-full" style="bottom: 10%; left: 20%; width: 160px; height: 160px; background: rgba(252,211,67,0.1); filter: blur(40px);"></div>
-  </div>
-
-  <!-- Content -->
-  <div class="relative z-10 w-full max-w-lg px-4 py-10">
-
-    <!-- Logo & Titre -->
-    <div class="text-center mb-8 auth-fade-in">
-      <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
-           style="background: rgba(255,255,255,0.12); backdrop-filter: blur(12px); border: 2px solid rgba(255,255,255,0.25);">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-      </div>
-      <h1 class="text-3xl font-bold text-white mb-1" style="text-shadow: 0 2px 8px rgba(0,0,0,0.4);">
-        Espace de traitement des
-      </h1>
-      <h2 class="text-2xl font-semibold" style="color: #FCD343; text-shadow: 0 1px 4px rgba(0,0,0,0.4);">
-        e-services
-      </h2>
-    </div>
-
-    <!-- Contenu dynamique (login, forgot password, etc.) -->
-    <router-outlet></router-outlet>
-
-    <!-- Footer -->
-    <div class="mt-6 text-center text-sm" style="color: rgba(255,255,255,0.5);">
-      &copy; 2025 Gouvernement du B\xE9nin &mdash; Tous droits r\xE9serv\xE9s
-    </div>
-  </div>
-</div>
-`, styles: ["/* src/app/views/auth/layout/layout.component.css */\n:host {\n  display: block;\n  animation: authFadeIn 0.6s ease-out;\n}\n@keyframes authFadeIn {\n  from {\n    opacity: 0;\n    transform: translateY(8px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n.auth-fade-in {\n  animation: authFadeIn 0.8s ease-out;\n}\n/*# sourceMappingURL=layout.component.css.map */\n"] }]
+    ], template: '<div class="auth-split">\n\n  <!-- ===== PANNEAU GAUCHE : branding ===== -->\n  <div class="auth-left">\n\n    <!-- Blobs d\xE9coratifs -->\n    <div class="auth-blob auth-blob-1"></div>\n    <div class="auth-blob auth-blob-2"></div>\n    <div class="auth-blob auth-blob-3"></div>\n\n    <div class="auth-left-content">\n\n      <!-- Logo -->\n      <div class="auth-logo">\n        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">\n          <rect x="2" y="3" width="20" height="14" rx="2"></rect>\n          <path d="M8 21h8M12 17v4"></path>\n          <path d="M7 8h.01M11 8h.01M7 12h10"></path>\n        </svg>\n      </div>\n\n      <!-- Titre -->\n      <div class="auth-headline">\n        <span class="auth-gov-label">R\xE9publique du B\xE9nin</span>\n        <h1 class="auth-app-name">Espace de traitement<br>des <em>e-services</em></h1>\n        <p class="auth-app-desc">\n          Plateforme nationale de gestion et de traitement des services administratifs \xE9lectroniques.\n        </p>\n      </div>\n\n      <!-- M\xE9triques visuelles -->\n      <div class="auth-stats">\n        <div class="auth-stat">\n          <span class="auth-stat-value">100%</span>\n          <span class="auth-stat-label">S\xE9curis\xE9</span>\n        </div>\n        <div class="auth-stat-divider"></div>\n        <div class="auth-stat">\n          <span class="auth-stat-value">24/7</span>\n          <span class="auth-stat-label">Disponible</span>\n        </div>\n        <div class="auth-stat-divider"></div>\n        <div class="auth-stat">\n          <span class="auth-stat-value">GOV</span>\n          <span class="auth-stat-label">Certifi\xE9</span>\n        </div>\n      </div>\n\n    </div>\n\n    <div class="auth-left-footer">\n      &copy; 2025 Gouvernement du B\xE9nin \u2014 Tous droits r\xE9serv\xE9s\n    </div>\n  </div>\n\n  <!-- ===== PANNEAU DROIT : formulaire ===== -->\n  <div class="auth-right">\n    <div class="auth-right-inner">\n      <router-outlet></router-outlet>\n    </div>\n  </div>\n\n</div>\n', styles: ["/* src/app/views/auth/layout/layout.component.css */\n:host {\n  display: block;\n}\n.auth-split {\n  display: flex;\n  min-height: 100vh;\n}\n.auth-left {\n  position: relative;\n  width: 44%;\n  flex-shrink: 0;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  overflow: hidden;\n  background:\n    linear-gradient(\n      155deg,\n      #062848 0%,\n      #0A3764 45%,\n      #0d4e8a 100%);\n}\n.auth-blob {\n  position: absolute;\n  border-radius: 50%;\n  filter: blur(60px);\n  pointer-events: none;\n}\n.auth-blob-1 {\n  width: 320px;\n  height: 320px;\n  top: -80px;\n  right: -80px;\n  background: rgba(252, 211, 67, 0.12);\n}\n.auth-blob-2 {\n  width: 260px;\n  height: 260px;\n  bottom: 60px;\n  left: -60px;\n  background: rgba(255, 255, 255, 0.06);\n}\n.auth-blob-3 {\n  width: 180px;\n  height: 180px;\n  top: 50%;\n  left: 60%;\n  transform: translate(-50%, -50%);\n  background: rgba(13, 78, 138, 0.5);\n}\n.auth-left-content {\n  position: relative;\n  z-index: 1;\n  padding: 3rem 3rem 2rem;\n  display: flex;\n  flex-direction: column;\n  gap: 2.5rem;\n  flex: 1;\n  justify-content: center;\n}\n.auth-logo {\n  width: 60px;\n  height: 60px;\n  border-radius: 16px;\n  background: rgba(255, 255, 255, 0.12);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  backdrop-filter: blur(8px);\n}\n.auth-gov-label {\n  display: inline-block;\n  font-size: 0.7rem;\n  font-weight: 700;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: #FCD343;\n  margin-bottom: 0.75rem;\n}\n.auth-app-name {\n  font-size: 2rem;\n  font-weight: 700;\n  color: white;\n  line-height: 1.25;\n  margin: 0 0 1rem;\n}\n.auth-app-name em {\n  font-style: normal;\n  color: #FCD343;\n}\n.auth-app-desc {\n  font-size: 0.875rem;\n  color: rgba(255, 255, 255, 0.6);\n  line-height: 1.65;\n  margin: 0;\n  max-width: 320px;\n}\n.auth-stats {\n  display: flex;\n  align-items: center;\n  gap: 1.5rem;\n  padding: 1.25rem 1.5rem;\n  background: rgba(255, 255, 255, 0.07);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  border-radius: 14px;\n  backdrop-filter: blur(8px);\n}\n.auth-stat {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 2px;\n}\n.auth-stat-value {\n  font-size: 1.1rem;\n  font-weight: 800;\n  color: white;\n  letter-spacing: 0.02em;\n}\n.auth-stat-label {\n  font-size: 0.65rem;\n  font-weight: 500;\n  color: rgba(255, 255, 255, 0.5);\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.auth-stat-divider {\n  width: 1px;\n  height: 32px;\n  background: rgba(255, 255, 255, 0.15);\n  flex-shrink: 0;\n}\n.auth-left-footer {\n  position: relative;\n  z-index: 1;\n  padding: 1.25rem 3rem;\n  font-size: 0.72rem;\n  color: rgba(255, 255, 255, 0.35);\n  border-top: 1px solid rgba(255, 255, 255, 0.08);\n}\n.auth-right {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: #f8fafc;\n  padding: 2rem;\n}\n.auth-right-inner {\n  width: 100%;\n  max-width: 420px;\n}\n@media (max-width: 900px) {\n  .auth-split {\n    flex-direction: column;\n  }\n  .auth-left {\n    width: 100%;\n    min-height: 220px;\n  }\n  .auth-left-content {\n    padding: 2rem 2rem 1.5rem;\n    gap: 1.5rem;\n    justify-content: flex-start;\n  }\n  .auth-app-name {\n    font-size: 1.5rem;\n  }\n  .auth-app-desc {\n    display: none;\n  }\n  .auth-stats {\n    display: none;\n  }\n  .auth-left-footer {\n    display: none;\n  }\n  .auth-right {\n    padding: 2rem 1.25rem;\n    align-items: flex-start;\n    background: #f8fafc;\n  }\n}\n/*# sourceMappingURL=layout.component.css.map */\n"] }]
   }], null, null);
 })();
 (() => {

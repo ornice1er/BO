@@ -4,9 +4,9 @@ export default `<!doctype html>
   <meta charset="utf-8">
   <title>Espace de traitement des e-services</title>
     <!-- <base href="https://preprodmemp.gouv.bj/pprod-bo/"> -->
-    <base href="https://preprodmtfp.gouv.bj/pprod-bo/">
+    <!-- <base href="https://preprodmtfp.gouv.bj/pprod-bo/"> -->
 
-  <!-- <base href="/"> -->
+  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@angular/material@15.0.0/prebuilt-themes/indigo-pink.css">
