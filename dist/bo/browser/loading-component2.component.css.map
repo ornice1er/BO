@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/components/loading-component2/loading-component2.component.css"],
+  "sourcesContent": ["    .loading-spinner {\n      margin-left: 0.5rem;\n    }\n    \n    .spinner-border-sm {\n      width: 1rem;\n      height: 1rem;\n      border-width: 0.1em;\n    }\n    \n    .spinner-border {\n      border: 0.1em solid currentColor;\n      border-right-color: transparent;\n      border-radius: 50%;\n      animation: spinner-border 0.75s linear infinite;\n    }\n    \n    @keyframes spinner-border {\n      to {\n        transform: rotate(360deg);\n      }\n    }"],
+  "mappings": ";AAAI,CAAC;AACC,eAAa;AACf;AAEA,CAAC;AACC,SAAO;AACP,UAAQ;AACR,gBAAc;AAChB;AAEA,CAAC;AACC,UAAQ,MAAM,MAAM;AACpB,sBAAoB;AACpB,iBAAe;AACf,aAAW,eAAe,MAAM,OAAO;AACzC;AAEA,WAPC;AAQC;AACE,eAAW,OAAO;AACpB;AACF;",
+  "names": []
+}

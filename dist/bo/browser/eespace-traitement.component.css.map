@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/admin/pages/eservice/eespace-traitement/eespace-traitement.component.css"],
+  "sourcesContent": ["div.dataTables_wrapper div.dataTables_length select {\n    width: 100px !important;\n    display: inline-block;\n}"],
+  "mappings": ";AAAA,GAAG,CAAC,mBAAmB,GAAG,CAAC,kBAAkB;AACzC,SAAO;AACP,WAAS;AACb;",
+  "names": []
+}

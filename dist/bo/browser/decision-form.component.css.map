@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/components/decision-form/decision-form.component.css"],
+  "sourcesContent": ["  .alert {\n      border-radius: 0.5rem;\n      padding: 1rem;\n      margin-bottom: 1.5rem;\n    }\n    \n    .alert-success {\n      background-color: rgba(31, 136, 63, 0.1);\n      color: var(--success-color);\n    }\n    \n    .alert-danger {\n      background-color: rgba(235, 0, 0, 0.1);\n      color: var(--danger-color);\n    }\n    \n    .alert-warning {\n      background-color: rgba(252, 211, 67, 0.1);\n      color: #856404;\n    }\n    \n    .form-label {\n      color: var(--dark-color);\n      margin-bottom: 0.5rem;\n    }\n    \n    .text-danger {\n      color: var(--danger-color) !important;\n    }"],
+  "mappings": ";AAAE,CAAC;AACG,iBAAe;AACf,WAAS;AACT,iBAAe;AACjB;AAEA,CAAC;AACC,oBAAkB,KAAK,EAAE,EAAE,GAAG,EAAE,EAAE,EAAE;AACpC,SAAO,IAAI;AACb;AAEA,CAAC;AACC,oBAAkB,KAAK,GAAG,EAAE,CAAC,EAAE,CAAC,EAAE;AAClC,SAAO,IAAI;AACb;AAEA,CAAC;AACC,oBAAkB,KAAK,GAAG,EAAE,GAAG,EAAE,EAAE,EAAE;AACrC,SAAO;AACT;AAEA,CAAC;AACC,SAAO,IAAI;AACX,iBAAe;AACjB;AAEA,CAAC;AACC,SAAO,IAAI;AACb;",
+  "names": []
+}

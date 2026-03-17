@@ -1,4 +1,15 @@
 @import "@ng-select/ng-select/themes/default.theme.css";
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+@theme {
+  --color-primary: #0A3764;
+  --color-primary-dark: #062848;
+  --color-secondary: #6c757d;
+  --color-warning-bo: #FCD343;
+  --color-success-bo: #1F883F;
+  --color-danger-bo: #EB0000;
+}
 
 /* position */
 

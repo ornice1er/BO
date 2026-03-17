@@ -1,2 +1,24 @@
 import './polyfills.server.mjs';
-import{a}from"./chunk-UM7KZZXH.mjs";import"./chunk-GBMK6K6D.mjs";import"./chunk-UT6536NC.mjs";import"./chunk-5XUXGTUW.mjs";export{a as default};
+import {
+  destroyAngularServerApp,
+  extractRoutesAndCreateRouteTree,
+  getOrCreateAngularServerApp,
+  main_server_default,
+  setAngularAppManifest
+} from "./chunk-5GNNS7EK.mjs";
+import {
+  resetCompiledComponents
+} from "./chunk-UGOUP4DL.mjs";
+import "./chunk-5WKMABBB.mjs";
+
+// angular:main-server-inject-manifest:angular:main-server-inject-manifest
+import manifest from "./angular-app-manifest.mjs";
+setAngularAppManifest(manifest);
+export {
+  main_server_default as default,
+  destroyAngularServerApp as \u0275destroyAngularServerApp,
+  extractRoutesAndCreateRouteTree as \u0275extractRoutesAndCreateRouteTree,
+  getOrCreateAngularServerApp as \u0275getOrCreateAngularServerApp,
+  resetCompiledComponents as \u0275resetCompiledComponents
+};
+//# sourceMappingURL=main.server.mjs.map
