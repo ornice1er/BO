@@ -20,11 +20,10 @@ import { PrestationService } from '../../../../core/services/prestation.service'
 import { ADDING_FIELDS, BANETTES, EVENTS } from '../../../../core/utils/DATA';
 
 @Component({
-  selector: 'app-etape-prestation-status',
-  standalone: true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './etape-prestation-status.component.html',
-  styleUrl: './etape-prestation-status.component.css'
+    selector: 'app-etape-prestation-status',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './etape-prestation-status.component.html',
+    styleUrl: './etape-prestation-status.component.css'
 })
 export class EtapePrestationStatusComponent {
 isDtInitialized:boolean = false

@@ -17,12 +17,10 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-correction',
-  templateUrl: './correction.component.html',
-    standalone:true,
-    imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-
-  styleUrls: ['./correction.component.css']
+    selector: 'ngx-correction',
+    templateUrl: './correction.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./correction.component.css']
 })
 export class CorrectionComponent implements OnInit,OnDestroy {
   user:any

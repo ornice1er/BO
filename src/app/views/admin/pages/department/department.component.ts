@@ -13,12 +13,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 @Component({
-  selector: 'app-department',
-  templateUrl: './department.component.html',
-      standalone:true,
-      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  
-  styleUrls: ['./department.component.css']
+    selector: 'app-department',
+    templateUrl: './department.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./department.component.css']
 })
 export class DepartmentComponent implements OnInit {
   selected_data:any

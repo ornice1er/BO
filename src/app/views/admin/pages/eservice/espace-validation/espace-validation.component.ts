@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-espace-validation',
-  templateUrl: './espace-validation.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-validation.component.css']
+    selector: 'app-espace-validation',
+    templateUrl: './espace-validation.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-validation.component.css']
 })
 export class EspaceValidationComponent implements OnInit {
 

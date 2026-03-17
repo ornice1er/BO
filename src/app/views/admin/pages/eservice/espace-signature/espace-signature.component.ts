@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-espace-signature',
-  templateUrl: './espace-signature.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-signature.component.css']
+    selector: 'app-espace-signature',
+    templateUrl: './espace-signature.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-signature.component.css']
 })
 export class EspaceSignatureComponent implements OnInit {
 

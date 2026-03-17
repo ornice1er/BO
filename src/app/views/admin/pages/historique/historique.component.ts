@@ -18,12 +18,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-historique',
-  templateUrl: './historique.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./historique.component.css']
+    selector: 'ngx-historique',
+    templateUrl: './historique.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./historique.component.css']
 })
 export class HistoriqueComponent implements OnInit,OnDestroy,AfterViewInit  {
   isDtInitialized:boolean = false

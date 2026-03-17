@@ -16,12 +16,10 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { EntityService } from '../../../../core/services/entity.service';
 
 @Component({
-  selector: 'ngx-officer',
-  templateUrl: './officer.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./officer.component.css']
+    selector: 'ngx-officer',
+    templateUrl: './officer.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./officer.component.css']
 })
 export class OfficerComponent implements OnInit {
   isDtInitialized:boolean = false

@@ -16,11 +16,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
-  selector: 'app-permission',
-  templateUrl: './permission.component.html',
-  standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  styleUrls: ['./permission.component.css']
+    selector: 'app-permission',
+    templateUrl: './permission.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./permission.component.css']
 })
 export class PermissionComponent implements OnInit {
 

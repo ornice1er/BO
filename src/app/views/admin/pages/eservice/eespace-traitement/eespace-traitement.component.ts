@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { PrestationDetails } from '../prestation-details';
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 @Component({
-  selector: 'ngx-eespace-traitement',
-  templateUrl: './eespace-traitement.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./eespace-traitement.component.css']
+    selector: 'ngx-eespace-traitement',
+    templateUrl: './eespace-traitement.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./eespace-traitement.component.css']
 })
 export class EespaceTraitementComponent implements OnInit,AfterViewInit {
   isDtInitialized:boolean = false

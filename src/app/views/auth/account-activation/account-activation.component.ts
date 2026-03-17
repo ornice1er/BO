@@ -8,11 +8,10 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-account-activation',
-  templateUrl: './account-activation.component.html',
-  standalone:true,
-  imports:[LoadingComponent,FormsModule],
-  styleUrls: ['./account-activation.component.css']
+    selector: 'app-account-activation',
+    templateUrl: './account-activation.component.html',
+    imports: [LoadingComponent, FormsModule],
+    styleUrls: ['./account-activation.component.css']
 })
 export class AccountActivationComponent implements OnInit {
   loading:any

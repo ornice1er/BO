@@ -13,11 +13,10 @@ import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-project-detail',
-  standalone: true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './project-detail.component.html',
-  styleUrl: './project-detail.component.css'
+    selector: 'app-project-detail',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './project-detail.component.html',
+    styleUrl: './project-detail.component.css'
 })
 export class ProjectDetailComponent {
 search_text:any=""

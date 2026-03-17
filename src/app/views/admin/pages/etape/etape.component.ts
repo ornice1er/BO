@@ -15,11 +15,10 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-etape',
-  standalone: true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './etape.component.html',
-  styleUrl: './etape.component.css'
+    selector: 'app-etape',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './etape.component.html',
+    styleUrl: './etape.component.css'
 })
 export class EtapeComponent {
 isDtInitialized:boolean = false

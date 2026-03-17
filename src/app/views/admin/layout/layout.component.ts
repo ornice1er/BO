@@ -20,40 +20,39 @@ import { DashService } from '../../../core/services/dash.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    RouterModule,
-    CommonModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatButtonModule,
-    MatExpansionModule,
-    MatMenuModule,
-    FormsModule
-  ],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css',
+    selector: 'app-layout',
+    imports: [
+        RouterOutlet,
+        RouterModule,
+        CommonModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        MatButtonModule,
+        MatExpansionModule,
+        MatMenuModule,
+        FormsModule
+    ],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.css',
     animations: [
-    trigger('slideDown', [
-      state('collapsed', style({
-        height: '0px',
-        opacity: 0,
-        overflow: 'hidden'
-      })),
-      state('expanded', style({
-        height: '*',
-        opacity: 1,
-        overflow: 'visible'
-      })),
-      transition('collapsed <=> expanded', [
-        animate('300ms ease-in-out')
-      ])
-    ])
-  ]
+        trigger('slideDown', [
+            state('collapsed', style({
+                height: '0px',
+                opacity: 0,
+                overflow: 'hidden'
+            })),
+            state('expanded', style({
+                height: '*',
+                opacity: 1,
+                overflow: 'visible'
+            })),
+            transition('collapsed <=> expanded', [
+                animate('300ms ease-in-out')
+            ])
+        ])
+    ]
 })
 export class LayoutComponent {
   menuOpen = true;

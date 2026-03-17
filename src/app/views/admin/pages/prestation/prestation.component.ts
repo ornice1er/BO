@@ -18,12 +18,10 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { EtapePrestationStatusService } from '../../../../core/services/etape-prestation-status.service';
 
 @Component({
-  selector: 'ngx-prestation',
-  templateUrl: './prestation.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,NgToggleComponent],
-    
-  styleUrls: ['./prestation.component.css']
+    selector: 'ngx-prestation',
+    templateUrl: './prestation.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent],
+    styleUrls: ['./prestation.component.css']
 })
 export class PrestationComponent implements OnInit {
   isDtInitialized:boolean = false

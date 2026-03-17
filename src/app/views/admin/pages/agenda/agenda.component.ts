@@ -16,11 +16,10 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-agenda',
-  templateUrl: './agenda.component.html',
-  standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  styleUrls: ['./agenda.component.css']
+    selector: 'ngx-agenda',
+    templateUrl: './agenda.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./agenda.component.css']
 })
 export class AgendaComponent implements OnInit,AfterViewInit {
   @ViewChild("dialog") dialog :TemplateRef<any> | undefined;

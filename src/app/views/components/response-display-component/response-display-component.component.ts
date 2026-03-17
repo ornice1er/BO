@@ -11,11 +11,10 @@ export interface ResponseData {
 }
 
 @Component({
-  selector: 'app-response-display-component',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './response-display-component.component.html',
-  styleUrl: './response-display-component.component.css'
+    selector: 'app-response-display-component',
+    imports: [CommonModule],
+    templateUrl: './response-display-component.component.html',
+    styleUrl: './response-display-component.component.css'
 })
 export class ResponseDisplayComponentComponent {
  @Input() responseData: ResponseData | null = null;

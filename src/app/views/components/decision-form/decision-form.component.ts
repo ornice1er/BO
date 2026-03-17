@@ -11,11 +11,10 @@ export interface DecisionData {
 }
 
 @Component({
-  selector: 'app-decision-form',
-  standalone: true,
-  imports: [CommonModule, FormsModule, LoadingComponent2Component],
-  templateUrl: './decision-form.component.html',
-  styleUrl: './decision-form.component.css'
+    selector: 'app-decision-form',
+    imports: [CommonModule, FormsModule, LoadingComponent2Component],
+    templateUrl: './decision-form.component.html',
+    styleUrl: './decision-form.component.css'
 })
 export class DecisionFormComponent {
   @Input() responseData: DecisionData = { hasPermission: -1 };

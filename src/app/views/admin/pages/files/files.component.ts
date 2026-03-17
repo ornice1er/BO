@@ -14,12 +14,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 @Component({
-  selector: 'ngx-files',
-  templateUrl: './files.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./files.component.css']
+    selector: 'ngx-files',
+    templateUrl: './files.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./files.component.css']
 })
 export class FilesComponent implements OnInit {
   error:any=""

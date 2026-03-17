@@ -15,12 +15,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-entity',
-  templateUrl: './entity.component.html',
-      standalone:true,
-      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  
-  styleUrls: ['./entity.component.css']
+    selector: 'ngx-entity',
+    templateUrl: './entity.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./entity.component.css']
 })
 export class EntityComponent implements OnInit {
   error:any=""

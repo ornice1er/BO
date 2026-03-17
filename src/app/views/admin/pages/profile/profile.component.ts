@@ -15,11 +15,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-profile',
-  templateUrl: './profile.component.html',
-  standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgxPaginationModule, NgSelectModule],
-  styleUrls: ['./profile.component.scss']
+    selector: 'ngx-profile',
+    templateUrl: './profile.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgxPaginationModule, NgSelectModule],
+    styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
   selected_data:any

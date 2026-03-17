@@ -14,12 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-entity-type',
-  templateUrl: './entity-type.component.html',
-      standalone:true,
-      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  
-  styleUrls: ['./entity-type.component.css']
+    selector: 'ngx-entity-type',
+    templateUrl: './entity-type.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./entity-type.component.css']
 })
 export class EntityTypeComponent implements OnInit {
 selected_data:any

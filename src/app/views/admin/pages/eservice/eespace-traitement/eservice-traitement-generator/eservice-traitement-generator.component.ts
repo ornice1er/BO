@@ -20,12 +20,10 @@ import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
-  selector: 'ngx-eservice-traitement-generator',
-  templateUrl: './eservice-traitement-generator.component.html',
-      standalone:true,
-      imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,AngularEditorModule ],
-  
-  styleUrls: ['./eservice-traitement-generator.component.css']
+    selector: 'ngx-eservice-traitement-generator',
+    templateUrl: './eservice-traitement-generator.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, AngularEditorModule],
+    styleUrls: ['./eservice-traitement-generator.component.css']
 })
 export class EserviceTraitementGeneratorComponent implements OnInit {
 selected_data:any

@@ -15,11 +15,10 @@ export interface ActionButtonsConfig {
 }
 
 @Component({
-  selector: 'app-action-buttons-component',
-  standalone: true,
-  imports: [CommonModule, LoadingComponent2Component],
-  templateUrl: './action-buttons-component.component.html',
-  styleUrl: './action-buttons-component.component.css'
+    selector: 'app-action-buttons-component',
+    imports: [CommonModule, LoadingComponent2Component],
+    templateUrl: './action-buttons-component.component.html',
+    styleUrl: './action-buttons-component.component.css'
 })
 export class ActionButtonsComponentComponent {
  @Input() config!: ActionButtonsConfig;

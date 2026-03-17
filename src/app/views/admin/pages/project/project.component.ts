@@ -18,11 +18,10 @@ import { ConfigService } from '../../../../core/utils/config-service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-project',
- standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './project.component.html',
-  styleUrl: './project.component.css'
+    selector: 'app-project',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './project.component.html',
+    styleUrl: './project.component.css'
 })
 export class ProjectComponent {
   isDtInitialized:boolean = false

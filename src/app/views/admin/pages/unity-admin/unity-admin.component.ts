@@ -19,12 +19,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-unity-admin',
-  templateUrl: './unity-admin.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,NgToggleComponent],
-    
-  styleUrls: ['./unity-admin.component.css']
+    selector: 'ngx-unity-admin',
+    templateUrl: './unity-admin.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent],
+    styleUrls: ['./unity-admin.component.css']
 })
 export class UnityAdminComponent implements OnInit {
   isDtInitialized:boolean = false

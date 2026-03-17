@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-espace-finish',
-  templateUrl: './espace-finish.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-finish.component.css']
+    selector: 'app-espace-finish',
+    templateUrl: './espace-finish.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-finish.component.css']
 })
 export class EspaceFinishComponent implements OnInit {
 

@@ -21,12 +21,10 @@ import {
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
-  selector: 'app-statiistique',
-  templateUrl: './statiistique.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,BaseChartDirective],
-    
-  styleUrls: ['./statiistique.component.css']
+    selector: 'app-statiistique',
+    templateUrl: './statiistique.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective],
+    styleUrls: ['./statiistique.component.css']
 })
 export class StatiistiqueComponent implements OnInit {
   user:any

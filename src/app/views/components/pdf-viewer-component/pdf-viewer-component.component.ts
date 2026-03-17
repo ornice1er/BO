@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-pdf-viewer-component',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './pdf-viewer-component.component.html',
-  styleUrl: './pdf-viewer-component.component.css'
+    selector: 'app-pdf-viewer-component',
+    imports: [CommonModule],
+    templateUrl: './pdf-viewer-component.component.html',
+    styleUrl: './pdf-viewer-component.component.css'
 })
 export class PdfViewerComponentComponent {
   @Input() pdfSrc: string | null = null;

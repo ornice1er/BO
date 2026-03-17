@@ -14,12 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-unity-admin-type',
-  templateUrl: './unity-admin-type.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./unity-admin-type.component.css']
+    selector: 'ngx-unity-admin-type',
+    templateUrl: './unity-admin-type.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./unity-admin-type.component.css']
 })
 export class UnityAdminTypeComponent implements OnInit {
   selected_data:any

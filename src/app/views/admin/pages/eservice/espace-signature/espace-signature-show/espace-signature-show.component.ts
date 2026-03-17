@@ -21,13 +21,11 @@ import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-espace-signature-show',
-  templateUrl: './espace-signature-show.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-signature-show.component.css'],
-  providers: [NgbModalConfig, NgbModal]
+    selector: 'app-espace-signature-show',
+    templateUrl: './espace-signature-show.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-signature-show.component.css'],
+    providers: [NgbModalConfig, NgbModal]
 })
 export class EspaceSignatureShowComponent implements OnInit {
 

@@ -15,13 +15,10 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 
 @Component({
-  selector: 'ngx-settings',
-  templateUrl: './settings.component.html',
-  
-          standalone:true,
-          imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-      
-  styleUrls: ['./settings.component.css']
+    selector: 'ngx-settings',
+    templateUrl: './settings.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
   role=""

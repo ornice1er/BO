@@ -14,12 +14,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'ngx-post',
-  templateUrl: './post.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./post.component.css']
+    selector: 'ngx-post',
+    templateUrl: './post.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./post.component.css']
 })
 export class PostComponent implements OnInit {
   selected_data:any

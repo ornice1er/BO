@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-espace-validation-visa',
-  templateUrl: './espace-validation-visa.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-validation-visa.component.css']
+    selector: 'app-espace-validation-visa',
+    templateUrl: './espace-validation-visa.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-validation-visa.component.css']
 })
 export class EspaceValidationVisaComponent implements OnInit {
 

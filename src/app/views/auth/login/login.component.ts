@@ -10,11 +10,10 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  standalone:true,
-  imports:[ CommonModule,LoadingComponent,FormsModule,RouterModule,ReactiveFormsModule],
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    imports: [CommonModule, LoadingComponent, FormsModule, RouterModule, ReactiveFormsModule],
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;

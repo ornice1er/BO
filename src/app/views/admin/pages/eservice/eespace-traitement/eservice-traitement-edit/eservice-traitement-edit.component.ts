@@ -28,10 +28,9 @@ import { ResponseData, ResponseDisplayComponentComponent } from '../../../../../
 import { DecisionData, DecisionFormComponent } from '../../../../../components/decision-form/decision-form.component';
 import { WorkflowService } from '../../../../../../core/services/workflow.service';
 @Component({
-  selector: 'ngx-eservice-traitement-edit',
-  templateUrl: './eservice-traitement-edit.component.html',
-      standalone:true,
-      imports:[
+    selector: 'ngx-eservice-traitement-edit',
+    templateUrl: './eservice-traitement-edit.component.html',
+    imports: [
         CommonModule,
         FormsModule,
         NgbModule,
@@ -41,7 +40,7 @@ import { WorkflowService } from '../../../../../../core/services/workflow.servic
         NgxPaginationModule,
         MatTooltipModule,
         AngularEditorModule,
-        CommonModule, 
+        CommonModule,
         FormsModule,
         PdfViewerComponentComponent,
         ActionButtonsComponentComponent,
@@ -49,10 +48,9 @@ import { WorkflowService } from '../../../../../../core/services/workflow.servic
         LoadingComponent,
         ResponseDisplayComponentComponent,
         NgxExtendedPdfViewerModule,
-
-      ],
-  encapsulation:ViewEncapsulation.None,
-  styleUrls: ['./eservice-traitement-edit.component.css']
+    ],
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./eservice-traitement-edit.component.css']
 })
 export class EserviceTraitementEditComponent implements OnInit {
   @ViewChild("pdfView") pdfView!: ElementRef<HTMLElement>;

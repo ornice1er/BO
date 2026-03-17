@@ -21,12 +21,10 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-espace-reject',
-  templateUrl: './espace-reject.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./espace-reject.component.css']
+    selector: 'app-espace-reject',
+    templateUrl: './espace-reject.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./espace-reject.component.css']
 })
 export class EspaceRejectComponent implements OnInit {
 

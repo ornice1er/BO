@@ -19,11 +19,10 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-workflow',
-  standalone: true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './workflow.component.html',
-  styleUrl: './workflow.component.css'
+    selector: 'app-workflow',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './workflow.component.html',
+    styleUrl: './workflow.component.css'
 })
 export class WorkflowComponent {
 isDtInitialized:boolean = false

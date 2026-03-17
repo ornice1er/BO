@@ -12,11 +12,10 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 @Component({
-  selector: 'app-user-profil',
-  templateUrl: './user-profil.component.html',
-  standalone:true,
-  imports:[LoadingComponent,CommonModule,FormsModule],
-  styleUrls: ['./user-profil.component.css']
+    selector: 'app-user-profil',
+    templateUrl: './user-profil.component.html',
+    imports: [LoadingComponent, CommonModule, FormsModule],
+    styleUrls: ['./user-profil.component.css']
 })
 export class UserProfilComponent implements OnInit {
   fileSrc:any="https://placehold.co/200x200"

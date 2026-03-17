@@ -14,12 +14,10 @@ import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 @Component({
-  selector: 'app-billing',
-  templateUrl: './billing.component.html',
-  standalone:true,
-    imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
-
-  styleUrls: ['./billing.component.css']
+    selector: 'app-billing',
+    templateUrl: './billing.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, RouterModule],
+    styleUrls: ['./billing.component.css']
 })
 export class BillingComponent implements OnInit {
   selected_data:any

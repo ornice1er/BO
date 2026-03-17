@@ -6,11 +6,10 @@ import { LoadingComponent } from '../../components/loading/loading.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-recovery-password',
-  templateUrl: './recovery-password.component.html',
-  standalone:true,
-  imports:[LoadingComponent,FormsModule,],
-  styleUrls: ['./recovery-password.component.css']
+    selector: 'app-recovery-password',
+    templateUrl: './recovery-password.component.html',
+    imports: [LoadingComponent, FormsModule,],
+    styleUrls: ['./recovery-password.component.css']
 })
 export class RecoveryPasswordComponent implements OnInit {
 

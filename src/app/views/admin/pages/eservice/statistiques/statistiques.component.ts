@@ -13,12 +13,10 @@ import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'ngx-statistiques',
-  templateUrl: './statistiques.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-    
-  styleUrls: ['./statistiques.component.css']
+    selector: 'ngx-statistiques',
+    templateUrl: './statistiques.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    styleUrls: ['./statistiques.component.css']
 })
 export class StatistiquesComponent implements OnInit {
   data:any;

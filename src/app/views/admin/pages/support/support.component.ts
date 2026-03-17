@@ -16,12 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
-  selector: 'app-support',
-  templateUrl: './support.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
-    
-  styleUrls: ['./support.component.css']
+    selector: 'app-support',
+    templateUrl: './support.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, RouterModule],
+    styleUrls: ['./support.component.css']
 })
 export class SupportComponent implements OnInit {
   selected_data:any

@@ -21,13 +21,11 @@ import { LoadingComponent } from '../../../../../components/loading/loading.comp
 import { PrestationDetails } from '../../prestation-details';
 
 @Component({
-  selector: 'ngx-eservice-traitement-show',
-  templateUrl: './eservice-traitement-show.component.html',
-        standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
-    
-  styleUrls: ['./eservice-traitement-show.component.css'],
-  providers: [NgbModalConfig, NgbModal]
+    selector: 'ngx-eservice-traitement-show',
+    templateUrl: './eservice-traitement-show.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, RouterModule],
+    styleUrls: ['./eservice-traitement-show.component.css'],
+    providers: [NgbModalConfig, NgbModal]
 })
 export class EserviceTraitementShowComponent implements OnInit {
   @ViewChild("pdfView") pdfView!: ElementRef<HTMLElement>;

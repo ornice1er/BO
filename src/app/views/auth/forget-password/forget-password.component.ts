@@ -7,11 +7,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-forget-password',
-  templateUrl: './forget-password.component.html',
-  standalone:true,
-  imports:[LoadingComponent,FormsModule,RouterModule,CommonModule],
-  styleUrls: ['./forget-password.component.css']
+    selector: 'app-forget-password',
+    templateUrl: './forget-password.component.html',
+    imports: [LoadingComponent, FormsModule, RouterModule, CommonModule],
+    styleUrls: ['./forget-password.component.css']
 })
 export class ForgetPasswordComponent implements OnInit {
 loading:any

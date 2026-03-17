@@ -18,11 +18,10 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
-  selector: 'app-prestation-status',
-  standalone: true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule],
-  templateUrl: './prestation-status.component.html',
-  styleUrl: './prestation-status.component.css'
+    selector: 'app-prestation-status',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    templateUrl: './prestation-status.component.html',
+    styleUrl: './prestation-status.component.css'
 })
 export class PrestationStatusComponent {
 isDtInitialized:boolean = false

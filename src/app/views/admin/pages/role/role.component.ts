@@ -14,11 +14,10 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-role',
-  templateUrl: './role.component.html',
-  standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,RouterModule,MatTooltipModule],
-  styleUrls: ['./role.component.css']
+    selector: 'app-role',
+    templateUrl: './role.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, RouterModule, MatTooltipModule],
+    styleUrls: ['./role.component.css']
 })
 export class RoleComponent implements OnInit {
   @ViewChild('contentAdd') contentAdd:ElementRef | undefined;

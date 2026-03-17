@@ -22,11 +22,10 @@ declare var bootstrap: any;
 
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  standalone:true,
-  imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,NgToggleModule,NgToggleComponent],
-  styleUrls: ['./user.component.css']
+    selector: 'app-user',
+    templateUrl: './user.component.html',
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent],
+    styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit,AfterViewInit  {
 @ViewChild('other_content1') other_content1:any
