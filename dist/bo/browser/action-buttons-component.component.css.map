@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/views/components/action-buttons-component/action-buttons-component.component.css"],
-  "sourcesContent": [" .card-header-custom {\n      background: linear-gradient(135deg, var(--light-color) 0%, #e9ecef 100%);\n      border-bottom: 2px solid var(--primary-color);\n    }\n    \n    @media (max-width: 768px) {\n      .card-header-custom {\n        flex-direction: column;\n        align-items: stretch;\n      }\n      \n      .card-header-custom button {\n        margin-bottom: 0.5rem;\n      }\n      \n      .card-header-custom button:last-child {\n        margin-bottom: 0;\n      }\n    }"],
-  "mappings": ";AAAC,CAAC;AACI;AAAA,IAAY;AAAA,MAAgB,MAAM;AAAA,MAAE,IAAI,eAAe,EAAE;AAAA,MAAE,QAAQ;AACnE,iBAAe,IAAI,MAAM,IAAI;AAC/B;AAEA,OAAO,CAAC,SAAS,EAAE;AACjB,GANJ;AAOM,oBAAgB;AAChB,iBAAa;AACf;AAEA,GAXJ,mBAWwB;AAClB,mBAAe;AACjB;AAEA,GAfJ,mBAewB,MAAM;AACxB,mBAAe;AACjB;AACF;",
-  "names": []
-}
