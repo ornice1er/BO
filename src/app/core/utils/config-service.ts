@@ -11,7 +11,13 @@ export const ConfigService: any = {
     return `${this.apiScheme}://${this.apiDomain}/${path}`;
   },
   toFile(path:any) {
-    return `${this.apiScheme}://${this.apiFile}/${path}`;
+    if (path) {
+          return `${this.apiScheme}://${this.apiFile}/${path}`;
+
+    }else{
+          return `${this.apiScheme}://${this.apiFile}`;
+
+    }
   },
   getOrigin() {
     return `${this.apiScheme}://${this.apiFile}`;
