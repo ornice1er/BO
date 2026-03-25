@@ -30,6 +30,7 @@ import { WorkflowService } from '../../../../../../core/services/workflow.servic
 @Component({
     selector: 'ngx-eservice-traitement-edit',
     templateUrl: './eservice-traitement-edit.component.html',
+    standalone:true,
     imports: [
         CommonModule,
         FormsModule,

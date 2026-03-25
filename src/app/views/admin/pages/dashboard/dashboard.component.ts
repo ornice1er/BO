@@ -24,6 +24,7 @@ interface CardSettings {
 
 @Component({
     selector: 'app-dashboard',
+    standalone:true,
     imports: [CommonModule, SampleSearchPipe, BaseChartDirective],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'
