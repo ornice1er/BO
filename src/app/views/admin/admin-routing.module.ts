@@ -44,6 +44,7 @@ import { UnityAdminTypeComponent } from "./pages/unity-admin-type/unity-admin-ty
 import { UnityAdminComponent } from "./pages/unity-admin/unity-admin.component";
 import { UserComponent } from "./pages/user/user.component";
 import { WorkflowComponent } from "./pages/workflow/workflow.component";
+import { WorkflowStateComponent } from "./pages/workflow-state/workflow-state.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -176,6 +177,14 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
              {
                 path: 'eservice/configurations/workflows',
                 component: WorkflowComponent,
+            },
+             {
+                path: 'eservice/workflow-state/:id',
+                component: WorkflowStateComponent,
+            },
+             {
+                path: 'eservice/workflow-state/:id/:slug',
+                component: WorkflowStateComponent,
             },
 
 

@@ -8,14 +8,14 @@ export default {
   entryPointToBrowserMapping: {
   "node_modules/@angular/animations/fesm2022/browser.mjs": [
     {
-      "path": "chunk-5ZSELZSY.js",
+      "path": "chunk-IPGCH4IW.js",
       "dynamicImport": false
     }
   ]
 },
   assets: {
-    'index.csr.html': {size: 56883, hash: 'a4ae1372d05b137b75fef16d342692c8d35de889fb2185b3e85513f3f01fc26e', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1666, hash: 'b5b0ece1315da064e3d9e668aeaebdf1cdd3f1b1bdfe868c770975ff6a533c04', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 56883, hash: 'd883c0db955f75a428993d58f9b35e80cb5851f3dee85c8f6942da00c6205e20', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1666, hash: 'a671f9a2051ab2d70d376d53e39b3f8e6e20d9fe547dd6f08c2896f62089d43a', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-JUEFRJJP.css': {size: 495568, hash: 'Xf6OLBe9pYI', text: () => import('./assets-chunks/styles-JUEFRJJP_css.mjs').then(m => m.default)}
   },
 };

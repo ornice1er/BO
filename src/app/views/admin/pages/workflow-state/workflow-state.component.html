@@ -1,0 +1,189 @@
+<div class="container-fluid py-3">
+
+  <!-- ── En-tête ─────────────────────────────────────────────────────────── -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="page-subtitle mb-0">Suivi du workflow — Requête #{{ requeteId }}</h3>
+    <button class="btn btn-outline-secondary btn-sm" (click)="loadState(); loadLogs()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Actualiser
+    </button>
+  </div>
+
+  <!-- ── État courant ────────────────────────────────────────────────────── -->
+  <div class="row mb-4">
+    <div class="col-lg-8">
+      <div class="card custom-card h-100">
+        <div class="card-body">
+          <app-loading [isVisible]="loadingState"></app-loading>
+
+          <ng-container *ngIf="!loadingState && state">
+
+            <!-- Étape & Statut -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Étape courante</p>
+                <h5 class="mb-0">
+                  <span class="badge me-2" [ngClass]="getEtapeTypeBadge(state.current_etape?.type ?? '')">
+                    {{ state.current_etape?.type }}
+                  </span>
+                  {{ state.current_etape?.name ?? '—' }}
+                </h5>
+              </div>
+              <div class="col-md-6">
+                <p class="text-muted small mb-1">Statut</p>
+                <h5 class="mb-0">
+                  <span class="badge bg-primary">{{ state.current_status?.name ?? '—' }}</span>
+                </h5>
+              </div>
+            </div>
+
+            <!-- SLA -->
+            <div *ngIf="state.sla_info" class="mb-3">
+              <p class="text-muted small mb-1">Délai SLA</p>
+              <span [ngClass]="getSlaClass(state.sla_info.days_left)">
+                <i class="bi bi-clock me-1"></i>
+                {{ state.sla_info.days_left }} jour(s) restant(s) — échéance {{ state.sla_info.deadline }}
+              </span>
+            </div>
+
+            <!-- Transitions disponibles -->
+            <div *ngIf="state.transitions.length > 0">
+              <p class="text-muted small mb-2">Actions disponibles</p>
+              <div class="d-flex flex-wrap gap-2">
+                <button
+                  *ngFor="let t of state.transitions"
+                  type="button"
+                  class="btn btn-sm"
+                  [ngClass]="getBtnClass(t.condition_type)"
+                  (click)="openConfirmModal(t, confirmModal)"
+                >
+                  <i class="bi me-1" [ngClass]="getIcon(t.condition_type)"></i>
+                  {{ getConditionLabel(t.condition_type) }}
+                  <span *ngIf="t.etape_to" class="ms-1 opacity-75">→ {{ t.etape_to.name }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="state.transitions.length === 0" class="text-muted fst-italic">
+              Aucune transition disponible à cette étape.
+            </div>
+
+          </ng-container>
+
+          <div *ngIf="!loadingState && !state" class="text-danger">
+            Impossible de charger l'état du workflow.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infos requête -->
+    <div class="col-lg-4" *ngIf="state?.requete">
+      <div class="card custom-card h-100">
+        <div class="card-body">
+          <p class="text-muted small mb-1">Code requête</p>
+          <p class="fw-semibold mb-2">{{ state!.requete.code }}</p>
+          <p class="text-muted small mb-1">Prestation</p>
+          <p class="mb-2">{{ state!.requete.prestation?.name ?? '—' }}</p>
+          <p class="text-muted small mb-1">Requérant</p>
+          <p class="mb-0">{{ state!.requete.firstname }} {{ state!.requete.lastname }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Historique des transitions ─────────────────────────────────────── -->
+  <div class="card custom-card">
+    <div class="card-header-actions">
+      <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Historique des transitions</h5>
+    </div>
+    <div class="card-body">
+      <app-loading [isVisible]="loadingLogs"></app-loading>
+
+      <div *ngIf="!loadingLogs && logs.length === 0" class="text-muted fst-italic">
+        Aucune transition enregistrée.
+      </div>
+
+      <div class="table-responsive" *ngIf="!loadingLogs && logs.length > 0">
+        <table class="table custom-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Étape de départ</th>
+              <th>Étape d'arrivée</th>
+              <th>Statut posé</th>
+              <th>Par</th>
+              <th>Commentaire</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of logs">
+              <td class="text-nowrap">{{ log.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ log.etape_from?.name ?? log.etape_from_id }}</td>
+              <td>
+                <span *ngIf="log.etape_to; else logTerminal">{{ log.etape_to?.name }}</span>
+                <ng-template #logTerminal><span class="badge bg-dark">Terminal</span></ng-template>
+              </td>
+              <td><span class="badge bg-primary">{{ log.status?.name ?? log.status_id }}</span></td>
+              <td>
+                <span *ngIf="log.triggered_by_user">{{ log.triggered_by_user.name }}</span>
+                <span *ngIf="!log.triggered_by_user" class="text-muted">{{ log.triggered_by_type }}</span>
+              </td>
+              <td class="text-muted fst-italic">{{ log.comment ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── Modal confirmation transition ──────────────────────────────────────── -->
+<ng-template #confirmModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="bi me-2" [ngClass]="getIcon(selectedTransition!.condition_type)"></i>
+      {{ getConditionLabel(selectedTransition!.condition_type) }}
+    </h5>
+    <button type="button" class="btn-close" (click)="d()"></button>
+  </div>
+  <div class="modal-body" *ngIf="selectedTransition">
+    <p>
+      <strong>{{ state?.current_etape?.name }}</strong>
+      <i class="bi bi-arrow-right mx-2"></i>
+      <strong>{{ selectedTransition.etape_to?.name ?? 'Terminal' }}</strong>
+    </p>
+    <p class="text-muted small mb-3">
+      Statut résultat : <span class="badge bg-primary">{{ selectedTransition.status_result?.name }}</span>
+    </p>
+
+    <!-- Motif de rejet (obligatoire si rejet / clôture) -->
+    <div *ngIf="needsMotif" class="mb-3">
+      <label class="form-label">Motif de rejet <span class="text-danger">(*)</span></label>
+      <select class="form-select" [(ngModel)]="selectedMotifId">
+        <option [ngValue]="null" disabled>Sélectionner un motif…</option>
+        <option *ngFor="let m of motifsForSelectedTransition" [ngValue]="m.id">{{ m.libelle }}</option>
+      </select>
+    </div>
+
+    <!-- Commentaire libre -->
+    <div class="mb-3">
+      <label class="form-label">Commentaire <small class="text-muted">(facultatif)</small></label>
+      <textarea class="form-control" rows="3" [(ngModel)]="transitionComment" placeholder="Note ou observation…"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="d()">Annuler</button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="getBtnClass(selectedTransition!.condition_type)"
+      [disabled]="applyingTransition || (needsMotif && !selectedMotifId)"
+      (click)="confirmTransition()"
+    >
+      <app-loading [isVisible]="applyingTransition"></app-loading>
+      Confirmer
+    </button>
+  </div>
+</ng-template>

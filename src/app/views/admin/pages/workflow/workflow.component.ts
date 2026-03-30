@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { EtapePrestationStatusService } from '../../../../core/services/etape-prestation-status.service';
 import { EtapeService } from '../../../../core/services/etape.service';
-import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
 import { PrestationService } from '../../../../core/services/prestation.service';
+import { StatusService } from '../../../../core/services/status.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
@@ -17,6 +16,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { TransitionCondition } from '../../../../core/Models/interface.model';
 
 @Component({
     selector: 'app-workflow',
@@ -25,85 +25,80 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
     styleUrl: './workflow.component.css'
 })
 export class WorkflowComponent {
-isDtInitialized:boolean = false
+  isDtInitialized: boolean = false;
 
-  selected_data:any
-  user:any
-  data:any[]=[]
-  eps:any[]=[]
-  prestations:any[]=[]
-  prestationStatus:any[]=[]
-  permissions:any[]=[]
-    etapes:any[]=[]
+  selected_data: any;
+  user: any;
+  data: any[] = [];
+  prestations: any[] = [];
+  etapes: any[] = [];
+  statuses: any[] = [];
+  permissions: any[] = [];
 
-  loading=false
-  loading2=false
-  error:any=""
-  buttonsPermission :any|undefined;
-is_active=false
-search_text:any=""
-remoteSearchData: any[] = []
-  pg={
-    pageSize:10,
-    p:1,
-    total:0
-  }
-  isPaginate=true
+  loading = false;
+  loading2 = false;
+  error: any = '';
+  buttonsPermission: any | undefined;
+  search_text: any = '';
+  remoteSearchData: any[] = [];
+  pg = { pageSize: 10, p: 1, total: 0 };
+  isPaginate = true;
   selectedId: number | null = null;
-         selectedFilter = '';
+  selectedFilter = '';
 
+  conditionTypes: { value: TransitionCondition; label: string }[] = [
+    { value: 'auto',          label: 'Automatique' },
+    { value: 'validation',    label: 'Validation' },
+    { value: 'rejet',         label: 'Rejet' },
+    { value: 'complement',    label: 'Complément' },
+    { value: 'signature',     label: 'Signature' },
+    { value: 'cloture',       label: 'Clôture' },
+    { value: 'paraphe',       label: 'Paraphe' },
+    { value: 'prevalidation', label: 'Pré-validation' },
+    { value: 'choix_sortie',  label: 'Choix sortie' },
+  ];
 
-         fileInput:any
+  constructor(
+    private wService: WorkflowService,
+    private etapeService: EtapeService,
+    private prestationService: PrestationService,
+    private statusService: StatusService,
+    private locService: LocalStorageService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private toastrService: ToastrService,
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
-      constructor(
-        private wService:WorkflowService,
-        private etapeService:EtapeService,
-        private prestationService:PrestationService,
-        private locService:LocalStorageService,
-        config: NgbModalConfig, 
-        private modalService: NgbModal,
-        private toastrService:ToastrService
-      ){
-        config.backdrop = 'static';
-        config.keyboard = false;
-      } 
-  
-    ngOnInit(): void {
-      this.all();
-      this.user=this.locService.get(GlobalName.userName);
-      this.permissions=this.user.roles[0].permissions;
-       this.buttonsPermission = {
-      show:true,
-      add:true,
-      edit:true,
-      delete:true
-    };
+  ngOnInit(): void {
+    this.all();
+    this.user = this.locService.get(GlobalName.userName);
+    this.permissions = this.user.roles[0].permissions;
+    this.buttonsPermission = { show: true, add: true, edit: true, delete: true };
+    this.getEtapes();
+    this.getPrestations();
+    this.getStatuses();
+  }
 
-     this.getEtapes()
-    this.getPrestations()
-    }
+  getEtapes() {
+    this.etapeService.getAll().subscribe((res: any) => {
+      this.etapes = res.data;
+    });
+  }
 
-
-
-     getEtapes() {
-      this.loading2=true;
-      this.etapeService.getAll().subscribe((res:any)=>{
-        this.etapes=res.data
-      },
-      (error:any)=>{
-        this.loading2=false;
-      })
-    }
-   
   getPrestations() {
-      this.loading2=true;
-      this.prestationService.getAll().subscribe((res:any)=>{
-        this.prestations=res.data
-      },
-      (error:any)=>{
-        this.loading2=false;
-      })
-    }
+    this.prestationService.getAll().subscribe((res: any) => {
+      this.prestations = res.data;
+    });
+  }
+
+  getStatuses() {
+    this.statusService.getAll().subscribe((res: any) => {
+      this.statuses = res.data;
+    });
+  }
 
 
  
@@ -130,13 +125,6 @@ remoteSearchData: any[] = []
   
     
 
-    uploadFile(ev:any){
-      if (ev.target.files.length!=0) {
-        this.fileInput=ev.target.files[0]
-      }
-    }
-  
-    
 add(content:any){
     this.modalService.open(content,{size:'lg'});
   }
