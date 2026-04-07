@@ -163,7 +163,7 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
       
       console.log(this.prestation)
       this.loading2=true;
-      this.requeteService.getByPrestationNew(this.prestation,this.code).subscribe((res:any)=>{
+      this.requeteService.getBanette(this.prestation).subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
@@ -179,13 +179,13 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
       this.selected_data=el
       console.log(this.selected_data)
 
-      if(this.selected_data?.reponses!.length !=0){
-        var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
-        if(check) this.responseUA=check;
-      }
-      this.docs[0].content=this.selected_data.content
-      this.docs[1].content=this.selected_data.content2
-      this.docs[2].content=this.selected_data.content3
+      // if(this.selected_data?.reponses!.length !=0){
+      //   var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
+      //   if(check) this.responseUA=check;
+      // }
+      // this.docs[0].content=this.selected_data.content
+      // this.docs[1].content=this.selected_data.content2
+      // this.docs[2].content=this.selected_data.content3
     }
   
     

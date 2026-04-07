@@ -130,23 +130,37 @@ add(content:any){
     return true;
   }
   
-    store(value:any) {
-      this.loading=true;
+  isShortNameDuplicate(shortName: string, excludeId?: number): boolean {
+    const normalized = shortName.trim().toLowerCase();
+    return this.data.some((d: any) =>
+      d.short_name?.trim().toLowerCase() === normalized && d.id !== excludeId
+    );
+  }
+
+  store(value:any) {
+    if (this.isShortNameDuplicate(value.short_name)) {
+      this.toastrService.warning("Un statut avec ce titre court existe déjà");
+      return;
+    }
+    this.loading=true;
         this.statusService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
             this.modalService.dismissAll()
             this.all();
-            //MyToastr.make('success',"Gestion des agents ","Enrehistrement effectué avec succès",this.toastrService)
 
         },
         (err:any)=>{
             this.loading=false;
         })
-  
+
   }
 
   update(value:any) {
+    if (this.isShortNameDuplicate(value.short_name, this.selected_data.id)) {
+      this.toastrService.warning("Un statut avec ce titre court existe déjà");
+      return;
+    }
     this.loading=true;
 
       this.statusService.update(value,this.selected_data.id).subscribe(
@@ -199,7 +213,7 @@ delete() {
 
 
  onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.name?.toLowerCase().includes(this.search_text.toLowerCase()));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }

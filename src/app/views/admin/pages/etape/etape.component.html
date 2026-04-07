@@ -47,7 +47,12 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                  <th scope="col">Libellé</th>
+                <th scope="col">Libellé</th>
+                <th scope="col">Type</th>
+                <th scope="col">Unité admin</th>
+                <th scope="col">SLA (jours)</th>
+                <th scope="col">Terminale</th>
+                <th scope="col">Sauv. partielle</th>
             </tr>
             </thead>
             <tbody>
@@ -139,6 +144,27 @@
                 </td>
 
                 <td>{{d?.name}}</td>
+                <td>
+                  <span class="badge"
+                    [class.bg-primary]="d?.type === 'depot'"
+                    [class.bg-info]="d?.type === 'traitement'"
+                    [class.bg-warning]="d?.type === 'commission'"
+                    [class.bg-success]="d?.type === 'delivrance'">
+                    {{ d?.type | titlecase }}
+                  </span>
+                </td>
+                <td>{{ d?.unite_admin?.libelle ?? '—' }}</td>
+                <td>{{ d?.sla_days ?? '—' }}</td>
+                <td>
+                  <span class="badge" [class.bg-success]="d?.is_terminal" [class.bg-secondary]="!d?.is_terminal">
+                    {{ d?.is_terminal ? 'Oui' : 'Non' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.bg-success]="d?.allow_partial_save" [class.bg-secondary]="!d?.allow_partial_save">
+                    {{ d?.allow_partial_save ? 'Oui' : 'Non' }}
+                  </span>
+                </td>
 
             </tr>
 
@@ -174,22 +200,65 @@
   <ng-template #addContent let-c="close" let-d="dismiss">
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
 
-        <div class="modal-header">
+      <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Enregistrement d'une étape</h4>
-        <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-          <div class=" form-group col-12 mb-3">
-                <label for="">Libellé <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="name" class="form-control" ngModel>
-            </div>
+        <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="form-group col-12 mb-3">
+            <label>Libellé <span class="text-danger">(*)</span></label>
+            <input type="text" name="name" class="form-control" ngModel required>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Type <span class="text-danger">(*)</span></label>
+            <select name="type" class="form-select" ngModel required>
+              <option value="">-- Sélectionner --</option>
+              <option value="depot">Dépôt</option>
+              <option value="traitement">Traitement</option>
+              <option value="commission">Commission</option>
+              <option value="delivrance">Délivrance</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Délai SLA (jours)</label>
+            <input type="number" name="sla_days" class="form-control" ngModel min="0">
+          </div>
+
+          <div class="form-group col-12 mb-3">
+            <label>Unité administrative responsable</label>
+            <ng-select name="unite_admin_id" ngModel placeholder="Sélectionner une unité">
+              <ng-option [value]="ua?.id" *ngFor="let ua of data2">{{ ua?.libelle }} [{{ ua?.sigle }} ]</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Étape terminale</label>
+            <ng-toggle name="is_terminal" [(ngModel)]="add_data.is_terminal"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Sauvegarde partielle autorisée</label>
+            <ng-toggle name="allow_partial_save" [(ngModel)]="add_data.allow_partial_save"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
 
         </div>
-        <div class="modal-footer">
-        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
+          Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+        </button>
+      </div>
     </form>
-
   </ng-template>
 
   
@@ -197,24 +266,65 @@
   <ng-template #editContent let-c="close" let-d="dismiss">
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification d'une étape</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-    
-           <div class=" form-group col-12 mb-3">
-                <label for="">libellé <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="name" class="form-control" [(ngModel)]="selected_data.name">
-            </div>
-         
- </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Modification d'une étape</h4>
+        <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
 
-    </div>
-</form>
+          <div class="form-group col-12 mb-3">
+            <label>Libellé <span class="text-danger">(*)</span></label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="selected_data.name" required>
+          </div>
 
+          <div class="form-group col-md-6 mb-3">
+            <label>Type <span class="text-danger">(*)</span></label>
+            <select name="type" class="form-select" [(ngModel)]="selected_data.type" required>
+              <option value="">-- Sélectionner --</option>
+              <option value="depot">Dépôt</option>
+              <option value="traitement">Traitement</option>
+              <option value="commission">Commission</option>
+              <option value="delivrance">Délivrance</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Délai SLA (jours)</label>
+            <input type="number" name="sla_days" class="form-control" [(ngModel)]="selected_data.sla_days" min="0">
+          </div>
+
+          <div class="form-group col-12 mb-3">
+            <label>Unité administrative responsable</label>
+            <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id" placeholder="Sélectionner une unité">
+              <ng-option [value]="ua?.id" *ngFor="let ua of data2">{{ ua?.libelle }} [{{ ua?.sigle }} ]</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Étape terminale</label>
+            <ng-toggle name="is_terminal" [(ngModel)]="selected_data.is_terminal"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Sauvegarde partielle autorisée</label>
+            <ng-toggle name="allow_partial_save" [(ngModel)]="selected_data.allow_partial_save"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
+          Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+        </button>
+      </div>
+    </form>
   </ng-template>
 
   <ng-template #showContent let-modal>

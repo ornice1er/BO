@@ -12,7 +12,11 @@ export class PrestationStatusService {
   constructor(private http: HttpClient) { }
 
   getAll(): any {
-    return this.http.get<any>(this.url, );
+    return this.http.get<any>(this.url);
+  }
+
+  getByPrestation(prestationId: number): any {
+    return this.http.get<any>(`${this.url}?prestation_id=${prestationId}`);
   }
 
   store(ressource: any) {

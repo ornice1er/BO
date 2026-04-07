@@ -13,28 +13,26 @@ import { UnityAdminService } from '../../../../core/services/unity_admin.service
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
-import { NgToggleComponent } from 'ng-toggle-button';
+import { NgToggleComponent, NgToggleModule } from 'ng-toggle-button';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
-import { EtapePrestationStatusService } from '../../../../core/services/etape-prestation-status.service';
 
 @Component({
     selector: 'ngx-prestation',
     templateUrl: './prestation.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent, NgToggleModule],
     styleUrls: ['./prestation.component.css']
 })
 export class PrestationComponent implements OnInit {
   isDtInitialized:boolean = false
-  selected_data:any
-  user:any
-  roles:any
+  selected_data: any
+  user: any
+  roles: any
+  add_data: any = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false }
   data:any[]=[]
   permissions:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
   data4:any[]=[]
-  etapes:any[]=[]
-  eps_id:any
   loading=false
   loading2=false
   error:any=""
@@ -53,13 +51,10 @@ remoteSearchData: any[] = []
   public options: any;
   public value: any[]=[];
   selectedFilter = '';
-  public eps: any[]=[];
-
       constructor(
         private unityAdminService:UnityAdminService,
         private prestationService:PrestationService,
-        private epsService:EtapePrestationStatusService,
-         private locService:LocalStorageService,
+        private locService:LocalStorageService,
         
         private entityService:EntityService,
         config: NgbModalConfig, private modalService: NgbModal,
@@ -75,7 +70,6 @@ remoteSearchData: any[] = []
       this.getUnityAdmins()
       this.getEntities()
       this.getUnityAdminsAll()
-      this.getEps()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
        this.buttonsPermission = {
@@ -90,20 +84,6 @@ remoteSearchData: any[] = []
         multiple: true,
         tags: true
       };
-    }
-
-     getEps() {
-      this.loading2=true;
-      this.epsService.getAll().subscribe((res:any)=>{
-        this.etapes=res.data
-        this.loading2=false;
-        this.selectedId=null
-
-      },
-      (error:any)=>{
-        
-        this.loading2=false;
-      })
     }
 
     all() {
@@ -167,8 +147,9 @@ remoteSearchData: any[] = []
 
       
     
-add(content:any){
-    this.modalService.open(content,{size:'lg'});
+  add(content: any) {
+    this.add_data = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false };
+    this.modalService.open(content, { size: 'lg' });
   }
 
 

@@ -9,6 +9,7 @@ import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { WorkflowService } from '../../../../core/services/workflow.service';
+import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -33,6 +34,7 @@ export class WorkflowComponent {
   prestations: any[] = [];
   etapes: any[] = [];
   statuses: any[] = [];
+  filteredStatuses: any[] = [];
   permissions: any[] = [];
 
   loading = false;
@@ -63,6 +65,7 @@ export class WorkflowComponent {
     private etapeService: EtapeService,
     private prestationService: PrestationService,
     private statusService: StatusService,
+    private psService: PrestationStatusService,
     private locService: LocalStorageService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -97,6 +100,14 @@ export class WorkflowComponent {
   getStatuses() {
     this.statusService.getAll().subscribe((res: any) => {
       this.statuses = res.data;
+    });
+  }
+
+  onPrestationChange(prestationId: number) {
+    this.filteredStatuses = [];
+    if (!prestationId) return;
+    this.psService.getByPrestation(prestationId).subscribe((res: any) => {
+      this.filteredStatuses = res.data.map((ps: any) => ps.status);
     });
   }
 
@@ -137,8 +148,10 @@ add(content:any){
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    if (this.selected_data?.prestation_id) {
+      this.onPrestationChange(this.selected_data.prestation_id);
+    }
     this.modalService.open(content,{size:'lg'});
-
   }
 
   verifyIfElementChecked(){

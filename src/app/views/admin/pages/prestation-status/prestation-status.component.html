@@ -188,9 +188,8 @@
                 </ng-select>
             </div>
                 <div class=" form-group col-12 mb-3">
-                <label for="">Statut <span class="text-danger ml-2">(*)</span></label>
-                <ng-select ngModel name="status_id">
-                    <ng-option selected  disabled></ng-option>
+                <label for="">Statut(s) <span class="text-danger ml-2">(*)</span></label>
+                <ng-select ngModel name="status_ids" [multiple]="true" placeholder="Sélectionner un ou plusieurs statuts">
                     <ng-option *ngFor="let s of status" [value]="s.id">{{s?.name}}</ng-option>
                 </ng-select>
             </div>

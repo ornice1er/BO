@@ -1,634 +1,284 @@
-import { CommonModule, formatDate, Location } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModalConfig, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
-import { ResponseService } from '../../../../../../core/services/response.service';
-import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
-import { ConfigService } from '../../../../../../core/utils/config-service';
-import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
+import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
-import { PrestationDetails } from '../../prestation-details';
 
 @Component({
-    selector: 'ngx-eservice-traitement-show',
-    templateUrl: './eservice-traitement-show.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, RouterModule],
-    styleUrls: ['./eservice-traitement-show.component.css'],
-    providers: [NgbModalConfig, NgbModal]
+  selector: 'ngx-eservice-traitement-show',
+  templateUrl: './eservice-traitement-show.component.html',
+  imports: [
+    CommonModule, FormsModule, NgbModule, LoadingComponent,
+    SampleSearchPipe, NgSelectModule, NgxPaginationModule,
+    MatTooltipModule, RouterModule
+  ],
+  styleUrls: ['./eservice-traitement-show.component.css'],
+  providers: [NgbModalConfig, NgbModal]
 })
 export class EserviceTraitementShowComponent implements OnInit {
-  @ViewChild("pdfView") pdfView!: ElementRef<HTMLElement>;
-  selected_data:any
-  user:any;
-  selected_file:any
-  myPrestation:any
-  //prestation:any;
-  code:any;
-  fileUploaded:any;
-  prestationName:any
-  permissions:any[]=[]
-  doc_path:any
-  showPreview2=false;
-  showPreview=false;
-  showResponseFilePreview=false;
-    pdfSrc :SafeResourceUrl | undefined | undefined
-  activeobsPanel=false
-  observation:any
-    stepContents:any[]=[]
 
+  // ── Données ────────────────────────────────────────────────────────────────
+  selected_data: any = undefined;
+  user: any;
+  myPrestation: any;
+  code: any;
+  prestation: any;
+  stepContents: any[] = [];
+  motifsRejet: any[] = [];
 
-  currentDescId:any=0
-  docs=[
-    {
-      id:0,
-      name:"Contenu lettre d'acceptation",
-      content:null
-    },
-    {
-      id:1,
-      name:"Contenu lettre d'agrément",
-      content:null
-  
-    },
-    {
-      id:2,
-      name:"Contenu autorisation de stage",
-      content:null
-    }
-  ]
-  loading=false
-  uas:any[]=[]
+  // ── État UI ────────────────────────────────────────────────────────────────
+  loading = false;
+  peutAgir = false;
+  pdfSrc: SafeResourceUrl | undefined;
+  pdfTitle = '';
 
-
-
-
-  responseUA = {
-     hasPermission: true,
-    reason:"",
-    motif:"",
-    observation:"",
-    unite_admin_id:"",
-    requete_id:"",
-    note:null,
-    preview_file:null
-    };
-  isTreated = false;
-  isMyTreated = false;
-  prestation:any = "autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel";
-  
+  @ViewChild('pdfViewerCanvas') pdfViewerCanvas!: TemplateRef<any>;
 
   constructor(
-    private activatedRoute:ActivatedRoute,
-     private locService:LocalStorageService,
-    private requeteService:RequeteService,
-    private _sanitizationService: DomSanitizer,
-    private router:Router,
-    private _location: Location,
-    private toastrService:ToastrService,
-    private uaService:UnityAdminService,
-    private affService:AffectationService,
-    private responseService:ResponseService,
-    config: NgbModalConfig, private modalService: NgbModal
-
+    private activatedRoute: ActivatedRoute,
+    private locService: LocalStorageService,
+    private requeteService: RequeteService,
+    private sanitizer: DomSanitizer,
+    private router: Router,
+    private toastr: ToastrService,
+    private modalService: NgbModal,
+    private offcanvasService: NgbOffcanvas,
+    config: NgbModalConfig,
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
-   }
+  }
 
+  // ── Initialisation ─────────────────────────────────────────────────────────
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
-      this.selected_data=null
-      this.fileUploaded=null
-      this.code=this.activatedRoute.snapshot.paramMap.get('code')
-      this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
-      this.user=this.locService.get(GlobalName.userName);
-      this.permissions=this.user.roles[0].permissions;
-      this.myPrestation=this.user.user_prestations.find((el:any)=>el.prestation.code ==this.prestation).prestation
-      console.log(this.myPrestation)
-      this.getName(this.prestation);
-     });  
-     
-     this.locService.remove('curreent_response')
-     this.get()
-     this.getMyCollab()
-  }
-  getName(code:any){
-    let check=PrestationDetails.find((e:any)=> e.code == code);
-    if (check) {
-      this.prestationName=check.name
-      this.doc_path=check.doc_path
-    }
-  }
-  get(){
-    this.requeteService.get(this.code,this.prestation,this.myPrestation.code).subscribe((res:any)=>{
-      this.modalService.dismissAll()
-      this.selected_data=res.data
-      this.stepContents=res.data?.step_contents
-
-     if(this.selected_data.reponses.length > 0) {
-      this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
-      this.isTreated=true
-        if( this.responseUA){
-          this.isMyTreated=true
-        }else{
-          this.responseUA= this.selected_data.reponses.find((e:any)=> e.unite_admin.ua_parent_code ==this.user.agent?.unite_admin?.id)
-          console.log("orceeeeeeeeeee",this.responseUA,this.user.agent?.unite_admin?.id)
-        }
-      }
-    
-    },
-    (error:any)=>{
-      
-    })
+    this.activatedRoute.paramMap.subscribe(() => {
+      this.selected_data = undefined;
+      this.code       = this.activatedRoute.snapshot.paramMap.get('code');
+      this.prestation = this.activatedRoute.snapshot.paramMap.get('slug');
+      this.user       = this.locService.get(GlobalName.userName);
+      this.myPrestation = this.user.user_prestations
+        .find((el: any) => el.prestation.code === this.prestation)?.prestation;
+      this.get();
+    });
   }
 
-  prendreEnCharge(){
-     this.requeteService.prendreEnCharge(this.selected_data.id).subscribe((res:any)=>{
-      this.modalService.dismissAll()
-      this.get()
-    },
-    (error:any)=>{
-      
-    })
-  }
+  // ── Chargement de la demande ───────────────────────────────────────────────
+  get(): void {
+    this.requeteService.getOne(this.code, this.prestation).subscribe({
+      next: (res: any) => {
+        this.modalService.dismissAll();
+        this.selected_data = res.data;
+        this.stepContents  = res.data?.step_contents ?? [];
 
-  showFile(el:any){
-    var url=el.url;
+        // Vérifier si l'agent connecté peut agir sur cette demande
+        this.checkPeutAgir();
 
-    window.open(url,'_blank')
-    // this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
-    // this.showPreview=true;
-    // this.observation="";
-    // this.selected_file=el;
-    
-    //  // $('#cBtn').trigger('click');
-    //   this.activeobsPanel=true;
-
-  }
-
-  showFileContract(file:any){
-    
-    //var url=ConfigService.toFile("storage/"+this.selected_data.prestation?.code+"/"+el.file64);
-    
-    //window.open(ConfigService.toFile('docs/responses/'+file),'_blank')
-    window.open(file,'_blank')
-
-    //this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
-    // console.log(url,this.pdfSrc)
-    // this.showPreview=true;
-    // this.observation="";
-    // this.selected_file=el;
-    
-    //   $('#cBtn').trigger('click');
-    //   this.activeobsPanel=true;
-
-  }
-  showResponseFile(name:any){
-    this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(name)
-    
-    this.showResponseFilePreview=true;
-    this.showPreview=true
-    
-   // $('#cBtn').trigger('click');
-  }
-
-  showFile2(){
-    if(this.selected_data==null){
-      alert("Veuillez sélectionner une ligne !")
-      return;
-    }
-
-    var url=ConfigService.toFile(this.doc_path)+"/"+this.selected_data.code+"/"+this.selected_data.filename;
-    this.pdfSrc=this._sanitizationService.bypassSecurityTrustResourceUrl(url)
-    this.showPreview2=true;
-
-  }
-
-  open(content:any) {
-this.modalService.open(content);
-      
-  }
-
-  open2(){
-    this.locService.set("selected_data",this.selected_data)
-    if(this.isTreated && !this.isMyTreated){
-      this.router.navigate(['admin/eservice/espace-traitement-edit/'+this.selected_data.code+'/'+this.prestation+'/'+this.responseUA.unite_admin_id])
-
-    }else{
-      this.router.navigate(['admin/eservice/espace-traitement-edit/'+this.selected_data.code+'/'+this.prestation])
-
-    }
-
-  }
-  open3(){
-    if (this.selected_data==null) {
-       this.toastrService.warning("Aucun élément selectionné");
-      return ;
-    }
-  
-        if(this.selected_data.reponses.length !=0){
-          if (this.user.roles[0].name!= "Directeur") {
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
-      if(check == null) {
-        this.toastrService.warning("`Votre projet de réponse est requis");
-        return ;
-      }
-    } 
-
-    }else{
-      this.toastrService.warning("`Votre projet de réponse est requis");
-      return ;
-    }
-    
-    this.router.navigate(['admin/eservice/espace-traitement-generation-doc/'+this.selected_data.code+'/'+this.prestation])
-
-  }
-
-  transDown(value:any){
-   let d2 = formatDate(new Date(),'yyyy-MM-dd','en_US');
-   let d1 =formatDate(value.delay,'yyyy-MM-dd','en_US');
-   let dayOfWeek =new Date(value.delay).getDay();
-
-   
-    if(d1 < d2){
-
-      this.toastrService.error(`Veuillez choisir une date ultérieure `)
-      return ;
-    }
-    if(dayOfWeek===6 || dayOfWeek===0){
-
-      this.toastrService.error(`Veuillez choisir une date de jour ouvré `)
-      return ;
-    }
-
-
-
-    this.modalService.dismissAll()
-
-    AppSweetAlert.confirmBox("Voulez vous vraiment affecter/retourner cet enregistrement ?").then((result:any) =>{
-      if(result.isConfirmed){
-        this.toastrService.info("Opération en cours")
-
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent?.unite_admin?.id,
-          unite_admin_down_id:value.ua_down_id,
-          sens:1,
-          instruction:value.instruction,
-          delay:value.delay,
-        }).subscribe(
-            (res:any)=>{
-               this.toastrService.success(`La demande ${this.selected_data.code} a été affectée avec succès`);
-              this.router.navigate(['/admin/eservice/espace-traitement/'+this.prestation])
-        },
-        (err:any)=>{
-          this.toastrService.error("Veuillez contactee l'administrateur")
-    
-        })
-      }})
-  
-  }
-  needCorrection(value:any){
-    if (this.selected_data==null) {
-       this.toastrService.warning("Aucun élément selectionné");
-      return ;
-    }
-     /* this.dialogService.open(DialogNamePromptComponent)
-      .onClose.subscribe(result =>{
-        if(result){*/
-          //MyToastr.make('info',"Demande de correction",`Opération en cours`,this.toastrService)
-
-          this.responseService.correction({
-            requete_id:this.selected_data.id,
-            commentaire:value.commentaire
-          
-          }).subscribe(
-              (res:any)=>{
-              this.loading=false;
-              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-               this.toastrService.success("La demande ${this.selected_data.code} a été suspension avec succès");
-          },
-          (err:any)=>{
-              this.loading=false;
-               this.toastrService.error("Opération échouée");
-      
-          })
-     //   }
-     // });
-    
-   
-  }
-  sendReachedAgreement(){
- 
-      /*this.dialogService.open(DialogNamePromptComponent)
-      .onClose.subscribe(result =>{
-        if(result){*/
-          //MyToastr.make('info',"Suspension pour accord à l'amiable",`Opération en cours`,this.toastrService)
-
-          this.responseService.reachedAgreement({
-            requete_id:this.selected_data.id
-          
-          }).subscribe(
-              (res:any)=>{
-              this.loading=false;
-              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-             
-              this.selected_data=null;
-              //MyToastr.make('success',"Suspension pour accord à l'amiable",`La demande ${this.selected_data.code} a été suspension avec succès`,this.toastrService)
-      
-          },
-          (err:any)=>{
-              this.loading=false;
-               this.toastrService.error("Opération échouée");
-      
-          })
-   //     }
-  //    });
-    
-   
-  }
-  transUp(){
-    if (this.selected_data==null) {
-       this.toastrService.warning("Aucun élément selectionné");
-      return ;
-    }
-    if(this.selected_data.reponses.length !=0){
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
-      if(check == null) {
-        this.toastrService.warning("`Votre projet de réponse est requis");
-        return ;
-      }
-    }else{
-      this.toastrService.warning("`Votre projet de réponse est requis");
-      return ;
-    }
-
-    AppSweetAlert.confirmBox('warning',"Voulez vous vraiment transmettre cet enregistrement ?",'Transmission').then((result:any) =>{
-      if(result.isConfirmed){
-        this.toastrService.info("Opération en cours")
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent?.unite_admin?.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-            this.loading=false;
-            this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-            this.toastrService.info(`La demande ${this.selected_data.code} a été transmise avec succès`)
-    
-        },
-        (err:any)=>{
-            this.loading=false;
-            this.toastrService.error("Veuillez contactee l'administrateur")
-    
-        })
+        // Charger les motifs de rejet pour l'étape courante
+        this.loadMotifsRejet();
+      },
+      error: () => {
+        this.toastr.error('Impossible de charger la demande');
       }
     });
-   
-  }
-  decline(value:any){
-    if(confirm("Envoyer le mail de rejet")){
-           //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
-           this.loading=true;
-           this.responseService.decline({
-             prestation:this.prestation,
-             prestation_name:this.prestationName,
-             requete_id:this.selected_data.id,
-             commentaire:value.commentaire
-           }).subscribe((res:any)=>{
-             this.loading=false;
-             this.selected_data=null;
-             this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-             //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
-           },
-           (error:any)=>{
-             
-             this.loading=false;
-             //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
-           })
-         }
-     
-   }
-   validate(){
-    if(confirm("Envoyer le mail de validation")){
-           //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
-           this.loading=true;
-           this.responseService.validate({
-             prestation:this.prestation,
-             prestation_name:this.prestationName,
-             requete_id:this.selected_data.id,
-             commentaire:""
-           }).subscribe((res:any)=>{
-             this.loading=false;
-             this.selected_data=null;
-             this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-             //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
-           },
-           (error:any)=>{
-             
-             this.loading=false;
-             //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
-           })
-         }
-     
-   }
-  hasPermission(permission:any){
-    var check= this.permissions.find((e:any)=>e.name ==permission)
-    if(check) return true;
-    return false
   }
 
-  storeAmend(){
-    this.responseUA.observation=`Les observations suivantes sont à prendre en compte sur le fichier suivant ${this.selected_file.filename}: \n ${this.observation} \n`
-    this.locService.set("curreent_response",this.responseUA.toString())
-    this.activeobsPanel=true
+  // ── Vérifier si l'agent peut agir ─────────────────────────────────────────
+  checkPeutAgir(): void {
+    if (!this.selected_data?.id) return;
+
+    this.requeteService.peutAgir(this.selected_data.id).subscribe({
+      next: (res: any) => {
+        this.peutAgir = res.data?.peut_agir ?? false;
+      },
+      error: () => { this.peutAgir = false; }
+    });
   }
 
+  // ── Charger les motifs de rejet ────────────────────────────────────────────
+  loadMotifsRejet(): void {
+    if (!this.selected_data?.prestation_id || !this.selected_data?.current_etape_id) return;
 
-  openWindow(contentTemplate:any) {
-    this.activeobsPanel=false;
-    if(this.selected_data==null){
-       this.toastrService.warning("Aucun élément selectionné");
+    this.requeteService.getMotifsRejet(
+      this.selected_data.prestation_id,
+      this.selected_data.current_etape_id
+    ).subscribe({
+      next: (res: any) => { this.motifsRejet = res.data ?? []; },
+      error: () => { this.motifsRejet = []; }
+    });
+  }
 
+  // ── PRISE EN CHARGE ────────────────────────────────────────────────────────
+  prendreEnCharge(): void {
+    AppSweetAlert.confirmBox('warning','Traitement de la demande','Confirmer la prise en charge de cette demande ?').then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.loading = true;
+      this.requeteService.prendreEnCharge(this.selected_data.id).subscribe({
+        next: () => {
+          this.loading = false;
+          this.toastr.success('Demande prise en charge');
+          this.get();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
+  }
+
+  // ── TRAITEMENT (valider / rejeter / parapher / signer / prévalider) ────────
+  traiter(decision: string, options: any = {}): void {
+    const labels: Record<string, string> = {
+      valider:     'Valider cette demande ?',
+      rejeter:     'Rejeter cette demande ?',
+      parapher:    'Apposer votre paraphe sur ce document ?',
+      signer:      'Signer définitivement ce document ?',
+      prevalider:  'Pré-valider cette demande ?',
+      cloturer:    'Clôturer définitivement cette demande ?',
+    };
+
+    AppSweetAlert.confirmBox('warning','Traitement de la demande',labels[decision] ?? 'Confirmer ?').then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.loading = true;
+
+      this.requeteService.traiter(this.selected_data.id, {
+        decision,
+        comment:  options.comment  ?? null,
+        motif_id: options.motif_id ?? null,
+        metadata: options.metadata ?? {},
+      }).subscribe({
+        next: () => {
+          this.loading = false;
+          this.modalService.dismissAll();
+          this.toastr.success('Opération effectuée avec succès');
+          this.get();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
+  }
+
+  // ── Soumission du formulaire de traitement (modal dialogTraiter) ───────────
+  submitTraitement(value: any): void {
+    if (!value.decision) {
+      this.toastr.warning('Veuillez choisir une décision');
       return;
     }
-
-    if(this.selected_data.reponses.length !=0){
-      var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent?.unite_admin?.id)
-      if(check) this.responseUA=check;
-
-      
-    }
-    /*this.windowService.open(
-      contentTemplate,{title:"Elaboration d'un projet de réponse"}
-    );*/
-    
-  }
-  back(){
-    this.showPreview=false;
-    this.showResponseFilePreview=false;
+    this.traiter(value.decision, {
+      comment:  value.comment  ?? null,
+      motif_id: value.motif_id ?? null,
+    });
   }
 
-  back2(){
-  /*  this._location.back();
-   if( this.myPrestation.start_point.id == this.user.agent?.unite_admin?.id){
-  this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-   }else{
-  this.router.navigate(['admin/eservice/espace-validation/'+this.prestation])
-   }*/
-   this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-
-
-  }
-
-  delivered(){
-    if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
-      //MyToastr.make('danger',"Opération échouée","Les contenus livrables des trois types de documents sont requis! ",this.toastrService)
-      return ;
-    }
-
-   /* this.dialogService.open(DialogNamePromptComponent)
-    .onClose.subscribe(result =>{
-      if(result){*/
-  
-      this.toastrService.info("Documen en cours d'envoi")
-        this.loading=true;
-  
-        this.responseService.store({
-          prestation:this.prestation,
-          prestation_name:this.prestationName,
-          requete_id:this.selected_data.id
-        }).subscribe((res:any)=>{
-   
-          this.loading=false;
-          this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-
-          //MyToastr.make('success',"Envoi d'attestation",`L'attestaion issue de la demande ${this.selected_data.code} a été envoyéee avec succès`,this.toastrService)
-
-        },
-        (error:any)=>{
-          this.selected_data=null
-          this.loading=false;
-          //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
-
-        })
-     // }})
-  
- 
+  // ── Action sur un document du circuit (paraphe, signature...) ─────────────
+peutAgirSurDocument(acte: any): boolean {
+  if (!acte?.current_circuit_step) return false;
+  const roleAgent = this.user?.roles?.[0]?.name;
+  return acte.current_circuit_step.role_name === roleAgent
+      && acte.status === 'en_circuit';
 }
-back3(){
-  this.showPreview2=false;
+actionSurDocument(acte: any): void {
+  const action = acte?.current_circuit_step?.action_type;
+  if (!action) return;
 
-}
+  AppSweetAlert.confirmBox('warning','Traitement du document',`Confirmer : ${action} sur ce document ?`).then((r: any) => {
+    if (!r.isConfirmed) return;
+    this.loading = true;
 
-getMyCollab(){
-  this.uaService.getUaCollabs().subscribe((res:any)=>{
-    this.loading=false;
-   this.modalService.dismissAll()
-    this.uas=res.data
-    console.log(res)
-  },
-  (error:any)=>{
-    this.toastrService.error("Veuillez contactee l'administrateur")
-
-})
-
-}
-
-deliveryrDoc(value:any){
-  /* this.dialogService.open(DialogNamePromptComponent)
-   .onClose.subscribe(result =>{
-     if(result){*/
-       var formData=new FormData()
-       formData.append('content',value.desc)
-       formData.append('currentDescId',this.currentDescId)
-       formData.append('id',JSON.stringify(this.selected_data.id))
-
-       this.toastrService.info(`Opération en cours`)
-     this.loading=true
-       this.responseService.storeContent(formData).subscribe(
-           (res:any)=>{
-             this.toastrService.success(`L'attestation est prête à être délivrée`);
-           this.loading=false;
-           let index=this.docs.findIndex((el:any)=>el.id==parseInt(this.currentDescId))
-           this.docs[index].content=value.contenu
-           console.log(index,parseInt(this.currentDescId),this.docs)
-               this.get()
-       },
-       (err:any)=>{
-           this.loading=false;
-            this.toastrService.error("Opération échouée");
-   
-       })
-   //  }})
- 
- }
- 
- authorized(value:any){
-  if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
-    //MyToastr.make('danger',"Opération échouée","Les contenus livrables des trois types de documents sont requis! ",this.toastrService)
-    return ;
-  }
-      this.loading=true;
-      this.responseService.authorized({
-        password:value.password,
-    
-        requete_id:this.selected_data.id
-      }).subscribe((res:any)=>{
- 
-        this.loading=false;
-       this.modalService.dismissAll()
-
-        this.get()
-        
-        this.toastrService.success(`Signature autorisée`)
-
+    this.requeteService.traiterDocument(acte.id, { action }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.toastr.success('Action effectuée');
+        this.get();
       },
-      (error:any)=>{
-      //  this.selected_data=null
-        this.loading=false;
-        this.toastrService.error("Veuillez contacter l'administrateur")
-
-    })
-
-
+      error: (err: any) => {
+        this.loading = false;
+        this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      }
+    });
+  });
 }
+  traiterDocument(acte: any): void {
+    const action = acte?.current_circuit_step?.action_type;
+    if (!action) return;
 
+    AppSweetAlert.confirmBox('warning','Traitement du document',`Confirmer l'action : ${action} ?`).then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.loading = true;
 
-isSigner(){
-  if(this.myPrestation?.signer2?.id == this.user.agent?.unite_admin?.id){
-    return true;
-    
-  }else{
-    return false;
-
+      this.requeteService.traiterDocument(acte.id, { action }).subscribe({
+        next: () => {
+          this.loading = false;
+          this.toastr.success('Action sur le document effectuée');
+          this.get();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
   }
-}
 
- getDecision(hasPermission: boolean): string {
-    return hasPermission ? "Favorable" : "Défavorable";
+  // ── Visualisation fichiers ─────────────────────────────────────────────────
+  showFile(el: any): void {
+    this.openPdfOffcanvas(el.url, el.name ?? 'Fichier');
   }
 
-  getDecisionClass(hasPermission: boolean): string {
-    return hasPermission ? "text-success" : "text-danger";
+  showResponseFile(url: string): void {
+    this.openPdfOffcanvas(url, 'Document');
   }
 
-  getDecisionIcon(hasPermission: boolean): string {
-    return hasPermission ? "✓" : "✗";
+  showDocumentActe(acte: any): void {
+    if (!acte?.file_url) return;
+    this.openPdfOffcanvas(acte.file_url, acte?.doc_produit?.name ?? 'Document produit');
+  }
+
+  private openPdfOffcanvas(url: string, title: string): void {
+    this.pdfSrc   = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.pdfTitle = title;
+    console.log( this.pdfSrc  );
+    this.offcanvasService.open(this.pdfViewerCanvas, {
+      position: 'end',
+      panelClass: 'offcanvas-pdf',
+      scroll: true,
+    });
+  }
+
+  // ── Modals ─────────────────────────────────────────────────────────────────
+  open(content: any): void {
+    this.modalService.open(content);
+  }
+
+  open2(): void {
+    // Navigation vers la page d'édition (traitement détaillé)
+    this.locService.set('selected_data', this.selected_data);
+    this.router.navigate([
+      'admin/eservice/espace-traitement-edit/' + this.selected_data.code + '/' + this.prestation
+    ]);
+  }
+
+  // ── Retour liste ───────────────────────────────────────────────────────────
+  back2(): void {
+    this.router.navigate(['admin/eservice/espace-traitement/' + this.prestation]);
+  }
+
+  // ── Permissions (conservé pour les cas spécifiques restants) ──────────────
+  hasPermission(permission: string): boolean {
+    return this.user?.roles?.[0]?.permissions?.some((e: any) => e.name === permission) ?? false;
   }
 }
