@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../utils/config-service';
 
 @Injectable({
@@ -7,129 +7,188 @@ import { ConfigService } from '../utils/config-service';
 })
 export class RequeteService {
 
-  url = ConfigService.toApiUrl('requete');
+  url = ConfigService.toApiUrl('requetes');
 
   constructor(private http: HttpClient) { }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // LECTURE
+  // ─────────────────────────────────────────────────────────────────────────
+
   getAll(): any {
-    return this.http.get<any>(this.url, );
+    return this.http.get<any>(this.url);
   }
 
-  get(code:any,slug:any,prestation_code?:any): any {
-    return this.http.get<any>(`${this.url}/get-one/${code}/${slug}?prestation_code=${prestation_code}`, );
-  }
-   prendreEnCharge(id:any): any {
-    return this.http.get<any>(`${ConfigService.toApiUrl('requete-prise-en-charge')}/${id}`, );
+  /** Détail complet d'une demande par code */
+  getOne(code: any, slug?: any): any {
+    return this.http.get<any>(`${this.url}/one/${code}`);
   }
 
-
-  
-  /*getByPrestationPending(id:any){
-    return this.http.get<any>(this.url+'/byPrestationPending/'+id, );
-
-  }*/
-
-  getByPrestationNew(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/pending/'+slug+'/new'+'?code='+code, );
-  }
-  getByPrestationTreated(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/treated'+'?code='+code, );
-  }
-  getByPrestationToSign(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/to-sign'+'?code='+code, );
-  }
-  getByPrestationSigned(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/signed'+'?code='+code, );
-  }
-  getByPrestationToReject(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/to-reject'+'?code='+code, );
-  }
-  getByPrestationRejected(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/rejected'+'?code='+code, );
-  }
-  getByPrestationPending(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/pending'+'?code='+code, );
-  }
-  getForAgenda(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/agenda'+'?code='+code, );
-  }
-  getByPrestationFinished(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/finished'+'?code='+code, );
-  }
-  getByPrestationAll(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/all'+'?code='+code, );
+  /** Ancien alias — conservé pour rétrocompatibilité */
+  get(code: any, slug: any, prestation_code?: any): any {
+    return this.http.get<any>(`${this.url}/one/${code}`);
   }
 
-  getByPrestationCorrect(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/correct'+'?code='+code, );
+  /** Banette de l'agent connecté selon son rôle */
+  getBanette(prestationCode: string): any {
+    return this.http.get<any>(`${this.url}/banette/${prestationCode}`);
   }
 
-  getByPrestationVisa(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/byPrestation/'+slug+'/visa'+'?code='+code, );
+  /** Suivi public par le requérant */
+  getSuivi(code: string): any {
+    return this.http.get<any>(`${this.url}/suivi/${code}`);
   }
 
-
-
-  relance(id:any): any {
-    return this.http.get<any>(this.url+'/relance/'+id, );
+  /** Toutes les demandes d'une prestation (admin) */
+  getByPrestationAll(slug: any, code?: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${slug}/all?code=${code}`);
   }
 
-  getCorrectionByPrestation(slug:any,code?:any): any {
-    return this.http.get<any>(this.url+'/correction/byPrestation/'+slug+'?code='+code, );
+  /** Vérifier si l'agent connecté peut agir sur une demande */
+  peutAgir(id: any): any {
+    return this.http.get<any>(`${this.url}/${id}/peut-agir`);
   }
 
-  store(ressource: any) {
-    return this.http.post(this.url, ressource, );
+  /** Vérifier la complétude du dossier */
+  verifierCompletude(id: any): any {
+    return this.http.get<any>(`${this.url}/${id}/completude`);
   }
 
-  confirm(ressource: any,slug:any,code?:any) {
-    return this.http.post(this.url+'/confirm/byPrestation/'+slug+'?code='+code, ressource, );
+  /**
+   * Transitions disponibles depuis l'étape courante d'une demande.
+   * Remplace workflowService.getAll() qui utilisait eps?.etape?.id
+   */
+getTransitionsDisponibles(prestationId: any, etapeId: any): any {
+  return this.http.get<any>(
+    `${ConfigService.toApiUrl('workflows')}-transitions?prestation_id=${prestationId}&etape_from_id=${etapeId}`
+  );
+}
+
+  /** Charger les motifs de rejet pour une prestation + étape */
+  getMotifsRejet(prestationId: any, etapeId: any): any {
+    return this.http.get<any>(
+      `${ConfigService.toApiUrl('motifs-rejet')}?prestation_id=${prestationId}&etape_id=${etapeId}`
+    );
   }
 
-  concat(ressource: any) {
-    return this.http.post(this.url+"/concat", ressource, );
+  // ─────────────────────────────────────────────────────────────────────────
+  // ACTIONS WORKFLOW
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /** Prise en charge par l'agent */
+  prendreEnCharge(id: any): any {
+    return this.http.post<any>(`${this.url}/${id}/prendre-en-charge`, {});
   }
 
-  show(id: any) {
-    return this.http.get(`${this.url}/${id}`, );
-  }
-  getForTreatment(id: any,slug:any,code?:any) {
-    return this.http.get(`${this.url}/treatment/${id}/${slug}`+'?code='+code, );
-  }
-  update(id: number,ressource: any) {
-    ressource['_method']="patch"
-    return this.http.patch(`${this.url}/${id}`, ressource, );
-  }
-
-  geeratePDF(id: number,ressource: any,slug:string,code?:any) {
-    
-    return this.http.post(`${this.url}/generate/${id}/${slug}`+'?code='+code, ressource, );
-  }
-
-  delete(id: number) {
-    return this.http.get(`${this.url}/${id}`, );
-  }
-  state(id: number) {
-    return this.http.get(`${this.url}/${id}/status`, );
-  }
-  verifyFile(code: any,npi:any,index:any) {
-    return this.http.get(`${ConfigService.toApiUrl('requete-verify')}/${code}/${npi}/${index}`, );
+  /**
+   * Traiter une demande : valider, rejeter, signer, parapher, prévalider, clôturer
+   *
+   * @param id      ID de la requête
+   * @param payload { decision, comment, motif_id, metadata }
+   */
+  traiter(id: any, payload: {
+    decision: string;
+    comment?: string | null;
+    motif_id?: number | null;
+    metadata?: any;
+  }): any {
+    return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
   }
 
-  requestProof(resource:any) {
-    return this.http.post(`${ConfigService.toApiUrl('requete-file-proof-send')}`,resource, );
+  /**
+   * Action sur le circuit documentaire (paraphe, signature, prévalidation)
+   *
+   * @param acteId  ID du document_acte
+   * @param payload { action, comment, file_path, metadata }
+   */
+  traiterDocument(acteId: any, payload: {
+    action: string;
+    comment?: string | null;
+    file_path?: string | null;
+    metadata?: any;
+  }): any {
+    return this.http.post<any>(`${this.url}/documents/${acteId}/traiter`, payload);
   }
 
-  addContratFile(resource: any) {
-    return this.http.post(`${ConfigService.toApiUrl('requete-add-contract-file')}`,resource, );
-  }
-  search(resource:any){
-      return this.http.post<any>(`${this.url}-search`,resource,
-       ConfigService.addAction('status'));
-    }
-      setStatus(id:any,status:any){
-    return this.http.get<any>(`${this.url}/${id}/state/${status}`,
-     ConfigService.addAction('status'));
+  /**
+   * Correction d'une demande rejetée par le requérant
+   *
+   * @param id      ID de la requête
+   * @param payload { step_contents, step_data }
+   */
+  corriger(id: any, payload: any): any {
+    return this.http.post<any>(`${this.url}/${id}/corriger`, payload);
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // CRUD STANDARD
+  // ─────────────────────────────────────────────────────────────────────────
+
+  store(ressource: any): any {
+    return this.http.post<any>(this.url, ressource);
+  }
+
+  update(id: number, ressource: any): any {
+    return this.http.patch<any>(`${this.url}/${id}`, ressource);
+  }
+
+  delete(id: number): any {
+    return this.http.delete<any>(`${this.url}/${id}`);
+  }
+
+  show(id: any): any {
+    return this.http.get<any>(`${this.url}/${id}`);
+  }
+
+  state(id: number): any {
+    return this.http.get<any>(`${this.url}/${id}/status`);
+  }
+
+  setStatus(id: any, status: any): any {
+    return this.http.get<any>(`${this.url}/${id}/state/${status}`);
+  }
+
+  search(resource: any): any {
+    return this.http.post<any>(`${this.url}-search`, resource);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // MÉTHODES CONSERVÉES POUR RÉTROCOMPATIBILITÉ
+  // ─────────────────────────────────────────────────────────────────────────
+
+  getForAgenda(slug: any, code?: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${slug}/agenda?code=${code}`);
+  }
+
+  relance(id: any): any {
+    return this.http.get<any>(`${this.url}/relance/${id}`);
+  }
+
+  confirm(ressource: any, slug: any, code?: any): any {
+    return this.http.post<any>(`${this.url}/confirm/byPrestation/${slug}?code=${code}`, ressource);
+  }
+
+  getForTreatment(id: any, slug: any, code?: any): any {
+    return this.http.get<any>(`${this.url}/treatment/${id}/${slug}?code=${code}`);
+  }
+
+  geeratePDF(id: number, ressource: any, slug: string, code?: any): any {
+    return this.http.post<any>(`${this.url}/generate/${id}/${slug}?code=${code}`, ressource);
+  }
+
+  verifyFile(code: any, npi: any, index: any): any {
+    return this.http.get<any>(`${ConfigService.toApiUrl('requete-verify')}/${code}/${npi}/${index}`);
+  }
+
+  requestProof(resource: any): any {
+    return this.http.post<any>(`${ConfigService.toApiUrl('requete-file-proof-send')}`, resource);
+  }
+
+  addContratFile(resource: any): any {
+    return this.http.post<any>(`${ConfigService.toApiUrl('requete-add-contract-file')}`, resource);
+  }
+
+  concat(ressource: any): any {
+    return this.http.post<any>(`${this.url}/concat`, ressource);
+  }
 }

@@ -202,10 +202,10 @@ toggleMenu() {
 
             if (this.user.is_trade) {
               if (!element?.prestation?.is_automatic_delivered) {
-            if (
-              element?.prestation?.start_point2?.id == this.user.agent.unite_admin.id 
-              || 
-              element?.prestation?.start_points.findIndex((el:any)=>el.unite_admin_id == this.user.agent.unite_admin.id)!=-1) {
+            // if (
+            //   element?.prestation?.start_point2?.id == this.user.agent.unite_admin.id 
+            //   || 
+            //   element?.prestation?.start_points.findIndex((el:any)=>el.unite_admin_id == this.user.agent.unite_admin.id)!=-1) {
              // newCount=this.data.find((el:any) =>el.code==element.prestation.code)?.new
 
              children.push( {
@@ -216,7 +216,7 @@ toggleMenu() {
 
          
          
-           }
+          // }
 
              if (element?.prestation?.signer2?.id == this.user.agent.unite_admin.id) {
 

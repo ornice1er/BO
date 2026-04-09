@@ -86,7 +86,7 @@ selectedId: number | null = null;
 
   all() {
     this.loading2=true;
-    this.requeteService.getByPrestationPending(this.slug,this.code).subscribe((res:any)=>{
+    this.requeteService.getBanette(this.code).subscribe((res:any)=>{
       this.loading2=false;
      this.data=res;
     },

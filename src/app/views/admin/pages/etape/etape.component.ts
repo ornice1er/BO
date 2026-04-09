@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { EtapeService } from '../../../../core/services/etape.service';
+import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { CommonModule, formatDate } from '@angular/common';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -13,18 +14,20 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 
 @Component({
     selector: 'app-etape',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent],
     templateUrl: './etape.component.html',
     styleUrl: './etape.component.css'
 })
 export class EtapeComponent {
 isDtInitialized:boolean = false
 
-  selected_data:any
-  user:any
+  selected_data: any
+  user: any
+  add_data: any = { is_terminal: false, allow_partial_save: false }
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
@@ -51,17 +54,19 @@ remoteSearchData: any[] = []
 
       constructor(
         private etapeService:EtapeService,
+        private unityAdminService:UnityAdminService,
         private locService:LocalStorageService,
-        config: NgbModalConfig, 
+        config: NgbModalConfig,
         private modalService: NgbModal,
         private toastrService:ToastrService
       ){
         config.backdrop = 'static';
         config.keyboard = false;
-      } 
-  
+      }
+
     ngOnInit(): void {
       this.all();
+      this.allUnityAdmins();
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
        this.buttonsPermission = {
@@ -83,8 +88,14 @@ remoteSearchData: any[] = []
 
       },
       (error:any)=>{
-        
+
         this.loading2=false;
+      })
+    }
+
+    allUnityAdmins() {
+      this.unityAdminService.getAll().subscribe((res:any)=>{
+        this.data2=res.data
       })
     }
 
@@ -105,8 +116,9 @@ remoteSearchData: any[] = []
     }
   
     
-add(content:any){
-    this.modalService.open(content,{size:'lg'});
+add(content: any) {
+    this.add_data = { is_terminal: false, allow_partial_save: false };
+    this.modalService.open(content, { size: 'lg' });
   }
 
 

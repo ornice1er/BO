@@ -144,3 +144,21 @@ export interface ApplyTransitionPayload {
   comment?: string;
   motif_rejet_id?: number;
 }
+
+// ── Document Circuit ──────────────────────────────────────────────────────────
+
+export type CircuitActionType = 'edition' | 'paraphe' | 'prevalidation' | 'signature' | 'correction';
+
+export interface DocumentCircuitEtape {
+  id: number;
+  doc_produit_id: number;
+  unite_admin_id: number | null;
+  role_name: string;
+  action_type: CircuitActionType;
+  status_after: string;
+  requete_status_after: string | null;
+  is_blocking: boolean;
+  order: number;
+  doc_produit?: { id: number; name: string; slug: string };
+  unite_admin?: { id: number; libelle: string };
+}

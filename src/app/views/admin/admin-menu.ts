@@ -139,14 +139,29 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           title: 'Gestion Status par prestations',
           link: '/admin/eservice/configurations/prestation-status',
         },
-         {
-          title: 'Gestion des status par étape',
-          link: '/admin/eservice/configurations/etape-prestation-status',
-        },
-
           {
           title: 'Workflow',
           link: '/admin/eservice/configurations/workflows',
+        },
+        {
+          title: 'Documents produits',
+          link: '/admin/eservice/configurations/etape-documents-produits',
+        },
+        {
+          title: 'Circuit de signature',
+          link: '/admin/eservice/configurations/document-circuit-etapes',
+        },
+        {
+          title: 'Pièces justificatives',
+          link: '/admin/eservice/configurations/etape-documents',
+        },
+        {
+          title: 'Motifs de rejet',
+          link: '/admin/eservice/configurations/motifs-rejet',
+        },
+        {
+          title: 'Règles de visibilité',
+          link: '/admin/eservice/configurations/etape-visibilites',
         },
       ]
       },

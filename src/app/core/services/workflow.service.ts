@@ -24,7 +24,7 @@ export class WorkflowService {
     return this.http.get(`${this.url}/${id}`, );
   }
   update(ressource: any, id: number) {
-    ressource.append('_method','patch')
+    ressource['_method'] = 'patch';
     return this.http.post(`${this.url}/${id}`, ressource, );
   }
   delete(id: number) {

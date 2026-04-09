@@ -1,360 +1,383 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { ToastrService } from 'ngx-toastr';
 import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../../core/services/affectation.service';
-import { PrestationService } from '../../../../../../core/services/prestation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
-import { ResponseService } from '../../../../../../core/services/response.service';
-import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
-import { PrestationDetails } from '../../prestation-details';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { PdfViewerComponentComponent } from '../../../../../components/pdf-viewer-component/pdf-viewer-component.component';
-import { ActionButtonsComponentComponent, ActionButtonsConfig } from '../../../../../components/action-buttons-component/action-buttons-component.component';
-import { ResponseData, ResponseDisplayComponentComponent } from '../../../../../components/response-display-component/response-display-component.component';
-import { DecisionData, DecisionFormComponent } from '../../../../../components/decision-form/decision-form.component';
-import { WorkflowService } from '../../../../../../core/services/workflow.service';
+import { DocumentActeService } from '../../../../../../core/services/document-acte.service';
+import { DocumentEditorComponent } from '../../../../../components/document-editor/document-editor.component';
+
 @Component({
-    selector: 'ngx-eservice-traitement-edit',
-    templateUrl: './eservice-traitement-edit.component.html',
-    standalone:true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        NgbModule,
-        LoadingComponent,
-        SampleSearchPipe,
-        NgSelectModule,
-        NgxPaginationModule,
-        MatTooltipModule,
-        AngularEditorModule,
-        CommonModule,
-        FormsModule,
-        PdfViewerComponentComponent,
-        ActionButtonsComponentComponent,
-        DecisionFormComponent,
-        LoadingComponent,
-        ResponseDisplayComponentComponent,
-        NgxExtendedPdfViewerModule,
-    ],
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./eservice-traitement-edit.component.css']
+  selector: 'ngx-eservice-traitement-edit',
+  templateUrl: './eservice-traitement-edit.component.html',
+  standalone: true,
+  imports: [
+    CommonModule, FormsModule, NgbModule, LoadingComponent,
+    SampleSearchPipe, NgSelectModule, NgxPaginationModule,
+    MatTooltipModule, NgxExtendedPdfViewerModule,DocumentEditorComponent
+  ],
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./eservice-traitement-edit.component.css']
 })
 export class EserviceTraitementEditComponent implements OnInit {
-  @ViewChild("pdfView") pdfView!: ElementRef<HTMLElement>;
-  selectedData:any
-  user:any;
-  responseData:any={
-    eps_id:"",
-    observation:"",
-  }
-  currentResponse:any
-  code:any
-  prestation:any
-  myPrestation:any
-  permissions:any[]=[]
-  uas:any[]=[]
-  showPreview2=false;
-  showResponseFilePreview=false;
-  workflow:any
-  loading=false
-  fileUploaded:any
-  fileUploaded2:any
-   // pdfSrc :SafeResourceUrl | undefined
-  pdfSrc2: SafeResourceUrl | undefined | string | null = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-  @ViewChild('contentPDF') contentPDF:TemplateRef<any> | undefined
-  @ViewChild('contentFiche') contentFiche:TemplateRef<any> | undefined
-pdfSrc: string | null = null;
-rdvDate: string | null = null;
-showAddingField={
-  rdv:false,
-  observation:false,
-  note_file:false
-}
+
+  @ViewChild('contentPDF') contentPDF: TemplateRef<any> | undefined;
+
+  // ── Données ────────────────────────────────────────────────────────────────
+  selectedData: any;
+  user: any;
+  code: any;
+  prestation: any;
+  myPrestation: any;
+  permissions: any[] = [];
+
+  // ── Workflow nouveau moteur ────────────────────────────────────────────────
+  transitionsDisponibles: any[] = [];   // transitions depuis l'étape courante
+  transitionSelectionnee: any = null;   // transition choisie dans le ng-select
+  motifsRejet: any[] = [];              // motifs de rejet pour l'étape courante
+
+  // ── Formulaire de réponse ──────────────────────────────────────────────────
+  responseData: any = {
+    transition_id: null,  // ✅ remplace eps_id
+    comment:       '',
+    motif_id:      null,
+    metadata:      {},
+  };
+
+  // ── UI ─────────────────────────────────────────────────────────────────────
+  loading = false;
+  pdfSrc: string | null = null;
+  rdvDate: string | null = null;
+  fileUploaded: any = null;
+
+  showAddingField = {
+    rdv:          false,
+    observation:  true,   // toujours visible par défaut
+    note_file:    false,
+  };
+
+  // Circuit documentaire
+documentsDuCircuit: any[] = [];    // document_actes liés à la requête
+docProduitCourant: any = null;     // doc produit configuré pour l'étape courante
+documentDejaSoumis = false;  
 
   constructor(
-    private activatedRoute:ActivatedRoute,
-     private locService:LocalStorageService,
-    private requeteService:RequeteService,
-    private workflowService:WorkflowService,
-    private router:Router,
+    private activatedRoute: ActivatedRoute,
+    private locService: LocalStorageService,
+    private requeteService: RequeteService,
+    private router: Router,
+    private toastr: ToastrService,
+    private offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
-    private responseService:ResponseService,
-    private toastrService:ToastrService,
-    private affService:AffectationService,
-    private _sanitizationService: DomSanitizer,
-    private uaService:UnityAdminService,
-    private prestationService:PrestationService,
-        private offcanvasService: NgbOffcanvas,
+    private docActeService: DocumentActeService,
+  ) {}
 
-
-  ) { 
-
-  }
-
+  // ── Initialisation ─────────────────────────────────────────────────────────
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
-      this.code=this.activatedRoute.snapshot.paramMap.get('code')
-      this.prestation=this.activatedRoute.snapshot.paramMap.get('slug')
-      this.user=this.locService.get(GlobalName.userName);
-      this.permissions=this.user.roles[0].permissions;
-      this.myPrestation=this.user.user_prestations.find((el:any)=>el.prestation.code ==this.prestation)?.prestation
-     });  
-     
-    this.get()
-    this.getMyCollab()
+    this.activatedRoute.paramMap.subscribe(() => {
+      this.code       = this.activatedRoute.snapshot.paramMap.get('code');
+      this.prestation = this.activatedRoute.snapshot.paramMap.get('slug');
+      this.user       = this.locService.get(GlobalName.userName);
+      this.permissions = this.user.roles?.[0]?.permissions ?? [];
+      this.myPrestation = this.user.user_prestations
+        ?.find((el: any) => el.prestation.code === this.prestation)?.prestation;
+    });
+
+    this.get();
   }
 
-  getWorkflow(){
-     this.workflowService.getAll(this.selectedData.prestation_id,this.selectedData?.eps?.etape?.id).subscribe(
-          (res:any)=>{
-            if (res.data.length!=0) {
-                      this.workflow=res.data[0]
-
-            }
-      },
-      (err:any)=>{
-          this.loading=false;
-            this.toastrService.error("Opération échouée");
-  
-      })
-  }
-
-  showResponseFile(name:any,css='details-panel'){
-       this.pdfSrc = `${ConfigService.toFile('storage')}/${name}`;
-      this.offcanvasService.open(this.contentPDF,{  panelClass: css, position: 'start'  });
-
-  }
-   get(){
-    this.requeteService.get(this.code,this.prestation,this.myPrestation?.code).subscribe((res:any)=>{
-      this.selectedData=res.data
-      this.getWorkflow()
-    },
-    (error:any)=>{
-      
-    })
-  }
-
+  // ── Chargement demande + transitions ──────────────────────────────────────
+get(): void {
+  this.requeteService.getOne(this.code).subscribe({
+    next: (res: any) => {
+      this.selectedData = res.data;
  
-   storeResponse(value:any){
-    this.loading=true;
-    var formData=new FormData();
-    for (const key in value) {
-      if (!Object.hasOwn(value, key)) continue;
-      
-      const element = value[key];
-
-      formData.append(key,element) 
-    }
-    if(this.fileUploaded!=null){
-      formData.append('file',this.fileUploaded) 
-    }
-    if(this.fileUploaded2!=null){
-      formData.append('filename',this.fileUploaded2) 
-    }
-    formData.append('requete_id',JSON.stringify(this.selectedData.id))
-   
-    formData.append('prestation',this.prestation)    
-    this.responseService.store(formData).subscribe(
-        (res:any)=>{  
-          this.get()
-          this.router.navigate(['/admin/eservice/espace-traitement-show/'+this.selectedData.code+'/'+this.myPrestation.code])
+      // Charger les transitions
+      this.chargerTransitionsDisponibles();
+      this.chargerMotifsRejet();
+ 
+      // Charger les documents du circuit
+      this.documentsDuCircuit = res.data?.document_actes ?? [];
+ 
+      // Identifier le doc produit pour l'étape courante
+      this.identifierDocProduitCourant();
+ 
+      // Vérifier si le document a déjà été soumis
+     this.documentDejaSoumis = this.documentsDuCircuit.some(
+        (a: any) => (a.status === 'en_circuit' || a.status === 'complet')
+                && a.doc_produit?.etape_edition_id === this.selectedData?.current_etape_id
+      );
     },
-    (err:any)=>{
+    error: () => this.toastr.error('Impossible de charger la demande')
+  });
+}
 
-        this.toastrService.error ("Veuillez contactee l'administrateur")
+  /**
+   * Charge les transitions disponibles depuis l'étape courante.
+   * Remplace getWorkflow() qui utilisait eps?.etape?.id.
+   */
+  chargerTransitionsDisponibles(): void {
+    if (!this.selectedData?.prestation_id || !this.selectedData?.current_etape_id) return;
 
-    })
-  }
-
-   updateResponse(value:any){
-    this.loading=true;
-    var formData=new FormData();
-    for (const key in value) {
-      if (!Object.hasOwn(value, key)) continue;
-      
-      const element = value[key];
-
-      formData.append(key,element) 
-    }
-    if(this.fileUploaded!=null){
-      formData.append('file',this.fileUploaded) 
-    }
-    if(this.fileUploaded2!=null){
-      formData.append('filename',this.fileUploaded2) 
-    }
-    formData.append('requete_id',JSON.stringify(this.selectedData.id))
-   
-    formData.append('prestation',this.prestation)    
-    this.responseService.update(this.currentResponse?.id,formData).subscribe(
-        (res:any)=>{  
-          this.get()
-
-    },
-    (err:any)=>{
-
-        this.toastrService.error ("Veuillez contactee l'administrateur")
-
-    })
-  }
-  upload(event:any){
-    if(event.target.files.length >0){
-    this.fileUploaded=event.target.files[0]
-    }
-  }
-  upload2(event:any,index:any,name:any){
-    if(event.target.files.length >0){
-    this.fileUploaded2=event.target.files[0]
-    }
-    
-  }
-
-  openContract(filename:any){
-    window.open(ConfigService.toFile('docs/responses/'+filename),'_blank')
-  }
-  back(){
-    this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selectedData.code+'/'+this.prestation])
-  }
-
-  open(content:any) {
-    this.modalService.open(content);
-          
+    this.requeteService.getTransitionsDisponibles(
+      this.selectedData.prestation_id,
+      this.selectedData.current_etape_id
+    ).subscribe({
+      next: (res: any) => {
+        this.transitionsDisponibles = res.data ?? [];
+      },
+      error: () => {
+        this.toastr.error('Impossible de charger les transitions');
+        this.transitionsDisponibles = [];
       }
+    });
+  }
 
-      hasPermission(permission:any){
-        var check= this.permissions.find((e:any)=>e.name ==permission)
-        if(check) return true;
-        return false
-      }
+  chargerMotifsRejet(): void {
+    if (!this.selectedData?.prestation_id || !this.selectedData?.current_etape_id) return;
 
+    this.requeteService.getMotifsRejet(
+      this.selectedData.prestation_id,
+      this.selectedData.current_etape_id
+    ).subscribe({
+      next: (res: any) => { this.motifsRejet = res.data ?? []; },
+      error: () => { this.motifsRejet = []; }
+    });
+  }
 
-       tansUpStart(value:any){
-        AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cette demande ?").then((result:any) =>{
-          //console.log(result.isConfirmed);
-          if(result.isConfirmed){
-           // $('#responseBtn').trigger('click')
-          }
-        });
-       }
-       transUp(){
-        if (this.selectedData==null) {
-           this.toastrService.warning("Aucun élément selectionné");
-          return ;
-        }
-        this.loading=true;
+  // ── Sélection d'une transition ─────────────────────────────────────────────
+  onTransitionChange(transitionId: any): void {
+    this.transitionSelectionnee = this.transitionsDisponibles
+      .find((t: any) => t.id === transitionId) ?? null;
 
-        this.affService.store({
-          requete_id:this.selectedData.id,
-          unite_admin_id:this.user?.agent?.unite_admin?.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-              this.loading=false;
-              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation+'/'+this.myPrestation?.code])
-              this.toastrService.info(`La demande ${this.selectedData.code} a été transmise avec succès`)
+    // Réinitialiser les champs additionnels
+    this.showAddingField = { rdv: false, observation: true, note_file: false };
+    this.responseData.motif_id = null;
+
+    if (!this.transitionSelectionnee) return;
+
+    const condition = this.transitionSelectionnee.condition_type;
+
+    // Afficher les champs selon le type de transition
+    if (condition === 'rejet' || condition === 'cloture') {
+      this.showAddingField.note_file = true;
+    }
+    if (condition === 'validation' && this.myPrestation?.need_meeting) {
+      this.showAddingField.rdv = true;
+    }
+  }
+
+  // ── Soumission ─────────────────────────────────────────────────────────────
+  soumettre(): void {
+    if (!this.responseData.transition_id) {
+      this.toastr.warning('Veuillez sélectionner une action');
+      return;
+    }
+
+    const transition = this.transitionSelectionnee;
+    const label = `${transition?.etape_to?.name ?? 'cette étape'} — Confirmer ?`;
+
+    AppSweetAlert.confirmBox('warning','Traitement de demande',label).then((result: any) => {
+      if (!result.isConfirmed) return;
+
+      this.loading = true;
+
+      // Mapper condition_type → decision pour le moteur
+      const decisionMap: Record<string, string> = {
+        auto:          'valider',
+        validation:    'valider',
+        rejet:         'rejeter',
+        complement:    'completer',
+        signature:     'signer',
+        paraphe:       'parapher',
+        prevalidation: 'prevalider',
+        cloture:       'cloturer',
+      };
+
+      const decision = decisionMap[transition?.condition_type] ?? 'valider';
+
+      const metadata: any = {};
+      if (this.rdvDate) metadata.rdv_date = this.rdvDate;
+
+      this.requeteService.traiter(this.selectedData.id, {
+        decision,
+        comment:  this.responseData.comment  || null,
+        motif_id: this.responseData.motif_id || null,
+        metadata,
+      }).subscribe({
+        next: () => {
+          this.loading = false;
+          this.toastr.success('Décision enregistrée avec succès');
+          this.router.navigate([
+            'admin/eservice/espace-traitement-show/' +
+            this.selectedData.code + '/' + this.myPrestation?.code
+          ]);
         },
-        (err:any)=>{
-          this.loading=false;
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
+  }
 
-            this.toastrService.error("Opération échouée","Veuillez contactee l'administrateur")
-    
-        })
-
-      }
-
-
-    showFile2(){
-      if(this.selectedData==null){
-        alert("Veuillez sélectionner une ligne !")
-        return;
-      }
-    
-
-      this.pdfSrc2=this._sanitizationService.bypassSecurityTrustResourceUrl(this.selectedData.filename)
-      this.showPreview2=true;
+  // ── Utilitaires ────────────────────────────────────────────────────────────
+  upload(event: any): void {
+    if (event.target.files.length > 0) {
+      this.fileUploaded = event.target.files[0];
     }
+  }
 
+  showResponseFile(name: any): void {
+    this.pdfSrc = `${ConfigService.toFile('storage')}/${name}`;
+    this.offcanvasService.open(this.contentPDF, { panelClass: 'details-panel', position: 'start' });
+  }
+
+  generateMessage(): void {
+    if (!this.rdvDate) return;
+    const date = new Date(this.rdvDate);
+    this.responseData.comment =
+      `Votre entretien est programmé le ${date.toLocaleDateString()} ` +
+      `à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. ` +
+      `Merci de vous présenter à l'heure avec les pièces nécessaires.`;
+  }
+
+  back(): void {
+    this.router.navigate([
+      'admin/eservice/espace-traitement-show/' +
+      this.selectedData?.code + '/' + this.prestation
+    ]);
+  }
+
+  hasPermission(permission: string): boolean {
+    return this.permissions?.some((e: any) => e.name === permission) ?? false;
+  }
+
+
+  get docProduitId(): number {
+  return this.selectedData?.document_actes?.[0]?.doc_produit_id
+      ?? this.myPrestation?.doc_produits?.[0]?.id;
+}
+
+
+
+// ── AJOUTER ces méthodes ───────────────────────────────────────────────────
+ 
+/**
+ * Identifie le document produit configuré pour l'étape courante
+ * en comparant template_key avec etape_edition_id
+ */
+identifierDocProduitCourant(): void {
+  console.log('current_etape_id:', this.selectedData?.current_etape_id);
+  console.log('prestation_id:', this.selectedData?.prestation_id);
+  console.log('documentsDuCircuit:', this.documentsDuCircuit);
+
+  if (!this.selectedData?.current_etape_id) {
+    this.docProduitCourant = null;
+    return;
+  }
+
+  const acteExistant = this.documentsDuCircuit.find(
+    (a: any) => a.status === 'en_edition'
+  );
+  console.log('acteExistant:', acteExistant);
+
+  if (acteExistant) {
+    this.docProduitCourant = acteExistant.doc_produit;
+    return;
+  }
+
+  this.docActeService.getDocProduit(
+    this.selectedData.prestation_id,
+    this.selectedData.current_etape_id
+  ).subscribe({
+    next: (res: any) => {
+      console.log('getDocProduit response:', res);
+      this.docProduitCourant = res.data ?? null;
+    },
+    error: (err:any) => {
+      console.error('getDocProduit error:', err);
+      this.docProduitCourant = null;
+    }
+  });
+}
+/** Vérifie si l'agent peut agir sur un document du circuit */
+peutAgirSurDocument(acte: any): boolean {
+  if (!acte?.current_circuit_step) return false;
+  const roleAgent = this.user?.roles?.[0]?.name;
+  return acte.current_circuit_step.role_name === roleAgent
+      && acte.status === 'en_circuit';
+}
+ 
+/** Exécute l'action sur un document du circuit */
+actionSurDocument(acte: any): void {
+  const action = acte?.current_circuit_step?.action_type;
+  if (!action) return;
+ 
+  AppSweetAlert.confirmBox(`Confirmer : ${action} sur ce document ?`).then((r: any) => {
+    if (!r.isConfirmed) return;
+    this.loading = true;
+    this.requeteService.traiterDocument(acte.id, { action }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.toastr.success('Action effectuée');
+        this.get();
+      },
+      error: (err: any) => {
+        this.loading = false;
+        this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      }
+    });
+  });
+}
+ 
+/** Appelé quand le document est soumis depuis l'éditeur */
+onDocumentSoumis(data: any): void {
+  this.toastr.success('Document soumis au circuit de signature');
+  this.get(); // Recharger — documentDejaSoumis passera à true
+}
+ 
+/** Vérifie si l'étape nécessite une édition (pas encore en circuit) */
+etapeNecessiteEdition(): boolean {
+  return this.selectedData?.current_etape?.produces_document === true
+      && !this.documentDejaSoumis;
+}
  
 
-    back2(){
-      this.showPreview2=false;
-      this.showResponseFilePreview=false;
-
-    }
-
-    getMyCollab(){
-      this.uaService.getUaCollabs().subscribe((res:any)=>{
-        this.loading=false;
-      this.modalService.dismissAll()
-        this.uas=res
-        console.log(res)
-      },
-      (error:any)=>{
-        this.toastrService.error("Veuillez contactee l'administrateur")
-
-    })
-
-    }
-      
-   
-    isSigner(){
-      if(this.myPrestation?.signer == this.user?.agent?.unite_admin?.id){
-        return true;
-        
-      }else{
-        return false;
-
-      }
-    }
-
-    generateMessage() {
-
-  if(!this.rdvDate) return;
-
-  const date = new Date(this.rdvDate);
-
-  const dateFormat = date.toLocaleDateString();
-  const heureFormat = date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-
-  this.responseData.observation =
-    `Votre entretien est programmé le ${dateFormat} à ${heureFormat}. 
-     Merci de vous présenter à l'heure avec les pièces nécessaires.`;
-
-}
 
 
-checkShowAddingField(ev:any){
-  switch (ev) {
-    case 'rdv':
-      this.showAddingField.rdv=true
-      break;
-  
-       case 'observation':
-       this.showAddingField.observation=true
-      break;
-       case 'note_file':
-       this.showAddingField.note_file=true
-      break;
-      
-    default:
-      break;
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
-
-

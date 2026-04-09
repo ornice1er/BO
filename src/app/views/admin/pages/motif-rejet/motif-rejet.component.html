@@ -1,0 +1,317 @@
+<h2 class="text-center mb-4 page-subtitle">Motifs de rejet</h2>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card custom-card">
+      <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+          <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>Ajouter
+          </button>
+          <div class="search-controls d-flex align-items-center">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control search-input"
+                name="search_text"
+                [(ngModel)]="search_text"
+                (ngModelChange)="onSearchChange()"
+                placeholder="Rechercher...">
+              <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+                <i class="fa fa-rotate-left"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="results-info mb-3">
+          <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>{{data.length}} élément(s)
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table custom-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Code</th>
+                <th>Libellé</th>
+                <th>Prestation</th>
+                <th>Étape</th>
+                <th>Complément</th>
+                <th>Définitif</th>
+                <th>Actif</th>
+                <th>Ordre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data | paginate: {
+                id: 'ngxP1',
+                itemsPerPage: pg.pageSize,
+                currentPage: pg.p,
+                totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+
+                <td class="position-relative checkbox-cell">
+                  <div class="form-check">
+                    <input
+                      (click)="checked(d)"
+                      class="form-check-input custom-radio"
+                      type="radio"
+                      name="selectedMotif"
+                      [value]="d.id"
+                      [(ngModel)]="selectedId"
+                      id="radio-{{ d.id }}"
+                    />
+                  </div>
+
+                  <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                      <button class="btn btn-action btn-add" (click)="add(addContent)" title="Ajouter">
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                      <button (click)="show(showContent)" type="button" class="btn btn-action btn-view" title="Consulter">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button (click)="edit(editContent)" type="button" class="btn btn-action btn-edit" title="Éditer">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button (click)="delete()" type="button" class="btn btn-action btn-delete" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                      <button type="button" class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+
+                <td><code>{{ d?.code }}</code></td>
+                <td>{{ d?.libelle }}</td>
+                <td>{{ d?.prestation?.name ?? '—' }}</td>
+                <td>{{ d?.etape?.name ?? '—' }}</td>
+                <td>
+                  <span class="badge" [class.bg-success]="d?.allow_complement" [class.bg-secondary]="!d?.allow_complement">
+                    {{ d?.allow_complement ? 'Oui' : 'Non' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.bg-danger]="d?.is_final" [class.bg-secondary]="!d?.is_final">
+                    {{ d?.is_final ? 'Oui' : 'Non' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.bg-success]="d?.is_active" [class.bg-secondary]="!d?.is_active">
+                    {{ d?.is_active ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td>{{ d?.order }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container mt-4">
+          <pagination-controls
+            id="ngxP1"
+            (pageChange)="getPage($event)"
+            [maxSize]="9"
+            [directionLinks]="true"
+            [autoHide]="true"
+            [responsive]="true"
+            [previousLabel]="'Précédent'"
+            [nextLabel]="'Suivant'">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL ADD -->
+<ng-template #addContent let-c="close" let-d="dismiss">
+  <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title">Nouveau motif de rejet</h4>
+      <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+
+        <div class="form-group col-md-8 mb-3">
+          <label>Libellé <span class="text-danger">(*)</span></label>
+          <input type="text" name="libelle" class="form-control" ngModel required
+            placeholder="ex: Pièces manquantes"
+            (ngModelChange)="onLibelleChange($event)">
+        </div>
+
+        <div class="form-group col-md-4 mb-3">
+          <label>Code <span class="text-danger">(*)</span></label>
+          <input type="text" name="code" class="form-control" [(ngModel)]="add_data.code" required
+            placeholder="ex: PIECES_MANQUANTES">
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Description <small class="text-muted">(usage interne)</small></label>
+          <textarea name="description" class="form-control" ngModel rows="2"
+            placeholder="Explication interne, non visible au requérant"></textarea>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Prestation <small class="text-muted">(laisser vide = applicable à toutes)</small></label>
+          <ng-select name="prestation_id" ngModel placeholder="Toutes les prestations">
+            <ng-option [value]="p?.id" *ngFor="let p of prestations">{{ p?.name }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Étape <small class="text-muted">(laisser vide = applicable à toutes)</small></label>
+          <ng-select name="etape_id" ngModel placeholder="Toutes les étapes">
+            <ng-option [value]="e?.id" *ngFor="let e of etapes">{{ e?.name }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-4 mb-3">
+          <label>Ordre</label>
+          <input type="number" name="order" class="form-control" ngModel min="0" value="0">
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Complément autorisé après ce rejet</label>
+          <ng-toggle name="allow_complement_toggle" [(ngModel)]="add_data.allow_complement"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Rejet définitif <small class="text-muted">(aucun recours possible)</small></label>
+          <ng-toggle name="is_final_toggle" [(ngModel)]="add_data.is_final"
+            [color]="{ unchecked: '#939da2', checked: '#dc3545' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Actif</label>
+          <ng-toggle name="is_active_toggle" [(ngModel)]="add_data.is_active"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
+        Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- MODAL EDIT -->
+<ng-template #editContent let-c="close" let-d="dismiss">
+  <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title">Modifier un motif de rejet</h4>
+      <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+
+        <div class="form-group col-md-8 mb-3">
+          <label>Libellé <span class="text-danger">(*)</span></label>
+          <input type="text" name="libelle" class="form-control" [(ngModel)]="selected_data.libelle" required>
+        </div>
+
+        <div class="form-group col-md-4 mb-3">
+          <label>Code <span class="text-danger">(*)</span></label>
+          <input type="text" name="code" class="form-control" [(ngModel)]="selected_data.code" required>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Description <small class="text-muted">(usage interne)</small></label>
+          <textarea name="description" class="form-control" [(ngModel)]="selected_data.description" rows="2"></textarea>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Prestation <small class="text-muted">(laisser vide = applicable à toutes)</small></label>
+          <ng-select name="prestation_id" [(ngModel)]="selected_data.prestation_id" placeholder="Toutes les prestations">
+            <ng-option [value]="p?.id" *ngFor="let p of prestations">{{ p?.name }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Étape <small class="text-muted">(laisser vide = applicable à toutes)</small></label>
+          <ng-select name="etape_id" [(ngModel)]="selected_data.etape_id" placeholder="Toutes les étapes">
+            <ng-option [value]="e?.id" *ngFor="let e of etapes">{{ e?.name }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-4 mb-3">
+          <label>Ordre</label>
+          <input type="number" name="order" class="form-control" [(ngModel)]="selected_data.order" min="0">
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Complément autorisé après ce rejet</label>
+          <ng-toggle name="allow_complement" [(ngModel)]="selected_data.allow_complement"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Rejet définitif <small class="text-muted">(aucun recours possible)</small></label>
+          <ng-toggle name="is_final" [(ngModel)]="selected_data.is_final"
+            [color]="{ unchecked: '#939da2', checked: '#dc3545' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Actif</label>
+          <ng-toggle name="is_active" [(ngModel)]="selected_data.is_active"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
+        Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- MODAL SHOW -->
+<ng-template #showContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Détails du motif de rejet</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-bordered">
+      <tbody>
+        <tr><th style="width:40%">Code</th><td><code>{{ selected_data?.code }}</code></td></tr>
+        <tr><th>Libellé</th><td>{{ selected_data?.libelle }}</td></tr>
+        <tr><th>Prestation</th><td>{{ selected_data?.prestation?.name ?? 'Toutes' }}</td></tr>
+        <tr><th>Étape</th><td>{{ selected_data?.etape?.name ?? 'Toutes' }}</td></tr>
+        <tr><th>Description</th><td>{{ selected_data?.description ?? '—' }}</td></tr>
+        <tr><th>Complément autorisé</th><td>{{ selected_data?.allow_complement ? 'Oui' : 'Non' }}</td></tr>
+        <tr><th>Rejet définitif</th><td>{{ selected_data?.is_final ? 'Oui' : 'Non' }}</td></tr>
+        <tr><th>Statut</th><td>{{ selected_data?.is_active ? 'Actif' : 'Inactif' }}</td></tr>
+        <tr><th>Ordre</th><td>{{ selected_data?.order }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

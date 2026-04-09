@@ -21,8 +21,12 @@ import { EspaceSignedComponent } from "./pages/eservice/espace-signed/espace-sig
 import { EspaceValidationVisaComponent } from "./pages/eservice/espace-validation-visa/espace-validation-visa.component";
 import { EspaceValidationComponent } from "./pages/eservice/espace-validation/espace-validation.component";
 import { StatistiquesComponent } from "./pages/eservice/statistiques/statistiques.component";
-import { EtapePrestationStatusComponent } from "./pages/etape-prestation-status/etape-prestation-status.component";
 import { EtapeComponent } from "./pages/etape/etape.component";
+import { EtapeDocumentProduitComponent } from "./pages/etape-document-produit/etape-document-produit.component";
+import { DocumentCircuitEtapeComponent } from "./pages/document-circuit-etape/document-circuit-etape.component";
+import { EtapeDocumentComponent } from "./pages/etape-document/etape-document.component";
+import { MotifRejetComponent } from "./pages/motif-rejet/motif-rejet.component";
+import { EtapeVisibiliteComponent } from "./pages/etape-visibilite/etape-visibilite.component";
 import { FilesComponent } from "./pages/files/files.component";
 import { HistoriqueComponent } from "./pages/historique/historique.component";
 import { OfficerComponent } from "./pages/officer/officer.component";
@@ -171,8 +175,20 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 component: PrestationStatusComponent,
             },
              {
-                path: 'eservice/configurations/etape-prestation-status',
-                component: EtapePrestationStatusComponent,
+                path: 'eservice/configurations/etape-documents-produits',
+                component: EtapeDocumentProduitComponent,
+            },
+             {
+                path: 'eservice/configurations/document-circuit-etapes',
+                component: DocumentCircuitEtapeComponent,
+            },
+             {
+                path: 'eservice/configurations/etape-documents',
+                component: EtapeDocumentComponent,
+            },
+             {
+                path: 'eservice/configurations/motifs-rejet',
+                component: MotifRejetComponent,
             },
              {
                 path: 'eservice/configurations/workflows',
@@ -186,7 +202,13 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'eservice/workflow-state/:id/:slug',
                 component: WorkflowStateComponent,
             },
+             {
+                path: 'eservice/configurations/etape-visibilites',
+                component: EtapeVisibiliteComponent,
+            },
 
+
+           
 
             {
                 path: 'eservice/espace-traitement/:slug',

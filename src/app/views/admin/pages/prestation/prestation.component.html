@@ -216,136 +216,127 @@
 
   <ng-template #addContent let-c="close" let-d="dismiss">
     <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
-
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Enregistrement de prestation</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="typeLabel">Code de la prestation</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="code" ngModel>
-    </div>
-      <div class="form-group" *ngIf="roles=='Admin national'">
-        <label for="typeLabel">Entité Admin</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" ngModel>
-            <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
-        </select>
-       </div>
-     <div class="form-group">
-      <label for="typeLabel">Structure</label>
-      <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" ngModel>
-          <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-      </select>
-     </div>
-      <div class="form-group">
-          <label for="typeLabel">Libellé</label>
-          <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" ngModel>
-          <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-              <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-          </span>
-
+      <div class="modal-header">
+        <h4 class="modal-title">Enregistrement d'une prestation</h4>
+        <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
       </div>
-      <div class="form-group">
-        <label for="">Laissez une description de la prestation</label>
-        <textarea name="desc" class="form-control" ngModel></textarea>
-        <!--ckeditor [config]="{ extraPlugins: 'divarea', height: '100' }" name="desc" ngModel="desc" required></ckeditor-->
+      <div class="modal-body">
+        <div class="row">
 
+          <div class="form-group col-md-4 mb-3">
+            <label>Code <span class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" name="code" ngModel required>
+          </div>
+
+          <div class="form-group col-md-8 mb-3">
+            <label>Libellé <span class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" name="name" ngModel required>
+          </div>
+
+          <div class="form-group col-12 mb-3" *ngIf="roles=='Admin national'">
+            <label>Entité Admin</label>
+            <ng-select name="entite_admin_id" ngModel placeholder="Sélectionner une entité">
+              <ng-option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Structure <span class="text-danger">(*)</span></label>
+            <ng-select name="unite_admin_id" ngModel required placeholder="Sélectionner une structure">
+              <ng-option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Unité signataire <span class="text-danger">(*)</span></label>
+            <ng-select name="signer" ngModel required placeholder="Sélectionner un signataire">
+              <ng-option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Point d'entrée <span class="text-danger">(*)</span></label>
+            <ng-select name="start_point" ngModel required placeholder="Sélectionner un point d'entrée">
+              <ng-option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Type de contenu <span class="text-danger">(*)</span></label>
+            <select name="content_type" class="form-select" ngModel required>
+              <option value="">-- Sélectionner --</option>
+              <option value="0">À éditer</option>
+              <option value="1">À charger</option>
+              <option value="2">Pas de contenu</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Délai avant mise en abandon (jours) <span class="text-danger">(*)</span></label>
+            <input type="number" class="form-control" name="delay" ngModel required min="1" max="365">
+          </div>
+
+          <div class="form-group col-12 mb-3">
+            <label>Description</label>
+            <textarea name="desc" class="form-control" ngModel rows="3"></textarea>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Nécessité de rendez-vous</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="add_data.need_meeting"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Besoin de validation</label>
+            <ng-toggle name="need_validation" [(ngModel)]="add_data.need_validation"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance automatique</label>
+            <ng-toggle name="is_automatic_delivered" [(ngModel)]="add_data.is_automatic_delivered"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Formulaire sur le portail national</label>
+            <ng-toggle name="from_pns" [(ngModel)]="add_data.from_pns"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Sortie physique requise</label>
+            <ng-toggle name="needOut" [(ngModel)]="add_data.needOut"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Circuit documentaire</label>
+            <ng-toggle name="has_document_circuit" [(ngModel)]="add_data.has_document_circuit"
+              [color]="{ unchecked: '#939da2', checked: '#1a6b3c' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+        </div>
       </div>
-      <div class="form-group">
-        <label for="typeLabel">Signataire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer" ngModel>
-            <option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Point d'entrée</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point" ngModel>
-            <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Type de contenu</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="content_type" ngModel>
-           
-          <option value="0">A éditer</option>
-            <option value="1">A Charger</option>
-            <option value="2">Pas de contenu</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Nécessité de rendez vous pour cette prestation ?</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_meeting" ngModel>
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Besoin de validation pour chargement de pièce finale</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_validation" ngModel>
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-        <div class="form-group">
-        <label for="typeLabel">Délivrance automatique</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  ngModel>
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-         <div class="form-group">
-        <label for="typeLabel">Etape & statut début</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="eps_id" ngModel>
-            <option [value]="t.id" *ngFor="let t of etapes">{{t.etape?.name}} =>{{t.ps?.status?.name}}</option>
-        </select>
-       </div>
-        <div class=" form-group col-12 mb-3">
-                <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
-                <ng-select name="signer" ngModel>
-                    <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
-                </ng-select>
-            </div>
-
-        <div class="form-group">
-        <label for="typeLabel">Génération de librable nécessaire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  ngModel>
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-
-       <div class="form-group">
-        <label for="typeLabel">Délai avant mise en abandon</label>
-        <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" ngModel min="1" max="30">
-    
-    </div>
-
-    <div class="d-flex justify-content-between">
-      <span>Formulaire sur le portail national ?</span>
-      <ng-toggle
-      name="from_pns"
-      ngModel
-      [color]="{
-          unchecked: '#939da2',
-          checked: '#0C574E'
-      }"
-      [values]="{
-          checked: true, 
-          unchecked: false
-      }"
-      ></ng-toggle>
-    </div>
- </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-
-    </div>
-</form>
-
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
+          Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+        </button>
+      </div>
+    </form>
   </ng-template>
 
 
@@ -353,161 +344,126 @@
 
   <ng-template #editContent let-c="close" let-d="dismiss">
     <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
-
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Modification de prestation</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="typeLabel">Code de la prestation</label>
-        <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required name="code" [(ngModel)]="selected_data.code">
-    </div>
-      <div class="form-group" *ngIf="roles=='Admin national'">
-        <label for="typeLabel">Entité Admin</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id">
-            <option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</option>
-        </select>
-       </div>
-     <div class="form-group">
-      <label for="typeLabel">Structure</label>
-      <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id">
-          <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
-      </select>
-     </div>
-      <div class="form-group">
-          <label for="typeLabel">Libellé</label>
-          <input type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="name" [(ngModel)]="selected_data.name">
-          <span *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-              <small *ngIf="name.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-          </span>
-
+      <div class="modal-header">
+        <h4 class="modal-title">Modification d'une prestation</h4>
+        <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
       </div>
-      <div class="form-group">
-        <label for="">Laissez une description de la prestation</label>
-        <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc"></textarea>
+      <div class="modal-body">
+        <div class="row">
 
-        <!--ckeditor [config]="{ extraPlugins: 'divarea', height: '100' }" name="desc" [(ngModel)]="selected_data.desc" required></ckeditor-->
-      </div>
+          <div class="form-group col-md-4 mb-3">
+            <label>Code <span class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" name="code" [(ngModel)]="selected_data.code" required>
+          </div>
 
-        <div class=" form-group col-12 mb-3">
-            <label for="">Unité signataire <span class="text-danger ml-2">(*)</span></label>
-            <ng-select name="signer" name="signer"  [(ngModel)]="selected_data.signer2.id">
-                <ng-option *ngFor="let o of data2" [value]="o.id">{{o.libelle}}</ng-option>
+          <div class="form-group col-md-8 mb-3">
+            <label>Libellé <span class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="selected_data.name" required>
+          </div>
+
+          <div class="form-group col-12 mb-3" *ngIf="roles=='Admin national'">
+            <label>Entité Admin</label>
+            <ng-select name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id" placeholder="Sélectionner une entité">
+              <ng-option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</ng-option>
             </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Structure <span class="text-danger">(*)</span></label>
+            <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id" required placeholder="Sélectionner une structure">
+              <ng-option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Unité signataire <span class="text-danger">(*)</span></label>
+            <ng-select name="signer" [(ngModel)]="selected_data.signer" required placeholder="Sélectionner un signataire">
+              <ng-option [value]="t.id" *ngFor="let t of data2">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Point d'entrée <span class="text-danger">(*)</span></label>
+            <ng-select name="start_point" [(ngModel)]="selected_data.start_point" required placeholder="Sélectionner un point d'entrée">
+              <ng-option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</ng-option>
+            </ng-select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Type de contenu <span class="text-danger">(*)</span></label>
+            <select name="content_type" class="form-select" [(ngModel)]="selected_data.content_type" required>
+              <option value="0">À éditer</option>
+              <option value="1">À charger</option>
+              <option value="2">Pas de contenu</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6 mb-3">
+            <label>Délai avant mise en abandon (jours) <span class="text-danger">(*)</span></label>
+            <input type="number" class="form-control" name="delay" [(ngModel)]="selected_data.delay" required min="1" max="365">
+          </div>
+
+          <div class="form-group col-12 mb-3">
+            <label>Description</label>
+            <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc" rows="3"></textarea>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Nécessité de rendez-vous</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Besoin de validation</label>
+            <ng-toggle name="need_validation" [(ngModel)]="selected_data.need_validation"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance automatique</label>
+            <ng-toggle name="is_automatic_delivered" [(ngModel)]="selected_data.is_automatic_delivered"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Formulaire sur le portail national</label>
+            <ng-toggle name="from_pns" [(ngModel)]="selected_data.from_pns"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Sortie physique requise</label>
+            <ng-toggle name="needOut" [(ngModel)]="selected_data.needOut"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Circuit documentaire</label>
+            <ng-toggle name="has_document_circuit" [(ngModel)]="selected_data.has_document_circuit"
+              [color]="{ unchecked: '#939da2', checked: '#1a6b3c' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
         </div>
-       <div class="form-group" *ngIf="selected_data.start_point!=null">
-        <label for="typeLabel">Point d'entrée</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point"  [(ngModel)]="selected_data.start_point2.id">
-            <option [value]="t2.id" *ngFor="let t2 of data4">{{t2.libelle}}</option>
-        </select>
-       </div>
-       <div class="form-group"  *ngIf="selected_data.start_point==null">
-        <label for="typeLabel">Point d'entrée</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="start_point"  ngModel>
-            <option [value]="t2.id" *ngFor="let t2 of data4">{{t2.libelle}}</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Type de contenu</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="content_type"  [(ngModel)]="selected_data.content_type">
-           
-          <option value="0">A éditer</option>
-            <option value="1">A Charger</option>
-            <option value="2">Pas de contenu</option>
-        </select>
-       </div>
-
-       <div class="form-group">
-        <label for="typeLabel">Nécessité de rendez vous pour cette prestation ?</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_meeting"  [(ngModel)]="selected_data.need_meeting">
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Besoin de validation pour chargement de pièce finale</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="need_validation"  [(ngModel)]="selected_data.need_validation">
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-
-        <div class="form-group">
-        <label for="typeLabel">Délivrance automatique</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="is_automatic_delivered"  [(ngModel)]="selected_data.is_automatic_delivered">
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-        <div class="form-group">
-        <label for="typeLabel">Unité signataire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="signer"  [(ngModel)]="selected_data.signer">
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-        <div class="form-group">
-        <label for="typeLabel">Génération de librable nécessaire</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="needOut"  [(ngModel)]="selected_data.needOut">
-          <option value="1">OUI</option>
-          <option value="0">NON</option>
-        </select>
-       </div>
-
-
-       <div class="form-group">
-        <label for="typeLabel">Délai avant mise en abandon</label>
-        <input type="number" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #name="ngModel" name="delay" [(ngModel)]="selected_data.delay" min="1" max="30">
-    </div>
-       <div class="form-group">
-        <label for="typeLabel">Etape & statut début</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="eps_id" [(ngModel)]="selected_data.eps_id">
-            <option [value]="t.id" *ngFor="let t of etapes">{{t.etape?.name}} =>{{t.ps?.status?.name}}</option>
-        </select>
-       </div>
-
-    <div class="d-flex justify-content-between mb-3">
-      <span>Prestation à délivrance auto</span>
-      <ng-toggle
-      name="is_automatic_delivered"
-      [(ngModel)]="selected_data.is_automatic_delivered"
-      [color]="{
-          unchecked: '#939da2',
-          checked: '#0C574E'
-      }"
-      [values]="{
-          checked: true, 
-          unchecked: false
-      }"
-      ></ng-toggle>
-    </div>
-
-    <div class="d-flex justify-content-between">
-      <span>Formulaire sur le portail national ?</span>
-      <ng-toggle
-      name="from_pns"
-      [(ngModel)]="selected_data.from_pns"
-      [color]="{
-          unchecked: '#939da2',
-          checked: '#0C574E'
-      }"
-      [values]="{
-          checked: true, 
-          unchecked: false
-      }"
-      ></ng-toggle>
-    </div>
-     </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-
-    </div>
-</form>
-
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
+          Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+        </button>
+      </div>
+    </form>
   </ng-template>
 <ng-template #dialogSP let-c="close" let-d="dismiss">
   <form #addSPForm="ngForm" (ngSubmit)="addSP(addSPForm.value)">
