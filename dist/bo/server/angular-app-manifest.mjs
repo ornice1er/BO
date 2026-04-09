@@ -20,8 +20,8 @@ export default {
   ]
 },
   assets: {
-    'index.csr.html': {size: 56994, hash: '822921eee267f6daf854198025824cf4d94c9d46840758c00738f8b49238491c', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1777, hash: '0d4ef522c7e2b11a5c4dc710313d69374b09555479886305dde117557a168928', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 56994, hash: 'c2e4235545d32d3273756393c2be5d75d6e1fbb6ec75cc4fcb4538448561a327', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1777, hash: '474fac809898eb97906a1d4ba521a2473895080082705e00cf336efd679cab69', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-SD3T7DTI.css': {size: 495728, hash: 'w8puJgMvze8', text: () => import('./assets-chunks/styles-SD3T7DTI_css.mjs').then(m => m.default)}
   },
 };

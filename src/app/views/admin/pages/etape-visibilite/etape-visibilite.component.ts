@@ -101,7 +101,7 @@ export class EtapeVisibiliteComponent implements OnInit {
     if (!t) return '—';
     const from = t.etape_from?.name ?? '?';
     const to   = t.etape_to?.name  ?? 'Terminal';
-    return `${t.prestation?.name ?? ''} — ${from} → ${to} [${t.condition_type}]`;
+    return `${t.prestation?.code ?? ''} — ${from} → ${to} [${t.condition_type}]`;
   }
 
   resolveTransition(d: any): any {

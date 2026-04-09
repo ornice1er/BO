@@ -114,8 +114,9 @@ get(): void {
       this.identifierDocProduitCourant();
  
       // Vérifier si le document a déjà été soumis
-      this.documentDejaSoumis = this.documentsDuCircuit.some(
-        (a: any) => a.status === 'en_circuit' || a.status === 'complet'
+     this.documentDejaSoumis = this.documentsDuCircuit.some(
+        (a: any) => (a.status === 'en_circuit' || a.status === 'complet')
+                && a.doc_produit?.etape_edition_id === this.selectedData?.current_etape_id
       );
     },
     error: () => this.toastr.error('Impossible de charger la demande')
