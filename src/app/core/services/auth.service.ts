@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   me(){
-    return this.http.get<any>(`${this.url2}/api/user`,
+    return this.http.get<any>(`${this.url2}api/user`,
      ConfigService.httpHeader(null,true));
   }
 
@@ -53,24 +53,23 @@ export class AuthService {
     ressource['client_id']=LoginParamProd.clientId;
     ressource['client_secret']=LoginParamProd.clientSecret;
     ressource['scope']=LoginParamProd.scope;*/
-
-    return this.http.post<any>(`${this.url2}/api/login`, ressource,
+    return this.http.post<any>(`${this.url2}api/login`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
   sendMail(ressource:any){
-    return this.http.post<any>(`${this.url2}/api/send-reset-password-link`, ressource,
+    return this.http.post<any>(`${this.url2}api/send-reset-password-link`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
 
   
   update(ressource:any){
-    return this.http.post<any>(`${this.url2}/api/update-profile`, ressource,ConfigService.addAction('edit'));
+    return this.http.post<any>(`${this.url2}api/update-profile`, ressource,ConfigService.addAction('edit'));
   }
 
   recoverPassword(token:any,ressource:any){
-    return this.http.post<any>(`${this.url2}/api/recovery-password/${token}`, ressource,
+    return this.http.post<any>(`${this.url2}api/recovery-password/${token}`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
@@ -81,22 +80,22 @@ export class AuthService {
 
   changePassword(ressource:any){
 
-    return this.http.post<any>(`${this.url2}/api/change-password`, ressource,ConfigService.addAction('edit'));
+    return this.http.post<any>(`${this.url2}api/change-password`, ressource,ConfigService.addAction('edit'));
     }
     changeFirstPassword(ressource:any){
 
-    return this.http.post<any>(`${this.url2}/api/change-first-password`, ressource,
+    return this.http.post<any>(`${this.url2}api/change-first-password`, ressource,
     ConfigService.httpHeader(null,true));
     }
 
     saveDB(){
 
-      return this.http.get<any>(`${this.url2}/api/save-db`,ConfigService.addAction('add'));
+      return this.http.get<any>(`${this.url2}api/save-db`,ConfigService.addAction('add'));
       }
 
       getBackups(){
 
-        return this.http.get<any>(`${this.url2}/api/backups`,ConfigService.addAction('list'));
+        return this.http.get<any>(`${this.url2}api/backups`,ConfigService.addAction('list'));
         }
 
             changeCode(ressource:any) {
