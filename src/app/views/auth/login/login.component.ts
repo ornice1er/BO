@@ -8,6 +8,8 @@ import { LocalStorageService } from '../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
+import { ConfigService } from '../../../core/utils/config-service';
 
 @Component({
     selector: 'app-login',
@@ -36,6 +38,11 @@ export class LoginComponent implements OnInit {
     }
 
   ngOnInit(): void {
+  }
+
+  loginWithLdap(): void {
+    const url = ConfigService.getLdapAuthUrl();
+    window.location.href = url;
   }
 
     togglePasswordVisibility(): void {

@@ -1,3 +1,55 @@
+/* ===== LDAP BUTTON ===== */
+.ldap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  padding: 0 1.5rem;
+  background: white;
+  color: #0A3764;
+  border: 1.5px solid #0A3764;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.ldap-btn:hover {
+  background: #0A3764;
+  color: white;
+  box-shadow: 0 4px 18px rgba(10, 55, 100, 0.2);
+  transform: translateY(-1px);
+}
+
+.ldap-btn:active {
+  transform: translateY(0);
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider-text {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* ===== LOGIN PANEL ===== */
 .login-panel {
   width: 100%;

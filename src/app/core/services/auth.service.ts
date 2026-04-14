@@ -107,6 +107,11 @@ export class AuthService {
       }
     
 
+      loginLdap(code: string, redirectUri: string) {
+        return this.http.post<any>(`${this.url2}api/login-ldap`, { code, redirect_uri: redirectUri },
+          ConfigService.httpHeader(null, true));
+      }
+
       getAuthorizationCode(code:any){
       let data={
         grant_type:"authorization_code",

@@ -10,7 +10,9 @@ export const environment = {
   API_SCHEME: 'http',
   API_DOMAIN: 'localhost:8000/api',
   API_FILE: 'localhost:8000',
-  API_VERSION: 'v1'
+  API_VERSION: 'v1',
+  LDAP_AUTH_URL: 'https://pprodauth.service-public.bj/citizen/login',
+  LDAP_CLIENT_ID: 'test'
 };
 
 /*

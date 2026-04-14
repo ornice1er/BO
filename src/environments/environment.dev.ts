@@ -3,5 +3,7 @@ export const environment = {
   API_SCHEME: 'https',
   API_DOMAIN: 'boeservices-api.mtfp-ctd.bj/api',
   API_FILE: 'boeservices-api.mtfp-ctd.bj',
-  API_VERSION: 'v1'
+  API_VERSION: 'v1',
+  LDAP_AUTH_URL: 'https://pprodauth.service-public.bj/citizen/login',
+  LDAP_CLIENT_ID: 'test'
 };

@@ -1,5 +1,6 @@
 import {  HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.pprod-memp';
+import { get } from 'http';
 
 export const ConfigService: any = {
   apiVersion: environment.API_VERSION,
@@ -45,5 +46,9 @@ export const ConfigService: any = {
       },
   toWsUrl(path:any){
     return `wss://${this.apiDomain}/${path}`
-  }
+  },
+
+  getLdapAuthUrl(){
+    return environment.LDAP_AUTH_URL + `?client_id=${environment.LDAP_CLIENT_ID}&redirect_uri=${encodeURIComponent(environment.LDAP_CALLBACK_URL)}&response_type=code&scope=openid&authError=true`;
+  } 
 }

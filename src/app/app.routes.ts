@@ -12,9 +12,11 @@ import { UserSettingComponent } from './views/auth/user-setting/user-setting.com
 import { NotFoundComponent } from './views/not-found-component/not-found-component.component';
 import { LayoutComponent } from './views/auth/layout/layout.component';
 import { PublicRoutes } from './views/public/public-routing.module';
+import { LdapCallbackComponent } from './views/auth/ldap-callback/ldap-callback.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login',pathMatch:'full'},
+    {path: 'sso-callback', component: LdapCallbackComponent},
     ...AdminRoutes,
     {
       path:"",
