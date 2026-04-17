@@ -5,5 +5,6 @@ export const environment = {
   API_FILE: 'backofficememp.gouv.bj/backend/',
   API_VERSION: 'v1',
   LDAP_AUTH_URL: 'https://auth.service-public.bj/citizen/login',
-  LDAP_CLIENT_ID: 'bo-memp'
+  LDAP_CLIENT_ID: 'bo-memp',
+  LDAP_CALLBACK_URL:'https://backofficememp.gouv.bj/sso-callback'
 };
