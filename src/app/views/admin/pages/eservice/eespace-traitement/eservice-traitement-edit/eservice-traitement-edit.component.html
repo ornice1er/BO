@@ -93,6 +93,7 @@
       <app-document-editor
         *ngIf="docProduitCourant"
         [requeteId]="selectedData?.id"
+         [contentType]="selectedData?.prestation?.content_type"
         [docProduitId]="docProduitCourant?.id"
         (submitted)="onDocumentSoumis($event)">
       </app-document-editor>

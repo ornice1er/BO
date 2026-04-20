@@ -16,6 +16,7 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { Router } from '@angular/router';
+import { PrestationService } from '../../../../core/services/prestation.service';
 
 @Component({
     selector: 'app-project',
@@ -32,6 +33,7 @@ export class ProjectComponent {
   data2:any[]=[]
   data3:any[]=[]
   uas:any[]=[]
+  prestationsList:any[]=[]
   permissions:any[]=[]
   loading=false
   loading2=false
@@ -54,6 +56,7 @@ remoteSearchData: any[] = []
          fileInput2:any
 
       constructor(
+        private prestationService:PrestationService,
         private projectService:ProjectService,
         private entityAdminService:EntityService,
         private router:Router,
@@ -69,6 +72,7 @@ remoteSearchData: any[] = []
   
     ngOnInit(): void {
       this.all();
+      this.getPrestations();
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
        this.buttonsPermission = {
@@ -79,6 +83,17 @@ remoteSearchData: any[] = []
     };
     }
  
+  
+     getPrestations() {
+      this.loading2=true;
+      this.prestationService.getAll().subscribe((res:any)=>{
+        this.prestationsList=res.data
+        this.loading2=false;
+      },
+      (error:any)=>{
+        this.loading2=false;
+      })
+    }
   
     all() {
       this.loading2=true;

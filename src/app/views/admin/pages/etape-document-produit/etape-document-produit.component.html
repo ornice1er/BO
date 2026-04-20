@@ -208,12 +208,18 @@
 
          <div class="form-group col-md-6 mb-3">
           <label>Généré depuis <span class="text-danger">(*)</span></label>
-          <select name="generate_from" class="form-select" ngModel required>
+          <select name="generate_from" class="form-select" [(ngModel)]="generate_from" required>
             <option value="">-- Sélectionner --</option>
             <option value="pns">PNS</option>
             <option value="system">Système</option>
           </select>
         </div>
+
+          <div class="form-group mb-3" *ngIf="generate_from === 'pns'">
+        <label class="fw-semibold">Corps du document</label> <br>
+        <app-quill-wrapper *ngIf="generate_from === 'pns'" [(ngModel)]="add_data.content" name="content" ngDefaultControl></app-quill-wrapper>
+
+      </div>
 
         <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
           <label class="mb-0">Correction autorisée après génération</label>
@@ -309,6 +315,13 @@
             <option value="system">Système</option>
           </select>
         </div>
+
+      <div class="form-group mb-3" *ngIf="selected_data.generate_from === 'pns'">
+        <label class="fw-semibold">Corps du document</label>
+        <br>
+                <app-quill-wrapper *ngIf="selected_data.generate_from === 'pns'" [(ngModel)]="selected_data.content" name="content" ngDefaultControl></app-quill-wrapper>
+      </div>
+
 
         <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
           <label class="mb-0">Correction autorisée après génération</label>

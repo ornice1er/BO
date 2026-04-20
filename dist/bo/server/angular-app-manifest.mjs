@@ -6,9 +6,29 @@ export default {
   locale: undefined,
   routes: undefined,
   entryPointToBrowserMapping: {
+  "node_modules/quill/quill.js": [
+    {
+      "path": "chunk-Y237BO4B.js",
+      "dynamicImport": false
+    },
+    {
+      "path": "chunk-ZRAC4FBK.js",
+      "dynamicImport": false
+    }
+  ],
   "node_modules/ngx-quill/fesm2022/ngx-quill-quill-CUw8Q_m0.mjs": [
     {
-      "path": "chunk-XLZOUWF7.js",
+      "path": "chunk-MRJRTGFR.js",
+      "dynamicImport": false
+    },
+    {
+      "path": "chunk-ZRAC4FBK.js",
+      "dynamicImport": false
+    }
+  ],
+  "node_modules/quill-html-edit-button/dist/quill.htmlEditButton.min.js": [
+    {
+      "path": "chunk-7JBIHLXR.js",
       "dynamicImport": false
     }
   ],
@@ -20,8 +40,8 @@ export default {
   ]
 },
   assets: {
-    'index.csr.html': {size: 56994, hash: 'c2e4235545d32d3273756393c2be5d75d6e1fbb6ec75cc4fcb4538448561a327', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1777, hash: '474fac809898eb97906a1d4ba521a2473895080082705e00cf336efd679cab69', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
-    'styles-SD3T7DTI.css': {size: 495728, hash: 'w8puJgMvze8', text: () => import('./assets-chunks/styles-SD3T7DTI_css.mjs').then(m => m.default)}
+    'index.csr.html': {size: 56994, hash: '4292157f5f14f0f23239c9b7c01797c792f94c4c2fb59aaaa3caa0216ebc2916', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1777, hash: 'fe886e44b230c0704134ef0f684f490ed322394f3fd79abdeb602fdde368994a', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'styles-JGJK44XZ.css': {size: 519960, hash: '74JAWXh7zPY', text: () => import('./assets-chunks/styles-JGJK44XZ_css.mjs').then(m => m.default)}
   },
 };

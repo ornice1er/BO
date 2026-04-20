@@ -265,9 +265,10 @@
             <label>Type de contenu <span class="text-danger">(*)</span></label>
             <select name="content_type" class="form-select" ngModel required>
               <option value="">-- Sélectionner --</option>
-              <option value="0">À éditer</option>
-              <option value="1">À charger</option>
-              <option value="2">Pas de contenu</option>
+              <option value="0">À éditer puis générer depuis le système</option>
+              <option value="1">À éditer puis générer depuis le PNS</option>
+              <option value="2">À charger</option>
+              <option value="3">Pas de contenu</option>
             </select>
           </div>
 
@@ -392,9 +393,10 @@
           <div class="form-group col-md-6 mb-3">
             <label>Type de contenu <span class="text-danger">(*)</span></label>
             <select name="content_type" class="form-select" [(ngModel)]="selected_data.content_type" required>
-              <option value="0">À éditer</option>
-              <option value="1">À charger</option>
-              <option value="2">Pas de contenu</option>
+                <option value="0">À éditer puis générer depuis le système</option>
+              <option value="1">À éditer puis générer depuis le PNS</option>
+              <option value="2">À charger</option>
+              <option value="3">Pas de contenu</option>
             </select>
           </div>
 

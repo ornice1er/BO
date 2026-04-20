@@ -41,19 +41,19 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
   <div class="card-body">
     <ul class="nav nav-tabs mb-4">
       <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab === 'generer'"
+        <a class="nav-link text-dark" [class.active]="activeTab === 'generer'"
            (click)="activeTab = 'generer'" href="javascript:void(0)">
           <i class="bi bi-magic me-1"></i>Générer
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab === 'wysiwyg'"
+        <a class="nav-link text-dark" [class.active]="activeTab === 'wysiwyg'"
            (click)="activeTab = 'wysiwyg'" href="javascript:void(0)">
           <i class="bi bi-pencil-square me-1"></i>Éditeur
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab === 'upload'"
+        <a class="nav-link text-dark" [class.active]="activeTab === 'upload'"
            (click)="activeTab = 'upload'" href="javascript:void(0)">
           <i class="bi bi-upload me-1"></i>Upload PDF
         </a>
@@ -61,7 +61,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     </ul>
 
     <!-- ── ONGLET 1 : GÉNÉRER ─────────────────────────────────────────────── -->
-    <div *ngIf="activeTab === 'generer'">
+    <div *ngIf="activeTab === 'generer' && (contentType==1 || contentType==0)">
       <p class="text-muted small mb-3">
         Le document sera généré automatiquement à partir des données de la demande
         et du template configuré.
@@ -85,10 +85,12 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
             {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
           </span>
         </div>
-        <textarea class="form-control mt-2" rows="8"
-                  [(ngModel)]="formData.content"
-                  placeholder="Saisissez le corps du document...">
-        </textarea>
+        <quill-editor
+          [(ngModel)]="formData.content"
+          [modules]="quillModules"
+          placeholder="Saisissez le corps du document..."
+          style="min-height: 300px; display:block; margin-top:8px;">
+        </quill-editor>
       </div>
 
       <div class="form-group mb-3">
@@ -107,18 +109,12 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     </div>
 
     <!-- ── ONGLET 2 : WYSIWYG ─────────────────────────────────────────────── -->
-    <div *ngIf="activeTab === 'wysiwyg'">
+    <div *ngIf="activeTab === 'wysiwyg' && (contentType==1 || contentType==0)" >
       <p class="text-muted small mb-3">
         Éditez le document librement. Les variables entre
         <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code>
         seront remplacées automatiquement lors de la génération PDF.
       </p>
-
-      <div class="form-group mb-3">
-        <label class="fw-semibold">Titre</label>
-        <input type="text" class="form-control mt-1"
-               [(ngModel)]="formData.title">
-      </div>
 
       <div class="form-group mb-3">
         <label class="fw-semibold">Corps du document</label>
@@ -130,12 +126,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         </quill-editor>
       </div>
 
-      <div class="form-group mb-3">
-        <label class="fw-semibold">Conclusion</label>
-        <textarea class="form-control mt-1" rows="2"
-                  [(ngModel)]="formData.conclusion">
-        </textarea>
-      </div>
+    
 
       <button class="btn btn-primary" (click)="sauvegarderWysiwyg()" [disabled]="loading">
         <i class="bi bi-save me-1"></i>
@@ -145,7 +136,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     </div>
 
     <!-- ── ONGLET 3 : UPLOAD ──────────────────────────────────────────────── -->
-    <div *ngIf="activeTab === 'upload'">
+    <div *ngIf="activeTab === 'upload' && contentType==2" >
       <p class="text-muted small mb-3">
         Uploadez un PDF préparé en dehors du système
         (Word exporté en PDF, document scanné signé...).
@@ -216,6 +207,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 export class DocumentEditorComponent implements OnInit {
 
   @Input() requeteId!: number;
+  @Input() contentType!: number;
   @Input() docProduitId!: number;
   @Output() submitted = new EventEmitter<any>();
 
@@ -256,6 +248,8 @@ export class DocumentEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+ 
+   
     this.initialiser();
   }
 
@@ -279,7 +273,27 @@ export class DocumentEditorComponent implements OnInit {
             this.formData.content     = saved.content     ?? '';
             this.formData.conclusion  = saved.conclusion  ?? '';
             this.formData.htmlContent = saved.content     ?? '';
+          }else{
+            this.formData.htmlContent     = res.data?.doc_produit?.content ?? '';
           }
+
+           switch (this.contentType) {
+              case 0: // Demande d'agrément
+                this.activeTab ='generer';
+                break;
+              case 1: // Demande d'agrément
+                this.activeTab ='wysiwyg';
+              break;
+              case 2: // Rapport d'inspection
+                this.activeTab ='upload';
+                break;
+                case 3: // Rapport d'inspection
+                this.activeTab ='aucun';
+                break;
+              default:
+                this.toastr.error('Type de contenu inconnu pour l\'éditeur de document');
+                return;
+            }
         },
         error: () => {
           this.loading = false;
