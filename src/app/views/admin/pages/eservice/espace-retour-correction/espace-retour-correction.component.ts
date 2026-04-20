@@ -153,7 +153,7 @@ export class EspaceRetourCorrectionComponent implements OnInit {
       
       console.log(this.prestation)
       this.loading2=true;
-      this.requeteService.getBanette(this.code).subscribe((res:any)=>{
+      this.requeteService.getBanette(this.code,'validation').subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()

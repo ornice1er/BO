@@ -13,7 +13,7 @@
   </div>
 
   <!-- Traiter la demande (valider / rejeter) -->
- <div *ngIf="peutAgir">
+ <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente'  && peutAgir">
   <button
     class="btn btn-warning"
     (click)="open2()"
@@ -191,7 +191,17 @@
           <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
             <td>{{ i + 1 }}</td>
             <td><span class="badge bg-secondary">{{ log?.etape_from?.name }}</span></td>
-            <td><span class="badge bg-primary">{{ log?.etape_to?.name }}</span></td>
+            <td>
+              <span class="badge bg-primary">{{ log?.etape_to?.name }}</span>
+            
+              <ul>
+                <li *ngFor="let visibilite of log?.transition?.visibilites" class="small text-muted">
+                  <i class="bi bi-eye me-1"></i>{{ visibilite?.role_name }} [{{ visibilite?.ua?.entite?.sigle ?? '—' }} / {{ visibilite?.ua?.sigle ?? '—' }}]
+                  <i *ngIf="visibilite?.can_act" class="bi bi-pencil-square text-warning"></i>
+                  <i *ngIf="visibilite?.can_read" class="bi bi-file-earmark-text text-primary"></i>
+
+              </ul>
+            </td>
             <td><span class="badge bg-info text-dark">{{ log?.status?.name }}</span></td>
             <td>
               {{ log?.triggered_by_type === 'système'
@@ -358,7 +368,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="fw-semibold">Mot de passe de délivrance</label>
+        <label class="fw-semibold">Mot de passe de sécurité</label>
         <input name="password" type="password" class="form-control mt-1" required ngModel>
       </div>
     </div>

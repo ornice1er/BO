@@ -30,8 +30,8 @@ export class RequeteService {
   }
 
   /** Banette de l'agent connecté selon son rôle */
-  getBanette(prestationCode: string): any {
-    return this.http.get<any>(`${this.url}/banette/${prestationCode}`);
+  getBanette(prestationCode: string, nature: string='auto', status: string='all'): any {
+    return this.http.get<any>(`${this.url}/banette/${prestationCode}?nature=${nature}&status=${status}`);
   }
 
   /** Suivi public par le requérant */

@@ -7,11 +7,11 @@
     <!-- Card Header with Actions -->
     <div class="card-header-actions">
         <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-primary-custom" (click)="add(addContent)">
+        <!-- <button class="btn btn-primary-custom" (click)="add(addContent)">
             <i class="bi bi-plus-lg me-2"></i>
             Ajouter
         </button>
-        
+         -->
         <div class="search-controls d-flex align-items-center">
             <div class="input-group">
             <select class="form-select filter-select" [(ngModel)]="selectedFilter">
@@ -75,13 +75,13 @@
 
                 <div *ngIf="selectedId === d.id" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
-                    <button
+                    <!-- <button
                         class="btn btn-action btn-add"
                         (click)="add(addContent)"
                         title="Ajouter"
                     >
                         <i class="bi bi-plus-lg"></i>
-                    </button>
+                    </button> -->
 
                     <button
                         (click)="show()"
@@ -92,7 +92,7 @@
                         <i class="bi bi-eye"></i>
                     </button>
 
-                    <button
+                    <!-- <button
                         (click)="edit(editContent)"
                         type="button"
                         class="btn btn-action btn-edit"
@@ -128,7 +128,7 @@
                         title="Désactiver"
                     >
                         <i class="bi bi-toggle-off"></i>
-                    </button>
+                    </button>-->
 
                     <button
                         type="button"
@@ -137,7 +137,7 @@
                         title="Fermer"
                     >
                         <i class="bi bi-x-lg"></i>
-                    </button>
+                    </button> 
                     </div>
                 </div>
                 </td>

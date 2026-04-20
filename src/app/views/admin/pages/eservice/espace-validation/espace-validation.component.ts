@@ -155,7 +155,7 @@ export class EspaceValidationComponent implements OnInit {
       
       console.log(this.prestation)
       this.loading2=true;
-      this.requeteService.getBanette(this.myPrestation.code).subscribe((res:any)=>{
+      this.requeteService.getBanette(this.myPrestation.code,'validation').subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
