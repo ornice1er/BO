@@ -170,7 +170,7 @@ get(): void {
     const condition = this.transitionSelectionnee.condition_type;
 
     // Afficher les champs selon le type de transition
-    if (condition === 'rejet' || condition === 'cloture') {
+    if (condition === 'validation' && this.myPrestation?.need_validation) {
       this.showAddingField.note_file = true;
     }
     if (condition === 'validation' && this.myPrestation?.need_meeting) {

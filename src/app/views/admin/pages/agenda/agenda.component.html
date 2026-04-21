@@ -9,12 +9,15 @@
                     <button *ngIf="selected_data!=null && canTransmit" class="btn btn-sm btn-danger mx-1" (click)="delete()" nbTooltip="Supprimer l'élément" nbTooltipPlacement="top" [disabled]="loading">
                         Annuler la rencontre
                     </button>
-                    <button *ngIf="canTransmit && role!='Directeur'" class=" btn btn-sm btn-primary float-right mx-1" (click)="transUp()" [disabled]="loading">Transmettre</button>
-                    <button *ngIf="canSendMail" class=" btn btn-sm btn-primary float-right mx-1" (click)="sendMail()" [disabled]="loading">Envoyer le mail</button>
+                    <!-- <button *ngIf="canTransmit && role!='Directeur'" class=" btn btn-sm btn-primary float-right mx-1" (click)="transUp()" [disabled]="loading">Transmettre</button> -->
+                    <button  class=" btn btn-sm btn-primary float-right mx-1" (click)="sendMail()" [disabled]="loading">Envoyer le mail</button>
                     <div class="align-self-center d-flex">
                         <div class="input-group">
-                            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-                            <option value="">Filtrer Par</option>
+                            <select class="form-select" id="inputGroupSelect04" (change)="loadData($event)" aria-label="Example select with button addon">
+                            <option value="">Filtrer par prestation</option>
+                            <option *ngFor="let prestation of user_prestations" [value]="prestation.prestation.code">
+                                {{ prestation.prestation.name }}
+                            </option>
                             </select>
                             <input type="text" class="form-control" name="search_text" [(ngModel)]="search_text"   (ngModelChange)="onSearchChange()" placeholder="Rechercher..">
                             <button (click)="resetSearch()" class="btn btn-outline-primary" type="button"><i class="fa fa-rotate-left" aria-hidden="true"></i> </button>
@@ -25,19 +28,22 @@
 
                                 <p>{{isPaginate ? pg.total : data.length}} élément(s)</p>
                                 <div class="table-responsive">
-                                <table class="table" >
-                                    <thead class="">
+                               <table class="table">
+                                    <thead>
                                         <tr>
                                             <th style="width: 10px;">#</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Prestation concernée</th>
-
-                                            <th scope="col">Texte</th>
-                                            <th scope="col">Etape</th>
+                                            <th scope="col">Titre</th>
+                                            <th scope="col">Prestation</th>
+                                            <th scope="col">Date début</th>
+                                            <th scope="col">Date fin</th>
+                                            <th scope="col">Session</th>
+                                            <th scope="col">Type RDV</th>
+                                            <th scope="col">Priorité</th>
                                             <th scope="col">Statut</th>
+                                            <th scope="col">Origine</th>
                                             <th scope="col">Réponse usager</th>
+                                            <th scope="col">Notif</th>
                                             <th scope="col">Auteur</th>
-                                
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -46,124 +52,135 @@
                                             itemsPerPage: pg.pageSize,
                                             currentPage: pg.p,
                                             totalItems: pg.total } | sampleSearch:search_text">
-                                        <td class="position-relative" style="z-index: 10;"> 
-                                            <div class="form-check mb-2">
-                                                <input
-                                                (click)="checked(d)"
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="selectedDoc"
-                                                [value]="d.id"
-                                                [(ngModel)]="selectedId"
-                                                id="radio-{{ d.id }}"
-                                                />
-                                            </div>
 
-                                            <div *ngIf="selectedId === d.id" class="overlay-panel-right">
-                                                <button
-                                                class="btn btn-info btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                                (click)="add(addContent)"
-                                                title="Ajouter"
-                                                matTooltip="Ajouter"
-                                                [disabled]="loading"
-                                                >
-                                                <i class="bi bi-plus-lg"></i>
-                                                </button>
-
-                                                <button
-                                                *ngIf="buttonsPermission.show"
-                                                (click)="show(showContent)"
-                                                type="button"
-                                                class="btn btn-outline-primary btn-sm btn-label waves-effect waves-light mb-1 me-3"
-                                                title="Consulter"
-                                                matTooltip="Consulter"
-                                                [disabled]="loading"
-                                                >
-                                                <i class="bi bi-eye"></i>
-                                                </button>
-
-                                                <button
-                                                *ngIf="buttonsPermission.edit"
-                                                (click)="edit(editContent)"
-                                                type="button"
-                                                class="btn btn-outline-warning btn-sm btn-label waves-effect waves-light mb-1 me-3"
-                                                title="Éditer"
-                                                matTooltip="Éditer"
-                                                [disabled]="loading"
-                                                >
-                                                <i class="bi bi-pencil"></i>
-                                                </button>
-
-                                                <button
-                                                *ngIf="buttonsPermission.delete"
-                                                (click)="delete()"
-                                                type="button"
-                                                class="btn btn-outline-danger btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                                title="Supprimer"
-                                                matTooltip="Supprimer"
-                                                [disabled]="loading"
-
-                                                >
-                                                <i class="bi bi-trash"></i>
-                                                </button>
-
-                                                <button
-                                                *ngIf="is_active != null && !is_active"
-                                                (click)="setStatus(1)"
-                                                type="button"
-                                                class="btn btn-outline-success btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                                title="Activer"
-                                                matTooltip="Activer"
-                                                [disabled]="loading"
-                                                >
-                                                <i class="bi bi-toggle-on"></i>
-                                                </button>
-
-                                                <button
-                                                *ngIf="is_active != null && is_active"
-                                                (click)="setStatus(0)"
-                                                type="button"
-                                                class="btn btn-outline-danger btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                                title="Désactiver"
-                                                matTooltip="Désactiver"
-                                                [disabled]="loading"
-
-                                                >
-                                                <i class="bi bi-toggle-off"></i>
-                                                </button>
-
-                                          
-
-                                                <button
-                                                type="button"
-                                                class="btn-close float-end"
-                                                (click)="selectedId = null"
-                                                title="Fermer"
-                                                matTooltip="Fermer"
-                                                ></button>
-                                            </div>
+                                            <!-- Actions -->
+                                            <td class="position-relative" style="z-index: 10;">
+                                                <div class="form-check mb-2">
+                                                    <input
+                                                        (click)="checked(d)"
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="selectedDoc"
+                                                        [value]="d.id"
+                                                        [(ngModel)]="selectedId"
+                                                        id="radio-{{ d.id }}"
+                                                    />
+                                                </div>
+                                                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                                                    <button class="btn btn-info btn-sm me-3 mb-1"
+                                                        (click)="add(addContent)" title="Ajouter" matTooltip="Ajouter" [disabled]="loading">
+                                                        <i class="bi bi-plus-lg"></i>
+                                                    </button>
+                                                    <button *ngIf="buttonsPermission.show"
+                                                        (click)="show(showContent)" type="button"
+                                                        class="btn btn-outline-primary btn-sm mb-1 me-3"
+                                                        title="Consulter" matTooltip="Consulter" [disabled]="loading">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button *ngIf="buttonsPermission.edit"
+                                                        (click)="edit(editContent)" type="button"
+                                                        class="btn btn-outline-warning btn-sm mb-1 me-3"
+                                                        title="Éditer" matTooltip="Éditer" [disabled]="loading">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <button *ngIf="buttonsPermission.delete"
+                                                        (click)="delete()" type="button"
+                                                        class="btn btn-outline-danger btn-sm me-3 mb-1"
+                                                        title="Supprimer" matTooltip="Supprimer" [disabled]="loading">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                    <button type="button" class="btn-close float-end"
+                                                        (click)="selectedId = null" title="Fermer" matTooltip="Fermer">
+                                                    </button>
+                                                </div>
                                             </td>
 
-                                            <td>{{d?.date_start | date:"dd-MM-yyyy"}}</td>
-                    <td>{{d?.requete?.prestation?.name}}</td>
+                                            <!-- Titre -->
+                                            <td>{{ d?.title ?? '—' }}</td>
 
-                    <td>{{d?.description}}</td>
-                   
-                    <td>{{d?.unite_admin?.libelle}}</td>
-                    <td>{{getStatus(d?.status)}}</td>
-                    <td>{{d?.usager_response==null ?"En attente de réponse":d?.usager_response==0?"Pas disponible":"Diponible"}}</td>
-                    <td>{{d.user?.agent?.lastname}} {{d.user?.agent?.firstname}}</td>
+                                            <!-- Prestation -->
+                                            <td>{{ d?.requete?.prestation?.name ?? '—' }}</td>
+
+                                            <!-- Date début -->
+                                            <td>{{ d?.date_start | date:'dd/MM/yyyy HH:mm' }}</td>
+
+                                            <!-- Date fin -->
+                                            <td>{{ d?.date_end ? (d?.date_end | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+
+                                            <!-- Type de session -->
+                                            <td>
+                                                <span [ngSwitch]="d?.session_type">
+                                                    <span *ngSwitchCase="'matinee'">Matinée</span>
+                                                    <span *ngSwitchCase="'apres_midi'">Après-midi</span>
+                                                    <span *ngSwitchCase="'journee_entiere'">Journée entière</span>
+                                                    <span *ngSwitchDefault>—</span>
+                                                </span>
+                                            </td>
+
+                                            <!-- Type RDV -->
+                                            <td>
+                                                <span [ngSwitch]="d?.rdv_type">
+                                                    <span *ngSwitchCase="'premier_rdv'">1er RDV</span>
+                                                    <span *ngSwitchCase="'second_rdv'">2ème RDV</span>
+                                                    <span *ngSwitchCase="'suivi_traitement'">Suivi</span>
+                                                    <span *ngSwitchDefault>—</span>
+                                                </span>
+                                            </td>
+
+                                            <!-- Priorité -->
+                                            <td>
+                                                <span class="badge" [ngClass]="{
+                                                    'bg-danger':        d?.priority === 'Haute',
+                                                    'bg-warning text-dark': d?.priority === 'Moyenne',
+                                                    'bg-info text-dark':    d?.priority === 'Faible'
+                                                }">{{ d?.priority ?? '—' }}</span>
+                                            </td>
+
+                                            <!-- Statut -->
+                                            <td>
+                                                <span class="badge" [ngClass]="{
+                                                    'bg-success':   d?.status === 'Ouvert',
+                                                    'bg-secondary': d?.status === 'Clos'
+                                                }">{{ d?.status ?? '—' }}</span>
+                                            </td>
+
+                                            <!-- Origine -->
+                                            <td>{{ d?.from ?? '—' }}</td>
+
+                                            <!-- Réponse usager -->
+                                            <td>
+                                                <span class="badge" [ngClass]="{
+                                                    'bg-secondary': d?.usager_response == null,
+                                                    'bg-danger':    d?.usager_response == 0,
+                                                    'bg-success':   d?.usager_response == 1
+                                                }">
+                                                    {{ d?.usager_response == null ? 'En attente' : d?.usager_response == 0 ? 'Indisponible' : 'Disponible' }}
+                                                </span>
+                                            </td>
+
+                                            <!-- Notifications -->
+                                            <td>
+                                                <i class="bi" [ngClass]="{
+                                                    'bi-bell-fill text-success': d?.has_notif == 1,
+                                                    'bi-bell-slash text-muted':  d?.has_notif == 0
+                                                }"></i>
+                                            </td>
+
+                                            <!-- Auteur -->
+                                            <td>{{ d?.user?.agent?.lastname }} {{ d?.user?.agent?.firstname }}</td>
 
                                         </tr>
 
-                                    <tr *ngIf="search_text !== '' && (data | sampleSearch:search_text).length === 0">
-                                        <td colspan="5" class="text-center">
-                                            <p class="text-muted">Recherche avancée en cours...</p>
-                                            <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
-                                                Réinitialiser la recherche
+                                        <!-- Aucun résultat recherche -->
+                                        <tr *ngIf="search_text !== '' && (data | sampleSearch:search_text).length === 0">
+                                            <td colspan="13" class="text-center">
+                                                <p class="text-muted">Recherche avancée en cours...</p>
+                                                <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">
+                                                    Réinitialiser la recherche
                                                 </button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                                 </div>
@@ -188,107 +205,454 @@
   
     <ng-template #addContent let-c="close" let-d="dismiss">
         <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-basic-title">Enregistrer un programme</h4>
-                <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-            </div>
-      <div>
-
-        <div class="modal-body">
-
-            <div class="form-group">
-                <label for="">Choisir la prestation</label>
-                <select name="" id="" class="form-control" (change)="loadRequete($event)" [disabled]="upId != undefined">
-                    <option selected disabled></option>
-                    <option *ngFor="let up of user_prestations" [selected]="upId==up.id" [value]="up.prestation.id">{{up.prestation.name}}</option>
-                </select>
-            </div>
-
-            <div class="form-group" *ngIf="code ==undefined">
-                <label for="">Choisir la requête</label>
-                <select class="form-control" ngModel name="requete_id" required >
-                    <option selected disabled></option>
-                    <option *ngFor="let req of requetes" [selected]="code==reqId" [value]="req.id">{{req.code}}</option>
-                </select>
-            </div>
-             
-            <div class="form-group" *ngIf="code !=undefined">
-                <label for="">Choisir la requête</label>
-                <select class="form-control" [(ngModel)]="reqId" name="requete_id" required disabled>
-                    <option selected disabled></option>
-                    <option *ngFor="let req of requetes" [value]="req.id">{{req.code}}</option>
-                </select>
-            </div>
- 
-                <div class="form-group">
-                    <label for="typeLabel">Texte</label>
-                    <textarea  #description="ngModel" name="description" ngModel class="form-control" rows="5"></textarea>
-                    <span *ngIf="description.invalid && (description.dirty || description.touched)" class="text-danger">
-                        <small *ngIf="description.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-                    </span>
-                </div>
-              
-                <div class="form-group">
-                    <label for="typeLabel">Date </label>
-                    <input type="datetime-local" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #date_start="ngModel" name="date_start" ngModel>
-                    <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
-                        <small *ngIf="date_start.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-                    </span>
-                </div>
-              
-      </div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Enregistrer un programme</h4>
+        <button type="button" class="btn btn-dark" (click)="d('Cross click')">
+            <i class="fa fa-times"></i>
+        </button>
     </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-      </div>
-    
-</form>
-  </ng-template>
 
-  <ng-template #editContent  let-c="close" let-d="dismiss">
-    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
-    <div style="height: 80vh;">
-      <div>
-        <h6>Modification de programme
-            <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-        </h6>
-      </div>
-      <div >
+    <div class="modal-body">
 
-     
-        <div class="form-group">
-            <label for="typeLabel">Texte</label>
-            <textarea  #description="ngModel" name="description" [(ngModel)]="selected_data.description" class="form-control" rows="5"></textarea>
-            <span *ngIf="description.invalid && (description.dirty || description.touched)" class="text-danger">
-                <small *ngIf="description.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-            </span>
-        </div>
-     
-        <div class="form-group">
-            <label for="typeLabel">Date</label>
-            <input type="datetime-local" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #date_start="ngModel" name="date_start" [(ngModel)]="selected_data.date_start">
-            <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
-                <small *ngIf="date_start.errors?.['required']" id="typeLabelHelp" class="form-text">Le libellé est requis.</small>
-            </span>
-        </div>
-      
+        <!-- Prestation -->
+        <div class="form-group mb-2">
+    <label>Choisir la prestation</label>
+    <select class="form-control" (change)="loadRequetes($event)" [disabled]="upId != undefined">
+        <option selected disabled value="">-- Sélectionner --</option>
+        <option *ngFor="let up of user_prestations"
+            [value]="up.prestation.id"
+            [selected]="upId == up.id">
+            {{up.prestation.name}}
+        </option>
+    </select>
 </div>
-      <div>
-        <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-      </div>
-    
+
+        <!-- Requête -->
+       <div class="form-group mb-2">
+    <label>Choisir la requête</label>
+    <select class="form-control" [(ngModel)]="reqId" name="requete_id"
+        [disabled]="upId != undefined && reqId != undefined">
+        <option selected disabled value="">-- Sélectionner --</option>
+        <option *ngFor="let req of requetes" [value]="req.id">{{req.code}} - {{req.name}}-{{req.email}}</option>
+    </select>
+</div>
+        <!-- Titre -->
+        <div class="form-group mb-2">
+            <label>Titre <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="title" ngModel required #title="ngModel">
+            <span *ngIf="title.invalid && (title.dirty || title.touched)" class="text-danger">
+                <small *ngIf="title.errors?.['required']">Le titre est requis.</small>
+            </span>
+        </div>
+
+        <!-- Date début -->
+        <div class="form-group mb-2">
+            <label>Date début <span class="text-danger">*</span></label>
+            <input type="datetime-local" class="form-control" name="date_start" ngModel required #date_start="ngModel">
+            <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
+                <small *ngIf="date_start.errors?.['required']">La date de début est requise.</small>
+            </span>
+        </div>
+
+        <!-- Date fin -->
+        <div class="form-group mb-2">
+            <label>Date fin</label>
+            <input type="datetime-local" class="form-control" name="date_end" ngModel>
+        </div>
+
+        <!-- Durée -->
+        <div class="form-group mb-2">
+            <label>Durée (minutes)</label>
+            <input type="number" class="form-control" name="duration_minutes" ngModel min="1">
+        </div>
+
+        <!-- Slots max -->
+        <div class="form-group mb-2">
+            <label>Nombre de slots max</label>
+            <input type="number" class="form-control" name="max_slots" ngModel min="1">
+        </div>
+
+        <!-- Type de session -->
+        <div class="form-group mb-2">
+            <label>Type de session <span class="text-danger">*</span></label>
+            <select class="form-control" name="session_type" ngModel required #session_type="ngModel">
+                <option selected disabled value="">-- Sélectionner --</option>
+                <option value="matinee">Matinée</option>
+                <option value="apres_midi">Après-midi</option>
+                <option value="journee_entiere">Journée entière</option>
+            </select>
+            <span *ngIf="session_type.invalid && (session_type.dirty || session_type.touched)" class="text-danger">
+                <small *ngIf="session_type.errors?.['required']">Le type de session est requis.</small>
+            </span>
+        </div>
+
+        <!-- Type de RDV -->
+        <div class="form-group mb-2">
+            <label>Type de RDV <span class="text-danger">*</span></label>
+            <select class="form-control" name="rdv_type" ngModel required #rdv_type="ngModel">
+                <option selected disabled value="">-- Sélectionner --</option>
+                <option value="premier_rdv">Premier RDV</option>
+                <option value="second_rdv">Second RDV</option>
+                <option value="suivi_traitement">Suivi traitement</option>
+            </select>
+            <span *ngIf="rdv_type.invalid && (rdv_type.dirty || rdv_type.touched)" class="text-danger">
+                <small *ngIf="rdv_type.errors?.['required']">Le type de RDV est requis.</small>
+            </span>
+        </div>
+
+        <!-- Statut -->
+        <div class="form-group mb-2">
+            <label>Statut <span class="text-danger">*</span></label>
+            <select class="form-control" name="status" ngModel required #status="ngModel">
+                <option selected disabled value="">-- Sélectionner --</option>
+                <option value="Ouvert">Ouvert</option>
+                <option value="Clos">Clos</option>
+            </select>
+            <span *ngIf="status.invalid && (status.dirty || status.touched)" class="text-danger">
+                <small *ngIf="status.errors?.['required']">Le statut est requis.</small>
+            </span>
+        </div>
+
+        <!-- Priorité -->
+        <div class="form-group mb-2">
+            <label>Priorité <span class="text-danger">*</span></label>
+            <select class="form-control" name="priority" ngModel required #priority="ngModel">
+                <option selected disabled value="">-- Sélectionner --</option>
+                <option value="Faible">Faible</option>
+                <option value="Moyenne">Moyenne</option>
+                <option value="Haute">Haute</option>
+            </select>
+            <span *ngIf="priority.invalid && (priority.dirty || priority.touched)" class="text-danger">
+                <small *ngIf="priority.errors?.['required']">La priorité est requise.</small>
+            </span>
+        </div>
+
+        <!-- Origine -->
+        <div class="form-group mb-2">
+            <label>Origine <span class="text-danger">*</span></label>
+            <select class="form-control" name="from" ngModel required #from="ngModel">
+                <option selected disabled value="">-- Sélectionner --</option>
+                <option value="Usager">Usager</option>
+                <option value="Métier">Métier</option>
+            </select>
+            <span *ngIf="from.invalid && (from.dirty || from.touched)" class="text-danger">
+                <small *ngIf="from.errors?.['required']">L'origine est requise.</small>
+            </span>
+        </div>
+
+        <!-- Réponse usager -->
+        <div class="form-group mb-2">
+            <label>Réponse usager attendue</label>
+            <select class="form-control" name="usager_response" ngModel>
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+            </select>
+        </div>
+
+        <!-- Notification -->
+        <div class="form-group mb-2">
+            <label>Activer les notifications</label>
+            <select class="form-control" name="has_notif" ngModel>
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+            </select>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group mb-2">
+            <label>Description</label>
+            <textarea name="description" ngModel class="form-control" rows="4"></textarea>
+        </div>
+
     </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
+            Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+        </button>
+    </div>
+
 </form>
   </ng-template>
+
+ <ng-template #editContent let-c="close" let-d="dismiss">
+  <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+
+    <div class="modal-header">
+      <h5 class="modal-title">Modification de programme</h5>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+
+      <div class="row">
+
+        <!-- Titre -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Titre <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="title"
+            [(ngModel)]="selected_data.title" required #title="ngModel">
+          <span *ngIf="title.invalid && (title.dirty || title.touched)" class="text-danger">
+            <small *ngIf="title.errors?.['required']">Le titre est requis.</small>
+          </span>
+        </div>
+
+        <!-- Origine -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Origine <span class="text-danger">*</span></label>
+          <select class="form-control" name="from"
+            [(ngModel)]="selected_data.from" required #from="ngModel">
+            <option disabled value="">-- Sélectionner --</option>
+            <option value="Usager">Usager</option>
+            <option value="Métier">Métier</option>
+          </select>
+          <span *ngIf="from.invalid && (from.dirty || from.touched)" class="text-danger">
+            <small *ngIf="from.errors?.['required']">L'origine est requise.</small>
+          </span>
+        </div>
+
+        <!-- Date début -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Date début <span class="text-danger">*</span></label>
+          <input type="datetime-local" class="form-control" name="date_start"
+            [(ngModel)]="selected_data.date_start" required #date_start="ngModel">
+          <span *ngIf="date_start.invalid && (date_start.dirty || date_start.touched)" class="text-danger">
+            <small *ngIf="date_start.errors?.['required']">La date de début est requise.</small>
+          </span>
+        </div>
+
+        <!-- Date fin -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Date fin</label>
+          <input type="datetime-local" class="form-control" name="date_end"
+            [(ngModel)]="selected_data.date_end">
+        </div>
+
+        <!-- Durée -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Durée (minutes)</label>
+          <input type="number" class="form-control" name="duration_minutes"
+            [(ngModel)]="selected_data.duration_minutes" min="1">
+        </div>
+
+        <!-- Slots max -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Nombre de slots max</label>
+          <input type="number" class="form-control" name="max_slots"
+            [(ngModel)]="selected_data.max_slots" min="1">
+        </div>
+
+        <!-- Type de session -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Type de session <span class="text-danger">*</span></label>
+          <select class="form-control" name="session_type"
+            [(ngModel)]="selected_data.session_type" required #session_type="ngModel">
+            <option disabled value="">-- Sélectionner --</option>
+            <option value="matinee">Matinée</option>
+            <option value="apres_midi">Après-midi</option>
+            <option value="journee_entiere">Journée entière</option>
+          </select>
+          <span *ngIf="session_type.invalid && (session_type.dirty || session_type.touched)" class="text-danger">
+            <small *ngIf="session_type.errors?.['required']">Le type de session est requis.</small>
+          </span>
+        </div>
+
+        <!-- Type de RDV -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Type de RDV <span class="text-danger">*</span></label>
+          <select class="form-control" name="rdv_type"
+            [(ngModel)]="selected_data.rdv_type" required #rdv_type="ngModel">
+            <option disabled value="">-- Sélectionner --</option>
+            <option value="premier_rdv">Premier RDV</option>
+            <option value="second_rdv">Second RDV</option>
+            <option value="suivi_traitement">Suivi traitement</option>
+          </select>
+          <span *ngIf="rdv_type.invalid && (rdv_type.dirty || rdv_type.touched)" class="text-danger">
+            <small *ngIf="rdv_type.errors?.['required']">Le type de RDV est requis.</small>
+          </span>
+        </div>
+
+        <!-- Statut -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Statut <span class="text-danger">*</span></label>
+          <select class="form-control" name="status"
+            [(ngModel)]="selected_data.status" required #status="ngModel">
+            <option disabled value="">-- Sélectionner --</option>
+            <option value="Ouvert">Ouvert</option>
+            <option value="Clos">Clos</option>
+          </select>
+          <span *ngIf="status.invalid && (status.dirty || status.touched)" class="text-danger">
+            <small *ngIf="status.errors?.['required']">Le statut est requis.</small>
+          </span>
+        </div>
+
+        <!-- Priorité -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Priorité <span class="text-danger">*</span></label>
+          <select class="form-control" name="priority"
+            [(ngModel)]="selected_data.priority" required #priority="ngModel">
+            <option disabled value="">-- Sélectionner --</option>
+            <option value="Faible">Faible</option>
+            <option value="Moyenne">Moyenne</option>
+            <option value="Haute">Haute</option>
+          </select>
+          <span *ngIf="priority.invalid && (priority.dirty || priority.touched)" class="text-danger">
+            <small *ngIf="priority.errors?.['required']">La priorité est requise.</small>
+          </span>
+        </div>
+
+        <!-- Réponse usager -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Réponse usager attendue</label>
+          <select class="form-control" name="usager_response"
+            [(ngModel)]="selected_data.usager_response">
+            <option value="0">Non</option>
+            <option value="1">Oui</option>
+          </select>
+        </div>
+
+        <!-- Notification -->
+        <div class="col-md-6 form-group mb-2">
+          <label>Activer les notifications</label>
+          <select class="form-control" name="has_notif"
+            [(ngModel)]="selected_data.has_notif">
+            <option value="0">Non</option>
+            <option value="1">Oui</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="col-12 form-group mb-2">
+          <label>Description</label>
+          <textarea name="description" [(ngModel)]="selected_data.description"
+            class="form-control" rows="3"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="d('Cross click')">Annuler</button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
+        Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+
+  </form>
+</ng-template>
   <ng-template #showContent let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
+    <h4 class="modal-title" id="modal-basic-title">Détails du programme</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
 
-      <div class="modal-body">
-        <div class="table-responsive table-card">
-       
-        </div>
-      </div>
+<div class="modal-body">
+    <div class="table-responsive table-card">
+        <table class="table table-borderless mb-0">
+            <tbody>
+
+                <tr>
+                    <th class="text-muted" style="width: 40%">Titre</th>
+                    <td>{{ selected_data?.title ?? '—' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Statut</th>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-success': selected_data?.status === 'Ouvert',
+                            'bg-secondary': selected_data?.status === 'Clos'
+                        }">{{ selected_data?.status }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Priorité</th>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-danger': selected_data?.priority === 'Haute',
+                            'bg-warning text-dark': selected_data?.priority === 'Moyenne',
+                            'bg-info text-dark': selected_data?.priority === 'Faible'
+                        }">{{ selected_data?.priority }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Date début</th>
+                    <td>{{ selected_data?.date_start | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Date fin</th>
+                    <td>{{ selected_data?.date_end ? (selected_data?.date_end | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Durée</th>
+                    <td>{{ selected_data?.duration_minutes ? selected_data?.duration_minutes + ' min' : '—' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Slots max</th>
+                    <td>{{ selected_data?.max_slots ?? '—' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Type de session</th>
+                    <td>
+                        <span [ngSwitch]="selected_data?.session_type">
+                            <span *ngSwitchCase="'matinee'">Matinée</span>
+                            <span *ngSwitchCase="'apres_midi'">Après-midi</span>
+                            <span *ngSwitchCase="'journee_entiere'">Journée entière</span>
+                            <span *ngSwitchDefault>—</span>
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Type de RDV</th>
+                    <td>
+                        <span [ngSwitch]="selected_data?.rdv_type">
+                            <span *ngSwitchCase="'premier_rdv'">Premier RDV</span>
+                            <span *ngSwitchCase="'second_rdv'">Second RDV</span>
+                            <span *ngSwitchCase="'suivi_traitement'">Suivi traitement</span>
+                            <span *ngSwitchDefault>—</span>
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Origine</th>
+                    <td>{{ selected_data?.from ?? '—' }}</td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Réponse usager</th>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-success': selected_data?.usager_response == 1,
+                            'bg-secondary': selected_data?.usager_response == 0
+                        }">{{ selected_data?.usager_response == 1 ? 'Oui' : 'Non' }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Notifications</th>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-success': selected_data?.has_notif == 1,
+                            'bg-secondary': selected_data?.has_notif == 0
+                        }">{{ selected_data?.has_notif == 1 ? 'Activées' : 'Désactivées' }}</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="text-muted">Description</th>
+                    <td>{{ selected_data?.description ?? '—' }}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
 </ng-template>

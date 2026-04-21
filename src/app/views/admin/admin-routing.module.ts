@@ -82,17 +82,12 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'agenda',
                 component: AgendaComponent,
             },
-            {
-                path: 'agenda/:slug',
-                component: AgendaComponent,
-            },
-
-            {
-                path: 'agenda/:code/:slug',
+             {
+                path: 'agenda/:code',
                 component: AgendaComponent,
             },
             {
-                path: 'agenda/:code/:slug/:codeP',
+                path: 'agenda/:code/:requete',
                 component: AgendaComponent,
             },
          

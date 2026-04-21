@@ -21,7 +21,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
     imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./agenda.component.css']
 })
-export class AgendaComponent implements OnInit,AfterViewInit {
+export class AgendaComponent implements OnInit {
   @ViewChild("dialog") dialog :TemplateRef<any> | undefined;
 
   selected_data:any
@@ -67,62 +67,107 @@ export class AgendaComponent implements OnInit,AfterViewInit {
           config.backdrop = 'static';
           config.keyboard = false;
       } 
-  ngAfterViewInit(): void {
-    if (this.slug != undefined) {
-      this.upId=this.user_prestations.find((el:any)=>el.prestation.slug==this.slug)?.id
 
-    }
-    if (this.code !=undefined && this.slug != undefined) {
-      this.upId=this.user_prestations.find((el:any)=>el.prestation.slug==this.slug).id
-      this.requeteService.getForAgenda(this.slug,this.codeP).subscribe((res:any)=>{
-        this.requetes=res
-      //  this.reqId=this.code
-       this.reqId=this.requetes.find((el:any)=>el.code==this.code)?.id
-        this.add(this.dialog)
+
+  loadRequetes(event:any){
+       this.codeP=this.user_prestations.find((el:any)=>el.prestation.id==event.target.value).prestation.code
+    this.getRequetes()
+  }
+  getRequetes(){  
+  this.requeteService.getByPrestationAll(this.codeP).subscribe((res:any)=>{
+        this.requetes=res.data
 
         })
   }
+  
+ngOnInit(): void {
+  this.user = this.locService.get(GlobalName.userName);
+  this.user_prestations = this.user.user_prestations;
+  this.role = this.user.roles[0].name;
+
+  this.activatedRoute.paramMap.subscribe(params => {
+    const codePrestation = params.get('code');       // code prestation
+    const codeRequete = params.get('requete');       // code requete
+
+    if (codePrestation && codeRequete) {
+      // Cas 3 : /agenda/:code/:requete — préselection prestation + requete
+      this._initWithPrestationAndRequete(codePrestation, codeRequete);
+
+    } else if (codePrestation) {
+      // Cas 2 : /agenda/:code — filtrer par prestation
+      this._initWithPrestation(codePrestation);
+
+    } else {
+      // Cas 1 : /agenda — tout afficher
+      this._initDefault();
+    }
+  });
+
+  this.buttonsPermission = { show: true, add: true, edit: true, delete: true };
+}
+
+private _initDefault(): void {
+  this.upId = undefined;
+  this.reqId = undefined;
+  this.getData();
+}
+
+private _initWithPrestation(codePrestation: string): void {
+  // Trouver l'upId correspondant au code prestation
+  const found = this.user_prestations.find(
+    (up: any) => up.prestation.code === codePrestation
+  );
+  if (found) {
+    this.upId = found.id;
+    this.codeP = codePrestation;
+    this.getRequetes(); // charge les requetes filtrées
   }
-  
-    ngOnInit(): void {
-      this.user=this.locService.get(GlobalName.userName);
-      this.user_prestations=this.user.userprestation
-      this.role=this.user.roles[0].name;
-      
-      this.activatedRoute.paramMap.subscribe(params => {
-        this.selected_data=null
-        this.code=this.activatedRoute.snapshot.paramMap.get('code')
-        this.codeP=this.activatedRoute.snapshot.paramMap.get('codeP')
-        this.slug=this.activatedRoute.snapshot.paramMap.get('slug')
+  this.getData();
+}
 
-        if (this.slug != undefined && this.slug!=null ) {
-          this.getByPrestation()
-        }else{
-          this.all();
+private _initWithPrestationAndRequete(codePrestation: string, codeRequete: string): void {
+  const found = this.user_prestations.find(
+    (up: any) => up.prestation.code === codePrestation
+  );
+  if (found) {
+    this.upId = found.id;
+    this.codeP = codePrestation;
 
-        }
-       });  
-   
-     
-    this.buttonsPermission = {
-      show:true,
-      add:true,
-      edit:true,
-      delete:true
-    };
-    }
+    // Charger les requetes puis préselectionner
+    this.requeteService.getByPrestationAll(this.codeP).subscribe((res: any) => {
+      this.requetes = res.data;
+
+      // Préselectionner la requete par son code
+      const req = this.requetes.find((r: any) => r.code === codeRequete);
+      if (req) {
+        this.reqId = req.id;
+      }
+    });
+  }
+  this.getData();
+}
+
+// Méthode unifiée de chargement des données
+getData(): void {
+  this.loading2 = true;
+  if (this.codeP) {
+    this.requeteService.getForAgenda(this.codeP).subscribe(
+      (res: any) => { this.data = res.data; this.loading2 = false; },
+      () => { this.loading2 = false; }
+    );
+  } else {
+    this.agendaService.getAll().subscribe(  // ← adapte selon ton service
+      (res: any) => { this.data = res.data; this.loading2 = false; },
+      () => { this.loading2 = false; }
+    );
+  }
+}
+
+loadData(event:any){
+  this.codeP=this.user_prestations.find((el:any)=>el.prestation.id==event.target.value).prestation.code
+  this.getData()
+}
   
-    all() {
-      this.loading2=true;
-      this.agendaService.getAll().subscribe((res:any)=>{
-        this.data=res.data
-        this.loading2=false;
-      },
-      (error:any)=>{
-        
-        this.loading2=false;
-      })
-    }
 
     getByPrestation() {
       this.loading2=true;
@@ -200,7 +245,7 @@ export class AgendaComponent implements OnInit,AfterViewInit {
             (res:any)=>{
             this.loading=false;
            this.modalService.dismissAll()
-            this.all();
+            this.getRequetes();
             this.toastrService.success("Un programme enregistrée, mail envoyé à l'usager")
         },
         (err:any)=>{
@@ -218,7 +263,7 @@ export class AgendaComponent implements OnInit,AfterViewInit {
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()
-          this.all();
+          this.getRequetes();
           //MyToastr.make('success',"Type Entité","Modification des types entités",this.toastrService)
   
       },
@@ -235,7 +280,7 @@ export class AgendaComponent implements OnInit,AfterViewInit {
         this.agendaService.delete(this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
-          this.all();
+          this.getRequetes();
           //MyToastr.make('success',"Type Entité","Suppression de type entité",this.toastrService)
       },
       (err:any)=>{
@@ -243,12 +288,6 @@ export class AgendaComponent implements OnInit,AfterViewInit {
       })
       }
   
-  }
-  
-  loadRequete(event:any){
-this.requeteService.getForAgenda( this.user_prestations.find((el:any)=>el.prestation.id==event.target.value).prestation.slug).subscribe((res:any)=>{
-this.requetes=res
-})
   }
 
   getStatus(state:any){
@@ -291,7 +330,7 @@ this.requetes=res
         this.toastrService.info('Mail Envoyé')
 
       this.loading=false;
-      this.all();
+      this.getRequetes();
       this.toastrService.success("Transmission de la proposition de rendez vous")
   },
   (err:any)=>{
@@ -309,7 +348,7 @@ this.requetes=res
             this.requeteService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
               this.toastrService.success(res.message)
               this.loading=false
-              this.all()
+              this.getRequetes()
           },
           (err:any)=>{
             this.loading=false
@@ -350,13 +389,13 @@ resetSearch() {
   this.search_text = '';
   this.isPaginate=true;
   this.pg.p = 1; // reset pagination si utilisée
-  this.all(); // méthode pour recharger les données initiales
+  this.getRequetes(); // méthode pour recharger les données initiales
 }
 
     getPage(event:any){
     if (this.isPaginate) {
       this.pg.p=event
-      this.all();
+      this.getRequetes();
     } else {
           this.pg.p=event
     }

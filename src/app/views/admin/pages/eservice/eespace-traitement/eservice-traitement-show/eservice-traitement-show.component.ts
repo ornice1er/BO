@@ -54,6 +54,7 @@ export class EserviceTraitementShowComponent implements OnInit {
     private toastr: ToastrService,
     private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas,
+    private toastrService:ToastrService,
     config: NgbModalConfig,
   ) {
     config.backdrop = 'static';
@@ -71,6 +72,15 @@ export class EserviceTraitementShowComponent implements OnInit {
         .find((el: any) => el.prestation.code === this.prestation)?.prestation;
       this.get();
     });
+  }
+
+  creerRdv(){
+  if (this.selected_data==null) {
+       this.toastrService.warning("Aucun élément selectionné");
+      return ;
+    }
+    this.locService.set("selected_data",this.selected_data)
+    this.router.navigate(['admin/agenda/'])
   }
 
   // ── Chargement de la demande ───────────────────────────────────────────────

@@ -65,7 +65,7 @@
 
   <!-- Créer RDV -->
   <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'en_attente'">
-    <button type="button" class="btn btn-dark text-white">
+    <button type="button" (click)="creerRdv()" class="btn btn-dark text-white">
       <i class="bi bi-calendar me-2"></i>
       Créer un rendez-vous
     </button>

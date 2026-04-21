@@ -50,6 +50,7 @@
                 <th>Email</th>
                 <th>Téléphone</th>
                 <th>Étape courante</th>
+                <th>Etape suivante</th>
                 <th>Statut</th>
                 <th>Dernier acteur</th>
                 <th>SLA restant</th>
@@ -115,8 +116,26 @@
                   <span class="badge bg-primary">
                     {{ d?.current_etape?.name ?? '—' }}
                   </span>
-                </td>
+                   <ul>
+                <li *ngFor="let visibilite of d.last_log?.transition?.visibilites" class="small text-muted">
+                  <i class="bi bi-eye me-1"></i>{{ visibilite?.role_name }} [{{ visibilite?.ua?.entite?.sigle ?? '—' }} / {{ visibilite?.ua?.sigle ?? '—' }}]
+                  <i *ngIf="visibilite?.can_act" class="bi bi-pencil-square text-warning"></i>
+                  <i *ngIf="visibilite?.can_read" class="bi bi-file-earmark-text text-primary"></i>
 
+              </ul>
+                </td>
+                 <td>
+                  <span class="badge bg-primary">
+                    {{ d?.last_log?.etape_to?.name ?? '—' }}
+                  </span>
+                     <ul>
+                <li *ngFor="let visibilite of d.last_log?.transition?.visibilites" class="small text-muted">
+                  <i class="bi bi-eye me-1"></i>{{ visibilite?.role_name }} [{{ visibilite?.ua?.entite?.sigle ?? '—' }} / {{ visibilite?.ua?.sigle ?? '—' }}]
+                  <i *ngIf="visibilite?.can_act" class="bi bi-pencil-square text-warning"></i>
+                  <i *ngIf="visibilite?.can_read" class="bi bi-file-earmark-text text-primary"></i>
+
+              </ul>
+                </td>
                 <!-- ✅ Statut courant — nouvelle logique -->
                 <td>
                   <span

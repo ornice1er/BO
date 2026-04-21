@@ -40,8 +40,8 @@ export class RequeteService {
   }
 
   /** Toutes les demandes d'une prestation (admin) */
-  getByPrestationAll(slug: any, code?: any): any {
-    return this.http.get<any>(`${this.url}/byPrestation/${slug}/all?code=${code}`);
+  getByPrestationAll(code: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${code}/all`);
   }
 
   /** Vérifier si l'agent connecté peut agir sur une demande */
@@ -156,8 +156,8 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
   // MÉTHODES CONSERVÉES POUR RÉTROCOMPATIBILITÉ
   // ─────────────────────────────────────────────────────────────────────────
 
-  getForAgenda(slug: any, code?: any): any {
-    return this.http.get<any>(`${this.url}/byPrestation/${slug}/agenda?code=${code}`);
+  getForAgenda(code: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${code}/agenda`);
   }
 
   relance(id: any): any {
