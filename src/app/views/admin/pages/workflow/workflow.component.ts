@@ -18,15 +18,17 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { TransitionCondition } from '../../../../core/Models/interface.model';
+import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 
 @Component({
     selector: 'app-workflow',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule,NgToggleModule, NgToggleComponent],
     templateUrl: './workflow.component.html',
     styleUrl: './workflow.component.css'
 })
 export class WorkflowComponent {
   isDtInitialized: boolean = false;
+  add_data: any = { can_act_pns: false, decision: ''};
 
   selected_data: any;
   user: any;

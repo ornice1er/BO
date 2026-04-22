@@ -54,6 +54,9 @@ export class RequeteService {
     return this.http.get<any>(`${this.url}/${id}/completude`);
   }
 
+
+
+
   /**
    * Transitions disponibles depuis l'étape courante d'une demande.
    * Remplace workflowService.getAll() qui utilisait eps?.etape?.id
@@ -79,6 +82,12 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
   prendreEnCharge(id: any): any {
     return this.http.post<any>(`${this.url}/${id}/prendre-en-charge`, {});
   }
+
+     associateToProject(id: any,project_id:any): any {
+    return this.http.post<any>(`${ConfigService.toApiUrl('requete-associate-to-project')}/${id}`, { project_id: project_id });
+  }
+
+
 
   /**
    * Traiter une demande : valider, rejeter, signer, parapher, prévalider, clôturer

@@ -15,7 +15,7 @@ import { ContentChange } from 'ngx-quill';
         [modules]="modules"
         (onContentChanged)="onContentChanged($event)"
         (blur)="onTouched()"
-        style="min-height:300px">
+        style="min-height:300px; width: 100%" >
       </quill-editor>
     </ng-container>
   `,

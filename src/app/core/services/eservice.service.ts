@@ -15,6 +15,17 @@ export class EServiceService {
     return this.http.get<any>(this.url, );
   }
 
+
+  getSessionData(prestation_codes?:any): any {
+    if (prestation_codes) {
+          return this.http.get<any>(`${ConfigService.toApiUrl('eservices-get-session')}?prestation_codes=${prestation_codes}`, );
+
+    } else {
+          return this.http.get<any>(`${ConfigService.toApiUrl('eservices-get-session')}`, );
+
+    }
+  }
+
   store(ressource: any) {
     return this.http.post(this.url, ressource, );
   }
@@ -49,3 +60,5 @@ export class EServiceService {
      ConfigService.addAction('status'));
   }
 }
+
+

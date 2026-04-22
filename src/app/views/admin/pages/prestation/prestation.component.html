@@ -306,6 +306,19 @@
             </ng-toggle>
           </div>
 
+            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance groupé</label>
+            <ng-toggle name="is_group_delivered" [(ngModel)]="add_data.is_group_delivered"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+             <div class="form-group col-md-4 mb-3">
+          <label>Clé de décision</label>
+          <input type="text" class="form-control" [(ngModel)]="add_data.decision" name="decision"/>
+        </div>
+
+
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Formulaire sur le portail national</label>
             <ng-toggle name="from_pns" [(ngModel)]="add_data.from_pns"
@@ -434,6 +447,19 @@
             </ng-toggle>
           </div>
 
+
+            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance groupé</label>
+            <ng-toggle name="is_group_delivered" [(ngModel)]="selected_data.is_group_delivered"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+             <div class="form-group col-md-4 mb-3">
+          <label>Clé de décision</label>
+          <input type="text" class="form-control" [(ngModel)]="selected_data.decision" name="decision"/>
+        </div>
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Formulaire sur le portail national</label>
             <ng-toggle name="from_pns" [(ngModel)]="selected_data.from_pns"

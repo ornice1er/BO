@@ -170,12 +170,12 @@ get(): void {
     const condition = this.transitionSelectionnee.condition_type;
 
     // Afficher les champs selon le type de transition
-    if (condition === 'validation' && this.myPrestation?.need_validation) {
+    if (condition === 'validation') {
       this.showAddingField.note_file = true;
     }
-    if (condition === 'validation' && this.myPrestation?.need_meeting) {
-      this.showAddingField.rdv = true;
-    }
+    // if (condition === 'validation' && this.myPrestation?.need_meeting) {
+    //   this.showAddingField.rdv = true;
+    // }
   }
 
   // ── Soumission ─────────────────────────────────────────────────────────────

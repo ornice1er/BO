@@ -35,6 +35,7 @@ export class ProjectComponent {
   uas:any[]=[]
   prestationsList:any[]=[]
   permissions:any[]=[]
+  prestationSelected:any[]=[]
   loading=false
   loading2=false
   error:any=""
@@ -136,7 +137,7 @@ remoteSearchData: any[] = []
     checked(el:any){
       this.selected_data=el
       this.uas=this.data2.find((ea:any)=> ea.id == el.entite_admin_id)?.uas
-
+      this.prestationSelected= this.getJson(el.prestations)
     }
   
     
@@ -197,14 +198,21 @@ add(content:any){
       }
 
      
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
-        }
-      }
+  let formData = new FormData();
 
+for (const key in value) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+        const element = value[key];
+
+        if (key === 'prestations') {
+            // S'assurer que c'est bien un array avant stringify
+            const prestations = Array.isArray(element) ? element : [element];
+            formData.append(key, JSON.stringify(prestations)); // ✅ envoie ["PS00608","PS00609"]
+        } else if (element !== null && element !== undefined) {
+            formData.append(key, element);
+        }
+    }
+}
       formData.append('file',this.fileInput)
 
       
@@ -237,14 +245,22 @@ add(content:any){
 
     
 
+     
+  let formData = new FormData();
 
-      let formData = new FormData()
-      for (const key in value) {
-        if (Object.prototype.hasOwnProperty.call(value, key)) {
-          const element = value[key];
-         formData.append(key,element) 
+for (const key in value) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+        const element = value[key];
+
+        if (key === 'prestations') {
+            // S'assurer que c'est bien un array avant stringify
+            const prestations = Array.isArray(element) ? element : [element];
+            formData.append(key, JSON.stringify(prestations)); // ✅ envoie ["PS00608","PS00609"]
+        } else if (element !== null && element !== undefined) {
+            formData.append(key, element);
         }
-      }
+    }
+}
 
         if (this.fileInput!=undefined) {
              formData.append('file',this.fileInput)
@@ -359,5 +375,9 @@ resetSearch() {
 
   getLink(filename:any){
     return ConfigService.toFile(`storage/${filename}`)
+  }
+
+  getJson(data:any){
+    return JSON.parse(data)
   }
 }

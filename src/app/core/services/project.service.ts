@@ -11,9 +11,17 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): any {
-    return this.http.get<any>(this.url, );
+  getAll(prestation_codes?:any): any {
+     if (prestation_codes) {
+          return this.http.get<any>(`${ConfigService.toApiUrl('projects')}?prestation_codes=${prestation_codes}`, );
+
+    } else {
+          return this.http.get<any>(`${ConfigService.toApiUrl('projects')}`, );
+
+    }
   }
+
+
 
   store(ressource: any) {
     return this.http.post(this.url, ressource, );

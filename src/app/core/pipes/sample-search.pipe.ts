@@ -21,7 +21,15 @@ export class SampleSearchPipe implements PipeTransform {
               item?.email?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.phone?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-              item?.short_name?.toLowerCase().includes(searchText.toLowerCase())
+              item?.short_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.transition?.prestation?.code?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.prestation?.code?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.prestation?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.prestation?.short_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.current_status?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.current_status?.short_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.created_at?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.updated_at?.toLowerCase().includes(searchText.toLowerCase())
         }) : value;
   }
 

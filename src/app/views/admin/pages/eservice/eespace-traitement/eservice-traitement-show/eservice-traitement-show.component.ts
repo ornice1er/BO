@@ -14,6 +14,8 @@ import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
+import { EServiceService } from '../../../../../../core/services/eservice.service';
+import { ProjectService } from '../../../../../../core/services/project.service';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
@@ -36,6 +38,7 @@ export class EserviceTraitementShowComponent implements OnInit {
   prestation: any;
   stepContents: any[] = [];
   motifsRejet: any[] = [];
+  projects: any[] = [];
 
   // ── État UI ────────────────────────────────────────────────────────────────
   loading = false;
@@ -49,6 +52,8 @@ export class EserviceTraitementShowComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private locService: LocalStorageService,
     private requeteService: RequeteService,
+    private eService: EServiceService,
+    private projectService:ProjectService,
     private sanitizer: DomSanitizer,
     private router: Router,
     private toastr: ToastrService,
@@ -74,6 +79,17 @@ export class EserviceTraitementShowComponent implements OnInit {
     });
   }
 
+  getProjects(){
+    this.projectService.getAll(this.prestation).subscribe({
+      next:(res:any)=>{
+        this.projects=res.data ?? [];
+      },
+      error:()=>{
+        this.toastr.error('Erreur lors de la récupération des données de session');
+      }
+    })
+  }
+
   creerRdv(){
   if (this.selected_data==null) {
        this.toastrService.warning("Aucun élément selectionné");
@@ -83,6 +99,12 @@ export class EserviceTraitementShowComponent implements OnInit {
     this.router.navigate(['admin/agenda/'])
   }
 
+      
+add(content:any){
+    this.modalService.open(content,{size:'lg'});
+  }
+
+
   // ── Chargement de la demande ───────────────────────────────────────────────
   get(): void {
     this.requeteService.getOne(this.code, this.prestation).subscribe({
@@ -91,11 +113,16 @@ export class EserviceTraitementShowComponent implements OnInit {
         this.selected_data = res.data;
         this.stepContents  = res.data?.step_contents ?? [];
 
+        
         // Vérifier si l'agent connecté peut agir sur cette demande
         this.checkPeutAgir();
 
         // Charger les motifs de rejet pour l'étape courante
         this.loadMotifsRejet();
+
+        if (this.selected_data?.current_etape?.can_associate) {
+          this.getProjects();
+        }
       },
       error: () => {
         this.toastr.error('Impossible de charger la demande');
@@ -193,6 +220,42 @@ export class EserviceTraitementShowComponent implements OnInit {
       motif_id: value.motif_id ?? null,
     });
   }
+
+  associate(value: any) {
+    this.loading = true;
+    this.requeteService.associateToProject(this.selected_data.id, value.project_id).subscribe(
+      (res:any) => {  
+          this.loading = false;
+           this.toastr.success(res.message)
+           this.modalService.dismissAll();
+           this.get();
+           //MyToastr.make('success',"Gestion des agents ","Modification effectuée avec succès",this.toastrService)
+
+      },
+      (err:any)=>{
+          this.loading=false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      })
+  }
+
+  dissociate() {
+    this.loading = true;
+    this.requeteService.associateToProject(this.selected_data.id, null).subscribe(
+      (res:any) => {  
+          this.loading = false;
+           this.toastr.success(res.message)
+           this.modalService.dismissAll();
+           this.getProjects();
+           //MyToastr.make('success',"Gestion des agents ","Modification effectuée avec succès",this.toastrService)
+
+      },
+      (err:any)=>{
+          this.loading=false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      })
+  }     
+    
+    
 
   // ── Action sur un document du circuit (paraphe, signature...) ─────────────
 peutAgirSurDocument(acte: any): boolean {

@@ -27,7 +27,7 @@ isDtInitialized:boolean = false
 
   selected_data: any
   user: any
-  add_data: any = { is_terminal: false, allow_partial_save: false }
+  add_data: any = { is_terminal: false, allow_partial_save: false,can_associate:false }
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
