@@ -30,8 +30,8 @@ export class RequeteService {
   }
 
   /** Banette de l'agent connecté selon son rôle */
-  getBanette(prestationCode: string): any {
-    return this.http.get<any>(`${this.url}/banette/${prestationCode}`);
+  getBanette(prestationCode: string, nature: string='auto', status: string='all'): any {
+    return this.http.get<any>(`${this.url}/banette/${prestationCode}?nature=${nature}&status=${status}`);
   }
 
   /** Suivi public par le requérant */
@@ -40,8 +40,8 @@ export class RequeteService {
   }
 
   /** Toutes les demandes d'une prestation (admin) */
-  getByPrestationAll(slug: any, code?: any): any {
-    return this.http.get<any>(`${this.url}/byPrestation/${slug}/all?code=${code}`);
+  getByPrestationAll(code: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${code}/all`);
   }
 
   /** Vérifier si l'agent connecté peut agir sur une demande */
@@ -53,6 +53,9 @@ export class RequeteService {
   verifierCompletude(id: any): any {
     return this.http.get<any>(`${this.url}/${id}/completude`);
   }
+
+
+
 
   /**
    * Transitions disponibles depuis l'étape courante d'une demande.
@@ -79,6 +82,12 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
   prendreEnCharge(id: any): any {
     return this.http.post<any>(`${this.url}/${id}/prendre-en-charge`, {});
   }
+
+     associateToProject(id: any,project_id:any): any {
+    return this.http.post<any>(`${ConfigService.toApiUrl('requete-associate-to-project')}/${id}`, { project_id: project_id });
+  }
+
+
 
   /**
    * Traiter une demande : valider, rejeter, signer, parapher, prévalider, clôturer
@@ -156,8 +165,8 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
   // MÉTHODES CONSERVÉES POUR RÉTROCOMPATIBILITÉ
   // ─────────────────────────────────────────────────────────────────────────
 
-  getForAgenda(slug: any, code?: any): any {
-    return this.http.get<any>(`${this.url}/byPrestation/${slug}/agenda?code=${code}`);
+  getForAgenda(code: any): any {
+    return this.http.get<any>(`${this.url}/byPrestation/${code}/agenda`);
   }
 
   relance(id: any): any {

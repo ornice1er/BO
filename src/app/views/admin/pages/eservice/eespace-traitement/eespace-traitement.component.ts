@@ -163,7 +163,7 @@ export class EespaceTraitementComponent implements OnInit,AfterViewInit {
       
       console.log(this.prestation)
       this.loading2=true;
-      this.requeteService.getBanette(this.prestation).subscribe((res:any)=>{
+      this.requeteService.getBanette(this.prestation,'auto').subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()

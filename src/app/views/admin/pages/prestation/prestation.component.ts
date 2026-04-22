@@ -27,7 +27,7 @@ export class PrestationComponent implements OnInit {
   selected_data: any
   user: any
   roles: any
-  add_data: any = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false }
+  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false,  need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false,decision:"" }
   data:any[]=[]
   permissions:any[]=[]
   data2:any[]=[]

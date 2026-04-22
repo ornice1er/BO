@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } f
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -63,7 +63,8 @@ remoteSearchData: any[] = []
      private _sanitizationService: DomSanitizer,      
         private locService:LocalStorageService,
        config: NgbModalConfig, private modalService: NgbModal,
-       private toastrService:ToastrService
+       private toastrService:ToastrService,
+       private router: Router
      ){
       config.backdrop = 'static';
           config.keyboard = false;
@@ -107,11 +108,21 @@ add(content:any){
   }
 
 
-  show(content:any){
-    if(!this.verifyIfElementChecked()) return ;
+  // show(content:any){
+  //   if(!this.verifyIfElementChecked()) return ;
     
-    this.modalService.open(content,{size:'lg'});
+  //   this.modalService.open(content,{size:'lg'});
+  // }
+
+  show(){
+    if (this.selected_data==null) {
+       this.toastrService.warning("Aucun élément selectionné");
+      return ;
+    }
+    this.locService.set("selected_data",this.selected_data)
+    this.router.navigate(['admin/eservice/espace-traitement-show/'+this.selected_data.code+'/'+this.prestation])
   }
+ 
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;

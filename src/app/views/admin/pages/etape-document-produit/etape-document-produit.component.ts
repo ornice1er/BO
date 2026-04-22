@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -15,13 +15,15 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { QuillEditorWrapperComponent } from '../../../components/quill-editor-wrapper/quill-editor-wrapper.component';
+
 
 @Component({
   selector: 'app-etape-document-produit',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent
+    MatTooltipModule, NgToggleModule, NgToggleComponent,QuillEditorWrapperComponent
   ],
   templateUrl: './etape-document-produit.component.html',
   styleUrl: './etape-document-produit.component.css'
@@ -30,7 +32,7 @@ export class EtapeDocumentProduitComponent implements OnInit {
 
   selected_data: any;
   user: any;
-  add_data: any = { allow_correction: true };
+  add_data: any = { allow_correction: true , content: ''};
   data: any[] = [];
   etapes: any[] = [];
   prestations: any[] = [];
@@ -43,8 +45,19 @@ export class EtapeDocumentProduitComponent implements OnInit {
   remoteSearchData: any[] = [];
   isPaginate = true;
   pg = { pageSize: 10, p: 1, total: 0 };
+generate_from:any="pns"
+quillModules: any
+
+formats = [
+  'bold', 'italic', 'underline',
+  'list', 'bullet',
+  'align'
+];
+
+  isBrowser = false;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
     private service: EtapeDocumentProduitService,
     private etapeService: EtapeService,
     private prestationService: PrestationService,
@@ -55,15 +68,21 @@ export class EtapeDocumentProduitComponent implements OnInit {
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
+     
   }
 
   ngOnInit(): void {
+     this.isBrowser = isPlatformBrowser(this.platformId);
+
     this.all();
     this.allEtapes();
     this.allPrestations();
     this.user = this.locService.get(GlobalName.userName);
     this.permissions = this.user.roles[0].permissions;
   }
+
+
+
 
   all() {
     this.loading2 = true;
@@ -94,7 +113,7 @@ export class EtapeDocumentProduitComponent implements OnInit {
   }
 
   add(content: any) {
-    this.add_data = { allow_correction: true };
+    this.add_data = { allow_correction: true , content: ''};
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -118,7 +137,12 @@ export class EtapeDocumentProduitComponent implements OnInit {
 
   store(value: any) {
     this.loading = true;
-    this.service.store(value).subscribe(
+     const payload = {
+    ...value,
+    content: this.add_data.content,           // ✅ récupéré depuis le modèle
+    allow_correction: this.add_data.allow_correction
+  };
+    this.service.store(payload).subscribe(
       (res: any) => {
         this.loading = false;
         this.modalService.dismissAll();
@@ -128,9 +152,20 @@ export class EtapeDocumentProduitComponent implements OnInit {
     );
   }
 
+  setHtmlContent(quill: any, html: string) {
+  const delta = quill.clipboard.convert(html);
+  quill.setContents(delta);
+}
+
   update(value: any) {
     this.loading = true;
-    this.service.update(value, this.selected_data.id).subscribe(
+   const payload = {
+    ...value,
+    content: this.selected_data.content,      // ✅
+    allow_correction: this.selected_data.allow_correction
+  };
+
+    this.service.update(payload, this.selected_data.id).subscribe(
       (res: any) => {
         this.loading = false;
         this.modalService.dismissAll();

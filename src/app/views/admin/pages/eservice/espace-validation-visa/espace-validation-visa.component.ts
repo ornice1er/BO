@@ -154,7 +154,7 @@ export class EspaceValidationVisaComponent implements OnInit {
       
       console.log(this.prestation)
       this.loading2=true;
-      this.requeteService.getBanette(this.code).subscribe((res:any)=>{
+      this.requeteService.getBanette(this.code,'validation').subscribe((res:any)=>{
         this.data=res.data
         this.loading2=false;
         this.modalService.dismissAll()
@@ -168,15 +168,6 @@ export class EspaceValidationVisaComponent implements OnInit {
   
     checked(el:any){
       this.selected_data=el
-      console.log(this.selected_data)
-
-      if(this.selected_data?.reponses!.length !=0){
-        var check=this.selected_data.reponses.find((e:any)=> e.unite_admin_id ==this.user.agent.unite_admin.id)
-        if(check) this.responseUA=check;
-      }
-      this.docs[0].content=this.selected_data.content
-      this.docs[1].content=this.selected_data.content2
-      this.docs[2].content=this.selected_data.content3
     }
   
     

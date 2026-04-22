@@ -1,3 +1,16 @@
 .offcanvas-wide {
    width: 70% !important;
 }
+
+.nav-tabs .nav-link {
+  color: #495057; /* couleur lisible */
+}
+
+.nav-tabs .nav-link.active {
+  color: #000;
+  font-weight: 600;
+}
+
+.nav-tabs .nav-link:not(.active) {
+  color: #6c757d; /* gris mais visible */
+}

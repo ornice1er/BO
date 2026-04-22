@@ -12,8 +12,41 @@
     </button>
   </div>
 
+   <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir">
+    <button
+      class="btn btn-secondary"
+      (click)="prendreEnCharge()"
+      [disabled]="loading">
+      <i class="bi bi-hand-index me-2"></i>
+      Prise de rdv
+    </button>
+  </div>
+
+  <!-- Créer RDV -->
+  <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'en_attente_visite'">
+    <button type="button" (click)="creerRdv()" class="btn btn-dark text-white">
+      <i class="bi bi-calendar me-2"></i>
+      Créer un rendez-vous
+    </button>
+  </div>
+
+   <div *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id==null && peutAgir">
+    <button type="button" (click)="add(addContent)" class="btn btn-dark text-white">
+      <i class="bi bi-calendar me-2"></i>
+     Associer à un projet
+    </button>
+  </div>
+    <div *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id!=null && peutAgir">
+    <button type="button" (click)="add(addContent)" class="btn btn-danger text-white">
+      <i class="bi bi-calendar me-2"></i>
+     Retirer du projet: {{selected_data?.project?.title}}
+    </button>
+  </div>
+
   <!-- Traiter la demande (valider / rejeter) -->
- <div *ngIf="peutAgir">
+ <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente' 
+              && selected_data?.current_status?.short_name != 'pris_en_charge' 
+              && selected_data?.current_status?.short_name != 'en_attente_visite'  && peutAgir">
   <button
     class="btn btn-warning"
     (click)="open2()"
@@ -63,13 +96,7 @@
     </button>
   </div>
 
-  <!-- Créer RDV -->
-  <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'en_attente'">
-    <button type="button" class="btn btn-dark text-white">
-      <i class="bi bi-calendar me-2"></i>
-      Créer un rendez-vous
-    </button>
-  </div>
+  
 
 </div>
 
@@ -90,11 +117,11 @@
         <strong>Statut :</strong>
         <span class="badge ms-2"
           [ngClass]="{
-            'bg-secondary':         selected_data?.current_status?.short_name === 'en_attente',
+            'bg-secondary':         selected_data?.current_status?.short_name === 'en_attente' || selected_data?.current_status?.short_name === 'pris_en_charge' || selected_data?.current_status?.short_name === 'en_attente_visite',
             'bg-info text-dark':    selected_data?.current_status?.short_name === 'en_verification',
-            'bg-primary':           selected_data?.current_status?.short_name === 'envoye',
+            'bg-primary':           selected_data?.current_status?.short_name === 'envoye' ||  selected_data?.current_status?.short_name === 'transmis',
             'bg-warning text-dark': selected_data?.current_status?.short_name === 'paraphe'
-                                  || selected_data?.current_status?.short_name === 'en_attente_signature',
+                                  || selected_data?.current_status?.short_name === 'en_attente_signature' ||  selected_data?.current_status?.short_name === 'etudie',
             'bg-success':           selected_data?.current_status?.short_name === 'valide'
                                   || selected_data?.current_status?.short_name === 'prevalide',
             'bg-danger':            selected_data?.current_status?.short_name === 'rejete'
@@ -191,7 +218,17 @@
           <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
             <td>{{ i + 1 }}</td>
             <td><span class="badge bg-secondary">{{ log?.etape_from?.name }}</span></td>
-            <td><span class="badge bg-primary">{{ log?.etape_to?.name }}</span></td>
+            <td>
+              <span class="badge bg-primary">{{ log?.etape_to?.name }}</span>
+            
+              <ul>
+                <li *ngFor="let visibilite of log?.transition?.visibilites" class="small text-muted">
+                  <i class="bi bi-eye me-1"></i>{{ visibilite?.role_name }} [{{ visibilite?.ua?.entite?.sigle ?? '—' }} / {{ visibilite?.ua?.sigle ?? '—' }}]
+                  <i *ngIf="visibilite?.can_act" class="bi bi-pencil-square text-warning"></i>
+                  <i *ngIf="visibilite?.can_read" class="bi bi-file-earmark-text text-primary"></i>
+
+              </ul>
+            </td>
             <td><span class="badge bg-info text-dark">{{ log?.status?.name }}</span></td>
             <td>
               {{ log?.triggered_by_type === 'système'
@@ -358,7 +395,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="fw-semibold">Mot de passe de délivrance</label>
+        <label class="fw-semibold">Mot de passe de sécurité</label>
         <input name="password" type="password" class="form-control mt-1" required ngModel>
       </div>
     </div>
@@ -382,4 +419,42 @@
   <div class="offcanvas-body p-0">
     <object [data]="pdfSrc" type="application/pdf" width="100%" height="100%"></object>
   </div>
+</ng-template>
+<ng-template #addContent let-c="close" let-d="dismiss">
+    <form #addForm="ngForm" (ngSubmit)="associate(addForm.value)">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Ajout de la demande à un projet</h4>
+            <button type="button" class="btn btn-dark" (click)="d('Cross click')">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group col-12 mb-3">
+                <label for="">Liste des projets en cours <span class="text-danger ml-2">(*)</span></label>
+                <select 
+                    name="project_id" 
+                    class="form-control" 
+                    ngModel          
+                    required>        <!-- ✅ required pour que addForm.invalid fonctionne -->
+                    <option value="">Sélectionner un projet...</option>
+                    <option *ngFor="let project of projects" [value]="project.id">
+                        {{ project.title }}  <!-- ✅ 'title' selon ton JSON, pas 'name' -->
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button 
+                type="submit" 
+                class="btn btn-outline-primary" 
+                [disabled]="addForm.invalid || loading">
+                Sauvegarder 
+                <app-loading [isVisible]="loading"></app-loading>
+            </button>
+        </div>
+
+    </form>
 </ng-template>

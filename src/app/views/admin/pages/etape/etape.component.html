@@ -218,6 +218,7 @@
               <option value="">-- Sélectionner --</option>
               <option value="depot">Dépôt</option>
               <option value="traitement">Traitement</option>
+              <option value="visite">Visite</option>
               <option value="commission">Commission</option>
               <option value="delivrance">Délivrance</option>
             </select>
@@ -246,6 +247,14 @@
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Sauvegarde partielle autorisée</label>
             <ng-toggle name="allow_partial_save" [(ngModel)]="add_data.allow_partial_save"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+             <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Association à un projet possible</label>
+            <ng-toggle name="can_associate" [(ngModel)]="add_data.can_associate"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>
@@ -284,6 +293,7 @@
               <option value="">-- Sélectionner --</option>
               <option value="depot">Dépôt</option>
               <option value="traitement">Traitement</option>
+              <option value="visite">Visite</option>
               <option value="commission">Commission</option>
               <option value="delivrance">Délivrance</option>
             </select>
@@ -312,6 +322,14 @@
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Sauvegarde partielle autorisée</label>
             <ng-toggle name="allow_partial_save" [(ngModel)]="selected_data.allow_partial_save"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Association à un projet possible</label>
+            <ng-toggle name="can_associate" [(ngModel)]="selected_data.can_associate"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>

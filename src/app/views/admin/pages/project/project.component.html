@@ -47,11 +47,12 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                  <th scope="col">Libellé</th>
+                <th scope="col">Libellé</th>
                 <th scope="col">Description</th>
+                <th scope="col">Prestations</th>
                 <th scope="col">Période</th>
                 <th scope="col">Arrêté</th>
-                                <th scope="col">Statut</th>
+                <th scope="col">Statut</th>
 
             </tr>
             </thead>
@@ -74,7 +75,7 @@
                     />
                 </div>
 
-                <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                <div *ngIf="selectedId === d.id && selected_data.status!='closed'" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
                     <button
                         class="btn btn-action btn-add"
@@ -145,6 +146,11 @@
 
                 <td>{{d?.title}}</td>
                 <td>{{d?.description}}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let p of getJson(d.prestations)">{{p}}</li>
+                    </ul>
+                </td>
                 <td>Du {{d?.date_start | date:"dd-MM-yyyy"}} au {{d?.date_end | date:"dd-MM-yyyy"}}</td>
                 <td>
                     <ul>
@@ -200,6 +206,12 @@
                 <label for="">Description <span class="text-danger ml-2">(*)</span></label>
                 <input type="text" name="description" class="form-control" ngModel>
             </div>
+             <div class=" form-group col-12 mb-3">
+                <label for="">Prestation(s) liée(s) <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="prestations" [multiple]="true" ngModel>
+                    <ng-option *ngFor="let p of prestationsList" [value]="p.code">[{{p.code}}]: {{p.name}}</ng-option>
+                </ng-select>
+            </div>
             <div class=" form-group col-12 mb-3">
                 <label for="">Date début <span class="text-danger ml-2">(*)</span></label>
                 <input type="date" name="date_start" class="form-control" ngModel>
@@ -241,6 +253,12 @@
                 <label for="">Description <span class="text-danger ml-2">(*)</span></label>
                 <input type="text" name="description" class="form-control" [(ngModel)]="selected_data.description">
             </div>
+              <div class=" form-group col-12 mb-3">
+                <label for="">Prestation(s) liée(s) <span class="text-danger ml-2">(*)</span></label>
+                <ng-select name="prestations" [(ngModel)]="prestationSelected" [multiple]="true">
+                    <ng-option *ngFor="let p of prestationsList" [value]="p.code">[{{p.code}}]: {{p.name}}</ng-option>
+                </ng-select>
+            </div>
             <div class=" form-group col-12 mb-3">
                 <label for="">Date début <span class="text-danger ml-2">(*)</span></label>
                 <input type="date" name="date_start" class="form-control" [(ngModel)]="selected_data.date_start">
@@ -250,17 +268,17 @@
                 <input type="date" name="date_end" class="form-control" [(ngModel)]="selected_data.date_end">
             </div>
                 <div class=" form-group col-12 mb-3">
-                <label for="">Arrếté portant création <span class="text-danger ml-2">(*)</span></label>
+                <label for="">Arrếté portant création</label>
                 <input type="file" class="form-control" (change)="uploadFile($event)">
             </div>
 
               <div class=" form-group col-12 mb-3">
-                <label for="">Arrếté de clôture <span class="text-danger ml-2">(*)</span></label>
+                <label for="">Arrếté de clôture </label>
                 <input type="file" class="form-control" (change)="uploadFile2($event)">
             </div>
 
             <div class=" form-group col-12 mb-3">
-                <label for="">Statut<span class="text-danger ml-2">(*)</span></label>
+                <label for="">Statut</label>
                 <select [(ngModel)]="selected_data.status" name="status" id=""  class="form-control">
                     <option value="open">Ouvert</option>
                     <option value="closed">Cloturé</option>
