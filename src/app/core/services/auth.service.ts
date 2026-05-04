@@ -52,6 +52,7 @@ export class AuthService {
     ressource['client_id']=LoginParamProd.clientId;
     ressource['client_secret']=LoginParamProd.clientSecret;
     ressource['scope']=LoginParamProd.scope;*/
+    console.log(ConfigService.toFile('api/login'))
     return this.http.post<any>(`${ConfigService.toFile('api/login')}`, ressource,
      ConfigService.httpHeader(null,true));
   }
