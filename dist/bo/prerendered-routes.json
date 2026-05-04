@@ -16,6 +16,7 @@
     "/admin/eservice/configurations/etape-visibilites": {},
     "/admin/eservice/configurations/etapes": {},
     "/admin/eservice/configurations/motifs-rejet": {},
+    "/admin/eservice/configurations/planning-slots": {},
     "/admin/eservice/configurations/prestation-status": {},
     "/admin/eservice/configurations/status": {},
     "/admin/eservice/configurations/workflows": {},

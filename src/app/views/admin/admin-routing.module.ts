@@ -49,6 +49,7 @@ import { UnityAdminComponent } from "./pages/unity-admin/unity-admin.component";
 import { UserComponent } from "./pages/user/user.component";
 import { WorkflowComponent } from "./pages/workflow/workflow.component";
 import { WorkflowStateComponent } from "./pages/workflow-state/workflow-state.component";
+import { PlanningSlotComponent } from "./pages/planning-slot/planning-slot.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -200,6 +201,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
              {
                 path: 'eservice/configurations/etape-visibilites',
                 component: EtapeVisibiliteComponent,
+            },
+            {
+                path: 'eservice/configurations/planning-slots',
+                component: PlanningSlotComponent,
             },
 
 

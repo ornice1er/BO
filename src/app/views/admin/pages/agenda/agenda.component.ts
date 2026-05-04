@@ -245,7 +245,7 @@ loadData(event:any){
             (res:any)=>{
             this.loading=false;
            this.modalService.dismissAll()
-            this.getRequetes();
+            this.getData();
             this.toastrService.success("Un programme enregistrée, mail envoyé à l'usager")
         },
         (err:any)=>{
@@ -263,7 +263,7 @@ loadData(event:any){
           (res:any)=>{
           this.loading=false;
           this.modalService.dismissAll()
-          this.getRequetes();
+          this.getData();
           //MyToastr.make('success',"Type Entité","Modification des types entités",this.toastrService)
   
       },
@@ -280,7 +280,7 @@ loadData(event:any){
         this.agendaService.delete(this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
-          this.getRequetes();
+          this.getData();
           //MyToastr.make('success',"Type Entité","Suppression de type entité",this.toastrService)
       },
       (err:any)=>{
@@ -316,7 +316,7 @@ loadData(event:any){
     this.agendaService.transUp(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
-      this.getByPrestation();
+      this.getData();
       this.toastrService.success("Transmission de la proposition de rendez vous")
   },
   (err:any)=>{
@@ -330,7 +330,7 @@ loadData(event:any){
         this.toastrService.info('Mail Envoyé')
 
       this.loading=false;
-      this.getRequetes();
+      this.getData();
       this.toastrService.success("Transmission de la proposition de rendez vous")
   },
   (err:any)=>{
@@ -348,7 +348,7 @@ loadData(event:any){
             this.requeteService.setStatus(this.selected_data.id,value).subscribe((res:any)=>{
               this.toastrService.success(res.message)
               this.loading=false
-              this.getRequetes()
+              this.getData()
           },
           (err:any)=>{
             this.loading=false
@@ -358,7 +358,7 @@ loadData(event:any){
       }
 
    onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.name?.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }
@@ -369,7 +369,7 @@ loadData(event:any){
 
   this.loading = true;
 
-  this.agendaService.search({search:this.search_text}).subscribe({
+  this.agendaService.search({term:this.search_text}).subscribe({
     next: (result:any) => {
       this.remoteSearchData = result.data;
       this.data = this.remoteSearchData;
@@ -388,14 +388,14 @@ loadData(event:any){
 resetSearch() {
   this.search_text = '';
   this.isPaginate=true;
-  this.pg.p = 1; // reset pagination si utilisée
-  this.getRequetes(); // méthode pour recharger les données initiales
+  this.pg.p = 1;
+  this.getData();
 }
 
     getPage(event:any){
     if (this.isPaginate) {
       this.pg.p=event
-      this.getRequetes();
+      this.getData();
     } else {
           this.pg.p=event
     }

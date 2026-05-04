@@ -11,7 +11,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
 
   url :string =ConfigService.toApiUrl("logout");
-  url2 :string =ConfigService.toFile('');
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   public isReady = new BehaviorSubject<boolean>(false);
 
@@ -43,7 +42,7 @@ export class AuthService {
   }
 
   me(){
-    return this.http.get<any>(`${this.url2}api/user`,
+    return this.http.get<any>(`${ConfigService.toFile('api/user')}`,
      ConfigService.httpHeader(null,true));
   }
 
@@ -53,23 +52,23 @@ export class AuthService {
     ressource['client_id']=LoginParamProd.clientId;
     ressource['client_secret']=LoginParamProd.clientSecret;
     ressource['scope']=LoginParamProd.scope;*/
-    return this.http.post<any>(`${this.url2}api/login`, ressource,
+    return this.http.post<any>(`${ConfigService.toFile('api/login')}`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
   sendMail(ressource:any){
-    return this.http.post<any>(`${this.url2}api/send-reset-password-link`, ressource,
+    return this.http.post<any>(`${ConfigService.toFile('api/send-reset-password-link')}`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
 
   
   update(ressource:any){
-    return this.http.post<any>(`${this.url2}api/update-profile`, ressource,ConfigService.addAction('edit'));
+    return this.http.post<any>(`${ConfigService.toFile('api/update-profile')}`, ressource,ConfigService.addAction('edit'));
   }
 
   recoverPassword(token:any,ressource:any){
-    return this.http.post<any>(`${this.url2}api/recovery-password/${token}`, ressource,
+    return this.http.post<any>(`${ConfigService.toFile('api/recovery-password/${token}')}`, ressource,
      ConfigService.httpHeader(null,true));
   }
 
@@ -80,22 +79,22 @@ export class AuthService {
 
   changePassword(ressource:any){
 
-    return this.http.post<any>(`${this.url2}api/change-password`, ressource,ConfigService.addAction('edit'));
+    return this.http.post<any>(`${ConfigService.toFile('api/change-password')}`, ressource,ConfigService.addAction('edit'));
     }
     changeFirstPassword(ressource:any){
 
-    return this.http.post<any>(`${this.url2}api/change-first-password`, ressource,
+    return this.http.post<any>(`${ConfigService.toFile('api/change-first-password')}`, ressource,
     ConfigService.httpHeader(null,true));
     }
 
     saveDB(){
 
-      return this.http.get<any>(`${this.url2}api/save-db`,ConfigService.addAction('add'));
+      return this.http.get<any>(`${ConfigService.toFile('api/save-db')}`,ConfigService.addAction('add'));
       }
 
       getBackups(){
 
-        return this.http.get<any>(`${this.url2}api/backups`,ConfigService.addAction('list'));
+        return this.http.get<any>(`${ConfigService.toFile('api/backups')}`,ConfigService.addAction('list'));
         }
 
             changeCode(ressource:any) {
@@ -108,7 +107,7 @@ export class AuthService {
     
 
       loginLdap(code: string, redirectUri: string) {
-        return this.http.post<any>(`${this.url2}api/login-ldap`, { code, redirect_uri: redirectUri },
+        return this.http.post<any>(`${ConfigService.toFile('')}api/login-ldap`, { code, redirect_uri: redirectUri },
           ConfigService.httpHeader(null, true));
       }
 

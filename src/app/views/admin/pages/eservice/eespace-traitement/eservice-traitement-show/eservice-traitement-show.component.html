@@ -2,7 +2,7 @@
 <div class="d-flex justify-content-between mb-5 flex-wrap gap-2">
 
   <!-- Prendre en charge -->
-  <div *ngIf="selected_data?.current_status?.short_name === 'en_attente' && peutAgir">
+  <div *ngIf="(selected_data?.current_status?.short_name === 'en_attente' || selected_data?.current_status?.short_name === 'demande') && peutAgir">
     <button
       class="btn btn-secondary"
       (click)="prendreEnCharge()"
@@ -23,7 +23,7 @@
   </div>
 
   <!-- Créer RDV -->
-  <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'en_attente_visite'">
+  <div *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien') && peutAgir">
     <button type="button" (click)="creerRdv()" class="btn btn-dark text-white">
       <i class="bi bi-calendar me-2"></i>
       Créer un rendez-vous
@@ -45,6 +45,7 @@
 
   <!-- Traiter la demande (valider / rejeter) -->
  <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente' 
+              && selected_data?.current_status?.short_name != 'demande' 
               && selected_data?.current_status?.short_name != 'pris_en_charge' 
               && selected_data?.current_status?.short_name != 'en_attente_visite'  && peutAgir">
   <button
@@ -117,7 +118,10 @@
         <strong>Statut :</strong>
         <span class="badge ms-2"
           [ngClass]="{
-            'bg-secondary':         selected_data?.current_status?.short_name === 'en_attente' || selected_data?.current_status?.short_name === 'pris_en_charge' || selected_data?.current_status?.short_name === 'en_attente_visite',
+            'bg-secondary':         selected_data?.current_status?.short_name === 'en_attente' 
+                                  || selected_data?.current_status?.short_name === 'demande' 
+                                  || selected_data?.current_status?.short_name === 'pris_en_charge' 
+                                  || selected_data?.current_status?.short_name === 'en_attente_visite',
             'bg-info text-dark':    selected_data?.current_status?.short_name === 'en_verification',
             'bg-primary':           selected_data?.current_status?.short_name === 'envoye' ||  selected_data?.current_status?.short_name === 'transmis',
             'bg-warning text-dark': selected_data?.current_status?.short_name === 'paraphe'

@@ -45,6 +45,7 @@
                 <th>Statut résultat</th>
                 <th>Notif.</th>
                 <th>Ordre</th>
+                <th>Action sur PNS</th>
                 <th>Actif</th>
               </tr>
             </thead>
@@ -120,6 +121,14 @@
                   <span *ngIf="d.notify_agent"     class="badge bg-secondary"             title="Notifie agent"><i class="bi bi-person-gear"></i></span>
                 </td>
                 <td>{{ d.order }}</td>
+                 <td>
+                  <span class="badge" [ngClass]="d.can_act_pns ? 'bg-success' : 'bg-danger'">
+                    {{ d.can_act_pns ? 'OUI' : 'NON' }}
+                  </span>
+                  <br>
+                  <span class="badge bg-primary fw-bold text-white" *ngIf="d.can_act_pns">{{d.decision}}</span>
+                  
+                 </td>
                 <td>
                   <span class="badge" [ngClass]="d.is_active ? 'bg-success' : 'bg-danger'">
                     {{ d.is_active ? 'Actif' : 'Inactif' }}

@@ -1,0 +1,303 @@
+<h2 class="text-center mb-4 page-subtitle">Gestion des créneaux de RDV</h2>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card custom-card">
+
+      <!-- Actions & Filtres -->
+      <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <button class="btn btn-primary-custom" (click)="add(addContent)">
+            <i class="bi bi-plus-lg me-2"></i>Nouveau créneau
+          </button>
+
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <input type="date" class="form-control" style="width:160px"
+              [(ngModel)]="filterDate" (change)="applyFilters()" placeholder="Date">
+
+            <select class="form-select" style="width:180px"
+              [(ngModel)]="filterUniteAdmin" (change)="applyFilters()">
+              <option value="">Toutes les unités</option>
+              <option *ngFor="let ua of uniteAdmins" [value]="ua.id">{{ua.libelle}}</option>
+            </select>
+
+            <select class="form-select" style="width:160px"
+              [(ngModel)]="filterSession" (change)="applyFilters()">
+              <option value="">Toutes sessions</option>
+              <option *ngFor="let s of sessionOptions" [value]="s.value">{{s.label}}</option>
+            </select>
+
+            <input type="text" class="form-control search-input" style="width:180px"
+              [(ngModel)]="search_text" placeholder="Rechercher...">
+
+            <button class="btn btn-outline-primary reset-btn" (click)="resetFilters()">
+              <i class="fa fa-rotate-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="results-info mb-3">
+          <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>{{data.length}} créneau(x)
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table custom-table">
+            <thead>
+              <tr>
+                <th style="width:50px">#</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Session</th>
+                <th>Durée</th>
+                <th>Places (total / restantes)</th>
+                <th>Unité admin</th>
+                <th>Prestation</th>
+                <th>Disponibilité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data | sampleSearch:search_text | paginate:{
+                    id:'slotsP',
+                    itemsPerPage: pg.pageSize,
+                    currentPage: pg.p,
+                    totalItems: pg.total }" class="table-row">
+
+                <td class="position-relative checkbox-cell">
+                  <div class="form-check">
+                    <input
+                      (click)="checked(d)"
+                      class="form-check-input custom-radio"
+                      type="radio"
+                      name="selectedSlot"
+                      [value]="d.id"
+                      [(ngModel)]="selectedId"
+                      id="radio-{{d.id}}"
+                    />
+                  </div>
+
+                  <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                    <div class="overlay-actions-grid">
+                      <button class="btn btn-action btn-add" (click)="add(addContent)" title="Ajouter">
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                      <button class="btn btn-action btn-view" (click)="show(showContent)" title="Détails">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-action btn-edit" (click)="edit(editContent)" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-action btn-delete" (click)="delete()" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                      <button class="btn btn-action" [class.btn-activate]="!d.is_available" [class.btn-deactivate]="d.is_available"
+                        (click)="toggleAvailability()" [title]="d.is_available ? 'Fermer' : 'Ouvrir'">
+                        <i class="bi" [class.bi-toggle-on]="d.is_available" [class.bi-toggle-off]="!d.is_available"></i>
+                      </button>
+                      <button class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+
+                <td>{{d.slot_date | date:'dd/MM/yyyy'}}</td>
+                <td>{{d.heure_debut}}</td>
+                <td>{{sessionLabels[d.session_type] ?? d.session_type}}</td>
+                <td>{{d.duration_minutes}} min</td>
+                <td>
+                  {{d.max_slots}} /
+                  <strong [class.text-danger]="slotsRemaining(d) === 0">{{slotsRemaining(d)}}</strong>
+                </td>
+                <td>{{d.unite_admin?.libelle ?? '—'}}</td>
+                <td>{{d.prestation?.name ?? 'Générique'}}</td>
+                <td>
+                  <span *ngIf="d.is_available && slotsRemaining(d) > 0" class="badge-available">Ouvert</span>
+                  <span *ngIf="!d.is_available" class="badge-closed">Fermé</span>
+                  <span *ngIf="d.is_available && slotsRemaining(d) === 0" class="badge-full">Complet</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container mt-4">
+          <pagination-controls
+            id="slotsP"
+            (pageChange)="getPage($event)"
+            [maxSize]="9"
+            [directionLinks]="true"
+            [autoHide]="true"
+            [responsive]="true"
+            [previousLabel]="'Précédent'"
+            [nextLabel]="'Suivant'">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Modal Ajout ─────────────────────────────────────── -->
+<ng-template #addContent let-c="close" let-d="dismiss">
+  <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title">Nouveau créneau de RDV</h4>
+      <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Unité administrative <span class="text-danger">(*)</span></label>
+          <ng-select name="unite_admin_id" ngModel [items]="uniteAdmins"
+            bindLabel="libelle" bindValue="id" placeholder="Sélectionner..." required>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Prestation</label>
+          <ng-select name="prestation_id" ngModel [items]="prestations"
+            bindLabel="name" bindValue="id" placeholder="Toutes prestations">
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Date <span class="text-danger">(*)</span></label>
+          <input type="date" name="slot_date" class="form-control" ngModel required>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Heure de début <span class="text-danger">(*)</span></label>
+          <input type="time" name="heure_debut" class="form-control" ngModel required>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Session</label>
+          <select name="session_type" class="form-select" ngModel>
+            <option *ngFor="let s of sessionOptions" [value]="s.value">{{s.label}}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-3 mb-3">
+          <label>Durée (min)</label>
+          <input type="number" name="duration_minutes" class="form-control" [ngModel]="20" min="5">
+        </div>
+
+        <div class="form-group col-md-3 mb-3">
+          <label>Places max</label>
+          <input type="number" name="max_slots" class="form-control" [ngModel]="20" min="1">
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
+        Enregistrer <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ── Modal Modification ──────────────────────────────── -->
+<ng-template #editContent let-c="close" let-d="dismiss">
+  <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title">Modifier le créneau</h4>
+      <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="row" *ngIf="selected_data">
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Unité administrative <span class="text-danger">(*)</span></label>
+          <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id"
+            [items]="uniteAdmins" bindLabel="libelle" bindValue="id" required>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Prestation</label>
+          <ng-select name="prestation_id" [(ngModel)]="selected_data.prestation_id"
+            [items]="prestations" bindLabel="name" bindValue="id" placeholder="Toutes prestations">
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Date <span class="text-danger">(*)</span></label>
+          <input type="date" name="slot_date" class="form-control" [(ngModel)]="selected_data.slot_date" required>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Heure de début <span class="text-danger">(*)</span></label>
+          <input type="time" name="heure_debut" class="form-control" [(ngModel)]="selected_data.heure_debut" required>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Session</label>
+          <select name="session_type" class="form-select" [(ngModel)]="selected_data.session_type">
+            <option *ngFor="let s of sessionOptions" [value]="s.value">{{s.label}}</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-3 mb-3">
+          <label>Durée (min)</label>
+          <input type="number" name="duration_minutes" class="form-control" [(ngModel)]="selected_data.duration_minutes" min="5">
+        </div>
+
+        <div class="form-group col-md-3 mb-3">
+          <label>Places max</label>
+          <input type="number" name="max_slots" class="form-control" [(ngModel)]="selected_data.max_slots" min="1">
+        </div>
+
+        <div class="form-group col-md-6 mb-3 d-flex align-items-center gap-2 pt-4">
+          <input type="checkbox" name="is_available" class="form-check-input" id="editAvail"
+            [(ngModel)]="selected_data.is_available">
+          <label for="editAvail" class="form-check-label">Créneau disponible</label>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
+        Sauvegarder <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ── Modal Détails ───────────────────────────────────── -->
+<ng-template #showContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Détails du créneau</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" *ngIf="selected_data">
+    <table class="table table-bordered">
+      <tbody>
+        <tr><th>Date</th><td>{{selected_data.slot_date | date:'dd/MM/yyyy'}}</td></tr>
+        <tr><th>Heure de début</th><td>{{selected_data.heure_debut}}</td></tr>
+        <tr><th>Session</th><td>{{sessionLabels[selected_data.session_type]}}</td></tr>
+        <tr><th>Durée</th><td>{{selected_data.duration_minutes}} minutes</td></tr>
+        <tr><th>Places max</th><td>{{selected_data.max_slots}}</td></tr>
+        <tr><th>Places réservées</th><td>{{selected_data.slots_booked}}</td></tr>
+        <tr><th>Places restantes</th><td>{{slotsRemaining(selected_data)}}</td></tr>
+        <tr><th>Unité admin</th><td>{{selected_data.unite_admin?.libelle ?? '—'}}</td></tr>
+        <tr><th>Prestation</th><td>{{selected_data.prestation?.name ?? 'Générique'}}</td></tr>
+        <tr>
+          <th>Disponibilité</th>
+          <td>
+            <span *ngIf="selected_data.is_available" class="badge-available">Ouvert</span>
+            <span *ngIf="!selected_data.is_available" class="badge-closed">Fermé</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

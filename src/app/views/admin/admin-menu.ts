@@ -163,6 +163,10 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           title: 'Règles de visibilité',
           link: '/admin/eservice/configurations/etape-visibilites',
         },
+        {
+          title: 'Créneaux RDV',
+          link: '/admin/eservice/configurations/planning-slots',
+        },
       ]
       },
       {
