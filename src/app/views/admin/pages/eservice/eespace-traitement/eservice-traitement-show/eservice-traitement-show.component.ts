@@ -91,12 +91,11 @@ export class EserviceTraitementShowComponent implements OnInit {
   }
 
   creerRdv(){
-  if (this.selected_data==null) {
-       this.toastrService.warning("Aucun élément selectionné");
-      return ;
+    if (this.selected_data == null) {
+      this.toastrService.warning("Aucun élément selectionné");
+      return;
     }
-    this.locService.set("selected_data",this.selected_data)
-    this.router.navigate(['admin/agenda/'])
+    this.router.navigate(['admin/agenda', this.prestation, this.selected_data.code]);
   }
 
       

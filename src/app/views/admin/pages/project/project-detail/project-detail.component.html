@@ -1,73 +1,80 @@
-  
-   <div class="card-header-actions">
-        <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-primary-custom" (click)="exportList()">
-            <i class="bi bi-plus-lg me-2"></i>
-            Exporter
-        </button>
-        </div>
-    </div>
+<div class="card-header-actions">
+  <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
 
-  <div class="card-body">
-        <div class="results-info mb-3">
-        <p class="text-muted mb-0">
-            <i class="bi bi-list-ul me-2"></i>
-            {{data?.requetes?.length}} élément(s)
-        </p>
-        </div>
+    <!-- Filtre par statut -->
+    <select class="form-select form-select-sm w-auto"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="onStatusChange()">
+      <option value="">Tous les statuts</option>
+      <option *ngFor="let s of statuses" [value]="s.short_name">{{ s.name }}</option>
+    </select>
 
-        <div class="table-responsive">
-        <table class="table custom-table">
-            <thead>
-            <tr>
-                <th style="width: 50px;">#</th>
-                  <th scope="col">Code PS</th>
-                <th scope="col">Code Demande</th>
-                <th scope="col">Demandeur</th>
-                <th scope="col">Statut</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let d of requetes | paginate: {
-                                    id:'ngxP1',
-                                    itemsPerPage: pg.pageSize,
-                                    currentPage: pg.p,
-                                    totalItems: pg.total } | sampleSearch:search_text; let i =index" class="table-row">
-                <td>{{i+1}}</td>
-                <td>{{d?.prestation?.code}}</td>
-                   <td>{{d?.code}}</td>
-                      <td>
-                        <ul>
-                            <li><strong>Email:</strong> {{d?.email}}</li>
+    <!-- Bouton export (sur la sélection filtrée) -->
+    <button class="btn btn-primary-custom" (click)="exportList()" [disabled]="loading2 || filteredRequetes.length === 0">
+      <i class="bi bi-download me-2"></i>
+      Exporter{{ selectedStatus ? ' (' + filteredRequetes.length + ')' : '' }}
+      <app-loading [isVisible]="loading2"></app-loading>
+    </button>
 
-                            <li><strong>Téléphone:</strong> {{d?.phone}}</li>
-                        </ul>
-                      </td>
-                      <td>
-                       {{d?.current_status?.name}}
-                      </td>
-            </tr>
+  </div>
+</div>
 
-           
-            </tbody>
-        </table>
-        </div>
+<div class="card-body">
+  <div class="results-info mb-3">
+    <p class="text-muted mb-0">
+      <i class="bi bi-list-ul me-2"></i>
+      {{ filteredRequetes.length }} élément(s)
+      <span *ngIf="selectedStatus" class="ms-1 badge bg-secondary">{{ selectedStatus }}</span>
+    </p>
+  </div>
 
-        <!-- Pagination placeholder -->
-        <div class="pagination-container mt-4">
-        
-        <pagination-controls 
-                        id="ngxP1"
-                        (pageChange)="getPage($event)"
-                        [maxSize]="9"
-                        [directionLinks]="true"
-                        [autoHide]="true"
-                        [responsive]="true"
-                        [previousLabel]="'Précédent'"
-                        [nextLabel]="'Suivant'"
-                        [screenReaderPaginationLabel]="'Pagination'"
-                        [screenReaderPageLabel]="'page'"
-                        [screenReaderCurrentLabel]="'Vous êtes sur la page'">
-                    </pagination-controls>
-        </div>
-    </div>
+  <div class="table-responsive">
+    <table class="table custom-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">#</th>
+          <th scope="col">Code PS</th>
+          <th scope="col">Code Demande</th>
+          <th scope="col">Demandeur</th>
+          <th scope="col">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of filteredRequetes | paginate: {
+                        id: 'ngxP1',
+                        itemsPerPage: pg.pageSize,
+                        currentPage: pg.p,
+                        totalItems: filteredRequetes.length
+                    } | sampleSearch:search_text; let i = index"
+            class="table-row">
+          <td>{{ i + 1 }}</td>
+          <td>{{ d?.prestation?.code }}</td>
+          <td>{{ d?.code }}</td>
+          <td>
+            <ul class="mb-0 ps-3">
+              <li><strong>Email :</strong> {{ d?.email }}</li>
+              <li><strong>Téléphone :</strong> {{ d?.phone }}</li>
+            </ul>
+          </td>
+          <td>{{ d?.current_status?.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination-container mt-4">
+    <pagination-controls
+      id="ngxP1"
+      (pageChange)="getPage($event)"
+      [maxSize]="9"
+      [directionLinks]="true"
+      [autoHide]="true"
+      [responsive]="true"
+      [previousLabel]="'Précédent'"
+      [nextLabel]="'Suivant'"
+      [screenReaderPaginationLabel]="'Pagination'"
+      [screenReaderPageLabel]="'page'"
+      [screenReaderCurrentLabel]="'Vous êtes sur la page'">
+    </pagination-controls>
+  </div>
+</div>

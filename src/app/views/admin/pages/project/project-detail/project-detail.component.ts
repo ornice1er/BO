@@ -19,66 +19,72 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
     styleUrl: './project-detail.component.css'
 })
 export class ProjectDetailComponent {
-search_text:any=""
+  search_text: any = '';
+  loading2 = false;
+  id: any;
+  data: any;
+  requetes: any[] = [];
+  statuses: any[] = [];
+  selectedStatus: string = '';
 
-loading2=false
-id:any
-data:any
-  requetes:any[]=[]
+  pg = { pageSize: 10, p: 1, total: 0 };
 
-  pg={
-    pageSize:10,
-    p:1,
-    total:0
-  }
-  
-        constructor(
-          private projectService:ProjectService,
-          private route:ActivatedRoute,
-           private locService:LocalStorageService,
-          config: NgbModalConfig, 
-          private modalService: NgbModal,
-          private toastrService:ToastrService
-        ){
-          config.backdrop = 'static';
-          config.keyboard = false;
-        } 
-    
-      ngOnInit(): void {
-         this.id= this.route.snapshot.paramMap.get('id')
-         this.get();
-      }
-   
-    
-      get() {
-        this.loading2=true;
-
-        this.projectService.show(this.id).subscribe((res:any)=>{
-          this.data=res.data
-          this.requetes=this.data?.requetes
-          this.loading2=false;  
-  
-        },
-        (error:any)=>{
-          
-          this.loading2=false;
-        })
-      }
-
-    getPage(event:any){
-  this.pg.p=event
+  constructor(
+    private projectService: ProjectService,
+    private route: ActivatedRoute,
+    private locService: LocalStorageService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private toastrService: ToastrService
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
   }
 
-  exportList(){
-      this.loading2=true;
-      const ids = this.data.requetes.map((req:any) => req.id);
-        this.projectService.exportList(this.id,{ids:ids}).subscribe((res:any)=>{
-          window.open(res.data,'_blank')
-      
-        },
-        (error:any)=>{
-          
-          this.loading2=false;
-        })
+  ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.get();
+  }
+
+  get filteredRequetes(): any[] {
+    if (!this.selectedStatus) return this.requetes;
+    return this.requetes.filter(r => r?.current_status?.short_name === this.selectedStatus);
+  }
+
+  get() {
+    this.loading2 = true;
+    this.projectService.show(this.id).subscribe(
+      (res: any) => {
+        this.data = res.data;
+        this.requetes = this.data?.requetes ?? [];
+        this.statuses = [...new Map(
+          this.requetes
+            .filter(r => r?.current_status)
+            .map(r => [r.current_status.short_name, r.current_status])
+        ).values()];
+        this.loading2 = false;
+      },
+      () => { this.loading2 = false; }
+    );
+  }
+
+  onStatusChange(): void {
+    this.pg.p = 1;
+  }
+
+  getPage(event: any): void {
+    this.pg.p = event;
+  }
+
+  exportList(): void {
+    this.loading2 = true;
+    const ids = this.filteredRequetes.map((req: any) => req.id);
+    this.projectService.exportList(this.id, { ids }).subscribe(
+      (res: any) => {
+        window.open(res.data, '_blank');
+        this.loading2 = false;
+      },
+      () => { this.loading2 = false; }
+    );
   }
 }

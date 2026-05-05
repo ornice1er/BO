@@ -23,8 +23,10 @@
   </div>
 
   <!-- Créer RDV -->
-  <div *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien') && peutAgir">
-    <button type="button" (click)="creerRdv()" class="btn btn-dark text-white">
+  <div *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien')">
+    <button type="button" (click)="creerRdv()" class="btn btn-dark text-white"
+      [disabled]="selected_data?.agendas?.length > 0"
+      [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà pour cette demande' : ''">
       <i class="bi bi-calendar me-2"></i>
       Créer un rendez-vous
     </button>
@@ -44,10 +46,12 @@
   </div>
 
   <!-- Traiter la demande (valider / rejeter) -->
- <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente' 
-              && selected_data?.current_status?.short_name != 'demande' 
-              && selected_data?.current_status?.short_name != 'pris_en_charge' 
-              && selected_data?.current_status?.short_name != 'en_attente_visite'  && peutAgir">
+ <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente'
+              && selected_data?.current_status?.short_name != 'demande'
+              && selected_data?.current_status?.short_name != 'pris_en_charge'
+              && selected_data?.current_status?.short_name != 'en_attente_visite'
+              && !selected_data?.current_etape?.is_terminal
+              && peutAgir">
   <button
     class="btn btn-warning"
     (click)="open2()"
@@ -123,9 +127,9 @@
                                   || selected_data?.current_status?.short_name === 'pris_en_charge' 
                                   || selected_data?.current_status?.short_name === 'en_attente_visite',
             'bg-info text-dark':    selected_data?.current_status?.short_name === 'en_verification',
-            'bg-primary':           selected_data?.current_status?.short_name === 'envoye' ||  selected_data?.current_status?.short_name === 'transmis',
+            'bg-primary':           selected_data?.current_status?.short_name === 'envoye' ||  selected_data?.current_status?.short_name === 'transmis'  || selected_data?.current_status?.short_name === 'en_attente_entretien' || selected_data?.current_status?.short_name === 'en_attente_arrete',
             'bg-warning text-dark': selected_data?.current_status?.short_name === 'paraphe'
-                                  || selected_data?.current_status?.short_name === 'en_attente_signature' ||  selected_data?.current_status?.short_name === 'etudie',
+                                  || selected_data?.current_status?.short_name === 'en_attente_signature' ||  selected_data?.current_status?.short_name === 'etudie' || selected_data?.current_status?.short_name === 'en_attente_finalisation',
             'bg-success':           selected_data?.current_status?.short_name === 'valide'
                                   || selected_data?.current_status?.short_name === 'prevalide',
             'bg-danger':            selected_data?.current_status?.short_name === 'rejete'

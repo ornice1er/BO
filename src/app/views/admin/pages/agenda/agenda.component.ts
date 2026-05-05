@@ -23,6 +23,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 })
 export class AgendaComponent implements OnInit {
   @ViewChild("dialog") dialog :TemplateRef<any> | undefined;
+  @ViewChild('addContent') addContentTpl!: TemplateRef<any>;
 
   selected_data:any
   data:any[]=[]
@@ -133,15 +134,13 @@ private _initWithPrestationAndRequete(codePrestation: string, codeRequete: strin
     this.upId = found.id;
     this.codeP = codePrestation;
 
-    // Charger les requetes puis préselectionner
     this.requeteService.getByPrestationAll(this.codeP).subscribe((res: any) => {
       this.requetes = res.data;
-
-      // Préselectionner la requete par son code
       const req = this.requetes.find((r: any) => r.code === codeRequete);
       if (req) {
         this.reqId = req.id;
       }
+      this.modalService.open(this.addContentTpl, { size: 'lg' });
     });
   }
   this.getData();
@@ -324,20 +323,21 @@ loadData(event:any){
   })
   }
   sendMail(){
-    this.toastrService.info('Opération en cours')
-    this.agendaService.SendMail(this.selected_data.id).subscribe(
-      (res:any)=>{
-        this.toastrService.info('Mail Envoyé')
-
-      this.loading=false;
-      this.getData();
-      this.toastrService.success("Transmission de la proposition de rendez vous")
-  },
-  (err:any)=>{
-    this.toastrService.info('Echec d\'envoi du mail')
-
-      this.loading=false;
-  })
+    AppSweetAlert.confirmBox('question', 'Envoi de mail', 'Confirmer l\'envoi du mail de rendez-vous à l\'usager ?').then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.toastrService.info('Opération en cours');
+      this.agendaService.SendMail(this.selected_data.id).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.getData();
+          this.toastrService.success('Mail envoyé à l\'usager');
+        },
+        (err: any) => {
+          this.loading = false;
+          this.toastrService.error('Échec d\'envoi du mail');
+        }
+      );
+    });
   }
 
 
