@@ -14,6 +14,7 @@ import { RequeteService } from '../../../../../../core/services/requete.service'
 import { ResponseService } from '../../../../../../core/services/response.service';
 import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
@@ -295,7 +296,7 @@ this.modalService.open(content);
               this.router.navigate(['/admin/eservice/espace-traitement/'+this.prestation])
         },
         (err:any)=>{
-          this.toastrService.error("Veuillez contactee l'administrateur")
+          AppErrorShow.showError("Opération échouée", err)
     
         })
       }})
@@ -323,7 +324,7 @@ this.modalService.open(content);
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
      //   }
@@ -352,7 +353,7 @@ this.modalService.open(content);
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
    //     }
@@ -392,7 +393,7 @@ this.modalService.open(content);
         },
         (err:any)=>{
             this.loading=false;
-            this.toastrService.error("Veuillez contactee l'administrateur")
+            AppErrorShow.showError("Opération échouée", err)
     
         })
       }
@@ -546,7 +547,7 @@ getMyCollab(){
     console.log(res)
   },
   (error:any)=>{
-    this.toastrService.error("Veuillez contactee l'administrateur")
+    AppErrorShow.showError("Opération échouée", error)
 
 })
 
@@ -574,7 +575,7 @@ deliveryrDoc(value:any){
        },
        (err:any)=>{
            this.loading=false;
-            this.toastrService.error("Opération échouée");
+            AppErrorShow.showError("Opération échouée", err);
    
        })
    //  }})
@@ -604,7 +605,7 @@ deliveryrDoc(value:any){
       (error:any)=>{
       //  this.selected_data=null
         this.loading=false;
-        this.toastrService.error("Veuillez contacter l'administrateur")
+        AppErrorShow.showError("Opération échouée", error)
 
     })
 

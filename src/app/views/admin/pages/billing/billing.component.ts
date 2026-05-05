@@ -13,6 +13,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 @Component({
     selector: 'app-billing',
     templateUrl: './billing.component.html',
@@ -169,7 +170,7 @@ add(content:any){
           (err:any)=>{
             this.loading=false
             console.log(err)
-              AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+              AppErrorShow.showError("Opération échouée", err)
           })
       }
 

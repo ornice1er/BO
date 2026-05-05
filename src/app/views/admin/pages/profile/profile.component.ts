@@ -183,7 +183,7 @@ export class ProfileComponent implements OnInit {
         (err:any)=>{
           this.loading=false
           console.log(err)
-            AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+            AppErrorShow.showError("Opération échouée", err)
         })
     }
 }

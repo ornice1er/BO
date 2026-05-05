@@ -185,7 +185,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
 
@@ -203,7 +203,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
   update(value:any){
@@ -228,7 +228,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
   delete(){
@@ -242,7 +242,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     },
     (err:any)=>{
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
 })
@@ -314,7 +314,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

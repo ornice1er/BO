@@ -47,9 +47,9 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                 <th scope="col">Libellé</th>
+                <th scope="col">Libellé</th>
                 <th scope="col">Unité parent</th>
-                <th scope="col">Direction départementale</th>
+                <th scope="col">Rattachement géographique</th>
             </tr>
             </thead>
             <tbody>
@@ -153,15 +153,19 @@
                 </div>
                 </td>
  <td>{{d?.libelle}}</td>
-                                    <td>{{d?.parent?.libelle}}</td>
+                                    <td>{{d?.parent?.libelle ?? '—'}}</td>
                                     <td>
-                                        <span *ngIf="d.department_id == null">
-                                            Unité administrative non départementale
-                                        </span>
-                                        <span *ngIf="d.department_id">
-                                            {{d?.department?.name}}
-
-                                        </span>
+                                        <ng-container *ngIf="d.municipality_id">
+                                            <span class="badge bg-info text-dark me-1">Communale</span>
+                                            {{ d?.municipality?.name }} ({{ d?.department?.name }})
+                                        </ng-container>
+                                        <ng-container *ngIf="!d.municipality_id && d.department_id">
+                                            <span class="badge bg-secondary me-1">Départementale</span>
+                                            {{ d?.department?.name }}
+                                        </ng-container>
+                                        <ng-container *ngIf="!d.municipality_id && !d.department_id">
+                                            <span class="text-muted fst-italic">Nationale</span>
+                                        </ng-container>
                                     </td>
             </tr>
 
@@ -259,34 +263,61 @@
                 </select>
                </div>
 
-               <div class="d-flex justify-content-between mb-3">
-                <span>Est ce une unité administrative départementale ?</span>
+              <!-- Toggle départementale -->
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-semibold">Unité départementale ?</span>
                 <ng-toggle
-                name="ua_department"
-                [(ngModel)]="ua_department"
-                [color]="{
-                    unchecked: '#939da2',
-                    checked: '#0C574E'
-                }"
-                [values]="{
-                    checked: true, 
-                    unchecked: false
-                }"
-                (change)="changed($event)"
+                  name="ua_department"
+                  [(ngModel)]="ua_department"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }"
+                  (change)="onToggleDepartement($event)"
                 ></ng-toggle>
               </div>
 
               <div class="form-group" *ngIf="ua_department">
-                <label for="typeLabel">Choix du département</label>
-                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"   name="department_id" ngModel>
-                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                <label>Département</label>
+                <select class="form-control" name="department_id" ngModel>
+                  <option value="">-- Choisir un département --</option>
+                  <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
                 </select>
-               </div>
+              </div>
+
+              <!-- Toggle communale -->
+              <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                <span class="fw-semibold">Unité communale ?</span>
+                <ng-toggle
+                  name="ua_commune"
+                  [(ngModel)]="ua_commune"
+                  [color]="{ unchecked: '#939da2', checked: '#1a5fa8' }"
+                  [values]="{ checked: true, unchecked: false }"
+                  (change)="onToggleCommune($event)"
+                ></ng-toggle>
+              </div>
+
+              <ng-container *ngIf="ua_commune">
+                <div class="form-group">
+                  <label>Département (pour filtrer les communes)</label>
+                  <select class="form-control" (change)="onDeptChangeForCommune($event)">
+                    <option value="">-- Choisir un département --</option>
+                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Commune</label>
+                  <select class="form-control" name="municipality_id" ngModel [disabled]="!communesByDept.length">
+                    <option value="">-- Choisir une commune --</option>
+                    <option [value]="t.id" *ngFor="let t of communesByDept">{{t.name}}</option>
+                  </select>
+                  <small class="text-muted" *ngIf="!communesByDept.length && selectedDeptIdForCommune">
+                    Chargement des communes...
+                  </small>
+                </div>
+              </ng-container>
 
  </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-
     </div>
 </form>
 
@@ -341,29 +372,55 @@
                     <option [value]="t.id" *ngFor="let t of data">{{t.libelle}}</option>
                 </select>
                </div>
-               <div class="d-flex justify-content-between mb-3">
-                <span>Est ce une unité administrative départementale ?</span>
+              <!-- Toggle départementale -->
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-semibold">Unité départementale ?</span>
                 <ng-toggle
-                name="ua_department"
-                [(ngModel)]="ua_department"
-                [color]="{
-                    unchecked: '#939da2',
-                    checked: '#0C574E'
-                }"
-                [values]="{
-                    checked: true, 
-                    unchecked: false
-                }"
-                (change)="changed($event)"
+                  name="ua_department"
+                  [(ngModel)]="ua_department"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }"
+                  (change)="onToggleDepartement($event)"
                 ></ng-toggle>
               </div>
 
               <div class="form-group" *ngIf="ua_department">
-                <label for="typeLabel">Choix du département</label>
-                <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"   name="department_id" [(ngModel)]="selected_data.department_id">
-                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                <label>Département</label>
+                <select class="form-control" name="department_id" [(ngModel)]="selected_data.department_id">
+                  <option value="">-- Choisir un département --</option>
+                  <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
                 </select>
-               </div>
+              </div>
+
+              <!-- Toggle communale -->
+              <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
+                <span class="fw-semibold">Unité communale ?</span>
+                <ng-toggle
+                  name="ua_commune"
+                  [(ngModel)]="ua_commune"
+                  [color]="{ unchecked: '#939da2', checked: '#1a5fa8' }"
+                  [values]="{ checked: true, unchecked: false }"
+                  (change)="onToggleCommune($event)"
+                ></ng-toggle>
+              </div>
+
+              <ng-container *ngIf="ua_commune">
+                <div class="form-group">
+                  <label>Département (pour filtrer les communes)</label>
+                  <select class="form-control" [ngModel]="selected_data.department_id" name="_dept_filter_edit" (change)="onDeptChangeForCommune($event)">
+                    <option value="">-- Choisir un département --</option>
+                    <option [value]="t.id" *ngFor="let t of departments">{{t.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Commune</label>
+                  <select class="form-control" name="municipality_id" [(ngModel)]="selected_data.municipality_id" [disabled]="!communesByDept.length">
+                    <option value="">-- Choisir une commune --</option>
+                    <option [value]="t.id" *ngFor="let t of communesByDept">{{t.name}}</option>
+                  </select>
+                </div>
+              </ng-container>
+
  </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>

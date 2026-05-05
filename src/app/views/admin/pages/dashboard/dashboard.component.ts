@@ -128,6 +128,12 @@ export class DashboardComponent implements OnInit {
     this._loadPrestation(code, found.prestation.name);
   }
 
+  get treatmentRate(): number {
+    if (!this.data?.total || this.data.total === 0) return 0;
+    const done = (this.data.finished ?? 0) + (this.data.signed ?? 0);
+    return Math.round((done / this.data.total) * 100);
+  }
+
   navigate(route: string): void {
     const slug = this.currentPrestation?.code;
     const routes: Record<string, string> = {
@@ -139,12 +145,15 @@ export class DashboardComponent implements OnInit {
       rejected:  `/admin/eservice/espace-reject/${slug}`,
       validated: `/admin/eservice/espace-validation/${slug}`,
       signed:    `/admin/eservice/espace-signed/${slug}`,
-      finished:  `/admin/eservice/espace-signed/${slug}`,
+      finished:  `/admin/eservice/finished/${slug}`,
       leaved:    `/admin/eservice/espace-rejected/${slug}`,
       // Admin
-      users:       '/admin/users',
-      prestations: '/admin/prestations',
-      ua:          '/admin/unity-admins',
+      users:        '/admin/users',
+      prestations:  '/admin/prestations',
+      ua:           '/admin/unity-admins',
+      departments:  '/admin/departments',
+      agents:       '/admin/officers',
+      stats:        '/admin/eservice/statistiques',
     };
     const path = routes[route];
     if (path) this.router.navigate([path]);

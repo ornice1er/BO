@@ -12,6 +12,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 
 @Component({
     selector: 'ngx-entity-type',
@@ -170,7 +171,7 @@ delete() {
         (err:any)=>{
           this.loading=false
           console.log(err)
-            AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+            AppErrorShow.showError("Opération échouée", err)
         })
     }
 

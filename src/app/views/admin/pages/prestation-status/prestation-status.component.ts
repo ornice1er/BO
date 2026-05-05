@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ToastrService } from 'ngx-toastr';
 import { EtapeService } from '../../../../core/services/etape.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
@@ -230,7 +231,7 @@ delete() {
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

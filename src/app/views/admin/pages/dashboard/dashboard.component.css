@@ -96,6 +96,69 @@
 .stat-decor-orange { background: #ea580c; }
 .stat-decor-purple { background: #9333ea; }
 
+/* Clickable card pointer */
+.stat-card--link {
+  cursor: pointer;
+}
+
+/* ===== SECTION LABELS ===== */
+.kpi-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 0.6rem;
+  padding-left: 2px;
+}
+
+/* ===== TREATMENT RATE CARD ===== */
+.rate-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+}
+.rate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+}
+.rate-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0A3764;
+}
+.rate-bar {
+  height: 8px;
+  background: #f0f2f5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.rate-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0A3764, #1a5fa8);
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+.rate-legend {
+  display: flex;
+  justify-content: space-between;
+}
+.rate-legend-item {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+.rate-legend-done { color: #0A3764; }
+
 /* ===== SELECTOR CARD ===== */
 .selector-card {
   background: white;

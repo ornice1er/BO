@@ -8,6 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { DepartmentService } from '../../../../core/services/department.service';
+import { MunicipalityService } from '../../../../core/services/municipality.service';
 import { EntityService } from '../../../../core/services/entity.service';
 import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { UnityAdminTypeService } from '../../../../core/services/unity_admin_type.service';
@@ -17,6 +18,7 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { NgToggleComponent } from 'ng-toggle-button';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 
 @Component({
     selector: 'ngx-unity-admin',
@@ -31,16 +33,20 @@ export class UnityAdminComponent implements OnInit {
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
-  departments:any[]=[]
-  loading=false
-  loading2=false
-  user:any
-  error:any=""
-  buttonsPermission :any|undefined;
-is_active=false
-search_text:any=""
-remoteSearchData: any[] = []
-  ua_department=false
+  departments: any[] = []
+  municipalities: any[] = []
+  communesByDept: any[] = []
+  loading = false
+  loading2 = false
+  user: any
+  error: any = ""
+  buttonsPermission: any | undefined;
+  is_active = false
+  search_text: any = ""
+  remoteSearchData: any[] = []
+  ua_department = false
+  ua_commune = false
+  selectedDeptIdForCommune: number | null = null
     pg={
     pageSize:10,
     p:1,
@@ -52,15 +58,15 @@ remoteSearchData: any[] = []
 permissions=[]
 
       constructor(
-        private unityAdminService:UnityAdminService,
-        private unityAdminTypeService:UnityAdminTypeService,
-        private entityService:EntityService,  
-         private locService:LocalStorageService,
-        private departmentService:DepartmentService,   
-            private toastrService:ToastrService,     
-        config: NgbModalConfig, 
+        private unityAdminService: UnityAdminService,
+        private unityAdminTypeService: UnityAdminTypeService,
+        private entityService: EntityService,
+        private locService: LocalStorageService,
+        private departmentService: DepartmentService,
+        private municipalityService: MunicipalityService,
+        private toastrService: ToastrService,
+        config: NgbModalConfig,
         private modalService: NgbModal
-
         ){
           config.backdrop = 'static';
           config.keyboard = false;
@@ -124,10 +130,28 @@ permissions=[]
       })
     }
   
-    checked(el:any){
-      this.selected_data=el
+    checked(el: any) {
+      this.selected_data = el
+      this.ua_department = el.department_id != null
+      this.ua_commune = el.municipality_id != null
+      if (this.ua_commune && el.department_id) {
+        this.selectedDeptIdForCommune = el.department_id
+        this.loadCommunesByDept(el.department_id)
+      }
+    }
 
-      if(this.selected_data.department_id != null)this.ua_department=true
+    loadCommunesByDept(deptId: number) {
+      this.municipalityService.getByDepartment(deptId).subscribe({
+        next: (res: any) => { this.communesByDept = res.data ?? [] },
+        error: () => { this.communesByDept = [] }
+      })
+    }
+
+    onDeptChangeForCommune(event: Event) {
+      const id = +(event.target as HTMLSelectElement).value
+      this.selectedDeptIdForCommune = id
+      this.communesByDept = []
+      if (id) this.loadCommunesByDept(id)
     }
   
     
@@ -171,6 +195,7 @@ permissions=[]
         },
         (err:any)=>{
             this.loading=false;
+            AppErrorShow.showError("Gestion des unités administratives", err);
         })
   }
   update(value:any) {
@@ -187,6 +212,7 @@ permissions=[]
       },
       (err:any)=>{
           this.loading=false;
+          AppErrorShow.showError("Gestion des unités administratives", err);
       })
 
 }
@@ -202,6 +228,7 @@ delete() {
   },
   (err:any)=>{
       this.loading=false;
+      AppErrorShow.showError("Gestion des unités administratives", err);
   })
   }
 
@@ -217,8 +244,7 @@ delete() {
       },
       (err:any)=>{
         this.loading=false
-        console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Gestion des unités administratives", err);
       })
   }
 
@@ -274,7 +300,13 @@ resetSearch() {
     return false
   }
 
-  changed(event:any){
-    //this.ua_department=!this.ua_department
+  changed(event: any) {}
+
+  onToggleDepartement(val: boolean) {
+    if (!val) { this.ua_commune = false; this.communesByDept = [] }
+  }
+
+  onToggleCommune(val: boolean) {
+    if (!val) { this.selectedDeptIdForCommune = null; this.communesByDept = [] }
   }
 }

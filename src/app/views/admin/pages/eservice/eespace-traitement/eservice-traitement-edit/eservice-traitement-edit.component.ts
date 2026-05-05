@@ -15,6 +15,7 @@ import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { DocumentActeService } from '../../../../../../core/services/document-acte.service';
 import { DocumentEditorComponent } from '../../../../../components/document-editor/document-editor.component';
 

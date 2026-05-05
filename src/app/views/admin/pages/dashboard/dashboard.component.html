@@ -83,35 +83,38 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.departments != null">
-      <div class="stat-card">
+      <div class="stat-card stat-card--link" (click)="navigate('departments')" title="Voir les départements">
         <div class="stat-icon stat-icon-teal"><i class="bi bi-diagram-3-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.departments }}</div>
           <div class="stat-label">Départements</div>
         </div>
         <div class="stat-decor stat-decor-teal"></div>
+        <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.total_requests != null">
-      <div class="stat-card">
+      <div class="stat-card stat-card--link" (click)="navigate('stats')" title="Voir les statistiques">
         <div class="stat-icon stat-icon-indigo"><i class="bi bi-file-earmark-text-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.total_requests }}</div>
           <div class="stat-label">Total des demandes</div>
         </div>
         <div class="stat-decor stat-decor-indigo"></div>
+        <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.agents != null">
-      <div class="stat-card">
+      <div class="stat-card stat-card--link" (click)="navigate('agents')" title="Voir les agents">
         <div class="stat-icon stat-icon-green"><i class="bi bi-person-badge-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.agents }}</div>
           <div class="stat-label">Agents</div>
         </div>
         <div class="stat-decor stat-decor-green"></div>
+        <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
       </div>
     </div>
 
@@ -202,113 +205,129 @@
     </div>
 
     <!-- KPI Grid -->
-    <div class="row g-3 mb-4" *ngIf="!loading && data">
+    <div *ngIf="!loading && data">
 
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('total')" title="Voir toutes les demandes">
-          <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.total }}</div>
-            <div class="stat-label">Totales</div>
-          </div>
-          <div class="stat-decor stat-decor-blue"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
+      <!-- Taux de traitement -->
+      <div class="rate-card mb-4">
+        <div class="rate-header">
+          <span class="rate-label">Taux de traitement global</span>
+          <span class="rate-value">{{ treatmentRate }}%</span>
+        </div>
+        <div class="rate-bar">
+          <div class="rate-fill" [style.width.%]="treatmentRate"></div>
+        </div>
+        <div class="rate-legend">
+          <span class="rate-legend-item rate-legend-done">{{ (data?.finished ?? 0) + (data?.signed ?? 0) }} finalisées</span>
+          <span class="rate-legend-item rate-legend-total">{{ data?.total ?? 0 }} au total</span>
         </div>
       </div>
 
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('news')" title="Voir les nouvelles demandes">
-          <div class="stat-icon stat-icon-indigo"><i class="bi bi-stars"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.news }}</div>
-            <div class="stat-label">Nouvelles</div>
+      <!-- Section : Vue d'ensemble -->
+      <div class="kpi-section-label">Vue d'ensemble</div>
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('total')" title="Voir toutes les demandes">
+            <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.total }}</div>
+              <div class="stat-label">Totales</div>
+            </div>
+            <div class="stat-decor stat-decor-blue"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-indigo"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
+        </div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('news')" title="Voir les nouvelles demandes">
+            <div class="stat-icon stat-icon-indigo"><i class="bi bi-stars"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.news }}</div>
+              <div class="stat-label">Nouvelles</div>
+            </div>
+            <div class="stat-decor stat-decor-indigo"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('treated')" title="Voir les demandes traitées">
+            <div class="stat-icon stat-icon-green"><i class="bi bi-check2-circle"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.treated }}</div>
+              <div class="stat-label">Traitées</div>
+            </div>
+            <div class="stat-decor stat-decor-green"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('pending')" title="Voir les demandes en attente">
+            <div class="stat-icon stat-icon-yellow"><i class="bi bi-pause-circle-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.pending }}</div>
+              <div class="stat-label">En attente</div>
+            </div>
+            <div class="stat-decor stat-decor-yellow"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
+          </div>
         </div>
       </div>
 
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('treated')" title="Voir les demandes traitées">
-          <div class="stat-icon stat-icon-green"><i class="bi bi-check2-circle"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.treated }}</div>
-            <div class="stat-label">Traitées</div>
+      <!-- Section : Résultats -->
+      <div class="kpi-section-label">Résultats</div>
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('signed')" title="Voir les demandes accordées">
+            <div class="stat-icon stat-icon-teal"><i class="bi bi-patch-check-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.signed }}</div>
+              <div class="stat-label">Accordées</div>
+            </div>
+            <div class="stat-decor stat-decor-teal"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-green"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('pending')" title="Voir les demandes en attente">
-          <div class="stat-icon stat-icon-yellow"><i class="bi bi-pause-circle-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.pending }}</div>
-            <div class="stat-label">En attente</div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('finished')" title="Voir les demandes finalisées">
+            <div class="stat-icon stat-icon-green"><i class="bi bi-bag-check-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.finished }}</div>
+              <div class="stat-label">Finalisées</div>
+            </div>
+            <div class="stat-decor stat-decor-green"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-yellow"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('rejected')" title="Voir les demandes rejetées">
-          <div class="stat-icon stat-icon-red"><i class="bi bi-x-circle-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.rejected }}</div>
-            <div class="stat-label">Rejetées</div>
+        <div class="col-6 col-sm-4 col-xl-3" *ngIf="currentPrestation?.need_validation">
+          <div class="stat-card stat-card--link" (click)="navigate('validated')" title="Voir les demandes validées">
+            <div class="stat-icon stat-icon-indigo"><i class="bi bi-shield-check"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.validated }}</div>
+              <div class="stat-label">Validées</div>
+            </div>
+            <div class="stat-decor stat-decor-indigo"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-red"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('signed')" title="Voir les demandes accordées">
-          <div class="stat-icon stat-icon-teal"><i class="bi bi-patch-check-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.signed }}</div>
-            <div class="stat-label">Accordées</div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('rejected')" title="Voir les demandes rejetées">
+            <div class="stat-icon stat-icon-red"><i class="bi bi-x-circle-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.rejected }}</div>
+              <div class="stat-label">Rejetées</div>
+            </div>
+            <div class="stat-decor stat-decor-red"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-teal"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
         </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('finished')" title="Voir les demandes finalisées">
-          <div class="stat-icon stat-icon-green"><i class="bi bi-bag-check-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.finished }}</div>
-            <div class="stat-label">Finalisées</div>
+        <div class="col-6 col-sm-4 col-xl-3">
+          <div class="stat-card stat-card--link" (click)="navigate('leaved')" title="Voir les demandes abandonnées">
+            <div class="stat-icon stat-icon-gray"><i class="bi bi-dash-circle-fill"></i></div>
+            <div class="stat-body">
+              <div class="stat-value">{{ data?.leaved }}</div>
+              <div class="stat-label">Abandonnées</div>
+            </div>
+            <div class="stat-decor stat-decor-gray"></div>
+            <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
           </div>
-          <div class="stat-decor stat-decor-green"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3" *ngIf="currentPrestation?.need_validation">
-        <div class="stat-card stat-card--link" (click)="navigate('validated')" title="Voir les demandes validées">
-          <div class="stat-icon stat-icon-indigo"><i class="bi bi-shield-check"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.validated }}</div>
-            <div class="stat-label">Validées</div>
-          </div>
-          <div class="stat-decor stat-decor-indigo"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <div class="col-6 col-sm-4 col-xl-3">
-        <div class="stat-card stat-card--link" (click)="navigate('leaved')" title="Voir les demandes abandonnées">
-          <div class="stat-icon stat-icon-gray"><i class="bi bi-dash-circle-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-value">{{ data?.leaved }}</div>
-            <div class="stat-label">Abandonnées</div>
-          </div>
-          <div class="stat-decor stat-decor-gray"></div>
-          <span class="stat-arrow"><i class="bi bi-arrow-right"></i></span>
         </div>
       </div>
 

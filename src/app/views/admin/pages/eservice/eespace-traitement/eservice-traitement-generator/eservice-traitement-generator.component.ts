@@ -182,7 +182,7 @@ editorConfig: AngularEditorConfig = {
         },
         (err:any)=>{
             this.loading=false;
-             this.toastrService.error("Opération échouée");
+             AppErrorShow.showError("Opération échouée", err);
     
         })
     //  }})
@@ -260,7 +260,7 @@ editorConfig: AngularEditorConfig = {
         (error:any)=>{
        //   this.selected_data=null
           this.loading=false;
-          this.toastrService.error("Veuillez contactee l'administrateur")
+          AppErrorShow.showError("Opération échouée", error)
 
       })
   
@@ -294,7 +294,7 @@ delivered(){
         (error:any)=>{
           this.selected_data=null
           this.loading=false;
-          this.toastrService.error("Veuillez contactee l'administrateur")
+          AppErrorShow.showError("Opération échouée", error)
 
         })
      // }})

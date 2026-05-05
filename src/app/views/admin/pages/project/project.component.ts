@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EntityService } from '../../../../core/services/entity.service';
 import { FonctionAgentService } from '../../../../core/services/fonction-agent.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { ConfigService } from '../../../../core/utils/config-service';
@@ -317,7 +318,7 @@ delete() {
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 
