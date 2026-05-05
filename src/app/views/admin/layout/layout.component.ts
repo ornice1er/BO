@@ -121,7 +121,7 @@ toggleMenu() {
  
       this.authService.update(value).subscribe((res: any) => {
         this.modalService.dismissAll()
-        AppSweetAlert.simpleAlert('succes',"Mise à jour", "Profile mis à jour avec succès");
+        AppSweetAlert.simpleAlert('success',"Mise à jour", "Profile mis à jour avec succès");
       })
       
       /*if (value.password != value.confirm) {
@@ -354,7 +354,7 @@ toggleMenu() {
             children.push(
             {
               title: 'Rendez-vous',
-              link: '/admin/agenda/'+element?.prestation?.code+'/'+element?.prestation?.code,
+              link: '/admin/agenda/'+element?.prestation?.code,
             }
             )
           }

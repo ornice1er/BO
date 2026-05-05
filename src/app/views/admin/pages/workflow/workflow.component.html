@@ -50,6 +50,16 @@
               </tr>
             </thead>
             <tbody>
+              <!-- Skeleton loader -->
+              <ng-container *ngIf="loading">
+                  <tr *ngFor="let i of [1,2,3,4,5,6,7]">
+                      <td *ngFor="let j of [1,2,3,4,5,6,7,8,9,10]">
+                          <span class="placeholder placeholder-glow col-10 rounded"></span>
+                      </td>
+                  </tr>
+              </ng-container>
+
+              <ng-container *ngIf="!loading">
               <tr
                 *ngFor="let d of data | sampleSearch: search_text | paginate: {
                   id: 'ngxP1',
@@ -73,22 +83,24 @@
                   </div>
                   <div *ngIf="selectedId === d.id" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
-                      <button class="btn btn-action btn-add" (click)="add(addContent)" title="Ajouter">
-                        <i class="bi bi-plus-lg"></i>
-                      </button>
-                      <button (click)="show(showContent)" type="button" class="btn btn-action btn-view" title="Consulter">
+                      <button (click)="show(showContent)" type="button" class="btn btn-action btn-view" title="Consulter"[disabled]="loading"
+>
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button (click)="edit(editContent)" type="button" class="btn btn-action btn-edit" title="Éditer">
+                      <button (click)="edit(editContent)" type="button" class="btn btn-action btn-edit" title="Éditer"[disabled]="loading"
+>
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button (click)="delete()" type="button" class="btn btn-action btn-delete" title="Supprimer">
+                      <button (click)="delete()" type="button" class="btn btn-action btn-delete" title="Supprimer"[disabled]="loading"
+>
                         <i class="bi bi-trash"></i>
                       </button>
-                      <button *ngIf="!d.is_active" (click)="setStatus(1)" type="button" class="btn btn-action btn-activate" title="Activer">
+                      <button *ngIf="!d.is_active" (click)="setStatus(1)" type="button" class="btn btn-action btn-activate" title="Activer"[disabled]="loading"
+>
                         <i class="bi bi-toggle-on"></i>
                       </button>
-                      <button *ngIf="d.is_active" (click)="setStatus(0)" type="button" class="btn btn-action btn-deactivate" title="Désactiver">
+                      <button *ngIf="d.is_active" (click)="setStatus(0)" type="button" class="btn btn-action btn-deactivate" title="Désactiver"[disabled]="loading"
+>
                         <i class="bi bi-toggle-off"></i>
                       </button>
                       <button type="button" class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
@@ -135,6 +147,7 @@
                   </span>
                 </td>
               </tr>
+              </ng-container>
             </tbody>
           </table>
         </div>

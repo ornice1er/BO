@@ -387,6 +387,7 @@
         /* Search Controls */
         .search-controls {
           gap: 1rem;
+          margin-left: auto;
         }
         
         .filter-select {
@@ -442,7 +443,9 @@
         
         /* ===== TABLE STYLES ===== */
         .table-responsive {
-          overflow: visible !important;
+          overflow-x: auto;
+          overflow-y: visible;
+          -webkit-overflow-scrolling: touch;
         }
 
         /* --- Card & Header --- */
@@ -711,9 +714,9 @@
 
         /* ===== OVERLAY ACTION PANEL ===== */
         .overlay-panel-right {
-          position: absolute;
-          top: 50%;
-          left: 56px;
+          position: fixed;
+          top: var(--panel-row-top, 50%);
+          left: calc(var(--sidebar-width) + 72px);
           transform: translateY(-50%);
           background: white;
           border: 1px solid #e2e8f0;
@@ -726,6 +729,7 @@
           gap: 6px;
           white-space: nowrap;
           animation: panelSlideIn 0.18s ease;
+          max-width: calc(100vw - var(--sidebar-width) - 100px);
         }
 
         @keyframes panelSlideIn {
@@ -737,6 +741,7 @@
           display: flex;
           align-items: center;
           gap: 5px;
+          flex-wrap: wrap;
         }
 
         /* Action Buttons */
@@ -758,6 +763,41 @@
         .btn-action:hover {
           transform: translateY(-2px);
           box-shadow: 0 3px 8px rgba(0,0,0,0.14);
+        }
+
+        @keyframes btn-spin { to { transform: rotate(360deg); } }
+
+        .btn-action { position: relative; overflow: hidden; }
+
+        .btn-action:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .btn-action:disabled i {
+          opacity: 0;
+        }
+
+        .btn-action:disabled::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          margin: auto;
+          width: 14px;
+          height: 14px;
+          border: 2px solid currentColor;
+          border-top-color: transparent;
+          border-radius: 50%;
+          animation: btn-spin 0.65s linear infinite;
+        }
+
+        .btn-action.btn-close-panel:disabled::after {
+          display: none;
+        }
+        .btn-action.btn-close-panel:disabled i {
+          opacity: 1;
         }
 
         .btn-add {
@@ -848,32 +888,98 @@
           opacity: 0.4;
         }
 
+        /* ===== CHECKBOX CELL STICKY ===== */
+        .checkbox-cell {
+          position: sticky !important;
+          left: 0;
+          background: white;
+          z-index: 3;
+        }
+        .custom-table tbody .table-row:nth-child(even) .checkbox-cell {
+          background: #f8fafd;
+        }
+        .custom-table tbody .table-row:hover .checkbox-cell {
+          background: #edf2ff;
+        }
+
+        /* ===== TABLE MIN-WIDTH (force scroll rather than wrap) ===== */
+        .custom-table { min-width: 500px; }
+
         /* ===== RESPONSIVE ===== */
+
+        /* Tablet (≤1024px) */
+        @media (max-width: 1024px) {
+          .overlay-panel-right {
+            left: calc(var(--sidebar-width) + 20px);
+          }
+        }
+
+        /* Mobile (≤768px) */
         @media (max-width: 768px) {
+          :root { --sidebar-width: 0px; }
+
           .sidebar { transform: translateX(-100%); }
           .sidebar.show { transform: translateX(0); }
           .main-content { margin-left: 0; }
-          .content-header { padding: 1rem; }
-          .content-body { padding: 1rem; }
-          .page-title { font-size: 1.5rem; }
-          .page-subtitle { font-size: 1.25rem; }
-          .card-header-actions { padding: 0.875rem 1rem; }
-          .card-header-actions .d-flex { flex-direction: column; gap: 0.75rem; }
-          .search-controls { width: 100%; }
+          .content-header { padding: 0.75rem 1rem; }
+          .content-body { padding: 0.75rem; }
+          .page-title { font-size: 1.3rem; }
+          .page-subtitle { font-size: 1rem; }
 
+          /* Card header stacks vertically */
+          .card-header-actions { padding: 0.75rem; }
+          .card-header-actions .d-flex {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 0.6rem;
+          }
+          .search-controls { width: 100%; }
+          .btn-primary-custom { width: 100%; justify-content: center; }
+
+          /* Table cells compact */
+          .custom-table thead th {
+            font-size: 0.65rem;
+            padding: 0.6rem 0.6rem;
+          }
+          .custom-table tbody td {
+            font-size: 0.78rem;
+            padding: 0.6rem 0.6rem;
+          }
+          .checkbox-cell { width: 40px; }
+
+          /* Overlay → bottom sheet on mobile */
           .overlay-panel-right {
             position: fixed;
             top: auto;
             bottom: 0;
-            left: 0;
+            left: 0 !important;
             right: 0;
+            max-width: 100%;
             transform: none;
             border-radius: 16px 16px 0 0;
-            padding: 16px;
+            padding: 14px 16px;
             justify-content: center;
             flex-wrap: wrap;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
           }
+
+          .overlay-actions-grid {
+            justify-content: center;
+            gap: 8px;
+          }
+
+          /* Results info */
+          .results-info { font-size: 0.75rem; }
+
+          /* Pagination compact */
+          ul.ngx-pagination { flex-wrap: wrap; }
+        }
+
+        /* Extra small (≤480px) */
+        @media (max-width: 480px) {
+          .custom-table thead th { font-size: 0.6rem; padding: 0.5rem; }
+          .custom-table tbody td { font-size: 0.72rem; padding: 0.5rem; }
+          .btn-action { width: 30px; height: 30px; font-size: 0.78rem; }
         }
         
         /* Animations */
@@ -1341,4 +1447,18 @@ ul.ngx-pagination {
 
 .pulse-animation {
   animation: pulse 2s infinite;
+}
+/* Table skeleton loader */
+.table-skeleton .placeholder {
+  display: inline-block;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  height: 14px;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

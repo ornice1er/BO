@@ -30,6 +30,16 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- Skeleton loader -->
+                                <ng-container *ngIf="loading2">
+                                    <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
+                                        <td *ngFor="let j of [1,2,3,4,5]">
+                                            <span class="placeholder col-10 rounded"></span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+
+                                <ng-container *ngIf="!loading2">
                                 <tr *ngFor="let d of data | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
@@ -49,15 +59,6 @@
                                     </div>
 
                                     <div *ngIf="selectedId === d.id" class="overlay-panel-right">
-                                        <button
-                                        class="btn btn-info btn-sm btn-label waves-effect waves-light me-3 mb-1"
-                                        (click)="add(addContent)"
-                                        title="Ajouter"
-                                        matTooltip="Ajouter"
-                                        [disabled]="loading"
-                                        >
-                                        <i class="bi bi-plus-lg"></i>
-                                        </button>
 
                                         <button
                                         *ngIf="buttonsPermission.show"
@@ -143,8 +144,9 @@
 
                                         </td>
                                 </tr>
+                                </ng-container><!-- end *ngIf="!loading2" -->
 
-                            <tr *ngIf="search_text !== '' && (data | sampleSearch:search_text).length === 0">
+                            <tr *ngIf="!loading2 && search_text !== '' && (data | sampleSearch:search_text).length === 0">
                                 <td colspan="5" class="text-center">
                                     <p class="text-muted">Recherche avancée en cours...</p>
                                     <button class="btn btn-outline-secondary btn-sm" (click)="resetSearch()">

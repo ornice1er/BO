@@ -1,468 +1,430 @@
-<!-- Header avec boutons d'action — nouveau moteur -->
-<div class="d-flex justify-content-between mb-5 flex-wrap gap-2">
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- BARRE D'ACTIONS                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="ts-action-bar" *ngIf="selected_data">
 
   <!-- Prendre en charge -->
-  <div *ngIf="(selected_data?.current_status?.short_name === 'en_attente' || selected_data?.current_status?.short_name === 'demande') && peutAgir">
-    <button
-      class="btn btn-secondary"
-      (click)="prendreEnCharge()"
-      [disabled]="loading">
-      <i class="bi bi-hand-index me-2"></i>
-      Prendre en charge
-    </button>
-  </div>
+  <button *ngIf="(selected_data?.current_status?.short_name === 'en_attente' || selected_data?.current_status?.short_name === 'demande') && peutAgir"
+    class="ts-btn ts-btn--blue" (click)="prendreEnCharge()" [disabled]="loading">
+    <i class="bi bi-hand-index-fill"></i> Prendre en charge
+  </button>
 
-   <div *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir">
-    <button
-      class="btn btn-secondary"
-      (click)="prendreEnCharge()"
-      [disabled]="loading">
-      <i class="bi bi-hand-index me-2"></i>
-      Prise de rdv
-    </button>
-  </div>
+  <!-- Prise de RDV -->
+  <button *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir"
+    class="ts-btn ts-btn--blue" (click)="prendreEnCharge()" [disabled]="loading">
+    <i class="bi bi-calendar2-check"></i> Prise de RDV
+  </button>
 
   <!-- Créer RDV -->
-  <div *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien')">
-    <button type="button" (click)="creerRdv()" class="btn btn-dark text-white"
-      [disabled]="selected_data?.agendas?.length > 0"
-      [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà pour cette demande' : ''">
-      <i class="bi bi-calendar me-2"></i>
-      Créer un rendez-vous
-    </button>
-  </div>
+  <button *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien')"
+    class="ts-btn ts-btn--dark" (click)="creerRdv()"
+    [disabled]="selected_data?.agendas?.length > 0"
+    [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà' : ''">
+    <i class="bi bi-calendar-plus"></i> Créer un rendez-vous
+  </button>
 
-   <div *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id==null && peutAgir">
-    <button type="button" (click)="add(addContent)" class="btn btn-dark text-white">
-      <i class="bi bi-calendar me-2"></i>
-     Associer à un projet
-    </button>
-  </div>
-    <div *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id!=null && peutAgir">
-    <button type="button" (click)="add(addContent)" class="btn btn-danger text-white">
-      <i class="bi bi-calendar me-2"></i>
-     Retirer du projet: {{selected_data?.project?.title}}
-    </button>
-  </div>
+  <!-- Associer à un projet -->
+  <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id == null && peutAgir"
+    class="ts-btn ts-btn--dark" (click)="add(addContent)">
+    <i class="bi bi-folder-plus"></i> Associer à un projet
+  </button>
 
-  <!-- Traiter la demande (valider / rejeter) -->
- <div *ngIf=" selected_data?.current_status?.short_name != 'en_attente'
+  <!-- Retirer du projet -->
+  <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id != null && peutAgir"
+    class="ts-btn ts-btn--danger" (click)="add(addContent)">
+    <i class="bi bi-folder-minus"></i> Retirer du projet : {{ selected_data?.project?.title }}
+  </button>
+
+  <!-- Traiter la demande -->
+  <button *ngIf="selected_data?.current_status?.short_name != 'en_attente'
               && selected_data?.current_status?.short_name != 'demande'
               && selected_data?.current_status?.short_name != 'pris_en_charge'
               && selected_data?.current_status?.short_name != 'en_attente_visite'
               && !selected_data?.current_etape?.is_terminal
-              && peutAgir">
-  <button
-    class="btn btn-warning"
-    (click)="open2()"
-    [disabled]="loading">
-    <i class="bi bi-pencil me-2"></i>
-    Traiter la demande
+              && peutAgir"
+    class="ts-btn ts-btn--amber" (click)="open2()" [disabled]="loading">
+    <i class="bi bi-pencil-square"></i> Traiter la demande
   </button>
-</div>
 
-<!-- Parapher (DGT) -->
-<div *ngIf="peutAgir && selected_data?.current_status?.short_name === 'envoye'">
+  <!-- Parapher / actions circuit documentaire -->
+  <ng-container *ngIf="peutAgir && selected_data?.current_status?.short_name === 'envoye'">
+    <ng-container *ngFor="let acte of selected_data?.document_actes">
+      <button *ngIf="acte?.status === 'en_circuit' && peutAgirSurDocument(acte)"
+        class="ts-btn ts-btn--purple" (click)="actionSurDocument(acte)" [disabled]="loading">
+        <i class="bi bi-pen"></i>
+        {{ acte?.current_circuit_step?.action_type | titlecase }} — {{ acte?.doc_produit?.name }}
+      </button>
+    </ng-container>
+  </ng-container>
 
-  <!-- Afficher les documents en attente de paraphe -->
-  <div *ngFor="let acte of selected_data?.document_actes">
-    <button
-      *ngIf="acte?.status === 'en_circuit' && peutAgirSurDocument(acte)"
-      class="btn btn-primary"
-      (click)="actionSurDocument(acte)"
-      [disabled]="loading">
-      <i class="bi bi-pen me-2"></i>
-      {{ acte?.current_circuit_step?.action_type | titlecase }} —
-      {{ acte?.doc_produit?.name }}
-    </button>
-  </div>
+  <!-- Signer -->
+  <button *ngIf="peutAgir && selected_data?.current_status?.short_name === 'paraphe'"
+    class="ts-btn ts-btn--teal" (click)="open(dialogSign)" [disabled]="loading">
+    <i class="bi bi-pen-fill"></i> Signer le document
+  </button>
 
-</div>
-
-  <!-- Signer (Ministre) -->
-  <div *ngIf="peutAgir && selected_data?.current_status?.short_name === 'paraphe'">
-    <button
-      class="btn btn-success"
-      (click)="open(dialogSign)"
-      [disabled]="loading">
-      <i class="bi bi-pen-fill me-2"></i>
-      Signer le document
-    </button>
-  </div>
-
-  <!-- Prévalider (DNSP) -->
-  <div *ngIf="peutAgir && selected_data?.current_status?.short_name === 'en_attente_signature'">
-    <button
-      class="btn btn-info"
-      (click)="traiter('prevalider')"
-      [disabled]="loading">
-      <i class="bi bi-check-circle me-2"></i>
-      Pré-valider
-    </button>
-  </div>
-
-  
+  <!-- Pré-valider -->
+  <button *ngIf="peutAgir && selected_data?.current_status?.short_name === 'en_attente_signature'"
+    class="ts-btn ts-btn--teal" (click)="traiter('prevalider')" [disabled]="loading">
+    <i class="bi bi-check2-circle"></i> Pré-valider
+  </button>
 
 </div>
 
-<!-- Contenu principal -->
-<div *ngIf="selected_data" class="card card-body">
-  <div class="h3 mb-4">Détails de la demande</div>
+<!-- Spinner chargement initial -->
+<div class="ts-spinner" *ngIf="selected_data === undefined">
+  <img src="assets/spinner.gif" alt="" height="50">
+</div>
 
-  <!-- ✅ Étape et statut — nouveau moteur -->
-  <div class="alert alert-info border-start border-info border-4 mb-3">
-    <div class="d-flex align-items-start gap-4">
-      <div>
-        <strong>Étape :</strong>
-        <span class="badge bg-primary ms-2">
-          {{ selected_data?.current_etape?.name ?? '—' }}
-        </span>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- CONTENU PRINCIPAL                                      -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div *ngIf="selected_data" class="ts-main">
+
+  <!-- ── Status card ────────────────────────────────────── -->
+  <div class="ts-status-card">
+    <div class="ts-status-title">
+      <i class="bi bi-file-earmark-text"></i> Détails de la demande
+    </div>
+    <div class="ts-status-row">
+      <div class="ts-status-item">
+        <span class="ts-status-label">Étape</span>
+        <span class="ts-badge ts-badge--blue">{{ selected_data?.current_etape?.name ?? '—' }}</span>
       </div>
-      <div>
-        <strong>Statut :</strong>
-        <span class="badge ms-2"
+      <div class="ts-status-item">
+        <span class="ts-status-label">Statut</span>
+        <span class="ts-badge"
           [ngClass]="{
-            'bg-secondary':         selected_data?.current_status?.short_name === 'en_attente' 
-                                  || selected_data?.current_status?.short_name === 'demande' 
-                                  || selected_data?.current_status?.short_name === 'pris_en_charge' 
-                                  || selected_data?.current_status?.short_name === 'en_attente_visite',
-            'bg-info text-dark':    selected_data?.current_status?.short_name === 'en_verification',
-            'bg-primary':           selected_data?.current_status?.short_name === 'envoye' ||  selected_data?.current_status?.short_name === 'transmis'  || selected_data?.current_status?.short_name === 'en_attente_entretien' || selected_data?.current_status?.short_name === 'en_attente_arrete',
-            'bg-warning text-dark': selected_data?.current_status?.short_name === 'paraphe'
-                                  || selected_data?.current_status?.short_name === 'en_attente_signature' ||  selected_data?.current_status?.short_name === 'etudie' || selected_data?.current_status?.short_name === 'en_attente_finalisation',
-            'bg-success':           selected_data?.current_status?.short_name === 'valide'
-                                  || selected_data?.current_status?.short_name === 'prevalide',
-            'bg-danger':            selected_data?.current_status?.short_name === 'rejete'
-                                  || selected_data?.current_status?.short_name === 'rejete_clos',
-            'bg-dark':              selected_data?.current_status?.short_name === 'cloture'
+            'ts-badge--grey':   ['en_attente','demande','pris_en_charge','en_attente_visite'].includes(selected_data?.current_status?.short_name),
+            'ts-badge--blue':   ['envoye','transmis','en_attente_entretien','en_attente_arrete'].includes(selected_data?.current_status?.short_name),
+            'ts-badge--cyan':   selected_data?.current_status?.short_name === 'en_verification',
+            'ts-badge--amber':  ['paraphe','en_attente_signature','etudie','en_attente_finalisation'].includes(selected_data?.current_status?.short_name),
+            'ts-badge--teal':   ['valide','prevalide'].includes(selected_data?.current_status?.short_name),
+            'ts-badge--danger': ['rejete','rejete_clos'].includes(selected_data?.current_status?.short_name),
+            'ts-badge--dark':   selected_data?.current_status?.short_name === 'cloture'
           }">
           {{ selected_data?.current_status?.name ?? 'Non défini' }}
         </span>
       </div>
-      <div *ngIf="selected_data?.sla_restant !== null && selected_data?.sla_restant !== undefined">
-        <strong>SLA :</strong>
-        <span class="badge ms-2"
+      <div class="ts-status-item" *ngIf="selected_data?.sla_restant !== null && selected_data?.sla_restant !== undefined">
+        <span class="ts-status-label">SLA</span>
+        <span class="ts-badge"
           [ngClass]="{
-            'bg-success':           selected_data?.sla_restant > 5,
-            'bg-warning text-dark': selected_data?.sla_restant <= 5 && selected_data?.sla_restant > 0,
-            'bg-danger':            selected_data?.sla_restant <= 0
+            'ts-badge--teal':   selected_data?.sla_restant > 5,
+            'ts-badge--amber':  selected_data?.sla_restant <= 5 && selected_data?.sla_restant > 0,
+            'ts-badge--danger': selected_data?.sla_restant <= 0
           }">
-          {{ selected_data?.sla_restant }} jour(s) restant(s)
+          <i class="bi bi-clock"></i> {{ selected_data?.sla_restant }} jour(s)
         </span>
       </div>
     </div>
   </div>
 
-  <!-- Instruction affectation (rétrocompatibilité) -->
-  <div *ngIf="selected_data?.affectation?.instruction" class="alert alert-warning border-start border-warning border-4">
-    <div class="d-flex align-items-start">
-      <i class="bi bi-exclamation-triangle me-3 mt-1"></i>
-      <div>
-        <p class="mb-2"><strong>Instruction :</strong> {{ selected_data?.affectation?.instruction }}</p>
-        <p class="mb-0"><strong>Pour au plus tard, le</strong> {{ selected_data?.affectation?.delay }}</p>
+  <!-- ── Instruction affectation ────────────────────────── -->
+  <div *ngIf="selected_data?.affectation?.instruction" class="ts-alert ts-alert--amber">
+    <i class="bi bi-exclamation-triangle-fill ts-alert-icon"></i>
+    <div>
+      <div class="ts-alert-title">Instruction</div>
+      <p class="mb-1">{{ selected_data?.affectation?.instruction }}</p>
+      <p class="mb-0 small"><strong>Pour au plus tard :</strong> {{ selected_data?.affectation?.delay }}</p>
+    </div>
+  </div>
+
+  <!-- ── Informations de la demande ─────────────────────── -->
+  <div class="ts-section" *ngFor="let sc of stepContents">
+    <div class="ts-section-header ts-section-header--blue">
+      <i class="bi bi-info-circle-fill"></i> {{ sc.title }}
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-info-grid">
+        <div class="ts-info-item" *ngFor="let line of sc.content | keyvalue">
+          <div class="ts-info-label">{{ line.key }}</div>
+          <div class="ts-info-value">{{ line.value }}</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Informations de la demande -->
-  <fieldset class="mb-4" *ngFor="let sc of stepContents">
-    <legend class="bg-info p-2 text-white rounded mb-3">
-      <i class="bi bi-building me-2"></i>{{ sc.title }}
-    </legend>
-    <div class="row g-4">
-      <div class="col-md-4" *ngFor="let line of sc.content | keyvalue">
-        <div class="info-item">
-          <dt class="fw-semibold text-muted mb-1">
-            <i class="bi bi-building me-2"></i>{{ line.key }}
-          </dt>
-          <dd class="text-dark">{{ line.value }}</dd>
+  <!-- ── Pièces jointes ──────────────────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.files?.length > 0">
+    <div class="ts-section-header ts-section-header--blue">
+      <i class="bi bi-paperclip"></i> Pièces jointes
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-files-grid">
+        <div *ngFor="let f of selected_data?.files" class="ts-file-card">
+          <div class="ts-file-icon"><i class="bi bi-file-earmark-text"></i></div>
+          <div class="ts-file-name">{{ f.name }}</div>
+          <button class="ts-btn-sm ts-btn-sm--dark" (click)="showFile(f)">
+            <i class="bi bi-eye"></i> Voir
+          </button>
         </div>
       </div>
     </div>
-  </fieldset>
+  </div>
 
-  <!-- Pièces jointes -->
-  <fieldset class="mb-4">
-    <legend class="bg-info p-2 text-white rounded mb-3">
-      <i class="bi bi-paperclip me-2"></i>Pièces jointes
-    </legend>
-    <div class="row g-3">
-      <div *ngFor="let f of selected_data?.files" class="col-md-3">
-        <div class="card h-100 border">
-          <div class="card-body p-3">
-            <dt class="fw-semibold text-muted mb-2">
-              <i class="bi bi-file-earmark-text me-2"></i>{{ f.name }}
-            </dt>
-            <dd>
-              <button class="btn btn-sm btn-dark" (click)="showFile(f)">
-                <i class="bi bi-eye me-1"></i>Voir fichier
-              </button>
-            </dd>
+  <!-- ── Historique des transitions ─────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.requete_etape_logs?.length > 0">
+    <div class="ts-section-header ts-section-header--dark">
+      <i class="bi bi-clock-history"></i> Historique des transitions
+    </div>
+    <div class="ts-section-body p-0">
+      <div class="table-responsive">
+        <table class="ts-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>De</th>
+              <th>Vers</th>
+              <th>Statut</th>
+              <th>Acteur</th>
+              <th>Commentaire</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="loading">
+              <tr *ngFor="let i of [1,2,3,4,5]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7]">
+                  <span class="placeholder placeholder-glow col-10 rounded"></span>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="!loading">
+              <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
+                <td class="text-muted">{{ i + 1 }}</td>
+                <td><span class="ts-badge ts-badge--grey ts-badge--sm">{{ log?.etape_from?.name }}</span></td>
+                <td>
+                  <span class="ts-badge ts-badge--blue ts-badge--sm">{{ log?.etape_to?.name }}</span>
+                  <ul class="ts-visibilites">
+                    <li *ngFor="let v of log?.transition?.visibilites">
+                      <i class="bi bi-eye"></i> {{ v?.role_name }}
+                      [{{ v?.ua?.entite?.sigle ?? '—' }} / {{ v?.ua?.sigle ?? '—' }}]
+                      <i *ngIf="v?.can_act" class="bi bi-pencil-square text-warning ms-1"></i>
+                      <i *ngIf="v?.can_read" class="bi bi-file-earmark-text text-primary ms-1"></i>
+                    </li>
+                  </ul>
+                </td>
+                <td><span class="ts-badge ts-badge--cyan ts-badge--sm">{{ log?.status?.name }}</span></td>
+                <td class="small">
+                  {{ log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—') }}
+                </td>
+                <td class="text-muted small">{{ log?.comment ?? '—' }}</td>
+                <td class="small text-muted">{{ log?.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Documents produits ──────────────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.document_actes?.length > 0">
+    <div class="ts-section-header ts-section-header--teal">
+      <i class="bi bi-file-earmark-check-fill"></i> Documents produits
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-doc-grid">
+        <div *ngFor="let acte of selected_data?.document_actes" class="ts-doc-card">
+          <div class="ts-doc-card-header">
+            <div class="ts-doc-name">{{ acte?.doc_produit?.name }}</div>
+            <span class="ts-badge ts-badge--sm"
+              [ngClass]="{
+                'ts-badge--grey':   acte?.status === 'en_edition',
+                'ts-badge--amber':  acte?.status === 'en_circuit',
+                'ts-badge--teal':   acte?.status === 'complet',
+                'ts-badge--danger': acte?.status === 'rejete'
+              }">
+              {{ acte?.status }}
+            </span>
+          </div>
+          <div class="ts-doc-meta" *ngIf="acte?.numero_identification">
+            N° {{ acte?.numero_identification }}
+          </div>
+          <div class="ts-doc-meta" *ngIf="acte?.current_circuit_step">
+            Étape : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
+            ({{ acte?.current_circuit_step?.action_type }})
+          </div>
+          <div class="ts-doc-actions">
+            <button *ngIf="acte?.file_path" class="ts-btn-sm ts-btn-sm--dark" (click)="showDocumentActe(acte)">
+              <i class="bi bi-eye"></i> Visualiser
+            </button>
+            <button *ngIf="peutAgirSurDocument(acte)" class="ts-btn-sm ts-btn-sm--blue"
+              (click)="traiterDocument(acte)" [disabled]="loading">
+              <i class="bi bi-pen"></i> {{ acte?.current_circuit_step?.action_type | titlecase }}
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </fieldset>
+  </div>
 
-  <!-- ✅ Historique des transitions — nouveau moteur -->
-  <fieldset class="mb-4" *ngIf="selected_data?.requete_etape_logs?.length > 0">
-    <legend class="bg-primary p-2 text-white rounded mb-3">
-      <i class="bi bi-clock-history me-2"></i>Historique des transitions
-    </legend>
-    <div class="table-responsive">
-      <table class="table table-sm table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>De</th>
-            <th>Vers</th>
-            <th>Statut</th>
-            <th>Acteur</th>
-            <th>Commentaire</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td><span class="badge bg-secondary">{{ log?.etape_from?.name }}</span></td>
-            <td>
-              <span class="badge bg-primary">{{ log?.etape_to?.name }}</span>
-            
-              <ul>
-                <li *ngFor="let visibilite of log?.transition?.visibilites" class="small text-muted">
-                  <i class="bi bi-eye me-1"></i>{{ visibilite?.role_name }} [{{ visibilite?.ua?.entite?.sigle ?? '—' }} / {{ visibilite?.ua?.sigle ?? '—' }}]
-                  <i *ngIf="visibilite?.can_act" class="bi bi-pencil-square text-warning"></i>
-                  <i *ngIf="visibilite?.can_read" class="bi bi-file-earmark-text text-primary"></i>
-
-              </ul>
-            </td>
-            <td><span class="badge bg-info text-dark">{{ log?.status?.name }}</span></td>
-            <td>
-              {{ log?.triggered_by_type === 'système'
-                  ? 'Système'
-                  : (log?.triggered_by?.name ?? '—') }}
-            </td>
-            <td class="text-muted small">{{ log?.comment ?? '—' }}</td>
-            <td>{{ log?.transitioned_at | date: 'dd-MM-yyyy HH:mm' }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- ── Historique des avis ─────────────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.reponses?.length > 0">
+    <div class="ts-section-header ts-section-header--grey">
+      <i class="bi bi-chat-left-text-fill"></i> Historique des avis
     </div>
-  </fieldset>
-
-  <!-- ✅ Documents produits (circuit documentaire) -->
-  <fieldset class="mb-4" *ngIf="selected_data?.document_actes?.length > 0">
-    <legend class="bg-success p-2 text-white rounded mb-3">
-      <i class="bi bi-file-earmark-check me-2"></i>Documents produits
-    </legend>
-    <div class="row g-3">
-      <div *ngFor="let acte of selected_data?.document_actes" class="col-md-6">
-        <div class="card border shadow-sm">
-          <div class="card-body p-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="mb-0">{{ acte?.doc_produit?.name }}</h6>
-              <span class="badge"
-                [ngClass]="{
-                  'bg-secondary': acte?.status === 'en_edition',
-                  'bg-warning text-dark': acte?.status === 'en_circuit',
-                  'bg-success':   acte?.status === 'complet',
-                  'bg-danger':    acte?.status === 'rejete'
-                }">
-                {{ acte?.status }}
-              </span>
-            </div>
-            <p class="text-muted small mb-2">
-              N° : {{ acte?.numero_identification ?? '—' }}
-            </p>
-            <p class="text-muted small mb-2" *ngIf="acte?.current_circuit_step">
-              Étape circuit : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
-              ({{ acte?.current_circuit_step?.action_type }})
-            </p>
-            <div class="d-flex gap-2 flex-wrap">
-              <button
-                *ngIf="acte?.file_path"
-                class="btn btn-sm btn-dark"
-                (click)="showDocumentActe(acte)">
-                <i class="bi bi-eye me-1"></i>Visualiser
-              </button>
-              <button
-                *ngIf="peutAgirSurDocument(acte)"
-                class="btn btn-sm btn-primary"
-                (click)="traiterDocument(acte)"
-                [disabled]="loading">
-                <i class="bi bi-pen me-1"></i>
-                {{ acte?.current_circuit_step?.action_type | titlecase }}
-              </button>
-            </div>
+    <div class="ts-section-body">
+      <div class="ts-avis-list">
+        <div *ngFor="let r of selected_data?.reponses" class="ts-avis-card">
+          <div class="ts-avis-header">{{ r?.unite_admin?.libelle }}</div>
+          <div class="ts-avis-obs">
+            <span class="ts-avis-obs-label">Observation</span>
+            <p class="mb-0">{{ r?.observation }}</p>
+          </div>
+          <div class="ts-doc-actions">
+            <button *ngIf="r?.note" class="ts-btn-sm ts-btn-sm--blue" (click)="showResponseFile(r.note)">
+              <i class="bi bi-file-earmark-text"></i> Voir la note
+            </button>
+            <button *ngIf="r?.preview_file" class="ts-btn-sm ts-btn-sm--blue" (click)="showResponseFile(r.preview_file)">
+              <i class="bi bi-file-earmark-text"></i> Voir le livrable
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </fieldset>
-
-  <!-- Historique avis (rétrocompatibilité ancien système) -->
-  <fieldset *ngIf="selected_data?.reponses?.length > 0">
-    <legend class="bg-secondary p-2 text-white rounded mb-3">
-      <i class="bi bi-chat-left-text me-2"></i>Historique des avis
-    </legend>
-    <div class="row g-3">
-      <div *ngFor="let r of selected_data?.reponses" class="col-12">
-        <div class="card border shadow-sm">
-          <div class="card-body p-4">
-            <h5 class="text-primary mb-3">{{ r?.unite_admin?.libelle }}</h5>
-            <div class="mb-3">
-              <strong class="text-secondary me-1">Observation :</strong>
-              <p class="mb-0 mt-1">{{ r?.observation }}</p>
-            </div>
-            <div class="d-flex gap-2 flex-wrap">
-              <button *ngIf="r?.note" class="btn btn-primary btn-sm" (click)="showResponseFile(r.note)">
-                <i class="bi bi-file-earmark-text me-1"></i>Voir la note
-              </button>
-              <button *ngIf="r?.preview_file" class="btn btn-primary btn-sm" (click)="showResponseFile(r.preview_file)">
-                <i class="bi bi-file-earmark-text me-1"></i>Voir le livrable
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </fieldset>
+  </div>
 
 </div>
 
-<!-- Spinner chargement -->
-<div class="text-center" *ngIf="selected_data === undefined">
-  <img src="assets/spinner.gif" alt="" height="50">
-</div>
-
-<!-- Modal Traiter la demande -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL : Traiter la demande                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
 <ng-template #dialogTraiter let-c="close" let-d="dismiss">
   <form #formTraiter="ngForm" (ngSubmit)="submitTraitement(formTraiter.value)">
-    <div class="modal-header">
-      <h4 class="modal-title">Traiter la demande</h4>
-      <button type="button" class="btn btn-dark" (click)="d('Cross click')">
-        <i class="fa fa-times"></i>
-      </button>
+    <div class="modal-header ts-modal-header ts-modal-header--amber">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ts-modal-icon"><i class="bi bi-pencil-square"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Traiter la demande</h5>
+          <small>Choisissez une décision et confirmez</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="d('Cross click')"></button>
     </div>
-    <div class="modal-body">
 
+    <div class="modal-body ts-modal-body">
       <!-- Décision -->
-      <div class="form-group mb-3">
-        <label class="fw-semibold">Décision</label>
-        <div class="d-flex gap-3 mt-2">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="decision" value="valider" ngModel id="valider">
-            <label class="form-check-label text-success fw-semibold" for="valider">
-              <i class="bi bi-check-circle me-1"></i>Valider
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="decision" value="rejeter" ngModel id="rejeter">
-            <label class="form-check-label text-danger fw-semibold" for="rejeter">
-              <i class="bi bi-x-circle me-1"></i>Rejeter
-            </label>
-          </div>
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-ui-radios"></i> Décision</div>
+        <div class="ts-decision-row">
+          <label class="ts-decision-option ts-decision-option--success">
+            <input type="radio" name="decision" value="valider" ngModel>
+            <i class="bi bi-check-circle-fill"></i> Valider
+          </label>
+          <label class="ts-decision-option ts-decision-option--danger">
+            <input type="radio" name="decision" value="rejeter" ngModel>
+            <i class="bi bi-x-circle-fill"></i> Rejeter
+          </label>
         </div>
       </div>
 
-      <!-- Motif de rejet (conditionnel) -->
-      <div class="form-group mb-3" *ngIf="formTraiter.value?.decision === 'rejeter'">
-        <label class="fw-semibold">Motif de rejet</label>
-        <select name="motif_id" class="form-select mt-1" ngModel>
+      <!-- Motif de rejet -->
+      <div class="ts-modal-section" *ngIf="formTraiter.value?.decision === 'rejeter'">
+        <div class="ts-modal-section-title"><i class="bi bi-tag-fill"></i> Motif de rejet</div>
+        <select name="motif_id" class="ts-select" ngModel>
           <option value="">Sélectionner un motif...</option>
           <option *ngFor="let m of motifsRejet" [value]="m.id">{{ m.libelle }}</option>
         </select>
       </div>
 
-      <!-- Commentaire libre -->
-      <div class="form-group mb-3">
-        <label class="fw-semibold">Commentaire</label>
-        <textarea name="comment" rows="3" class="form-control mt-1" ngModel
-          placeholder="Détails supplémentaires..."></textarea>
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="d('Cross click')">Annuler</button>
-      <button type="submit" class="btn btn-primary" [disabled]="formTraiter.invalid || loading">
-        Confirmer <app-loading [isVisible]="loading"></app-loading>
-      </button>
-    </div>
-  </form>
-</ng-template>
-
-<!-- Modal Signature -->
-<ng-template #dialogSign let-c="close" let-d="dismiss">
-  <form #formSign="ngForm" (ngSubmit)="traiter('signer', formSign.value)">
-    <div class="modal-header">
-      <h4 class="modal-title">Signer le document</h4>
-      <button type="button" class="btn btn-dark" (click)="d('Cross click')">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="fw-semibold">Mot de passe de sécurité</label>
-        <input name="password" type="password" class="form-control mt-1" required ngModel>
+      <!-- Commentaire -->
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-chat-text-fill"></i> Commentaire</div>
+        <textarea name="comment" rows="3" class="ts-textarea" ngModel placeholder="Détails supplémentaires..."></textarea>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-success" [disabled]="formSign.invalid || loading">
-        <i class="bi bi-pen-fill me-2"></i>Signer
+
+    <div class="modal-footer ts-modal-footer">
+      <button type="button" class="ts-btn-footer ts-btn-footer--cancel" (click)="d('Cross click')">Annuler</button>
+      <button type="submit" class="ts-btn-footer ts-btn-footer--submit" [disabled]="formTraiter.invalid || loading">
+        <i class="bi bi-check2-circle"></i> Confirmer
         <app-loading [isVisible]="loading"></app-loading>
       </button>
     </div>
   </form>
 </ng-template>
 
-<!-- Offcanvas Visualiseur PDF -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL : Signer                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<ng-template #dialogSign let-c="close" let-d="dismiss">
+  <form #formSign="ngForm" (ngSubmit)="traiter('signer', formSign.value)">
+    <div class="modal-header ts-modal-header ts-modal-header--teal">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ts-modal-icon"><i class="bi bi-pen-fill"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Signer le document</h5>
+          <small>Saisissez votre mot de passe de sécurité</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body ts-modal-body">
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-lock-fill"></i> Mot de passe</div>
+        <input name="password" type="password" class="ts-input" required ngModel placeholder="••••••••">
+      </div>
+    </div>
+
+    <div class="modal-footer ts-modal-footer">
+      <button type="submit" class="ts-btn-footer ts-btn-footer--teal" [disabled]="formSign.invalid || loading">
+        <i class="bi bi-pen-fill"></i> Signer
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL : Associer à un projet                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<ng-template #addContent let-c="close" let-d="dismiss">
+  <form #addForm="ngForm" (ngSubmit)="associate(addForm.value)">
+    <div class="modal-header ts-modal-header ts-modal-header--blue">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ts-modal-icon"><i class="bi bi-folder-plus"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Associer à un projet</h5>
+          <small>Sélectionnez un projet en cours</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body ts-modal-body">
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-collection-fill"></i> Projet</div>
+        <select name="project_id" class="ts-select" ngModel required>
+          <option value="">Sélectionner un projet...</option>
+          <option *ngFor="let project of projects" [value]="project.id">{{ project.title }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer ts-modal-footer">
+      <button type="button" class="ts-btn-footer ts-btn-footer--cancel" (click)="d('Cross click')">Annuler</button>
+      <button type="submit" class="ts-btn-footer ts-btn-footer--submit" [disabled]="addForm.invalid || loading">
+        <i class="bi bi-check2-circle"></i> Sauvegarder
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OFFCANVAS : PDF Viewer                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
 <ng-template #pdfViewerCanvas let-offcanvas>
   <div class="offcanvas-header border-bottom">
-    <h5 class="offcanvas-title">
-      <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>{{ pdfTitle }}
+    <h5 class="offcanvas-title d-flex align-items-center gap-2">
+      <i class="bi bi-file-earmark-pdf text-danger"></i> {{ pdfTitle }}
     </h5>
     <button type="button" class="btn-close" (click)="offcanvas.dismiss()"></button>
   </div>
   <div class="offcanvas-body p-0">
     <object [data]="pdfSrc" type="application/pdf" width="100%" height="100%"></object>
   </div>
-</ng-template>
-<ng-template #addContent let-c="close" let-d="dismiss">
-    <form #addForm="ngForm" (ngSubmit)="associate(addForm.value)">
-
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Ajout de la demande à un projet</h4>
-            <button type="button" class="btn btn-dark" (click)="d('Cross click')">
-                <i class="fa fa-times"></i>
-            </button>
-        </div>
-
-        <div class="modal-body">
-            <div class="form-group col-12 mb-3">
-                <label for="">Liste des projets en cours <span class="text-danger ml-2">(*)</span></label>
-                <select 
-                    name="project_id" 
-                    class="form-control" 
-                    ngModel          
-                    required>        <!-- ✅ required pour que addForm.invalid fonctionne -->
-                    <option value="">Sélectionner un projet...</option>
-                    <option *ngFor="let project of projects" [value]="project.id">
-                        {{ project.title }}  <!-- ✅ 'title' selon ton JSON, pas 'name' -->
-                    </option>
-                </select>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button 
-                type="submit" 
-                class="btn btn-outline-primary" 
-                [disabled]="addForm.invalid || loading">
-                Sauvegarder 
-                <app-loading [isVisible]="loading"></app-loading>
-            </button>
-        </div>
-
-    </form>
 </ng-template>

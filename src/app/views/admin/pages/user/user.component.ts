@@ -63,6 +63,7 @@ selectedId: number | null = null;
     selectedFilter = '';
   prestations:any[]=[]
   data4:any[]=[]
+  new_is_trade = false;
 
   constructor(
     private userService:UserService,
@@ -278,6 +279,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
   add(content:any){
+    this.new_is_trade = false;
        if(this.selected_data!= undefined){
          this.selected_data?.userprestation.forEach((e:any)=> {
         var check=  this.prestations.find((f:any)=> f.id==e.prestation_id);

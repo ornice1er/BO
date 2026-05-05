@@ -1,0 +1,319 @@
+/* ── Modal header ─────────────────────────────────────── */
+.user-modal-header {
+  background: linear-gradient(135deg, #0A3764 0%, #1a5fa8 100%);
+  color: white;
+  padding: 20px 24px;
+  border-radius: 0;
+  border-bottom: none;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.modal-header-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.user-modal-header .modal-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.user-modal-header small {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.78rem;
+}
+
+/* ── Modal body ───────────────────────────────────────── */
+.user-modal-body {
+  padding: 20px 24px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Form sections ────────────────────────────────────── */
+.form-section {
+  background: white;
+  border: 1px solid #e8edf3;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0A3764;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eef1f6;
+}
+
+.form-section-title i {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* ── Inputs ───────────────────────────────────────────── */
+.form-control-modern {
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.875rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fafbfd;
+}
+
+.form-control-modern:focus {
+  border-color: #1a5fa8;
+  box-shadow: 0 0 0 3px rgba(26,95,168,0.1);
+  background: white;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 5px;
+}
+
+/* ── Toggle card ──────────────────────────────────────── */
+.toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 13px 16px;
+  gap: 12px;
+}
+
+.toggle-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.toggle-card-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #0C574E, #1a8a7a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.toggle-card-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.toggle-card-desc {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* ── Toggle card states ───────────────────────────────── */
+.toggle-card--active {
+  border-color: #0C574E;
+  background: rgba(12, 87, 78, 0.04);
+}
+
+.toggle-card-icon-active {
+  background: linear-gradient(135deg, #0a4a42, #0C574E) !important;
+  box-shadow: 0 2px 8px rgba(12, 87, 78, 0.35);
+}
+
+.toggle-card-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.toggle-state-badge {
+  font-size: 0.71rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #e5e7eb;
+  color: #6b7280;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.toggle-state-badge--on {
+  background: rgba(12, 87, 78, 0.12);
+  color: #0C574E;
+}
+
+/* ── Prestations grid ─────────────────────────────────── */
+.prestations-count {
+  margin-left: auto;
+  font-size: 0.72rem;
+  background: #eef2f7;
+  color: #0A3764;
+  border-radius: 20px;
+  padding: 2px 9px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.prestations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+
+.prestation-item {
+  position: relative;
+}
+
+.prestation-item input.prestation-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.prestation-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #374151;
+  background: #fafbfd;
+  transition: all 0.15s;
+  user-select: none;
+  width: 100%;
+  margin: 0;
+}
+
+.prestation-label .check-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: transparent;
+  background: white;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.prestation-item input:checked + .prestation-label {
+  border-color: #0C574E;
+  background: rgba(12,87,78,0.06);
+  color: #0C574E;
+  font-weight: 600;
+}
+
+.prestation-item input:checked + .prestation-label .check-icon {
+  background: #0C574E;
+  border-color: #0C574E;
+  color: white;
+}
+
+.prestation-label:hover {
+  border-color: #1a5fa8;
+  background: rgba(26,95,168,0.04);
+}
+
+/* ── Modal footer ─────────────────────────────────────── */
+.user-modal-footer {
+  padding: 14px 24px;
+  background: white;
+  border-top: 1px solid #e8edf3;
+  gap: 10px;
+}
+
+.btn-footer-cancel {
+  padding: 8px 20px;
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b7280;
+  background: white;
+  transition: all 0.15s;
+}
+
+.btn-footer-cancel:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-footer-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 22px;
+  background: linear-gradient(135deg, #0A3764 0%, #1a5fa8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(10,55,100,0.25);
+}
+
+.btn-footer-submit:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(10,55,100,0.35);
+}
+
+.btn-footer-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 576px) {
+  .prestations-grid { grid-template-columns: 1fr; }
+  .user-modal-body { padding: 14px 16px; }
+  .user-modal-header { padding: 16px 18px; }
+  .user-modal-footer { padding: 12px 16px; }
+}

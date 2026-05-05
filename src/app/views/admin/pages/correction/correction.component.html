@@ -55,6 +55,16 @@
             </tr>
             </thead>
             <tbody>
+            <!-- Skeleton loader -->
+            <ng-container *ngIf="loading2">
+                <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
+                    <td *ngFor="let j of [1,2,3,4,5,6,7]">
+                        <span class="placeholder col-10 rounded"></span>
+                    </td>
+                </tr>
+            </ng-container>
+
+            <ng-container *ngIf="!loading2">
             <tr *ngFor="let d of data | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
@@ -75,19 +85,14 @@
 
                 <div *ngIf="selectedId === d.id" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
-                    <button
-                        class="btn btn-action btn-add"
-                        (click)="add(addContent)"
-                        title="Ajouter"
-                    >
-                        <i class="bi bi-plus-lg"></i>
-                    </button>
 
                     <button
                         (click)="show(showContent)"
                         type="button"
                         class="btn btn-action btn-view"
                         title="Consulter"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-eye"></i>
                     </button>
@@ -97,6 +102,8 @@
                         type="button"
                         class="btn btn-action btn-edit"
                         title="Éditer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-pencil"></i>
                     </button>
@@ -106,6 +113,8 @@
                         type="button"
                         class="btn btn-action btn-delete"
                         title="Supprimer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-trash"></i>
                     </button>
@@ -116,6 +125,8 @@
                         type="button"
                         class="btn btn-action btn-activate"
                         title="Activer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-toggle-on"></i>
                     </button>
@@ -126,6 +137,8 @@
                         type="button"
                         class="btn btn-action btn-deactivate"
                         title="Désactiver"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-toggle-off"></i>
                     </button>
@@ -154,8 +167,9 @@
                 </td>
                 <td *ngIf="showLastLevel">{{d?.parcours[d?.parcours.length-1]?.libelle}}</td>
             </tr>
+            </ng-container><!-- end *ngIf="!loading2" -->
 
-            <tr *ngIf="search_text !== '' && data.length === 0" class="no-results-row">
+            <tr *ngIf="!loading2 && search_text !== '' && data.length === 0" class="no-results-row">
                 <td colspan="5" class="text-center py-4">
                 <div class="no-results">
                     <i class="bi bi-search mb-3"></i>

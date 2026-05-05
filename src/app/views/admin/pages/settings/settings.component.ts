@@ -31,6 +31,7 @@ export class SettingsComponent implements OnInit {
   fileUploaded:File | undefined
   token:any
   active:any=1
+  activeTab = 1;
   buttonsPermission :any|undefined;
 
   constructor(
@@ -44,35 +45,44 @@ export class SettingsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-  //  if(this.router.snapshot.paramMap.get('token')){
-  //   this.token=this.router.snapshot.paramMap.get('token')
-  //   this.active=3
-  //  }
-    this.user= this.localService.get(GlobalName.userName)
-    this.role=this.user?.roles[0].name
-    this.selected_data=this.user?.agent;
-     this.buttonsPermission = {
-      show:true,
-      add:true,
-      edit:true,
-      delete:true
-    };
-  
+    this.user = this.localService.get(GlobalName.userName);
+    this.role = this.user?.roles[0]?.name;
+    this.selected_data = this.user?.agent ?? {};
+    this.loadMe();
   }
 
-  update(value:any) {
-    this.loading=true;
-      this.offcerService.update(value,this.selected_data.id).subscribe(
-          (res:any)=>{
-          this.loading=false;
-          this.toastrService.success("Modification effectuée avec succès")
-
+  loadMe(): void {
+    this.authService.me().subscribe({
+      next: (res: any) => {
+        this.user = res.data ?? res;
+        this.localService.set(GlobalName.userName, this.user);
+        this.selected_data = this.user?.agent ?? {};
       },
-      (err:any)=>{
-          this.loading=false;
-      })
+      error: () => {}
+    });
+  }
 
-}
+  getInitials(): string {
+    const last = this.user?.agent?.lastname?.charAt(0) ?? this.user?.email?.charAt(0) ?? '?';
+    const first = this.user?.agent?.firstname?.charAt(0) ?? '';
+    return (last + first).toUpperCase();
+  }
+
+  update(value: any) {
+    this.loading = true;
+    this.offcerService.update(value, this.selected_data.id).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        this.toastrService.success('Modification effectuée avec succès');
+        this.loadMe();
+      },
+      error: (err: any) => {
+        this.loading = false;
+        const msg = err?.error?.message ?? 'Une erreur est survenue';
+        this.toastrService.error(msg, 'Paramètres');
+      }
+    });
+  }
 upload(event:any){
   this.fileUploaded=event.target.files[0]
   

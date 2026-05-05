@@ -1,0 +1,281 @@
+/* ─── Palette ───────────────────────────────────────────────── */
+/* ViewEncapsulation.None : les variables sont déclarées globalement */
+ngx-agenda, .ag-scope {
+  --blue:   #0A3764;
+  --teal:   #0C574E;
+  --amber:  #b45309;
+  --danger: #dc2626;
+  --cyan:   #0e7490;
+  --grey:   #6b7280;
+}
+
+/* Rendre les variables accessibles dans les modals (hors du DOM du composant) */
+:root {
+  --ag-blue:   #0A3764;
+  --ag-teal:   #0C574E;
+  --ag-amber:  #b45309;
+  --ag-danger: #dc2626;
+  --ag-cyan:   #0e7490;
+  --ag-grey:   #6b7280;
+}
+
+/* ─── Action buttons (header) ───────────────────────────────── */
+.ag-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+  color: #fff;
+}
+.ag-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.ag-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-1px); }
+.ag-btn:not(:disabled):active { transform: translateY(0); }
+
+.ag-btn--amber {
+  background: linear-gradient(135deg, var(--ag-amber) 0%, #d97706 100%);
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.28);
+}
+.ag-btn--danger {
+  background: linear-gradient(135deg, var(--ag-danger) 0%, #ef4444 100%);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.28);
+}
+
+/* ─── Send-mail button ──────────────────────────────────────── */
+.btn-send-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, var(--ag-blue) 0%, #1a5fa8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(10, 55, 100, 0.25);
+  white-space: nowrap;
+}
+.btn-send-mail i { font-size: 0.9rem; }
+.btn-send-mail:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(10, 55, 100, 0.35);
+}
+.btn-send-mail:active:not(:disabled) { transform: translateY(0); }
+.btn-send-mail:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-send-mail--sent {
+  background: linear-gradient(135deg, var(--ag-teal) 0%, #0f766e 100%) !important;
+  box-shadow: 0 2px 8px rgba(12, 87, 78, 0.28) !important;
+}
+
+/* ─── Badges ────────────────────────────────────────────────── */
+.ag-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: #e5e7eb;
+  color: #374151;
+}
+.ag-badge--teal   { background: #d1fae5; color: var(--ag-teal); }
+.ag-badge--danger { background: #fee2e2; color: var(--ag-danger); }
+.ag-badge--amber  { background: #fef3c7; color: var(--ag-amber); }
+.ag-badge--cyan   { background: #cffafe; color: var(--ag-cyan); }
+.ag-badge--grey   { background: #f3f4f6; color: var(--ag-grey); }
+
+/* ─── Prestation chip ───────────────────────────────────────── */
+.ag-prestation {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 6px;
+  font-size: 0.73rem;
+  font-weight: 500;
+  background: #e8edf5;
+  color: var(--ag-blue);
+  border: 1px solid rgba(10, 55, 100, 0.15);
+}
+
+/* ─── Modal headers ─────────────────────────────────────────── */
+.ag-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: none;
+}
+.ag-modal-header .modal-title,
+.ag-modal-header h5,
+.ag-modal-header small {
+  color: #fff !important;
+}
+.ag-modal-header small { opacity: 0.82; font-size: 0.78rem; }
+
+.ag-modal-header--blue {
+  background: linear-gradient(135deg, #0A3764 0%, #1a5fa8 100%);
+}
+.ag-modal-header--amber {
+  background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+}
+.ag-modal-header--dark {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+/* ─── Modal icon bubble ─────────────────────────────────────── */
+.ag-modal-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ─── Modal body ────────────────────────────────────────────── */
+.ag-modal-body {
+  padding: 1.25rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* ─── Modal footer ──────────────────────────────────────────── */
+.ag-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ─── Form sections ─────────────────────────────────────────── */
+.ag-form-section {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ag-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ag-blue);
+  background: #f0f5fb;
+  border-bottom: 1px solid #dce8f5;
+}
+.ag-form-section .row { padding: 1rem; }
+
+/* ─── Form inputs & labels ──────────────────────────────────── */
+.ag-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+.ag-input {
+  display: block;
+  width: 100%;
+  padding: 0.46rem 0.7rem;
+  font-size: 0.85rem;
+  color: #1e293b;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  appearance: auto;
+}
+.ag-input:focus {
+  border-color: var(--ag-blue);
+  box-shadow: 0 0 0 3px rgba(10, 55, 100, 0.1);
+  background: #fff;
+}
+textarea.ag-input { resize: vertical; }
+
+/* ─── Footer buttons ────────────────────────────────────────── */
+.ag-btn-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.ag-btn-footer:disabled { opacity: 0.55; cursor: not-allowed; }
+.ag-btn-footer:not(:disabled):hover { opacity: 0.88; }
+
+.ag-btn-footer--cancel {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+.ag-btn-footer--cancel:hover { background: #e2e8f0; }
+
+.ag-btn-footer--submit {
+  background: linear-gradient(135deg, var(--ag-blue) 0%, #1a5fa8 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(10, 55, 100, 0.25);
+}
+.ag-btn-footer--amber {
+  background: linear-gradient(135deg, var(--ag-amber) 0%, #d97706 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.25);
+}
+
+/* ─── Detail grid (show modal) ──────────────────────────────── */
+.ag-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+.ag-detail-item {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ag-detail-item--full { grid-column: 1 / -1; }
+
+.ag-detail-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+.ag-detail-value {
+  font-size: 0.88rem;
+  color: #1e293b;
+}

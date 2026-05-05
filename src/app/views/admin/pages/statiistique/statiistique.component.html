@@ -29,6 +29,16 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Skeleton loader -->
+        <ng-container *ngIf="loading">
+            <tr *ngFor="let i of [1,2,3,4,5,6,7]">
+                <td *ngFor="let j of [1,2,3,4,5,6]">
+                    <span class="placeholder placeholder-glow col-10 rounded"></span>
+                </td>
+            </tr>
+        </ng-container>
+
+        <ng-container *ngIf="!loading">
         <tr *ngFor="let d of data" class="table-row">
           <td>
             <div class="stat-prestation-name">
@@ -58,6 +68,7 @@
             Aucune donnée disponible
           </td>
         </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

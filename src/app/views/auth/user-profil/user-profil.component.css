@@ -1,0 +1,279 @@
+/* ── Page wrapper ─────────────────────────────────────── */
+.profil-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Hero card ────────────────────────────────────────── */
+.profil-hero-card {
+  background: linear-gradient(135deg, #0A3764 0%, #1a5fa8 100%);
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(10,55,100,0.22);
+}
+
+.profil-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+
+.profil-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  border: 2px solid rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.profil-hero-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profil-hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.profil-role-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+.profil-status-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(255,80,80,0.25);
+  color: #ffd0d0;
+}
+
+.profil-status-badge.badge--active {
+  background: rgba(12,87,78,0.35);
+  color: #a7f3d0;
+}
+
+.profil-trade-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  background: rgba(12,87,78,0.4);
+  color: #a7f3d0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.profil-hero-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.75);
+}
+
+.profil-hero-sub i {
+  margin-right: 4px;
+  opacity: 0.8;
+}
+
+/* ── Tabs card ────────────────────────────────────────── */
+.profil-tabs-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e8edf3;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(10,55,100,0.07);
+}
+
+.profil-tab-nav {
+  display: flex;
+  border-bottom: 1px solid #e8edf3;
+  background: #f8fafc;
+}
+
+.profil-tab-btn {
+  flex: 1;
+  padding: 13px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: color 0.15s, background 0.15s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.profil-tab-btn:hover {
+  color: #0A3764;
+  background: rgba(10,55,100,0.03);
+}
+
+.profil-tab-btn.active {
+  color: #0A3764;
+  border-bottom-color: #0A3764;
+  background: white;
+}
+
+/* ── Tab body ─────────────────────────────────────────── */
+.profil-tab-body {
+  padding: 24px 28px;
+}
+
+.profil-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profil-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profil-field--full {
+  grid-column: 1 / -1;
+}
+
+.profil-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.profil-input {
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.875rem;
+  background: #fafbfd;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.profil-input:focus {
+  outline: none;
+  border-color: #1a5fa8;
+  box-shadow: 0 0 0 3px rgba(26,95,168,0.1);
+  background: white;
+}
+
+/* ── Form footer ──────────────────────────────────────── */
+.profil-form-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profil-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 24px;
+  background: linear-gradient(135deg, #0A3764 0%, #1a5fa8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(10,55,100,0.25);
+}
+
+.profil-btn-submit:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(10,55,100,0.35);
+}
+
+.profil-btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.profil-btn-danger {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  box-shadow: 0 2px 8px rgba(124,58,237,0.25);
+}
+
+.profil-btn-danger:hover:not(:disabled) {
+  box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+}
+
+/* ── Signature ────────────────────────────────────────── */
+.profil-signature-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.profil-signature-img {
+  width: 200px;
+  height: 120px;
+  object-fit: contain;
+  border: 1px solid #dde3ec;
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 8px;
+}
+
+.profil-signature-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 576px) {
+  .profil-page { padding: 12px 10px; }
+  .profil-hero-card { padding: 18px 16px; flex-direction: column; align-items: flex-start; }
+  .profil-form-grid { grid-template-columns: 1fr; }
+  .profil-tab-body { padding: 18px 16px; }
+  .profil-tab-btn { font-size: 0.75rem; padding: 11px 8px; }
+  .profil-hero-name { white-space: normal; }
+}

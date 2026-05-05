@@ -60,6 +60,16 @@
               </tr>
             </thead>
             <tbody>
+              <!-- Skeleton loader -->
+              <ng-container *ngIf="loading">
+                  <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
+                      <td *ngFor="let j of [1,2,3,4,5,6,7,8,9]">
+                          <span class="placeholder col-10 rounded"></span>
+                      </td>
+                  </tr>
+              </ng-container>
+
+              <ng-container *ngIf="!loading">
               <tr *ngFor="let d of data | sampleSearch:search_text | paginate:{
                     id:'slotsP',
                     itemsPerPage: pg.pageSize,
@@ -81,20 +91,21 @@
 
                   <div *ngIf="selectedId === d.id" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
-                      <button class="btn btn-action btn-add" (click)="add(addContent)" title="Ajouter">
-                        <i class="bi bi-plus-lg"></i>
-                      </button>
-                      <button class="btn btn-action btn-view" (click)="show(showContent)" title="Détails">
+                      <button class="btn btn-action btn-view" (click)="show(showContent)" title="Détails"[disabled]="loading"
+>
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button class="btn btn-action btn-edit" (click)="edit(editContent)" title="Modifier">
+                      <button class="btn btn-action btn-edit" (click)="edit(editContent)" title="Modifier"[disabled]="loading"
+>
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-action btn-delete" (click)="delete()" title="Supprimer">
+                      <button class="btn btn-action btn-delete" (click)="delete()" title="Supprimer"[disabled]="loading"
+>
                         <i class="bi bi-trash"></i>
                       </button>
                       <button class="btn btn-action" [class.btn-activate]="!d.is_available" [class.btn-deactivate]="d.is_available"
-                        (click)="toggleAvailability()" [title]="d.is_available ? 'Fermer' : 'Ouvrir'">
+                        (click)="toggleAvailability()" [title]="d.is_available ? 'Fermer' : 'Ouvrir'"[disabled]="loading"
+>
                         <i class="bi" [class.bi-toggle-on]="d.is_available" [class.bi-toggle-off]="!d.is_available"></i>
                       </button>
                       <button class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
@@ -120,6 +131,7 @@
                   <span *ngIf="d.is_available && slotsRemaining(d) === 0" class="badge-full">Complet</span>
                 </td>
               </tr>
+              </ng-container><!-- end *ngIf="!loading" -->
             </tbody>
           </table>
         </div>

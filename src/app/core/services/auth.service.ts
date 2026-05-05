@@ -65,7 +65,7 @@ export class AuthService {
 
   
   update(ressource:any){
-    return this.http.post<any>(`${ConfigService.toFile('api/update-profile')}`, ressource,ConfigService.addAction('edit'));
+    return this.http.post<any>(`${ConfigService.toFile('api/user-update')}`, ressource,ConfigService.addAction('edit'));
   }
 
   recoverPassword(token:any,ressource:any){

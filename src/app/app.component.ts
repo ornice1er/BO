@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -11,12 +11,24 @@ import { CommonModule } from '@angular/common';
     styleUrl: './app.component.css'
 })
 export class AppComponent {
-   isReady = false;
+  isReady = false;
 
-     constructor(private authService: AuthService) {
+  constructor(private authService: AuthService) {
     this.authService.isReady.subscribe(ready => {
       this.isReady = ready;
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('custom-radio')) {
+      const tr = target.closest('tr');
+      if (tr) {
+        const rect = tr.getBoundingClientRect();
+        const mid = rect.top + rect.height / 2;
+        document.documentElement.style.setProperty('--panel-row-top', `${mid}px`);
+      }
+    }
+  }
 }

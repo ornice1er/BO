@@ -55,6 +55,16 @@
             </tr>
             </thead>
             <tbody>
+            <!-- Skeleton loader -->
+            <ng-container *ngIf="loading">
+                <tr *ngFor="let i of [1,2,3,4,5,6,7]">
+                    <td *ngFor="let j of [1,2,3,4,5,6]">
+                        <span class="placeholder placeholder-glow col-10 rounded"></span>
+                    </td>
+                </tr>
+            </ng-container>
+
+            <ng-container *ngIf="!loading">
             <tr *ngFor="let d of data | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
@@ -75,19 +85,14 @@
 
                 <div *ngIf="selectedId === d.id" class="overlay-panel-right">
                     <div class="overlay-actions-grid">
-                    <button
-                        class="btn btn-action btn-add"
-                        (click)="add(addContent)"
-                        title="Ajouter"
-                    >
-                        <i class="bi bi-plus-lg"></i>
-                    </button>
 
                     <button
                         (click)="show(showContent)"
                         type="button"
                         class="btn btn-action btn-view"
                         title="Consulter"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-eye"></i>
                     </button>
@@ -97,6 +102,8 @@
                         type="button"
                         class="btn btn-action btn-edit"
                         title="Éditer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-pencil"></i>
                     </button>
@@ -106,6 +113,8 @@
                         type="button"
                         class="btn btn-action btn-delete"
                         title="Supprimer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-trash"></i>
                     </button>
@@ -116,6 +125,8 @@
                         type="button"
                         class="btn btn-action btn-activate"
                         title="Activer"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-toggle-on"></i>
                     </button>
@@ -126,6 +137,8 @@
                         type="button"
                         class="btn btn-action btn-deactivate"
                         title="Désactiver"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-toggle-off"></i>
                     </button>
@@ -135,6 +148,8 @@
                         type="button"
                         class="btn btn-action btn-reset"
                         title="Réinitialiser le mot de passe"
+                    [disabled]="loading"
+
                     >
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </button>
@@ -199,6 +214,7 @@
                 </div>
                 </td>
             </tr>
+            </ng-container>
             </tbody>
         </table>
         </div>
@@ -227,209 +243,304 @@
 
 
 <ng-template #addContent let-modal>
-    <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
-    <div class="modal-header">
-      <h6 class="modal-title" id="modal-basic-title">Enregistrer un  compte utilisateur</h6>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body" >
-        <div class="row mb-3" >
-            
-            <div class=" form-group col-12 mb-3">
-                <label for="">Email <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="email" class="form-control" ngModel>
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Contact <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="phone" class="form-control" ngModel>
-            </div>
-                <div class="form-group" *ngIf="role!='Admin national'">
-                <label for="typeLabel">Agent</label>
-                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #type="ngModel" name="agent_id" ngModel>
-                    <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
-                </ng-select>
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Rôle <span class="text-danger ml-2">(*)</span></label>
-                <ng-select name="roles" ngModel [multiple]="true">
-                    <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
-                </ng-select>
-            </div>
+  <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
 
-              <div class="d-flex justify-content-between">
-          <p>Acteur métier :</p>
-          <ng-toggle
-          ngModel
-
-          name="is_trade"
-          [color]="{
-              unchecked: '#939da2',
-              checked: '#0C574E'
-          }"
-          [values]="{
-              checked: true, unchecked: false
-          }"
-  
-          ></ng-toggle>
+    <div class="modal-header user-modal-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="modal-header-icon"><i class="bi bi-person-plus-fill"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Nouveau compte utilisateur</h5>
+          <small>Remplissez les informations pour créer un compte</small>
         </div>
-        <div class="" *ngIf="role != 'Admin national'">
-          <h4>Affectation des prestations au compte utilisateur</h4>
-          <h6>Ce compte aura accès aux prestations suivantes</h6>
-          <div class="container">
-            <div class="row">
-              <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
-                <input class="form-check-input" type="checkbox" name="state"  [(ngModel)]="p.state" >
-                <label class="form-check-label">
-                  {{p.name}}
-                </label>
-              </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body user-modal-body">
+
+      <!-- Informations du compte -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-envelope-fill"></i> Informations du compte</div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control form-control-modern" ngModel placeholder="exemple@mail.com">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contact <span class="text-danger">*</span></label>
+            <input type="text" name="phone" class="form-control form-control-modern" ngModel placeholder="+229 ...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Rôle & Affectation -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-shield-fill"></i> Rôle &amp; Affectation</div>
+        <div class="row g-3">
+          <div class="col-12" *ngIf="role!='Admin national'">
+            <label class="form-label">Agent associé</label>
+            <ng-select name="agent_id" ngModel placeholder="Sélectionner un agent">
+              <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Rôle(s) <span class="text-danger">*</span></label>
+            <ng-select name="roles" ngModel [multiple]="true" placeholder="Sélectionner un ou plusieurs rôles">
+              <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profil utilisateur -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-person-badge-fill"></i> Profil utilisateur</div>
+        <div class="toggle-card" [class.toggle-card--active]="new_is_trade">
+          <div class="toggle-card-info">
+            <div class="toggle-card-icon-wrap" [class.toggle-card-icon-active]="new_is_trade">
+              <i class="bi bi-briefcase-fill"></i>
+            </div>
+            <div>
+              <div class="toggle-card-title">Acteur métier</div>
+              <div class="toggle-card-desc">Accès au portail en tant qu'acteur économique</div>
             </div>
           </div>
-          
+          <div class="toggle-card-controls">
+            <span class="toggle-state-badge" [class.toggle-state-badge--on]="new_is_trade">
+              {{ new_is_trade ? 'Activé' : 'Désactivé' }}
+            </span>
+            <ng-toggle name="is_trade" [(ngModel)]="new_is_trade"
+              [color]="{unchecked:'#939da2', checked:'#0C574E'}"
+              [values]="{checked:true, unchecked:false}">
+            </ng-toggle>
+          </div>
         </div>
+      </div>
+
+      <!-- Accès aux prestations -->
+      <div class="form-section" *ngIf="role != 'Admin national'">
+        <div class="form-section-title">
+          <i class="bi bi-grid-fill"></i> Accès aux prestations
+          <span class="prestations-count">{{prestations.length}} prestation(s)</span>
         </div>
-       
+        <div class="prestations-grid">
+          <div class="prestation-item" *ngFor="let p of prestations; let i=index">
+            <input class="prestation-checkbox" type="checkbox" name="state" [(ngModel)]="p.state" [id]="'add-prest-'+i">
+            <label [for]="'add-prest-'+i" class="prestation-label">
+              <i class="bi bi-check2 check-icon"></i>
+              {{p.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-dark" [disabled]="addForm.invalid || loading"  >Créer le compte <app-loading [isVisible]="loading"></app-loading></button>
+
+    <div class="modal-footer user-modal-footer">
+      <button type="button" class="btn btn-footer-cancel" (click)="modal.dismiss('Cross click')">Annuler</button>
+      <button type="submit" class="btn btn-footer-submit" [disabled]="addForm.invalid || loading">
+        <i class="bi bi-check2-circle"></i> Créer le compte
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
     </div>
-</form>
-  </ng-template>
+
+  </form>
+</ng-template>
 
   <ng-template #editContent let-modal>
-    <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
-    <div class="modal-header">
-      <h6 class="modal-title" id="modal-basic-title">Modifier un utilisateur</h6>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body" >
-        <div class="row mb-3">
-          
-            <div class=" form-group col-12 mb-3">
-                <label for="">Email <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="email" class="form-control" [(ngModel)]="selected_data.email">
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">Contact <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="phone" class="form-control" [(ngModel)]="selected_data.phone">
-            </div>
-            <div class="form-group" *ngIf="role!='Admin national'">
-                <label for="typeLabel">Agent</label>
-                <ng-select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp"  #type="ngModel" name="agent_id" [(ngModel)]="selected_data.agent_id">
-                    <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
-                </ng-select>
-            </div>
-            <div class=" form-group col-12 mb-3">
-                <label for="">rôle <span class="text-danger ml-2">(*)</span></label>
-                <ng-select name="roles" [multiple]="true" [(ngModel)]="selectedRoles">
-                    <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
-                </ng-select>  
-             </div>
+  <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
 
-
-        <div class="d-flex justify-content-between">
-          <p>Acteur métier :</p>
-          <ng-toggle
-          ngModel
-
-          name="is_trade"
-          [color]="{
-              unchecked: '#939da2',
-              checked: '#0C574E'
-          }"
-          [values]="{
-              checked: true, unchecked: false
-          }"
-  
-          ></ng-toggle>
+    <div class="modal-header user-modal-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="modal-header-icon"><i class="bi bi-pencil-square"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Modifier un utilisateur</h5>
+          <small>Mettez à jour les informations du compte</small>
         </div>
-        <div class="" *ngIf="role != 'Admin national'">
-          <h4>Affectation des prestations au compte utilisateur</h4>
-          <h6>Ce compte aura accès aux prestations suivantes</h6>
-          <div class="container">
-            <div class="row">
-              <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
-                <input class="form-check-input" type="checkbox" name="state"  [(ngModel)]="p.state" >
-                <label class="form-check-label">
-                  {{p.name}}
-                </label>
-              </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body user-modal-body">
+
+      <!-- Informations du compte -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-envelope-fill"></i> Informations du compte</div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control form-control-modern" [(ngModel)]="selected_data.email">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contact <span class="text-danger">*</span></label>
+            <input type="text" name="phone" class="form-control form-control-modern" [(ngModel)]="selected_data.phone">
+          </div>
+        </div>
+      </div>
+
+      <!-- Rôle & Affectation -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-shield-fill"></i> Rôle &amp; Affectation</div>
+        <div class="row g-3">
+          <div class="col-12" *ngIf="role!='Admin national'">
+            <label class="form-label">Agent associé</label>
+            <ng-select name="agent_id" [(ngModel)]="selected_data.agent_id" placeholder="Sélectionner un agent">
+              <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Rôle(s) <span class="text-danger">*</span></label>
+            <ng-select name="roles" [multiple]="true" [(ngModel)]="selectedRoles" placeholder="Sélectionner un ou plusieurs rôles">
+              <ng-option *ngFor="let s of roles" [value]="s.name">{{s.name}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profil utilisateur -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-person-badge-fill"></i> Profil utilisateur</div>
+        <div class="toggle-card" [class.toggle-card--active]="selected_data?.is_trade">
+          <div class="toggle-card-info">
+            <div class="toggle-card-icon-wrap" [class.toggle-card-icon-active]="selected_data?.is_trade">
+              <i class="bi bi-briefcase-fill"></i>
+            </div>
+            <div>
+              <div class="toggle-card-title">Acteur métier</div>
+              <div class="toggle-card-desc">Accès au portail en tant qu'acteur économique</div>
             </div>
           </div>
-          
+          <div class="toggle-card-controls">
+            <span class="toggle-state-badge" [class.toggle-state-badge--on]="selected_data?.is_trade">
+              {{ selected_data?.is_trade ? 'Activé' : 'Désactivé' }}
+            </span>
+            <ng-toggle name="is_trade" [(ngModel)]="selected_data.is_trade"
+              [color]="{unchecked:'#939da2', checked:'#0C574E'}"
+              [values]="{checked:true, unchecked:false}">
+            </ng-toggle>
+          </div>
         </div>
+      </div>
 
-           
+      <!-- Accès aux prestations -->
+      <div class="form-section" *ngIf="role != 'Admin national'">
+        <div class="form-section-title">
+          <i class="bi bi-grid-fill"></i> Accès aux prestations
+          <span class="prestations-count">{{prestations.length}} prestation(s)</span>
         </div>
-       
+        <div class="prestations-grid">
+          <div class="prestation-item" *ngFor="let p of prestations; let i=index">
+            <input class="prestation-checkbox" type="checkbox" name="state" [(ngModel)]="p.state" [id]="'edit-prest-'+i">
+            <label [for]="'edit-prest-'+i" class="prestation-label">
+              <i class="bi bi-check2 check-icon"></i>
+              {{p.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-dark" [disabled]="editForm.invalid || loading" >Sauvegarder <app-loading [isVisible]="loading"></app-loading></button>
+
+    <div class="modal-footer user-modal-footer">
+      <button type="button" class="btn btn-footer-cancel" (click)="modal.dismiss('Cross click')">Annuler</button>
+      <button type="submit" class="btn btn-footer-submit" [disabled]="editForm.invalid || loading">
+        <i class="bi bi-check2-circle"></i> Sauvegarder
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
     </div>
-</form>
-  </ng-template>
+
+  </form>
+</ng-template>
   <ng-template #resetContent let-modal>
-    <form #editForm="ngForm" (ngSubmit)="resetPassword(editForm.value)">
-    <div class="modal-header">
-      <h6 class="modal-title" id="modal-basic-title">Réinitialiser le mot de passe </h6>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body" >
-        <div class="row mb-3">
-        
-            <div class=" form-group col-12 mb-3">
-                <label for="">Email <span class="text-danger ml-2">(*)</span></label>
-                <input type="text" name="email" class="form-control" [(ngModel)]="selected_data.email">
-            </div> 
-            <div class=" form-group col-12 mb-3">
-                <label for="">Mot de passe <span class="text-danger ml-2">(*)</span></label>
-                <input type="password" name="password" class="form-control" minlength="8" ngModel>
-            </div> 
-            <div class=" form-group col-12 mb-3">
-                <label for="">Confirmer le mot de passe <span class="text-danger ml-2">(*)</span></label>
-                <input type="password" name="password_confirmation" class="form-control" minlength="8" ngModel>
-            </div> 
-           
-          
-             <div class="d-flex justify-content-between">
-          <p>Acteur métier :</p>
-          <ng-toggle
-          [(ngModel)]="selected_data.is_trade"
-          name="is_trade"
-          [color]="{
-              unchecked: '#939da2',
-              checked: '#0C574E'
-          }"
-          [values]="{
-              checked: true, unchecked: false
-          }"
-          ></ng-toggle>
+  <form #resetForm="ngForm" (ngSubmit)="resetPassword(resetForm.value)">
+
+    <div class="modal-header user-modal-header" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
+      <div class="d-flex align-items-center gap-3">
+        <div class="modal-header-icon"><i class="bi bi-key-fill"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Réinitialiser le mot de passe</h5>
+          <small>Définir un nouveau mot de passe pour <strong>{{selected_data?.email}}</strong></small>
         </div>
-        <div class="" *ngIf="role != 'Admin national'">
-          <h4>Affectation des prestations au compte utilisateur</h4>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
 
-          <h6>Ce compte aura accès aux prestations suivantes</h6>
+    <div class="modal-body user-modal-body">
 
-        <div class="container">
-          <div class="row">
-            <div class="col-6 form-check" *ngFor="let p of prestations, let i=index">
-              <input class="form-check-input" type="checkbox" [checked]="p.state" name="state{{i}}"  [(ngModel)]="p.state" >
-              <label class="form-check-label">
-                {{p.name}}
-              </label>
-            </div>
+      <!-- Sécurité -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-lock-fill"></i> Nouveau mot de passe</div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control form-control-modern" [(ngModel)]="selected_data.email" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+            <input type="password" name="password" class="form-control form-control-modern" minlength="8" ngModel placeholder="Min. 8 caractères">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Confirmer <span class="text-danger">*</span></label>
+            <input type="password" name="password_confirmation" class="form-control form-control-modern" minlength="8" ngModel placeholder="Répéter le mot de passe">
           </div>
         </div>
-        
+      </div>
+
+      <!-- Profil utilisateur -->
+      <div class="form-section">
+        <div class="form-section-title"><i class="bi bi-person-badge-fill"></i> Profil utilisateur</div>
+        <div class="toggle-card" [class.toggle-card--active]="selected_data?.is_trade">
+          <div class="toggle-card-info">
+            <div class="toggle-card-icon-wrap" [class.toggle-card-icon-active]="selected_data?.is_trade">
+              <i class="bi bi-briefcase-fill"></i>
+            </div>
+            <div>
+              <div class="toggle-card-title">Acteur métier</div>
+              <div class="toggle-card-desc">Accès au portail en tant qu'acteur économique</div>
+            </div>
+          </div>
+          <div class="toggle-card-controls">
+            <span class="toggle-state-badge" [class.toggle-state-badge--on]="selected_data?.is_trade">
+              {{ selected_data?.is_trade ? 'Activé' : 'Désactivé' }}
+            </span>
+            <ng-toggle name="is_trade" [(ngModel)]="selected_data.is_trade"
+              [color]="{unchecked:'#939da2', checked:'#0C574E'}"
+              [values]="{checked:true, unchecked:false}">
+            </ng-toggle>
+          </div>
         </div>
+      </div>
+
+      <!-- Accès aux prestations -->
+      <div class="form-section" *ngIf="role != 'Admin national'">
+        <div class="form-section-title">
+          <i class="bi bi-grid-fill"></i> Accès aux prestations
+          <span class="prestations-count">{{prestations.length}} prestation(s)</span>
         </div>
-       
+        <div class="prestations-grid">
+          <div class="prestation-item" *ngFor="let p of prestations; let i=index">
+            <input class="prestation-checkbox" type="checkbox" [checked]="p.state" name="state{{i}}" [(ngModel)]="p.state" [id]="'reset-prest-'+i">
+            <label [for]="'reset-prest-'+i" class="prestation-label">
+              <i class="bi bi-check2 check-icon"></i>
+              {{p.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-dark" [disabled]="editForm.invalid || loading" >Réinitialiser <app-loading [isVisible]="loading"></app-loading></button>
+
+    <div class="modal-footer user-modal-footer">
+      <button type="button" class="btn btn-footer-cancel" (click)="modal.dismiss('Cross click')">Annuler</button>
+      <button type="submit" class="btn btn-footer-submit" [disabled]="resetForm.invalid || loading"
+        style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); box-shadow: 0 2px 8px rgba(124,58,237,0.3);">
+        <i class="bi bi-key-fill"></i> Réinitialiser
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
     </div>
-</form>
-  </ng-template>
+
+  </form>
+</ng-template>
 
   <ng-template #showContent let-modal>
     <div class="modal-header">

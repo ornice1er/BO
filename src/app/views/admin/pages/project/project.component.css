@@ -1,0 +1,55 @@
+.project-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Ouvert — vert */
+.badge-open {
+  background: rgba(31, 136, 63, 0.1);
+  color: #1a7a35;
+  border: 1px solid rgba(31, 136, 63, 0.25);
+}
+.badge-open .badge-dot {
+  background: #1F883F;
+  box-shadow: 0 0 0 2px rgba(31, 136, 63, 0.25);
+  animation: pulse-green 2s infinite;
+}
+
+/* Clôturé — gris neutre */
+.badge-closed {
+  background: rgba(107, 114, 128, 0.08);
+  color: #4b5563;
+  border: 1px solid rgba(107, 114, 128, 0.22);
+}
+.badge-closed .badge-dot {
+  background: #6b7280;
+}
+
+/* Inconnu */
+.badge-unknown {
+  background: rgba(252, 211, 67, 0.12);
+  color: #92600a;
+  border: 1px solid rgba(252, 211, 67, 0.4);
+}
+.badge-unknown .badge-dot {
+  background: #FCD343;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(31, 136, 63, 0.25); }
+  50%       { box-shadow: 0 0 0 4px rgba(31, 136, 63, 0.12); }
+}

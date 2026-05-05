@@ -434,8 +434,7 @@
                     {{getText()}}
                     <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
                       <span class="visually-hidden">Chargement...</span>
-                    </div>
-                  </button>
+                    </div> <app-loading [isVisible]="loading"></app-loading></button>
                 </div>
               </form>
             </ng-container>
@@ -467,8 +466,7 @@
                       {{getText()}}
                       <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
                         <span class="visually-hidden">Chargement...</span>
-                      </div>
-                    </button>
+                      </div> <app-loading [isVisible]="loading"></app-loading></button>
                   </div>
                 </div>
               </form>
@@ -501,8 +499,7 @@
                       {{getText()}}
                       <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
                         <span class="visually-hidden">Chargement...</span>
-                      </div>
-                    </button>
+                      </div> <app-loading [isVisible]="loading"></app-loading></button>
                   </div>
                 </div>
               </form>
@@ -564,8 +561,7 @@
         Signer
         <div *ngIf="loading" class="spinner-border spinner-border-sm ms-2" role="status">
           <span class="visually-hidden">Chargement...</span>
-        </div>
-      </button>
+        </div> <app-loading [isVisible]="loading"></app-loading></button>
     </div>
   </form>
 </ng-template>

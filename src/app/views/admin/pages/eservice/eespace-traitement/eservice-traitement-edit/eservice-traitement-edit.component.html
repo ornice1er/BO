@@ -1,82 +1,87 @@
-<!-- Informations de la demande -->
-<div class="card mb-3">
-  <div class="card-header">
-    <strong>Informations de la demande</strong>
-  </div>
-  <div class="card-body row">
-    <div class="col-md-4">
-      <b>Demandeur :</b> {{ selectedData?.email }} | {{ selectedData?.phone }}
+<!-- ── Bandeau : informations de la demande ─────────────────── -->
+<div class="te-info-banner mb-4">
+  <div class="te-info-banner__body">
+
+    <div class="te-info-field">
+      <span class="te-info-field__label"><i class="bi bi-person me-1"></i>Demandeur</span>
+      <span class="te-info-field__value">{{ selectedData?.email }}</span>
+      <span class="te-info-field__sub">{{ selectedData?.phone }}</span>
     </div>
-    <div class="col-md-4">
-      <b>Prestation :</b> {{ selectedData?.prestation?.name }}
+
+    <div class="te-info-divider"></div>
+
+    <div class="te-info-field">
+      <span class="te-info-field__label"><i class="bi bi-grid me-1"></i>Prestation</span>
+      <span class="te-info-field__value">{{ selectedData?.prestation?.name }}</span>
     </div>
-    <div class="col-md-4">
-      <b>Étape courante :</b>
-      <span class="badge bg-primary ms-1">{{ selectedData?.current_etape?.name ?? '—' }}</span>
-      <span class="badge ms-1"
-        [ngClass]="{
-          'bg-secondary':         selectedData?.current_status?.short_name === 'en_attente',
-          'bg-info':              selectedData?.current_status?.short_name === 'en_verification',
-          'bg-primary':           selectedData?.current_status?.short_name === 'envoye',
-          'bg-warning text-dark': selectedData?.current_status?.short_name === 'paraphe'
-                               || selectedData?.current_status?.short_name === 'en_attente_signature',
-          'bg-success':           selectedData?.current_status?.short_name === 'valide'
-                               || selectedData?.current_status?.short_name === 'prevalide',
-          'bg-danger':            selectedData?.current_status?.short_name === 'rejete'
-                               || selectedData?.current_status?.short_name === 'rejete_clos',
-          'bg-dark':              selectedData?.current_status?.short_name === 'cloture'
-        }">
-        {{ selectedData?.current_status?.name ?? '—' }}
-      </span>
+
+    <div class="te-info-divider"></div>
+
+    <div class="te-info-field">
+      <span class="te-info-field__label"><i class="bi bi-diagram-3 me-1"></i>Étape courante</span>
+      <span class="te-badge te-badge--blue mt-1">{{ selectedData?.current_etape?.name ?? '—' }}</span>
     </div>
+
+    <div class="te-info-divider"></div>
+
+    <div class="te-info-field">
+      <span class="te-info-field__label"><i class="bi bi-circle-half me-1"></i>Statut</span>
+      <span class="te-badge mt-1" [ngClass]="{
+        'te-badge--grey':   selectedData?.current_status?.short_name === 'en_attente',
+        'te-badge--cyan':   selectedData?.current_status?.short_name === 'en_verification',
+        'te-badge--blue':   selectedData?.current_status?.short_name === 'envoye',
+        'te-badge--amber':  selectedData?.current_status?.short_name === 'paraphe'
+                         || selectedData?.current_status?.short_name === 'en_attente_signature',
+        'te-badge--green':  selectedData?.current_status?.short_name === 'valide'
+                         || selectedData?.current_status?.short_name === 'prevalide',
+        'te-badge--red':    selectedData?.current_status?.short_name === 'rejete'
+                         || selectedData?.current_status?.short_name === 'rejete_clos',
+        'te-badge--dark':   selectedData?.current_status?.short_name === 'cloture'
+      }">{{ selectedData?.current_status?.name ?? '—' }}</span>
+    </div>
+
   </div>
 </div>
 
-<!-- BLOC A — ÉDITEUR DE DOCUMENT
-     Affiché si l'étape courante produit un document (produces_document = true)
-     et que le document n'a pas encore été soumis au circuit -->
-<div *ngIf="selectedData?.current_etape?.produces_document && !documentDejaSoumis">
 
-  <!-- Documents déjà dans le circuit (paraphe / signature / prévalidation) -->
-  <div class="card mb-3" *ngIf="documentsDuCircuit.length > 0">
-    <div class="card-header">
-      <strong><i class="bi bi-file-earmark-check me-2"></i>Documents du circuit</strong>
+<!-- ── BLOC A : Éditeur de document ────────────────────────── -->
+<ng-container *ngIf="selectedData?.current_etape?.produces_document && !documentDejaSoumis">
+
+  <!-- Documents du circuit -->
+  <div class="te-section mb-4" *ngIf="documentsDuCircuit.length > 0">
+    <div class="te-section__header">
+      <i class="bi bi-file-earmark-check"></i>
+      Documents du circuit
     </div>
-    <div class="card-body">
+    <div class="te-section__body">
       <div class="row g-3">
         <div *ngFor="let acte of documentsDuCircuit" class="col-md-6">
-          <div class="card border shadow-sm h-100">
-            <div class="card-body p-3">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="mb-0">{{ acte?.doc_produit?.name }}</h6>
-                <span class="badge"
-                  [ngClass]="{
-                    'bg-warning text-dark': acte?.status === 'en_edition',
-                    'bg-primary':           acte?.status === 'en_circuit',
-                    'bg-success':           acte?.status === 'complet',
-                    'bg-danger':            acte?.status === 'rejete'
-                  }">{{ acte?.status }}</span>
-              </div>
-              <p class="text-muted small mb-1">N° {{ acte?.numero_identification ?? '—' }}</p>
-              <p class="text-muted small mb-2" *ngIf="acte?.current_circuit_step">
-                <i class="bi bi-arrow-right me-1"></i>
-                En attente : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
-                ({{ acte?.current_circuit_step?.action_type }})
-              </p>
-              <div class="d-flex gap-2 flex-wrap">
-                <button *ngIf="acte?.file_url"
-                  class="btn btn-sm btn-outline-dark"
-                  (click)="showResponseFile(acte.file_url)">
-                  <i class="bi bi-eye me-1"></i>Visualiser
-                </button>
-                <button *ngIf="peutAgirSurDocument(acte)"
-                  class="btn btn-sm btn-primary"
-                  (click)="actionSurDocument(acte)"
-                  [disabled]="loading">
-                  <i class="bi bi-pen me-1"></i>
-                  {{ acte?.current_circuit_step?.action_type | titlecase }}
-                </button>
-              </div>
+          <div class="te-doc-card">
+            <div class="te-doc-card__top">
+              <span class="te-doc-card__name">{{ acte?.doc_produit?.name }}</span>
+              <span class="te-badge te-badge--sm" [ngClass]="{
+                'te-badge--amber': acte?.status === 'en_edition',
+                'te-badge--blue':  acte?.status === 'en_circuit',
+                'te-badge--green': acte?.status === 'complet',
+                'te-badge--red':   acte?.status === 'rejete'
+              }">{{ acte?.status }}</span>
+            </div>
+            <p class="te-doc-card__num">N° {{ acte?.numero_identification ?? '—' }}</p>
+            <p class="te-doc-card__step" *ngIf="acte?.current_circuit_step">
+              <i class="bi bi-arrow-right-short"></i>
+              En attente : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
+              <span class="text-muted ms-1">({{ acte?.current_circuit_step?.action_type }})</span>
+            </p>
+            <div class="d-flex gap-2 mt-2 flex-wrap">
+              <button *ngIf="acte?.file_url" class="te-btn te-btn--ghost te-btn--sm"
+                (click)="showResponseFile(acte.file_url)">
+                <i class="bi bi-eye"></i> Visualiser
+              </button>
+              <button *ngIf="peutAgirSurDocument(acte)" class="te-btn te-btn--primary te-btn--sm"
+                (click)="actionSurDocument(acte)" [disabled]="loading">
+                <i class="bi bi-pen"></i>
+                {{ acte?.current_circuit_step?.action_type | titlecase }}
+              </button>
             </div>
           </div>
         </div>
@@ -84,40 +89,44 @@
     </div>
   </div>
 
-  <!-- Éditeur document -->
-  <div class="card mb-3">
-    <div class="card-header">
-      <strong><i class="bi bi-pencil-square me-2"></i>{{ selectedData?.current_etape?.name }}</strong>
+  <!-- Éditeur -->
+  <div class="te-section mb-4">
+    <div class="te-section__header">
+      <i class="bi bi-pencil-square"></i>
+      {{ selectedData?.current_etape?.name }}
     </div>
-    <div class="card-body">
+    <div class="te-section__body">
       <app-document-editor
         *ngIf="docProduitCourant"
         [requeteId]="selectedData?.id"
-         [contentType]="selectedData?.prestation?.content_type"
+        [contentType]="selectedData?.prestation?.content_type"
         [docProduitId]="docProduitCourant?.id"
         (submitted)="onDocumentSoumis($event)">
       </app-document-editor>
-      <div *ngIf="!docProduitCourant" class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle me-2"></i>
+      <div *ngIf="!docProduitCourant" class="te-alert te-alert--warning">
+        <i class="bi bi-exclamation-triangle"></i>
         Aucun document produit configuré pour cette étape.
       </div>
     </div>
   </div>
 
-</div>
+</ng-container>
 
-<!-- BLOC B — DÉCISION WORKFLOW
-     Affiché si l'étape ne produit pas de document
-     OU si le document a déjà été soumis au circuit -->
-<div class="card mb-3"
+
+<!-- ── BLOC B : Décision workflow ───────────────────────────── -->
+<div class="te-section mb-4"
   *ngIf="!selectedData?.current_etape?.produces_document || documentDejaSoumis">
 
-  <div class="card-header"><strong>Décision</strong></div>
-  <div class="card-body">
+  <div class="te-section__header">
+    <i class="bi bi-send-check"></i>
+    Décision
+  </div>
 
-    <!-- Transitions disponibles -->
-    <div class="form-group mb-3">
-      <label class="fw-semibold">Prochaine étape</label>
+  <div class="te-section__body">
+
+    <!-- Prochaine étape -->
+    <div class="te-form-group">
+      <label class="te-label">Prochaine étape</label>
       <ng-select
         name="transition_id"
         [(ngModel)]="responseData.transition_id"
@@ -129,84 +138,85 @@
           → {{ t.status_result?.name }}
         </ng-option>
       </ng-select>
-      <small class="text-muted" *ngIf="transitionsDisponibles.length === 0">
-        Aucune transition disponible depuis cette étape.
+      <small class="te-hint" *ngIf="transitionsDisponibles.length === 0">
+        <i class="bi bi-info-circle me-1"></i>Aucune transition disponible depuis cette étape.
       </small>
     </div>
 
     <!-- Motif de rejet -->
-    <div class="form-group mb-3"
+    <div class="te-form-group"
       *ngIf="transitionSelectionnee?.condition_type === 'rejet'
           || transitionSelectionnee?.condition_type === 'cloture'">
-      <label class="fw-semibold">Motif de rejet</label>
+      <label class="te-label">Motif de rejet</label>
       <ng-select name="motif_id" [(ngModel)]="responseData.motif_id" placeholder="Sélectionner un motif...">
         <ng-option *ngFor="let m of motifsRejet" [value]="m.id">
           {{ m.libelle }}
-          <span class="badge bg-danger ms-1" *ngIf="m.is_final">Définitif</span>
+          <span class="te-badge te-badge--red te-badge--sm ms-1" *ngIf="m.is_final">Définitif</span>
         </ng-option>
       </ng-select>
     </div>
 
     <!-- RDV -->
-    <div class="form-group mb-3" *ngIf="showAddingField.rdv">
-      <label class="fw-semibold">Date et heure du rendez-vous</label>
-      <input type="datetime-local" class="form-control"
-             [(ngModel)]="rdvDate">
+    <div class="te-form-group" *ngIf="showAddingField.rdv">
+      <label class="te-label"><i class="bi bi-calendar-event me-1"></i>Date et heure du rendez-vous</label>
+      <input type="datetime-local" class="te-input" [(ngModel)]="rdvDate">
     </div>
 
     <!-- Observation -->
-    <div class="form-group mb-3" *ngIf="showAddingField.observation">
-      <label class="fw-semibold">Observation</label>
-      <textarea class="form-control" rows="3"
-                [(ngModel)]="responseData.comment"
-                placeholder="Commentaire ou observation..."></textarea>
+    <div class="te-form-group" *ngIf="showAddingField.observation">
+      <label class="te-label"><i class="bi bi-chat-left-text me-1"></i>Observation</label>
+      <textarea class="te-input" rows="3"
+        [(ngModel)]="responseData.comment"
+        placeholder="Commentaire ou observation..."></textarea>
     </div>
 
     <!-- Pièce jointe -->
-    <div class="form-group mb-3" *ngIf="showAddingField.note_file">
-      <label class="fw-semibold">Joindre une note ou PJ</label>
-      <input type="file" class="form-control" (change)="upload($event)">
+    <div class="te-form-group" *ngIf="showAddingField.note_file">
+      <label class="te-label"><i class="bi bi-paperclip me-1"></i>Joindre une note ou PJ</label>
+      <input type="file" class="te-input" (change)="upload($event)">
     </div>
 
   </div>
 </div>
 
-<!-- Livrable existant -->
-<div class="card mb-3" *ngIf="selectedData?.filename">
-  <div class="card-body text-center">
-    <h5><i class="bi bi-file-earmark-pdf text-danger"></i> Livrable disponible</h5>
-    <button class="btn btn-primary" (click)="showResponseFile(selectedData.filename)">
-      Voir le document
+
+<!-- ── Livrable existant ────────────────────────────────────── -->
+<div class="te-section mb-4" *ngIf="selectedData?.filename">
+  <div class="te-section__body text-center py-3">
+    <i class="bi bi-file-earmark-pdf" style="font-size:2rem;color:#dc3545;"></i>
+    <p class="fw-semibold mt-2 mb-3">Livrable disponible</p>
+    <button class="te-btn te-btn--primary" (click)="showResponseFile(selectedData.filename)">
+      <i class="bi bi-eye"></i> Voir le document
     </button>
   </div>
 </div>
 
-<!-- Boutons d'action -->
-<div class="card">
-  <div class="card-body text-center d-flex justify-content-center gap-3">
-    <button class="btn btn-secondary" (click)="back()">
-      <i class="bi bi-arrow-left me-1"></i>Annuler
-    </button>
-    <button
-      *ngIf="!selectedData?.current_etape?.produces_document || documentDejaSoumis"
-      class="btn btn-primary"
-      [disabled]="!responseData.transition_id || loading"
-      (click)="soumettre()">
-      <i class="bi bi-check-circle me-1"></i>
-      Confirmer
-      <app-loading [isVisible]="loading"></app-loading>
-    </button>
-  </div>
+
+<!-- ── Boutons d'action ─────────────────────────────────────── -->
+<div class="te-actions">
+  <button class="te-btn te-btn--ghost" (click)="back()">
+    <i class="bi bi-arrow-left"></i> Annuler
+  </button>
+  <button
+    *ngIf="!selectedData?.current_etape?.produces_document || documentDejaSoumis"
+    class="te-btn te-btn--primary"
+    [disabled]="!responseData.transition_id || loading"
+    (click)="soumettre()">
+    <i class="bi bi-check-circle"></i>
+    Confirmer
+    <app-loading [isVisible]="loading"></app-loading>
+  </button>
 </div>
 
-<!-- Viewer PDF (offcanvas) -->
+
+<!-- ── Viewer PDF (offcanvas) ───────────────────────────────── -->
 <ng-template #contentPDF let-offcanvas>
-  <div class="offcanvas-header">
-    <h4 class="offcanvas-title">Visualiseur de fichier</h4>
-    <button type="button" class="btn-close" (click)="offcanvas.dismiss()"></button>
+  <div class="offcanvas-header" style="background:linear-gradient(135deg,#0A3764,#0d4e8a);color:#fff;">
+    <h5 class="offcanvas-title mb-0"><i class="bi bi-file-earmark-pdf me-2"></i>Visualiseur de fichier</h5>
+    <button type="button" class="btn-close btn-close-white" (click)="offcanvas.dismiss()"></button>
   </div>
-  <div class="offcanvas-body" *ngIf="pdfSrc">
-    <ngx-extended-pdf-viewer [src]="pdfSrc" height="80vh" useBrowserLocale="true">
+  <div class="offcanvas-body p-0" *ngIf="pdfSrc">
+    <ngx-extended-pdf-viewer [src]="pdfSrc" height="90vh" useBrowserLocale="true">
     </ngx-extended-pdf-viewer>
   </div>
 </ng-template>

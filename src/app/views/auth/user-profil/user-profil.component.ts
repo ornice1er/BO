@@ -11,6 +11,7 @@ import { LocalStorageService } from '../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 @Component({
     selector: 'app-user-profil',
     templateUrl: './user-profil.component.html',
@@ -18,141 +19,147 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['./user-profil.component.css']
 })
 export class UserProfilComponent implements OnInit {
-  fileSrc:any="https://placehold.co/200x200"
-  loading=false
-  fileInput:any
-  user:any;
-  tag="admin-user-account"
+  fileSrc: any = 'https://placehold.co/200x200';
+  loading = false;
+  loadingUser = false;
+  fileInput: any;
+  user: any;
+  activeTab = 0;
+  tag = 'admin-user-account';
 
   constructor(
-    private spinnerService:NgxSpinnerService,
-    private fileService:FileService,
-    private authService:AuthService,
-    private usService:UserSettingService,
-    private lsService:LocalStorageService,
+    private spinnerService: NgxSpinnerService,
+    private fileService: FileService,
+    private authService: AuthService,
+    private usService: UserSettingService,
+    private lsService: LocalStorageService,
     private router: Router,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.user=this.lsService.get(GlobalName.userName)
-    if(this.user?.user_setting !=null || this.user?.user_setting!=undefined)this.getFile('local','director',this.user?.user_setting?.signature)
-
-  }
-  getFile(disk:any,folder:any,filename:any){
-    //this.pdfViewLoader=true
-    this.spinnerService.show()
-    this.fileService.get({
-      folder:folder,
-      disk:disk,
-      filename:filename
-    }).subscribe((res:any)=>{
-     // this.pdfViewLoader=false
-     this.spinnerService.hide()
-      this.fileSrc=res[0]
-     // this.offcanvasService.open(this.contentPDF,{  panelClass: 'details-panel', position: 'end'  });
-
-    },
-    (err:any)=>{
-      this.spinnerService.hide()
-      AppErrorShow.showError("Profil utilisateur connecté",err)
-
-    })
+    this.user = this.lsService.get(GlobalName.userName);
+    this.loadMe();
   }
 
-
-  
-  update(value:any){
-
-    this.loading=true
-    this.authService.update(value).subscribe((res:any)=>{
-      this.loading=false
-      this.lsService.set(GlobalName.userName,res.data);
-      this.user=res.data
-      this.toastr.success('Sauvegarde des informations du compte', 'Mon compte');
-    },
-    (err:any)=>{
-      this.loading=false
-      this.toastr.success('Sauvegarde des informations échouée', 'Mon compte');
-
+  loadMe(): void {
+    this.loadingUser = true;
+    this.authService.me().subscribe({
+      next: (res: any) => {
+        this.loadingUser = false;
+        this.user = res.data ?? res;
+        this.lsService.set(GlobalName.userName, this.user);
+        if (this.user?.user_setting?.signature) {
+          this.getFile('local', 'director', this.user.user_setting.signature);
+        }
+      },
+      error: () => {
+        this.loadingUser = false;
+      }
     });
   }
 
-  changePassword(value:any){
-    this.loading=true
-    this.authService.changePassword(value).subscribe((res:any)=>{
-      this.loading=false
-      this.toastr.success(res.message, 'Mon compte');
-      this.logout()
-    },
-    (err:any)=>{
-      this.loading=false
-      this.toastr.error('Changement de mot de passe échouée', 'Mon compte');
+  getInitials(): string {
+    const last = this.user?.agent?.lastname?.charAt(0) ?? this.user?.email?.charAt(0) ?? '?';
+    const first = this.user?.agent?.firstname?.charAt(0) ?? '';
+    return (last + first).toUpperCase();
+  }
 
+  getFile(disk: any, folder: any, filename: any): void {
+    this.spinnerService.show();
+    this.fileService.get({ folder, disk, filename }).subscribe({
+      next: (res: any) => {
+        this.spinnerService.hide();
+        this.fileSrc = res[0];
+      },
+      error: (err: any) => {
+        this.spinnerService.hide();
+        AppErrorShow.showError('Profil utilisateur connecté', err);
+      }
     });
   }
-  readFile(){
-    var reader = new FileReader();
 
-    reader.readAsDataURL(this.fileInput); // read file as data url
+  update(value: any): void {
+    this.loading = true;
+    this.authService.update(value).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        this.user = res.data ?? res;
+        this.lsService.set(GlobalName.userName, this.user);
+        this.toastr.success('Informations mises à jour', 'Mon profil');
+      },
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Sauvegarde échouée', 'Mon profil');
+      }
+    });
+  }
 
-    reader.onload = (event) => { // called once readAsDataURL is completed
+  changePassword(value: any): void {
+    this.loading = true;
+    this.authService.changePassword(value).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        this.toastr.success(res.message, 'Mon profil');
+        this.logout();
+      },
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Changement de mot de passe échoué', 'Mon profil');
+      }
+    });
+  }
+
+  readFile(): void {
+    const reader = new FileReader();
+    reader.readAsDataURL(this.fileInput);
+    reader.onload = (event) => {
       this.fileSrc = event.target?.result;
+    };
+  }
+
+  loadImg(event: any): void {
+    if (event.target.files.length !== 0) {
+      this.fileInput = event.target.files[0];
+      this.readFile();
     }
   }
 
-  loadImg(event:any){
-    if(event.target.files.length!=0){
-      this.fileInput=event.target.files[0]
-      this.readFile()
+  storeSign(value: any): void {
+    const formData = new FormData();
+    if (this.fileInput !== undefined) {
+      formData.append('signature', this.fileInput);
     }
-  }
-  storeSign(value:any){
-    let formData= new FormData()
+    this.loading = true;
+    const action = this.user?.user_setting != null
+      ? this.usService.update(this.user.id, formData)
+      : this.usService.store(formData);
 
-    if (this.fileInput!=undefined) {
-      formData.append("signature",this.fileInput)
-    }
-    
-    if(this.user?.userSetting!=null || this.user?.userSetting!=undefined){
-      this.loading=true
-      this.usService.update(this.user?.id,formData).subscribe((res:any)=>{
-        this.loading=false
-        this.toastr.success(res.message, 'Mon compte');
+    action.subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        this.toastr.success(res.message, 'Mon profil');
       },
-      (err:any)=>{
-        this.loading=false
-        this.toastr.error('Changement de mot de passe échouée', 'Mon compte');
-  
-      });
-    }else{
-      this.loading=true
-      this.usService.store(formData).subscribe((res:any)=>{
-        this.loading=false
-        this.toastr.success(res.message, 'Mon compte');
-      },
-      (err:any)=>{
-        this.loading=false
-        this.toastr.error('Changement de mot de passe échouée', 'Mon compte');
-  
-      });
-    }
-
-    
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Chargement de la signature échoué', 'Mon profil');
+      }
+    });
   }
 
-  logout(){
-    this.authService.logout().subscribe((res:any)=>{
-      this.lsService.remove(GlobalName.tokenName)
-      this.lsService.remove(GlobalName.refreshTokenName)
-      this.lsService.remove(GlobalName.expireIn)
-      this.router.navigate(['/admin/login'])
-      this.toastr.success('Déconnexion réussie', 'Connexion');
-    }),
-    ((err:any)=>{
-      console.log(err)
-      this.toastr.success('Déconnexion échouée', 'Connexion');
-
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.lsService.remove(GlobalName.tokenName);
+        this.lsService.remove(GlobalName.refreshTokenName);
+        this.lsService.remove(GlobalName.expireIn);
+        this.router.navigate(['/admin/login']);
+        this.toastr.success('Déconnexion réussie', 'Connexion');
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.toastr.error('Déconnexion échouée', 'Connexion');
+      }
     });
   }
 }

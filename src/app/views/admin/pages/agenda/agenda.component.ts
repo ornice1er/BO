@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +19,8 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
     selector: 'ngx-agenda',
     templateUrl: './agenda.component.html',
     imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
-    styleUrls: ['./agenda.component.css']
+    styleUrls: ['./agenda.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AgendaComponent implements OnInit {
   @ViewChild("dialog") dialog :TemplateRef<any> | undefined;
@@ -37,6 +38,7 @@ export class AgendaComponent implements OnInit {
   canTransmit=true
   role=""
   canSendMail=true
+  mailSentIds = new Set<number>()
   is_active=true
   code:any
   codeP:any
@@ -323,12 +325,15 @@ loadData(event:any){
   })
   }
   sendMail(){
+    if (!this.verifyIfElementChecked()) return;
     AppSweetAlert.confirmBox('question', 'Envoi de mail', 'Confirmer l\'envoi du mail de rendez-vous à l\'usager ?').then((result: any) => {
       if (!result.isConfirmed) return;
-      this.toastrService.info('Opération en cours');
+      this.loading = true;
+      this.toastrService.info('Envoi en cours…');
       this.agendaService.SendMail(this.selected_data.id).subscribe(
         (res: any) => {
           this.loading = false;
+          this.mailSentIds.add(this.selected_data.id);
           this.getData();
           this.toastrService.success('Mail envoyé à l\'usager');
         },
