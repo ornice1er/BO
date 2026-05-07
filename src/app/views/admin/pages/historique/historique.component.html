@@ -68,12 +68,12 @@
 
               <ng-container *ngIf="!loading2">
               <tr
-                *ngFor="let d of data | paginate: {
+                *ngFor="let d of data | sampleSearch: search_text | paginate: {
                   id: 'ngxP1',
                   itemsPerPage: pg.pageSize,
                   currentPage: pg.p,
                   totalItems: pg.total
-                } | sampleSearch: search_text"
+                }"
                 class="table-row">
 
                 <!-- Colonne sélection + actions -->

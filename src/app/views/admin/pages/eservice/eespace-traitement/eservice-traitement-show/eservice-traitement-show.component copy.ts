@@ -8,7 +8,7 @@ import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../../core/services/response.service';
@@ -25,7 +25,7 @@ import { PrestationDetails } from '../../prestation-details';
   selector: 'ngx-eservice-traitement-show',
   templateUrl: './eservice-traitement-show.component.html',
         standalone:true,
-        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,SampleSearchPipe,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
+        imports:[CommonModule,FormsModule,NgbModule,LoadingComponent,NgSelectModule,NgxPaginationModule,MatTooltipModule,RouterModule],
     
   styleUrls: ['./eservice-traitement-show.component.css'],
   providers: [NgbModalConfig, NgbModal]

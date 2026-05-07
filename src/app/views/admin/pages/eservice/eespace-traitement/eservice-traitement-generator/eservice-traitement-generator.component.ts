@@ -8,7 +8,7 @@ import { NgbModule, NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../../core/services/response.service';
@@ -18,11 +18,12 @@ import { LoadingComponent } from '../../../../../components/loading/loading.comp
 import { PrestationDetails } from '../../prestation-details';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 
 @Component({
     selector: 'ngx-eservice-traitement-generator',
     templateUrl: './eservice-traitement-generator.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, AngularEditorModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule, MatTooltipModule, AngularEditorModule],
     styleUrls: ['./eservice-traitement-generator.component.css']
 })
 export class EserviceTraitementGeneratorComponent implements OnInit {
@@ -93,8 +94,7 @@ editorConfig: AngularEditorConfig = {
       name: 'titleText',
       class: 'titleText',
       tag: 'h1',
-    },
-  ],
+    }],
   uploadUrl: 'v1/image',
  // upload: (file: File) => {  },
   uploadWithCredentials: false,

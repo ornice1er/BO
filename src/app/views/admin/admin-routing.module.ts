@@ -50,6 +50,9 @@ import { UserComponent } from "./pages/user/user.component";
 import { WorkflowComponent } from "./pages/workflow/workflow.component";
 import { WorkflowStateComponent } from "./pages/workflow-state/workflow-state.component";
 import { PlanningSlotComponent } from "./pages/planning-slot/planning-slot.component";
+import { MunicipalityComponent } from "./pages/municipality/municipality.component";
+import { DistrictComponent } from "./pages/district/district.component";
+import { VillageComponent } from "./pages/village/village.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -71,6 +74,18 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
             {
                 path: 'departments',
                 component: DepartmentComponent,
+            },
+            {
+                path: 'municipalities',
+                component: MunicipalityComponent,
+            },
+            {
+                path: 'districts',
+                component: DistrictComponent,
+            },
+            {
+                path: 'villages',
+                component: VillageComponent,
             },
      
             {

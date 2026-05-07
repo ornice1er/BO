@@ -50,12 +50,12 @@
         </ng-container>
 
         <ng-container *ngIf="!loading2">
-        <tr *ngFor="let d of filteredRequetes | paginate: {
+        <tr *ngFor="let d of filteredRequetes | sampleSearch:search_text | paginate: {
                         id: 'ngxP1',
                         itemsPerPage: pg.pageSize,
                         currentPage: pg.p,
                         totalItems: filteredRequetes.length
-                    } | sampleSearch:search_text; let i = index"
+                    }; let i = index"
             class="table-row">
           <td>{{ i + 1 }}</td>
           <td>{{ d?.prestation?.code }}</td>

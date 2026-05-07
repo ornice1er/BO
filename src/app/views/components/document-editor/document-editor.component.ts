@@ -14,7 +14,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 @Component({
   selector: 'app-document-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbModule, QuillModule, LoadingComponent,NgxExtendedPdfViewerModule],
+  imports: [CommonModule, FormsModule, NgbModule, QuillModule, NgxExtendedPdfViewerModule, LoadingComponent],
   template: `
 <div class="card" *ngIf="acte">
 
@@ -233,8 +233,7 @@ export class DocumentEditorComponent implements OnInit {
       ['bold', 'italic', 'underline'],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
       [{ 'align': [] }],
-      ['clean'],
-    ]
+      ['clean']]
   };
 
   private baseUrl = ConfigService.toApiUrl('document-actes');

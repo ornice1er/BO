@@ -139,7 +139,7 @@
       <div class="ts-info-grid">
         <div class="ts-info-item" *ngFor="let line of sc.content | keyvalue">
           <div class="ts-info-label">{{ line.key }}</div>
-          <div class="ts-info-value">{{ line.value }}</div>
+          <div class="ts-info-value">{{ resolveGeoLabel($any(line.key), $any(line.value)) }}</div>
         </div>
       </div>
     </div>

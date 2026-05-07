@@ -67,11 +67,11 @@
             </ng-container>
 
             <ng-container *ngIf="!loading">
-            <tr *ngFor="let d of data | paginate: {
+            <tr *ngFor="let d of data | sampleSearch:search_text | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
                                     currentPage: pg.p,
-                                    totalItems: pg.total } | sampleSearch:search_text" class="table-row">
+                                    totalItems: pg.total }" class="table-row">
                 <td class="position-relative checkbox-cell">
                 <div class="form-check">
                     <input

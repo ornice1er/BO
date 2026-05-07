@@ -175,7 +175,7 @@ add(content:any){
       }
 
    onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name?.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.object?.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }

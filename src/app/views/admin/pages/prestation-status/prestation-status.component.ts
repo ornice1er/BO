@@ -248,7 +248,7 @@ delete() {
 
   this.loading = true;
 
-  this.statusService.search({search:this.search_text}).subscribe({
+  this.psStatus.search({search:this.search_text}).subscribe({
     next: (result:any) => {
       this.remoteSearchData = result.data;
       this.data = this.remoteSearchData;

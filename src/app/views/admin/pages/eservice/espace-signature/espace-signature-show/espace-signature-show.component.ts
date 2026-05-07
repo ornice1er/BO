@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../../core/services/response.service';
@@ -19,12 +19,12 @@ import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
-import { LoadingComponent } from '../../../../../components/loading/loading.component';
+import {} from '../../../../../components/loading/loading.component';
 
 @Component({
     selector: 'app-espace-signature-show',
     templateUrl: './espace-signature-show.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./espace-signature-show.component.css'],
     providers: [NgbModalConfig, NgbModal]
 })

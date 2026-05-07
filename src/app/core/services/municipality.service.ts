@@ -9,14 +9,10 @@ export class MunicipalityService {
 
   url = ConfigService.toApiUrl('municipalities');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getAll(params?: any): any {
-    return this.http.get<any>(this.url, { params });
-  }
-
-  getByDepartment(departmentId: number): any {
-    return this.http.get<any>(this.url, { params: { department_id: departmentId } });
+  getAll(): any {
+    return this.http.get<any>(this.url);
   }
 
   store(ressource: any) {
@@ -36,7 +32,11 @@ export class MunicipalityService {
     return this.http.delete(`${this.url}/${id}`);
   }
 
+  search(resource: any) {
+    return this.http.post<any>(`${this.url}-search`, resource, ConfigService.addAction('status'));
+  }
+
   setStatus(id: any, status: any) {
-    return this.http.get<any>(`${this.url}/${id}/state/${status}`);
+    return this.http.get<any>(`${this.url}/${id}/state/${status}`, ConfigService.addAction('status'));
   }
 }

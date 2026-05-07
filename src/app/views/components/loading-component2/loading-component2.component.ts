@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
     templateUrl: './loading-component2.component.html',
     styleUrl: './loading-component2.component.css'
 })
-export class LoadingComponent2Component {
+export class2Component {
  @Input() isVisible: boolean = false;
 }

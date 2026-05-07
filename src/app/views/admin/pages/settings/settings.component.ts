@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../core/pipes/sample-search.pipe';
 import { AuthService } from '../../../../core/services/auth.service';
 import { OfficerService } from '../../../../core/services/officer.service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
@@ -17,7 +17,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 @Component({
     selector: 'ngx-settings',
     templateUrl: './settings.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {

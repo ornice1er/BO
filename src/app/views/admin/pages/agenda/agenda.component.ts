@@ -364,7 +364,7 @@ loadData(event:any){
       }
 
    onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name?.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.requete?.prestation?.name?.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }
@@ -375,7 +375,7 @@ loadData(event:any){
 
   this.loading = true;
 
-  this.agendaService.search({term:this.search_text}).subscribe({
+  this.agendaService.search({search:this.search_text}).subscribe({
     next: (result:any) => {
       this.remoteSearchData = result.data;
       this.data = this.remoteSearchData;

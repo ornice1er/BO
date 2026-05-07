@@ -61,7 +61,7 @@ export class DashService {
 
 
     search(resource:any){
-        return this.http.post<any>(`${this.url}-search`,resource,
+        return this.http.post<any>(`${this.url}search`,resource,
          ConfigService.addAction('status'));
       }
       
