@@ -5,12 +5,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../core/pipes/sample-search.pipe';
 import { DashService } from '../../../../core/services/dash.service';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
-import { LoadingComponent } from '../../../components/loading/loading.component';
+import {} from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import {
@@ -23,7 +23,7 @@ import { BaseChartDirective } from 'ng2-charts';
 @Component({
     selector: 'app-statiistique',
     templateUrl: './statiistique.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective],
+    imports: [CommonModule, FormsModule, NgbModule, NgSelectModule, NgxPaginationModule, MatTooltipModule, BaseChartDirective],
     styleUrls: ['./statiistique.component.css']
 })
 export class StatiistiqueComponent implements OnInit {
@@ -82,8 +82,7 @@ export class StatiistiqueComponent implements OnInit {
       { border:'#4f46e5', bg:'rgba(79,70,229,0.08)' },
       { border:'#0d9488', bg:'rgba(13,148,136,0.08)' },
       { border:'#ea580c', bg:'rgba(234,88,12,0.08)' },
-      { border:'#9333ea', bg:'rgba(147,51,234,0.08)' },
-    ];
+      { border:'#9333ea', bg:'rgba(147,51,234,0.08)' }];
     this.dashService.getAll().subscribe((res:any)=>{
       this.data=res.data.data
        this.buttonsPermission = {

@@ -8,14 +8,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
 import { DashService } from '../../../../../core/services/dash.service';
-import { LoadingComponent } from '../../../../components/loading/loading.component';
+import {} from '../../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'ngx-statistiques',
     templateUrl: './statistiques.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./statistiques.component.css']
 })
 export class StatistiquesComponent implements OnInit {

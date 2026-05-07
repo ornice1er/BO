@@ -9,19 +9,19 @@ import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { DepartmentService } from '../../../../core/services/department.service';
 import { EntityService } from '../../../../core/services/entity.service';
+import { MunicipalityService } from '../../../../core/services/municipality.service';
 import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { UnityAdminTypeService } from '../../../../core/services/unity_admin_type.service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
-import { NgToggleComponent } from 'ng-toggle-button';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
     selector: 'ngx-unity-admin',
     templateUrl: './unity-admin.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./unity-admin.component.css']
 })
 export class UnityAdminComponent implements OnInit {
@@ -32,6 +32,8 @@ export class UnityAdminComponent implements OnInit {
   data2:any[]=[]
   data3:any[]=[]
   departments:any[]=[]
+  municipalities:any[]=[]
+  filteredMunicipalities:any[]=[]
   loading=false
   loading2=false
   user:any
@@ -40,7 +42,8 @@ export class UnityAdminComponent implements OnInit {
 is_active=false
 search_text:any=""
 remoteSearchData: any[] = []
-  ua_department=false
+  ua_type=''
+  selected_dept_for_commune: any = null
     pg={
     pageSize:10,
     p:1,
@@ -54,9 +57,10 @@ permissions=[]
       constructor(
         private unityAdminService:UnityAdminService,
         private unityAdminTypeService:UnityAdminTypeService,
-        private entityService:EntityService,  
+        private entityService:EntityService,
          private locService:LocalStorageService,
-        private departmentService:DepartmentService,   
+        private departmentService:DepartmentService,
+        private municipalityService:MunicipalityService,
             private toastrService:ToastrService,     
         config: NgbModalConfig, 
         private modalService: NgbModal
@@ -73,6 +77,7 @@ permissions=[]
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
       this.getDepartments();
+      this.getMunicipalities();
        this.buttonsPermission = {
       show:true,
       add:true,
@@ -95,15 +100,31 @@ permissions=[]
       })
     }
     getDepartments() {
-      this.loading2=true;
       this.departmentService.getAll().subscribe((res:any)=>{
         this.departments=res.data
-        this.loading2=false;
-      },
-      (error:any)=>{
-        
-        this.loading2=false;
       })
+    }
+
+    getMunicipalities() {
+      this.municipalityService.getAll().subscribe((res:any)=>{
+        this.municipalities=res.data;
+        this.refreshFilteredMunicipalities();
+      })
+    }
+
+    refreshFilteredMunicipalities() {
+      if (!this.selected_dept_for_commune) {
+        this.filteredMunicipalities = [];
+        return;
+      }
+      this.filteredMunicipalities = this.municipalities.filter(
+        (m:any) => m.department_id == this.selected_dept_for_commune
+      );
+    }
+
+    onDepartmentForCommuneChange() {
+      if (this.selected_data) this.selected_data.municipality_id = null;
+      this.refreshFilteredMunicipalities();
     }
 
     getTypeUnityAdmin(){
@@ -126,13 +147,29 @@ permissions=[]
   
     checked(el:any){
       this.selected_data=el
-
-      if(this.selected_data.department_id != null)this.ua_department=true
+      if (el.department_id != null) {
+        this.ua_type = 'departementale';
+        this.selected_dept_for_commune = null;
+        this.filteredMunicipalities = [];
+      } else if (el.municipality_id != null) {
+        this.ua_type = 'communale';
+        const muni = this.municipalities.find((m:any) => m.id === el.municipality_id);
+        this.selected_dept_for_commune = muni ? muni.department_id : (el.municipality?.department_id ?? null);
+        this.refreshFilteredMunicipalities();
+      } else {
+        this.ua_type = '';
+        this.selected_dept_for_commune = null;
+        this.filteredMunicipalities = [];
+      }
     }
   
     
     add(content:any){
-    this.modalService.open(content,{size:'lg'});
+    this.ua_type='';
+    this.selected_dept_for_commune = null;
+    this.getTypeUnityAdmin();
+    this.getEntities();
+    this.modalService.open(content,{size:'lg', scrollable:true});
   }
 
 
@@ -144,8 +181,9 @@ permissions=[]
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
-    this.modalService.open(content,{size:'lg'});
-
+    this.getTypeUnityAdmin();
+    this.getEntities();
+    this.modalService.open(content,{size:'lg', scrollable:true});
   }
 
     verifyIfElementChecked(){
@@ -159,34 +197,37 @@ permissions=[]
   
     store(value:any) {
       this.loading=true;
-
-      delete value.ua_department
+      delete value.ua_type;
+      delete value.comm_dept_filter;
         this.unityAdminService.store(value).subscribe(
             (res:any)=>{
-            this.loading=false;
-              this.modalService.dismissAll()
-            this.all();
-            //MyToastr.make('success',"Gestion des unités administratives ","Modification effectuée avec succès",this.toastrService)
-
+              this.loading=false;
+              this.modalService.dismissAll();
+              this.toastrService.success("Unité administrative créée avec succès");
+              this.all();
         },
         (err:any)=>{
             this.loading=false;
+            const msg = err?.error?.message || "Une erreur est survenue lors de la création";
+            this.toastrService.error(msg);
         })
   }
   update(value:any) {
     this.loading=true;
-    delete value.ua_department
+    delete value.ua_type;
+    delete value.comm_dept_filter;
 
       this.unityAdminService.update(value,this.selected_data.id).subscribe(
           (res:any)=>{
-          this.loading=false;
-            this.modalService.dismissAll()
-          this.all();
-          //MyToastr.make('success',"Gestion des unités administratives ","Enregistrement effectuée avec succès",this.toastrService)
-
+            this.loading=false;
+            this.modalService.dismissAll();
+            this.toastrService.success("Unité administrative modifiée avec succès");
+            this.all();
       },
       (err:any)=>{
           this.loading=false;
+          const msg = err?.error?.message || "Une erreur est survenue lors de la modification";
+          this.toastrService.error(msg);
       })
 
 }
@@ -224,7 +265,7 @@ delete() {
 
 
  onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name?.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.libelle?.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }
@@ -274,7 +315,4 @@ resetSearch() {
     return false
   }
 
-  changed(event:any){
-    //this.ua_department=!this.ua_department
-  }
 }

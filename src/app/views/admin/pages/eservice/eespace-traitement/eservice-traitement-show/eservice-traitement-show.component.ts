@@ -8,7 +8,7 @@ import { NgbModule, NgbModalConfig, NgbModal, NgbOffcanvas } from '@ng-bootstrap
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
@@ -16,13 +16,15 @@ import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { EServiceService } from '../../../../../../core/services/eservice.service';
 import { ProjectService } from '../../../../../../core/services/project.service';
+import { DepartmentService } from '../../../../../../core/services/department.service';
+import { MunicipalityService } from '../../../../../../core/services/municipality.service';
+import { DistrictService } from '../../../../../../core/services/district.service';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
   templateUrl: './eservice-traitement-show.component.html',
   imports: [
-    CommonModule, FormsModule, NgbModule, LoadingComponent,
-    SampleSearchPipe, NgSelectModule, NgxPaginationModule,
+    CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule,
     MatTooltipModule, RouterModule
   ],
   styleUrls: ['./eservice-traitement-show.component.css'],
@@ -40,6 +42,10 @@ export class EserviceTraitementShowComponent implements OnInit {
   motifsRejet: any[] = [];
   projects: any[] = [];
 
+  private deptMap = new Map<string, string>();
+  private muniMap = new Map<string, string>();
+  private distMap = new Map<string, string>();
+
   // ── État UI ────────────────────────────────────────────────────────────────
   loading = false;
   peutAgir = false;
@@ -54,6 +60,9 @@ export class EserviceTraitementShowComponent implements OnInit {
     private requeteService: RequeteService,
     private eService: EServiceService,
     private projectService:ProjectService,
+    private departmentService: DepartmentService,
+    private municipalityService: MunicipalityService,
+    private districtService: DistrictService,
     private sanitizer: DomSanitizer,
     private router: Router,
     private toastr: ToastrService,
@@ -68,6 +77,7 @@ export class EserviceTraitementShowComponent implements OnInit {
 
   // ── Initialisation ─────────────────────────────────────────────────────────
   ngOnInit(): void {
+    this.loadGeoData();
     this.activatedRoute.paramMap.subscribe(() => {
       this.selected_data = undefined;
       this.code       = this.activatedRoute.snapshot.paramMap.get('code');
@@ -77,6 +87,37 @@ export class EserviceTraitementShowComponent implements OnInit {
         .find((el: any) => el.prestation.code === this.prestation)?.prestation;
       this.get();
     });
+  }
+
+  private loadGeoData(): void {
+    this.departmentService.getAll().subscribe((res: any) => {
+      (res.data ?? []).forEach((d: any) => {
+        if (d.code) this.deptMap.set(d.code, d.name);
+        this.deptMap.set(String(d.id), d.name);
+      });
+    });
+    this.municipalityService.getAll().subscribe((res: any) => {
+      (res.data ?? []).forEach((m: any) => {
+        if (m.code) this.muniMap.set(m.code, m.name);
+        this.muniMap.set(String(m.id), m.name);
+      });
+    });
+    this.districtService.getAll().subscribe((res: any) => {
+      (res.data ?? []).forEach((d: any) => {
+        if (d.code) this.distMap.set(d.code, d.name);
+        this.distMap.set(String(d.id), d.name);
+      });
+    });
+  }
+
+  resolveGeoLabel(key: string, value: unknown): string {
+    if (value == null || value === '') return '—';
+    const k = key.toLowerCase();
+    const v = String(value);
+    if (k === 'département' || k === 'departement') return this.deptMap.get(v) ?? v;
+    if (k === 'commune') return this.muniMap.get(v) ?? v;
+    if (k === 'arrondissement') return this.distMap.get(v) ?? v;
+    return v;
   }
 
   getProjects(){

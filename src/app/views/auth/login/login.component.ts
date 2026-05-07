@@ -5,7 +5,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { AppRedirect } from '../../../core/utils/app-redirect';
 import { GlobalName } from '../../../core/utils/global-name';
 import { LocalStorageService } from '../../../core/utils/local-stoarge-service';
-import { LoadingComponent } from '../../components/loading/loading.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../../core/utils/config-service';
@@ -13,7 +12,7 @@ import { ConfigService } from '../../../core/utils/config-service';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    imports: [CommonModule, LoadingComponent, FormsModule, RouterModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {

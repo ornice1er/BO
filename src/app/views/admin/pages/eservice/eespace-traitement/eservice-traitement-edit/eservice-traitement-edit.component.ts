@@ -8,7 +8,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { ToastrService } from 'ngx-toastr';
-import { SampleSearchPipe } from '../../../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
@@ -23,8 +23,7 @@ import { DocumentEditorComponent } from '../../../../../components/document-edit
   templateUrl: './eservice-traitement-edit.component.html',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, NgbModule, LoadingComponent,
-    SampleSearchPipe, NgSelectModule, NgxPaginationModule,
+    CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule,
     MatTooltipModule, NgxExtendedPdfViewerModule,DocumentEditorComponent
   ],
   encapsulation: ViewEncapsulation.None,

@@ -40,11 +40,11 @@
                                 </ng-container>
 
                                 <ng-container *ngIf="!loading2">
-                                <tr *ngFor="let d of data | paginate: {
+                                <tr *ngFor="let d of data | sampleSearch:search_text | paginate: {
                                     id:'ngxP1',
                                     itemsPerPage: pg.pageSize,
                                     currentPage: pg.p,
-                                    totalItems: pg.total } | sampleSearch:search_text">
+                                    totalItems: pg.total }">
                                 <td class="position-relative" style="z-index: 10;"> 
                                     <div class="form-check mb-2">
                                         <input

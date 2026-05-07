@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { RequeteService } from '../../../../core/services/requete.service';
-import { LoadingComponent } from '../../../components/loading/loading.component';
+import {} from '../../../components/loading/loading.component';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
@@ -20,7 +20,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
     selector: 'ngx-correction',
     templateUrl: './correction.component.html',
     standalone:true,
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./correction.component.css']
 })
 export class CorrectionComponent implements OnInit,OnDestroy {

@@ -20,9 +20,29 @@ export const MENU_ADMIN_NATIONAL: any[] = [
       },
   
     {
-      title: 'Départements',
-      icon: 'options-outline',
-      link: '/admin/departments',
+      title: 'Découpage territorial',
+      icon: 'map-outline',
+      isTitle: false,
+      hasChildren: true,
+      collapse: false,
+      children: [
+        {
+          title: 'Départements',
+          link: '/admin/departments',
+        },
+        {
+          title: 'Municipalités',
+          link: '/admin/municipalities',
+        },
+        {
+          title: 'Districts',
+          link: '/admin/districts',
+        },
+        {
+          title: 'Villages',
+          link: '/admin/villages',
+        },
+      ]
     },
     {
         title: 'Type Entité',
@@ -119,6 +139,31 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         title: 'Fonction Agent',
         icon: 'options-outline',
         link: '/admin/posts',
+      },
+      {
+        title: 'Découpage territorial',
+        icon: 'map-outline',
+        isTitle: false,
+        hasChildren: true,
+        collapse: false,
+        children: [
+          {
+            title: 'Départements',
+            link: '/admin/departments',
+          },
+          {
+            title: 'Municipalités',
+            link: '/admin/municipalities',
+          },
+          {
+            title: 'Districts',
+            link: '/admin/districts',
+          },
+          {
+            title: 'Villages',
+            link: '/admin/villages',
+          },
+        ]
       },
        {
       title: 'Configuration eServices',

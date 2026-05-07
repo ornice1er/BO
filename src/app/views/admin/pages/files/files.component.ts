@@ -5,7 +5,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../core/pipes/sample-search.pipe';
 import { FilesService } from '../../../../core/services/files.service';
 import { PrestationService } from '../../../../core/services/prestation.service';
 import { GlobalName } from '../../../../core/utils/global-name';
@@ -16,7 +16,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 @Component({
     selector: 'ngx-files',
     templateUrl: './files.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./files.component.css']
 })
 export class FilesComponent implements OnInit {

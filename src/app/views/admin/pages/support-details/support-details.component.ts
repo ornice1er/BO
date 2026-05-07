@@ -6,18 +6,18 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
+import {} from '../../../../core/pipes/sample-search.pipe';
 import { BillingService } from '../../../../core/services/billing.service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
-import { LoadingComponent } from '../../../components/loading/loading.component';
+import {} from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
     selector: 'app-support-details',
     templateUrl: './support-details.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, NgSelectModule, NgxPaginationModule, MatTooltipModule],
     styleUrls: ['./support-details.component.css']
 })
 export class SupportDetailsComponent implements OnInit {

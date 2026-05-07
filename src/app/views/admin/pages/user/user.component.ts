@@ -167,6 +167,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   store(value:any){
     this.loading=true
     if(value.is_signer=="")value.is_signer=false
+    value['is_trade'] = this.new_is_trade ?? false
       var choices:any[]=[]
      this.prestations.forEach((e:any)=>{
           if( e.state==true){
@@ -209,6 +210,8 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   update(value:any){
     this.loading=true
     if(value.is_signer=="")value.is_signer=false
+    value['is_trade'] = this.selected_data.is_trade ?? false
+    value['roles']    = this.selectedRoles
 
       var choices:any[]=[]
     this.prestations.forEach((e:any)=>{
@@ -252,10 +255,11 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.selected_data=el;
     this.selected_data?.roles?.forEach((el:any) => this.selectedRoles.push(el.name));
     this.is_active=el.is_active
-  this.prestations.forEach((e: any) => {
-    const match = this.selected_data?.user_prestations?.some((p: any) => p.prestation_id === e.id);
-    e.state = match ? true : false;
-  });
+    this.prestations.forEach((e: any) => {
+      const match = this.selected_data?.user_prestations?.some((p: any) => p.prestation_id === e.id);
+      e.state = match ? true : false;
+    });
+    this.syncAllSelected();
   }
   verifyIfElementChecked(){
     console.log(this.selected_data)
@@ -267,7 +271,18 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
 
-    getInitials(lastname: string, firstname: string): string {
+    allSelected = false;
+
+  toggleAllPrestations(checked: boolean): void {
+    this.prestations.forEach((p:any) => p.state = checked);
+    this.allSelected = checked;
+  }
+
+  private syncAllSelected(): void {
+    this.allSelected = this.prestations.length > 0 && this.prestations.every((p:any) => p.state);
+  }
+
+  getInitials(lastname: string, firstname: string): string {
     const last = lastname ? lastname.charAt(0) : '';
     const first = firstname ? firstname.charAt(0) : '';
     return (last + first).toUpperCase();
@@ -280,12 +295,8 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
 
   add(content:any){
     this.new_is_trade = false;
-       if(this.selected_data!= undefined){
-         this.selected_data?.userprestation.forEach((e:any)=> {
-        var check=  this.prestations.find((f:any)=> f.id==e.prestation_id);
-        if(check !=null) this.prestations[this.prestations.findIndex((f:any)=> f.id==e.prestation_id)].state = true;
-      });
-       }
+    this.prestations.forEach((e:any) => e.state = false);
+    this.allSelected = false;
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -319,7 +330,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   }
 
   onSearchChange() {
-  const localResults = this.data.filter((d:any) => d.name?.includes(this.search_text));
+  const localResults = this.data.filter((d:any) => d.email?.includes(this.search_text));
   if (this.search_text.length > 2 && localResults.length === 0) {
     this.searchRemotely();
   }

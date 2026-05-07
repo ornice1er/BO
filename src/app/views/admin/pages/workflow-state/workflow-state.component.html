@@ -120,7 +120,7 @@
               <td class="text-nowrap">{{ log.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
               <td>{{ log.etape_from?.name ?? log.etape_from_id }}</td>
               <td>
-                <span *ngIf="log.etape_to; else logTerminal">{{ log.etape_to?.name }}</span>
+                <span *ngIf="log.etape_to; else logTerminal">{{ log.etape_to.name }}</span>
                 <ng-template #logTerminal><span class="badge bg-dark">Terminal</span></ng-template>
               </td>
               <td><span class="badge bg-primary">{{ log.status?.name ?? log.status_id }}</span></td>
