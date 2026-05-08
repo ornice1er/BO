@@ -144,9 +144,10 @@ export class ProfileComponent implements OnInit {
     return false
   }
 
-  revoke(id:any,id2:any){
+  async revoke(id:any,id2:any){
     this.loading=true;
-    if(confirm("Voulez vous retirer ce droit ?")){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous retirer ce droit ?');
+    if (result.isConfirmed) {
       this.toastrService.info("Profil","Ajout de Opération en cours")
          this.profileService.update({id:id2},id).subscribe(
           (res:any)=>{
@@ -162,7 +163,7 @@ export class ProfileComponent implements OnInit {
 
       })
     }
-   
+
   }
 
   getActions(event:any){

@@ -323,9 +323,10 @@ export class EspaceSignatureComponent implements OnInit {
   }
 
   
-   delete() {
+   async delete() {
     this.loading=true;
-    if(confirm('Voulez vous supprimer cet élément')){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+    if (result.isConfirmed) {
       this.requeteService.delete(this.selected_data.id).subscribe(
         (res:any)=>{
         this.loading=false;
@@ -336,7 +337,7 @@ export class EspaceSignatureComponent implements OnInit {
         this.loading=false;
     })
     }
-  
+
   }
 
   add(content:any){
@@ -400,8 +401,9 @@ export class EspaceSignatureComponent implements OnInit {
   
   }
 
-  decline(value:any, ref:any){
-   if(confirm("Envoyer le mail de rejet")){
+  async decline(value:any, ref:any){
+   const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de rejet');
+   if (result.isConfirmed) {
           //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
           this.loading=true;
           this.responseService.decline({
@@ -418,13 +420,13 @@ export class EspaceSignatureComponent implements OnInit {
 
           },
           (error:any)=>{
-            
+
             this.loading=false;
             //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
 
           })
         }
-    
+
   }
   authorized(value:any){
     if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
@@ -664,12 +666,13 @@ export class EspaceSignatureComponent implements OnInit {
   }
 
   
-  delivered(){
+  async delivered(){
       if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
         //MyToastr.make('danger',"Opération échouée","Les contenus livrables des trois types de documents sont requis! ",this.toastrService)
         return ;
       }
-       if(confirm("Envoyer l'attestation au demandeur")){
+       const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', "Envoyer l'attestation au demandeur");
+       if (result.isConfirmed) {
           //MyToastr.make('info',"Opération encours","Autorisation en cours d'envoi",this.toastrService)
           this.loading=true;
           this.responseService.store({
@@ -679,7 +682,7 @@ export class EspaceSignatureComponent implements OnInit {
           }).subscribe((res:any)=>{
            this.all()
             this.loading=false;
-            
+
             //MyToastr.make('success',"Envoi d'attestation",`L'attestaion issue de la demande ${this.selected_data.code} a été envoyéee avec succès`,this.toastrService)
 
           },
@@ -690,8 +693,8 @@ export class EspaceSignatureComponent implements OnInit {
 
           })
         }
-    
-   
+
+
   }
 
   changeDesc(event:any){

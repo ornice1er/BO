@@ -102,8 +102,9 @@ export class MunicipalityComponent implements OnInit {
     );
   }
 
-  delete() {
-    if (confirm('Voulez vous supprimer cet élément')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+    if (result.isConfirmed) {
       this.loading = true;
       this.municipalityService.delete(this.selected_data.id).subscribe(
         () => { this.loading = false; this.all(); },

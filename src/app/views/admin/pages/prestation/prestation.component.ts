@@ -209,9 +209,10 @@ remoteSearchData: any[] = []
   }
   
   
-  delete() {
+  async delete() {
       this.loading=true;
-      if(confirm('Voulez vous supprimer cet élément')){
+      const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+      if (result.isConfirmed) {
         this.prestationService.delete(this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
@@ -223,7 +224,7 @@ remoteSearchData: any[] = []
           this.loading=false;
       })
       }
-  
+
   }
 
     setStatus(value:any){

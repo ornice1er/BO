@@ -351,8 +351,9 @@ this.modalService.open(content);
     });
    
   }
-  decline(value:any){
-    if(confirm("Envoyer le mail de rejet")){
+  async decline(value:any){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de rejet');
+    if (result.isConfirmed) {
            //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
            this.loading=true;
            this.responseService.decline({
@@ -365,19 +366,20 @@ this.modalService.open(content);
              this.selected_data=null;
              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
              //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
+
            },
            (error:any)=>{
-             
+
              this.loading=false;
              //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
+
            })
          }
-     
+
    }
-   validate(){
-    if(confirm("Envoyer le mail de validation")){
+   async validate(){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de validation');
+    if (result.isConfirmed) {
            //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
            this.loading=true;
            this.responseService.validate({
@@ -390,16 +392,16 @@ this.modalService.open(content);
              this.selected_data=null;
              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
              //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
+
            },
            (error:any)=>{
-             
+
              this.loading=false;
              //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
+
            })
          }
-     
+
    }
   hasPermission(permission:any){
     var check= this.permissions.find((e:any)=>e.name ==permission)

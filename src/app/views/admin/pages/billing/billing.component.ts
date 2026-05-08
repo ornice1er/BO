@@ -141,9 +141,10 @@ add(content:any){
   }
   
   
-  delete() {
+  async delete() {
       this.loading=true;
-      if(confirm('Voulez vous supprimer cet élément')){
+      const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+      if (result.isConfirmed) {
         this.billingService.delete(this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
@@ -154,7 +155,7 @@ add(content:any){
           this.loading=false;
       })
       }
-  
+
   }
 
 

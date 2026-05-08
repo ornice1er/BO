@@ -17,6 +17,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 
 @Component({
   selector: 'app-document-circuit-etape',
@@ -178,8 +179,9 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     );
   }
 
-  delete() {
-    if (confirm('Voulez-vous supprimer cet élément ?')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez-vous supprimer cet élément ?');
+    if (result.isConfirmed) {
       this.loading = true;
       this.service.delete(this.selected_data.id).subscribe(
         () => {

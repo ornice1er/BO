@@ -42,4 +42,8 @@ export class WorkflowService {
      ConfigService.addAction('status'));
   }
 
+  deleteByPrestation(prestationId: number) {
+    return this.http.delete(`${this.url}/by-prestation/${prestationId}`);
+  }
+
 }

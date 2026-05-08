@@ -144,9 +144,10 @@ add(content:any){
     console.log(this.selected_data)
   }
 
-  delete() {
+  async delete() {
   this.loading=true;
-  if(confirm('Voulez vous supprimer cet élément')){
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+  if (result.isConfirmed) {
     this.requeteService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
