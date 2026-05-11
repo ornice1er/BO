@@ -353,6 +353,16 @@ actionSurDocument(acte: any): void {
     this.openPdfOffcanvas(el.url, el.name ?? 'Fichier');
   }
 
+  viewNoteFile(path: string): void {
+    this.requeteService.getNoteFileUrl(path).subscribe({
+      next: (res: any) => {
+        const url = res?.data?.url;
+        if (url) window.open(url, '_blank');
+      },
+      error: () => this.toastr.error('Impossible de charger la note'),
+    });
+  }
+
   showResponseFile(url: string): void {
     this.openPdfOffcanvas(url, 'Document');
   }

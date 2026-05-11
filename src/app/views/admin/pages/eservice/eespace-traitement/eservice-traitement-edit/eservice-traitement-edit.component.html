@@ -165,9 +165,12 @@
     <!-- Observation -->
     <div class="te-form-group" *ngIf="showAddingField.observation">
       <label class="te-label"><i class="bi bi-chat-left-text me-1"></i>Observation</label>
-      <textarea class="te-input" rows="3"
+      <quill-editor
         [(ngModel)]="responseData.comment"
-        placeholder="Commentaire ou observation..."></textarea>
+        [modules]="quillModules"
+        placeholder="Commentaire ou observation..."
+        style="display:block;">
+      </quill-editor>
     </div>
 
     <!-- Pièce jointe -->

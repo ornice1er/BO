@@ -101,6 +101,7 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     motif_id?: number | null;
     metadata?: any;
     link?: string | null;
+    note_file_path?: string | null;
   }): any {
     return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
   }
@@ -109,6 +110,10 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<any>(`${this.url}/${id}/upload-note-file`, form);
+  }
+
+  getNoteFileUrl(path: string): any {
+    return this.http.get<any>(`${this.url}/note-file-url?path=${encodeURIComponent(path)}`);
   }
 
   /**

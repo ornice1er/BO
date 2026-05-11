@@ -179,13 +179,14 @@
               <th>Statut</th>
               <th>Acteur</th>
               <th>Commentaire</th>
+              <th>Note</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngIf="loading">
               <tr *ngFor="let i of [1,2,3,4,5]">
-                <td *ngFor="let j of [1,2,3,4,5,6,7]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7,8]">
                   <span class="placeholder placeholder-glow col-10 rounded"></span>
                 </td>
               </tr>
@@ -209,7 +210,15 @@
                 <td class="small">
                   {{ log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—') }}
                 </td>
-                <td class="text-muted small">{{ log?.comment ?? '—' }}</td>
+                <td class="text-muted small" [innerHTML]="log?.comment ?? '—'"></td>
+                <td>
+                  <button *ngIf="log?.metadata?.note_file_path"
+                    class="ts-btn-sm ts-btn-sm--dark"
+                    (click)="viewNoteFile(log.metadata.note_file_path)">
+                    <i class="bi bi-paperclip"></i> Voir
+                  </button>
+                  <span *ngIf="!log?.metadata?.note_file_path" class="text-muted small">—</span>
+                </td>
                 <td class="small text-muted">{{ log?.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
               </tr>
             </ng-container>

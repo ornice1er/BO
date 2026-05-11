@@ -18,6 +18,7 @@ import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { DocumentActeService } from '../../../../../../core/services/document-acte.service';
 import { DocumentEditorComponent } from '../../../../../components/document-editor/document-editor.component';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'ngx-eservice-traitement-edit',
@@ -25,7 +26,7 @@ import { DocumentEditorComponent } from '../../../../../components/document-edit
   standalone: true,
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgxExtendedPdfViewerModule,DocumentEditorComponent
+    MatTooltipModule, NgxExtendedPdfViewerModule, DocumentEditorComponent, QuillModule
   ],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./eservice-traitement-edit.component.css']
@@ -61,6 +62,16 @@ export class EserviceTraitementEditComponent implements OnInit {
   rdvDate: string | null = null;
   fileUploaded: File | null = null;
   sharePjToPns = false;
+  noteFilePath: string | null = null;
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ align: [] }],
+      ['clean'],
+    ],
+  };
 
   showAddingField = {
     rdv:          false,
@@ -165,8 +176,9 @@ get(): void {
     // Réinitialiser les champs additionnels
     this.showAddingField = { rdv: false, observation: true, note_file: false };
     this.responseData.motif_id = null;
-    this.fileUploaded = null;
-    this.sharePjToPns = false;
+    this.fileUploaded  = null;
+    this.sharePjToPns  = false;
+    this.noteFilePath  = null;
 
     if (!this.transitionSelectionnee) return;
 
@@ -211,11 +223,12 @@ get(): void {
       const metadata: any = {};
       if (this.rdvDate) metadata.rdv_date = this.rdvDate;
 
-      if (this.sharePjToPns && this.fileUploaded) {
+      if (this.fileUploaded) {
         this.requeteService.uploadNoteFile(this.selectedData.id, this.fileUploaded).subscribe({
           next: (uploadRes: any) => {
-            const signedUrl = uploadRes?.data?.signed_url ?? null;
-            this._envoyerTraiter(decision, metadata, signedUrl);
+            const signedUrl  = this.sharePjToPns ? (uploadRes?.data?.signed_url ?? null) : null;
+            const filePath   = uploadRes?.data?.path ?? null;
+            this._envoyerTraiter(decision, metadata, signedUrl, filePath);
           },
           error: (err: any) => {
             this.loading = false;
@@ -223,18 +236,19 @@ get(): void {
           }
         });
       } else {
-        this._envoyerTraiter(decision, metadata, null);
+        this._envoyerTraiter(decision, metadata, null, null);
       }
     });
   }
 
-  private _envoyerTraiter(decision: string, metadata: any, link: string | null): void {
+  private _envoyerTraiter(decision: string, metadata: any, link: string | null, noteFilePath: string | null): void {
     this.requeteService.traiter(this.selectedData.id, {
       decision,
-      comment:  this.responseData.comment  || null,
-      motif_id: this.responseData.motif_id || null,
+      comment:         this.responseData.comment  || null,
+      motif_id:        this.responseData.motif_id || null,
       metadata,
       link,
+      note_file_path:  noteFilePath,
     }).subscribe({
       next: () => {
         this.loading = false;
