@@ -59,7 +59,8 @@ export class EserviceTraitementEditComponent implements OnInit {
   loading = false;
   pdfSrc: string | null = null;
   rdvDate: string | null = null;
-  fileUploaded: any = null;
+  fileUploaded: File | null = null;
+  sharePjToPns = false;
 
   showAddingField = {
     rdv:          false,
@@ -164,6 +165,8 @@ get(): void {
     // Réinitialiser les champs additionnels
     this.showAddingField = { rdv: false, observation: true, note_file: false };
     this.responseData.motif_id = null;
+    this.fileUploaded = null;
+    this.sharePjToPns = false;
 
     if (!this.transitionSelectionnee) return;
 
@@ -193,7 +196,6 @@ get(): void {
 
       this.loading = true;
 
-      // Mapper condition_type → decision pour le moteur
       const decisionMap: Record<string, string> = {
         auto:          'valider',
         validation:    'valider',
@@ -206,36 +208,56 @@ get(): void {
       };
 
       const decision = decisionMap[transition?.condition_type] ?? 'valider';
-
       const metadata: any = {};
       if (this.rdvDate) metadata.rdv_date = this.rdvDate;
 
-      this.requeteService.traiter(this.selectedData.id, {
-        decision,
-        comment:  this.responseData.comment  || null,
-        motif_id: this.responseData.motif_id || null,
-        metadata,
-      }).subscribe({
-        next: () => {
-          this.loading = false;
-          this.toastr.success('Décision enregistrée avec succès');
-          this.router.navigate([
-            'admin/eservice/espace-traitement-show/' +
-            this.selectedData.code + '/' + this.myPrestation?.code
-          ]);
-        },
-        error: (err: any) => {
-          this.loading = false;
-          this.toastr.error(err?.error?.message ?? 'Opération échouée');
-        }
-      });
+      if (this.sharePjToPns && this.fileUploaded) {
+        this.requeteService.uploadNoteFile(this.selectedData.id, this.fileUploaded).subscribe({
+          next: (uploadRes: any) => {
+            const signedUrl = uploadRes?.data?.signed_url ?? null;
+            this._envoyerTraiter(decision, metadata, signedUrl);
+          },
+          error: (err: any) => {
+            this.loading = false;
+            this.toastr.error(err?.error?.message ?? 'Erreur lors de l\'upload du fichier');
+          }
+        });
+      } else {
+        this._envoyerTraiter(decision, metadata, null);
+      }
+    });
+  }
+
+  private _envoyerTraiter(decision: string, metadata: any, link: string | null): void {
+    this.requeteService.traiter(this.selectedData.id, {
+      decision,
+      comment:  this.responseData.comment  || null,
+      motif_id: this.responseData.motif_id || null,
+      metadata,
+      link,
+    }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.toastr.success('Décision enregistrée avec succès');
+        this.router.navigate([
+          'admin/eservice/espace-traitement-show/' +
+          this.selectedData.code + '/' + this.myPrestation?.code
+        ]);
+      },
+      error: (err: any) => {
+        this.loading = false;
+        this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      }
     });
   }
 
   // ── Utilitaires ────────────────────────────────────────────────────────────
   upload(event: any): void {
     if (event.target.files.length > 0) {
-      this.fileUploaded = event.target.files[0];
+      this.fileUploaded = event.target.files[0] as File;
+    } else {
+      this.fileUploaded = null;
+      this.sharePjToPns = false;
     }
   }
 
@@ -343,7 +365,7 @@ actionSurDocument(acte: any): void {
 }
  
 /** Appelé quand le document est soumis depuis l'éditeur */
-onDocumentSoumis(data: any): void {
+onDocumentSoumis(_data: any): void {
   this.toastr.success('Document soumis au circuit de signature');
   this.get(); // Recharger — documentDejaSoumis passera à true
 }

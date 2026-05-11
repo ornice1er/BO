@@ -100,8 +100,15 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     comment?: string | null;
     motif_id?: number | null;
     metadata?: any;
+    link?: string | null;
   }): any {
     return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
+  }
+
+  uploadNoteFile(id: any, file: File): any {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.url}/${id}/upload-note-file`, form);
   }
 
   /**
