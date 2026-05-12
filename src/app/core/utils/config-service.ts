@@ -11,13 +11,14 @@ export const ConfigService: any = {
     return `${this.apiScheme}://${this.apiDomain}/${path}`;
   },
   toFile(path:any) {
-    if (path) {
-          return `${this.apiScheme}://${this.apiFile}/${path}`;
-
-    }else{
-          return `${this.apiScheme}://${this.apiFile}`;
-
+    if (!path) return `${this.apiScheme}://${this.apiFile}`;
+    // Dédoublonner le préfixe base (URLs corrompues en base avant fix d'idempotence)
+    const base = `${this.apiScheme}://${this.apiFile}/`;
+    while (path.startsWith(base)) {
+      path = path.slice(base.length);
     }
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `${this.apiScheme}://${this.apiFile}/${path}`;
   },
   getOrigin() {
     return `${this.apiScheme}://${this.apiFile}`;

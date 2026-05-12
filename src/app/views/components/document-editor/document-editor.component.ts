@@ -1,6 +1,6 @@
 // ─── document-editor.component.ts ───────────────────────────────────────────
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { QuillModule } from 'ngx-quill';
@@ -26,10 +26,11 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <span class="badge ms-2"
         [ngClass]="{
           'bg-warning text-dark': acte?.status === 'en_edition',
+          'bg-info text-dark':    acte?.status === 'en_attente_pns',
           'bg-primary':           acte?.status === 'en_circuit',
           'bg-success':           acte?.status === 'complet'
         }">
-        {{ acte?.status }}
+        {{ acte?.status === 'en_attente_pns' ? 'En attente PNS' : acte?.status }}
       </span>
     </div>
     <button class="btn btn-sm btn-outline-secondary" (click)="previsualiser()" *ngIf="acte?.file_url">
@@ -110,7 +111,29 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
     <!-- ── ONGLET 2 : WYSIWYG ─────────────────────────────────────────────── -->
     <div *ngIf="activeTab === 'wysiwyg' && (contentType==1 || contentType==0)" >
-      <p class="text-muted small mb-3">
+
+      <!-- Bandeau d'attente PNS -->
+      <div *ngIf="isPending" class="alert alert-info mb-3">
+        <div *ngIf="countdown !== null" class="d-flex align-items-center gap-2">
+          <div class="spinner-border spinner-border-sm text-info flex-shrink-0"></div>
+          <span>
+            Contenu envoyé au PNS — vérification du retour dans
+            <strong>{{ countdown }}s</strong>…
+          </span>
+        </div>
+        <div *ngIf="countdown === null" class="d-flex align-items-center justify-content-between">
+          <span>
+            <i class="bi bi-hourglass-split me-2"></i>
+            En attente du retour PNS. Si le document n'est pas encore disponible,
+            vous pouvez vérifier le statut ou renvoyer le contenu.
+          </span>
+          <button class="btn btn-sm btn-outline-info ms-3" (click)="verifierStatutPns()" [disabled]="loading">
+            <i class="bi bi-arrow-clockwise me-1"></i>Vérifier le statut
+          </button>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-3" *ngIf="!isPns">
         Éditez le document librement. Les variables entre
         <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code>
         seront remplacées automatiquement <strong>uniquement lorsque le document est généré par le système</strong>
@@ -126,13 +149,18 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         </quill-editor>
       </div>
 
-    
-
-      <button class="btn btn-primary" (click)="sauvegarderWysiwyg()" [disabled]="loading">
-        <i class="bi bi-save me-1"></i>
-        Sauvegarder et générer PDF
-        <app-loading [isVisible]="loading"></app-loading>
-      </button>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-primary" (click)="sauvegarderWysiwyg()"
+                [disabled]="loading || countdown !== null || (isPns && !!acte?.file_url)">
+          <i class="bi me-1" [ngClass]="isPns ? 'bi-send' : 'bi-save'"></i>
+          {{ isPns ? (isPending ? 'Renvoyer au PNS' : 'Envoyer au PNS pour génération') : 'Sauvegarder et générer PDF' }}
+          <app-loading [isVisible]="loading"></app-loading>
+        </button>
+        <span *ngIf="countdown !== null" class="text-muted small">
+          <span class="spinner-border spinner-border-sm me-1"></span>
+          Vérification dans <strong>{{ countdown }}s</strong>…
+        </span>
+      </div>
     </div>
 
     <!-- ── ONGLET 3 : UPLOAD ──────────────────────────────────────────────── -->
@@ -169,7 +197,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
   <!-- Footer — Soumettre au circuit -->
   <div class="card-footer d-flex justify-content-between align-items-center"
-       *ngIf="acte?.file_url">
+       *ngIf="acte?.file_url && countdown === null">
     <span class="text-success small">
       <i class="bi bi-check-circle me-1"></i>
       Document généré — prêt à soumettre au circuit de signature
@@ -199,7 +227,19 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     <button type="button" class="btn-close" (click)="offcanvas.dismiss()"></button>
   </div>
   <div class="offcanvas-body p-0">
-  <ngx-extended-pdf-viewer [src]="pdfSrc" height="80vh" useBrowserLocale="true">
+    <div *ngIf="pdfLoadError" class="p-4 text-center">
+      <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Impossible d'afficher le document.<br>
+        <strong>Le document est disponible</strong> — rechargez la page pour accéder au bouton de soumission.
+      </div>
+      <button class="btn btn-primary mt-2" (click)="rechargerPage()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Recharger la page
+      </button>
+    </div>
+    <ngx-extended-pdf-viewer *ngIf="!pdfLoadError"
+      [src]="pdfSrc" height="80vh" useBrowserLocale="true"
+      (pdfLoadingFailed)="pdfLoadError = true">
     </ngx-extended-pdf-viewer>
   </div>
 </ng-template>
@@ -211,9 +251,11 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }
     app-document-editor .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
     app-document-editor .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
+    .offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }
   `],
 })
-export class DocumentEditorComponent implements OnInit {
+export class DocumentEditorComponent implements OnInit, OnDestroy {
+  private static quillRegistered = false;
 
   @Input() requeteId!: number;
   @Input() contentType!: number;
@@ -228,7 +270,11 @@ export class DocumentEditorComponent implements OnInit {
   loading        = false;
   showPreview    = false;
   pdfSrc: any = null;
+  pdfLoadError = false;
   selectedFile: File | null = null;
+  countdown: number | null = null;
+
+  private countdownTimer: any = null;
 
   formData = {
     title:       '',
@@ -258,8 +304,11 @@ export class DocumentEditorComponent implements OnInit {
   // ── Enregistrement du plugin HTML source ─────────────────────────────────
   private async initQuill(): Promise<void> {
     const Quill = (await import('quill')).default;
-    const htmlEditButton = (await import('quill-html-edit-button')).default;
-    Quill.register('modules/htmlEditButton', htmlEditButton);
+    if (!DocumentEditorComponent.quillRegistered) {
+      const htmlEditButton = (await import('quill-html-edit-button')).default;
+      Quill.register('modules/htmlEditButton', htmlEditButton, true);
+      DocumentEditorComponent.quillRegistered = true;
+    }
 
     this.quillModules = {
       toolbar: [
@@ -275,7 +324,6 @@ export class DocumentEditorComponent implements OnInit {
         [{ align: [] }],
         ['link', 'image'],
         ['clean'],
-        ['htmlEditButton'],
       ],
       htmlEditButton: {
         buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
@@ -293,7 +341,7 @@ export class DocumentEditorComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.loading      = false;
-          this.acte         = res.data.acte;
+          this.acte         = { ...res.data.acte };
           this.variables    = res.data.variables;
           this.variableKeys = Object.keys(this.variables);
 
@@ -363,7 +411,7 @@ export class DocumentEditorComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.loading = false;
-        this.acte    = res.data.acte;
+        this.acte    = { ...res.data.acte };
         this.toastr.success('Document généré avec succès');
       },
       error: (err) => {
@@ -373,8 +421,21 @@ export class DocumentEditorComponent implements OnInit {
     });
   }
 
+  get isPns(): boolean {
+    return this.acte?.doc_produit?.generate_from === 'pns';
+  }
+
+  get isPending(): boolean {
+    return this.acte?.status === 'en_attente_pns';
+  }
+
+  ngOnDestroy(): void {
+    this.clearCountdown();
+  }
+
   // ── Sauvegarder WYSIWYG ───────────────────────────────────────────────────
   sauvegarderWysiwyg(): void {
+    this.clearCountdown();
     this.loading = true;
     this.http.post<any>(`${this.baseUrl}/${this.acte.id}/sauvegarder`, {
       title:        this.formData.title,
@@ -383,14 +444,62 @@ export class DocumentEditorComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.loading = false;
-        this.acte    = res.data.acte;
-        this.toastr.success('Document sauvegardé');
+        this.acte    = { ...res.data.acte };
+        if (res.data.pending) {
+          this.toastr.info('Contenu envoyé au PNS — vérification dans 5s');
+          this.startPnsCountdown();
+        } else {
+          this.toastr.success('Document sauvegardé et PDF généré');
+        }
       },
       error: (err) => {
         this.loading = false;
         this.toastr.error(err?.error?.message ?? 'Sauvegarde échouée');
       }
     });
+  }
+
+  private startPnsCountdown(): void {
+    this.countdown = 10;
+    this.countdownTimer = setInterval(() => {
+      if (this.countdown! > 1) {
+        this.countdown!--;
+      } else {
+        this.clearCountdown();
+        this.checkPnsCallback();
+      }
+    }, 1000);
+  }
+
+  private clearCountdown(): void {
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+    this.countdown = null;
+  }
+
+  verifierStatutPns(): void {
+    this.loading = true;
+    this.checkPnsCallback();
+  }
+
+  private checkPnsCallback(): void {
+    this.http.get<any>(`${this.baseUrl}/init/${this.requeteId}/${this.docProduitId}`)
+      .subscribe({
+        next: (res) => {
+          this.loading = false;
+          const acte = res.data.acte;
+          if (acte?.file_url) {
+            this.toastr.success('Document reçu du PNS — prêt à soumettre');
+            this.acte = { ...acte }; // nouvelle référence → change detection + footer visible
+          } else {
+            this.acte = { ...acte }; // status reste 'en_attente_pns' → bandeau + bouton Vérifier
+            this.toastr.info('Document pas encore disponible — réessayez dans quelques secondes');
+          }
+        },
+        error: () => { this.loading = false; }
+      });
   }
 
   // ── Upload PDF externe ────────────────────────────────────────────────────
@@ -414,7 +523,7 @@ export class DocumentEditorComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.loading      = false;
-          this.acte         = res.data.acte;
+          this.acte         = { ...res.data.acte };
           this.selectedFile = null;
           this.toastr.success('PDF uploadé avec succès');
         },
@@ -431,12 +540,16 @@ previsualiser(): void {
     this.toastr.warning('Aucun document généré');
     return;
   }
-  this.pdfSrc = this.acte.file_url;
-  //this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.acte.file_url);
+  this.pdfLoadError = false;
+  this.pdfSrc = ConfigService.toFile(this.acte.file_url);
   this.offcanvasService.open(this.pdfOffcanvasRef, {
     position: 'end',
-    panelClass: 'offcanvas-wide',  // classe CSS pour la largeur
+    panelClass: 'offcanvas-wide',
   });
+}
+
+rechargerPage(): void {
+  window.location.reload();
 }
 
   // ── Soumettre au circuit ──────────────────────────────────────────────────
