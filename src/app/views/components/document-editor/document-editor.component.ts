@@ -232,38 +232,49 @@ export class DocumentEditorComponent implements OnInit {
     htmlContent: '',
   };
 
-  quillModules = {
-    toolbar: [
-      [{ font: [] }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      [{ script: 'sub' }, { script: 'super' }],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
+  quillModules: any = null;
 
   private genererEditor: any = null;
 
   private baseUrl = ConfigService.toApiUrl('document-actes');
-@ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
+  @ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
 
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
-    private offcanvasService: NgbOffcanvas, 
+    private offcanvasService: NgbOffcanvas,
   ) {}
 
   ngOnInit(): void {
- 
-   
+    this.initQuill(); // appelle initialiser() en fin de chaîne async
+  }
+
+  // ── Enregistrement du plugin HTML source ─────────────────────────────────
+  private async initQuill(): Promise<void> {
+    const Quill = (await import('quill')).default;
+    const htmlEditButton = (await import('quill-html-edit-button')).default;
+    Quill.register('modules/htmlEditButton', htmlEditButton);
+
+    this.quillModules = {
+      toolbar: [
+        [{ font: [] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ script: 'sub' }, { script: 'super' }],
+        ['blockquote', 'code-block'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+        ['link', 'image'],
+        ['clean'],
+        ['htmlEditButton'],
+      ],
+      htmlEditButton: {},
+    };
+
     this.initialiser();
   }
 
