@@ -1,5 +1,5 @@
 <!-- ================================================================
-   VUE ADMINISTRATEUR (Admin Sectoriel / Admin national)
+   VUE ADMINISTRATEUR
    ================================================================ -->
 <div *ngIf="isAdmin">
 
@@ -30,7 +30,22 @@
     </div>
   </div>
 
-  <!-- Skeleton loader -->
+  <!-- ── Accès rapides ──────────────────────────────────────── -->
+  <div class="kpi-section-label">Accès rapides</div>
+  <div class="quick-links-grid mb-4">
+    <div *ngFor="let ql of quickLinks"
+         class="quick-link-card quick-link-card--{{ ql.colorClass }}"
+         (click)="navigateTo(ql.route)">
+      <div class="quick-link-icon"><i class="bi {{ ql.icon }}"></i></div>
+      <div class="quick-link-label">{{ ql.label }}</div>
+      <i class="bi bi-arrow-right quick-link-arrow"></i>
+    </div>
+  </div>
+
+  <!-- ── KPIs globaux ───────────────────────────────────────── -->
+  <div class="kpi-section-label">Vue d'ensemble</div>
+
+  <!-- Skeleton -->
   <div *ngIf="loading" class="row g-3 mb-4">
     <div class="col-12 col-sm-6 col-lg-4" *ngFor="let i of [1,2,3,4,5,6]">
       <div class="stat-card">
@@ -43,11 +58,10 @@
     </div>
   </div>
 
-  <!-- KPIs admin -->
   <div *ngIf="!loading && data" class="row g-3 mb-4">
 
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="stat-card stat-card--link" (click)="navigate('users')" title="Voir les utilisateurs">
+      <div class="stat-card stat-card--link" (click)="navigate('users')">
         <div class="stat-icon stat-icon-blue"><i class="bi bi-people-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.users ?? '—' }}</div>
@@ -59,7 +73,7 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="stat-card stat-card--link" (click)="navigate('prestations')" title="Voir les prestations">
+      <div class="stat-card stat-card--link" (click)="navigate('prestations')">
         <div class="stat-icon stat-icon-orange"><i class="bi bi-briefcase-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.prestations ?? '—' }}</div>
@@ -71,7 +85,7 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="stat-card stat-card--link" (click)="navigate('ua')" title="Voir les unités administratives">
+      <div class="stat-card stat-card--link" (click)="navigate('ua')">
         <div class="stat-icon stat-icon-purple"><i class="bi bi-building-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.ua ?? '—' }}</div>
@@ -83,7 +97,7 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.departments != null">
-      <div class="stat-card stat-card--link" (click)="navigate('departments')" title="Voir les départements">
+      <div class="stat-card stat-card--link" (click)="navigate('departments')">
         <div class="stat-icon stat-icon-teal"><i class="bi bi-diagram-3-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.departments }}</div>
@@ -95,7 +109,7 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.total_requests != null">
-      <div class="stat-card stat-card--link" (click)="navigate('stats')" title="Voir les statistiques">
+      <div class="stat-card stat-card--link" (click)="navigate('stats')">
         <div class="stat-icon stat-icon-indigo"><i class="bi bi-file-earmark-text-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.total_requests }}</div>
@@ -107,7 +121,7 @@
     </div>
 
     <div class="col-12 col-sm-6 col-lg-4" *ngIf="data?.agents != null">
-      <div class="stat-card stat-card--link" (click)="navigate('agents')" title="Voir les agents">
+      <div class="stat-card stat-card--link" (click)="navigate('agents')">
         <div class="stat-icon stat-icon-green"><i class="bi bi-person-badge-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.agents }}</div>
@@ -120,10 +134,83 @@
 
   </div>
 
-  <!-- Message si aucune donnée après chargement -->
   <div *ngIf="!loading && !data" class="empty-state">
     <i class="bi bi-exclamation-circle empty-icon"></i>
     <p>Impossible de charger les données du tableau de bord.</p>
+  </div>
+
+  <!-- ── Activité par prestation ────────────────────────────── -->
+  <ng-container *ngIf="user_prestations.length > 0">
+
+    <div class="kpi-section-label">Activité par prestation</div>
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingPrestations" class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let i of [1,2,3]">
+        <div class="prestation-card">
+          <div class="prestation-card__skeleton"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingPrestations && prestationsData.length > 0" class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-lg-4" *ngFor="let p of prestationsData">
+        <div class="prestation-card"
+             (click)="navigateTo('/admin/eservice/espace-traitement/' + p.prestation.code)">
+          <div class="prestation-card__header">
+            <div class="prestation-card__name">{{ p.prestation.name }}</div>
+            <span class="prestation-card__code">{{ p.prestation.code }}</span>
+          </div>
+
+          <div class="prestation-card__stats">
+            <div class="prestation-stat">
+              <span class="prestation-stat__value">{{ p.stats?.total ?? '—' }}</span>
+              <span class="prestation-stat__label">Total</span>
+            </div>
+            <div class="prestation-stat">
+              <span class="prestation-stat__value prestation-stat__value--amber">{{ p.stats?.pending ?? '—' }}</span>
+              <span class="prestation-stat__label">En attente</span>
+            </div>
+            <div class="prestation-stat">
+              <span class="prestation-stat__value prestation-stat__value--red">{{ p.stats?.rejected ?? '—' }}</span>
+              <span class="prestation-stat__label">Rejetées</span>
+            </div>
+            <div class="prestation-stat">
+              <span class="prestation-stat__value prestation-stat__value--green">{{ (p.stats?.finished ?? 0) + (p.stats?.signed ?? 0) }}</span>
+              <span class="prestation-stat__label">Finalisées</span>
+            </div>
+          </div>
+
+          <div class="prestation-card__rate">
+            <div class="prestation-card__rate-header">
+              <span class="prestation-card__rate-label">Taux de traitement</span>
+              <span class="prestation-card__rate-value">{{ p.rate }}%</span>
+            </div>
+            <div class="rate-bar">
+              <div class="rate-fill" [style.width.%]="p.rate"></div>
+            </div>
+          </div>
+
+          <i class="bi bi-arrow-right prestation-card__arrow"></i>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <!-- ── Graphique comparatif multi-prestations ─────────────── -->
+  <div class="chart-card" *ngIf="!loadingPrestations && chartData.length > 0">
+    <div class="chart-card-header">
+      <i class="bi bi-graph-up-arrow chart-card-icon"></i>
+      <span class="chart-card-title">Évolution mensuelle des demandes par prestation</span>
+    </div>
+    <div class="chart-card-body">
+      <canvas baseChart
+        [type]="'line'"
+        [data]="{ labels: chartLabels, datasets: chartData }"
+        [options]="chartOptions">
+      </canvas>
+    </div>
   </div>
 
 </div>
@@ -165,7 +252,7 @@
   <!-- VUE DIRECTEUR -->
   <div *ngIf="isDirecteur && data" class="row g-3">
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="stat-card stat-card--link" (click)="navigate('total')" title="Voir toutes les demandes">
+      <div class="stat-card stat-card--link" (click)="navigate('total')">
         <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.total ?? '—' }}</div>
@@ -176,7 +263,7 @@
       </div>
     </div>
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="stat-card stat-card--link" (click)="navigate('pending')" title="Voir les demandes en attente">
+      <div class="stat-card stat-card--link" (click)="navigate('pending')">
         <div class="stat-icon stat-icon-yellow"><i class="bi bi-hourglass-split"></i></div>
         <div class="stat-body">
           <div class="stat-value">{{ data?.pending ?? '—' }}</div>
@@ -204,7 +291,6 @@
       </div>
     </div>
 
-    <!-- KPI Grid -->
     <div *ngIf="!loading && data">
 
       <!-- Taux de traitement -->
@@ -222,11 +308,11 @@
         </div>
       </div>
 
-      <!-- Section : Vue d'ensemble -->
+      <!-- Vue d'ensemble -->
       <div class="kpi-section-label">Vue d'ensemble</div>
       <div class="row g-3 mb-3">
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('total')" title="Voir toutes les demandes">
+          <div class="stat-card stat-card--link" (click)="navigate('total')">
             <div class="stat-icon stat-icon-blue"><i class="bi bi-file-earmark-text-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.total }}</div>
@@ -237,7 +323,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('news')" title="Voir les nouvelles demandes">
+          <div class="stat-card stat-card--link" (click)="navigate('news')">
             <div class="stat-icon stat-icon-indigo"><i class="bi bi-stars"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.news }}</div>
@@ -248,7 +334,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('treated')" title="Voir les demandes traitées">
+          <div class="stat-card stat-card--link" (click)="navigate('treated')">
             <div class="stat-icon stat-icon-green"><i class="bi bi-check2-circle"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.treated }}</div>
@@ -259,7 +345,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('pending')" title="Voir les demandes en attente">
+          <div class="stat-card stat-card--link" (click)="navigate('pending')">
             <div class="stat-icon stat-icon-yellow"><i class="bi bi-pause-circle-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.pending }}</div>
@@ -271,11 +357,11 @@
         </div>
       </div>
 
-      <!-- Section : Résultats -->
+      <!-- Résultats -->
       <div class="kpi-section-label">Résultats</div>
       <div class="row g-3 mb-4">
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('signed')" title="Voir les demandes accordées">
+          <div class="stat-card stat-card--link" (click)="navigate('signed')">
             <div class="stat-icon stat-icon-teal"><i class="bi bi-patch-check-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.signed }}</div>
@@ -286,7 +372,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('finished')" title="Voir les demandes finalisées">
+          <div class="stat-card stat-card--link" (click)="navigate('finished')">
             <div class="stat-icon stat-icon-green"><i class="bi bi-bag-check-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.finished }}</div>
@@ -297,7 +383,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3" *ngIf="currentPrestation?.need_validation">
-          <div class="stat-card stat-card--link" (click)="navigate('validated')" title="Voir les demandes validées">
+          <div class="stat-card stat-card--link" (click)="navigate('validated')">
             <div class="stat-icon stat-icon-indigo"><i class="bi bi-shield-check"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.validated }}</div>
@@ -308,7 +394,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('rejected')" title="Voir les demandes rejetées">
+          <div class="stat-card stat-card--link" (click)="navigate('rejected')">
             <div class="stat-icon stat-icon-red"><i class="bi bi-x-circle-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.rejected }}</div>
@@ -319,7 +405,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-4 col-xl-3">
-          <div class="stat-card stat-card--link" (click)="navigate('leaved')" title="Voir les demandes abandonnées">
+          <div class="stat-card stat-card--link" (click)="navigate('leaved')">
             <div class="stat-icon stat-icon-gray"><i class="bi bi-dash-circle-fill"></i></div>
             <div class="stat-body">
               <div class="stat-value">{{ data?.leaved }}</div>
@@ -343,8 +429,8 @@
         <canvas baseChart
           [type]="'line'"
           [data]="{ labels: chartLabels, datasets: chartData }"
-          [options]="chartOptions"
-        ></canvas>
+          [options]="chartOptions">
+        </canvas>
       </div>
     </div>
 

@@ -35,6 +35,7 @@ export class EtapeVisibiliteComponent implements OnInit {
   add_data: any = { can_read: true, can_act: false, scope_type: 'requete' };
   data: any[] = [];
   transitions: any[] = [];
+  prestations: any[] = [];
   docProduits: any[] = [];
   roles: any[] = [];
   permissions: any[] = [];
@@ -44,6 +45,9 @@ export class EtapeVisibiliteComponent implements OnInit {
   selectedId: number | null = null;
   isPaginate = true;
   pg = { pageSize: 10, p: 1, total: 0 };
+
+  viewMode: 'table' | 'diagram' = 'table';
+  selectedPrestationId: number | null = null;
 
   constructor(
     private service: EtapeVisibiliteService,
@@ -83,6 +87,14 @@ export class EtapeVisibiliteComponent implements OnInit {
   allTransitions() {
     this.workflowService.getAll().subscribe((res: any) => {
       this.transitions = res.data ?? res;
+      // Extraire les prestations uniques depuis les transitions
+      const map = new Map<number, any>();
+      this.transitions.forEach((t: any) => {
+        const p = t.prestation;
+        if (p && !map.has(p.id)) map.set(p.id, p);
+      });
+      this.prestations = Array.from(map.values())
+        .sort((a, b) => a.name.localeCompare(b.name));
     });
   }
 
@@ -97,6 +109,40 @@ export class EtapeVisibiliteComponent implements OnInit {
       this.roles = res.data ?? res;
     });
   }
+
+  // ── Filtrage ────────────────────────────────────────────────
+
+  get filteredData(): any[] {
+    if (!this.selectedPrestationId) return this.data;
+    return this.data.filter(d =>
+      (d.transition?.prestation?.id ?? null) === this.selectedPrestationId
+    );
+  }
+
+  filterByPrestation(id: number | null) {
+    this.selectedPrestationId = id;
+    this.pg.p = 1;
+    if (!id) this.viewMode = 'table';
+  }
+
+  prestationName(id: number | null): string {
+    return this.prestations.find(p => p.id === id)?.name ?? '';
+  }
+
+  // ── Diagramme ───────────────────────────────────────────────
+
+  get diagramGroups(): { transition: any; rules: any[] }[] {
+    if (!this.selectedPrestationId) return [];
+    const transForPrestation = this.transitions
+      .filter((t: any) => (t.prestation?.id ?? t.prestation_id) === this.selectedPrestationId)
+      .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+    return transForPrestation.map((t: any) => ({
+      transition: t,
+      rules: this.data.filter(d => d.workflow_transition_id === t.id),
+    }));
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────
 
   transitionLabel(t: any): string {
     if (!t) return '—';
@@ -211,6 +257,5 @@ export class EtapeVisibiliteComponent implements OnInit {
 
   getPage(event: any) {
     this.pg.p = event;
-    this.all();
   }
 }

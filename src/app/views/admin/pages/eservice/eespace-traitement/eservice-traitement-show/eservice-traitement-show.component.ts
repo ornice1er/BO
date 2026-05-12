@@ -42,6 +42,7 @@ export class EserviceTraitementShowComponent implements OnInit {
   stepContents: any[] = [];
   motifsRejet: any[] = [];
   projects: any[] = [];
+  etapesPrecedentes: any[] = [];
 
   private deptMap = new Map<string, string>();
   private muniMap = new Map<string, string>();
@@ -280,20 +281,21 @@ add(content:any){
   }
 
   dissociate() {
-    this.loading = true;
-    this.requeteService.associateToProject(this.selected_data.id, null).subscribe(
-      (res:any) => {  
+    AppSweetAlert.confirmBox('warning', 'Retirer du projet', `Retirer cette demande du projet "${this.selected_data?.project?.title}" ?`).then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.loading = true;
+      this.requeteService.associateToProject(this.selected_data.id, null).subscribe(
+        (res: any) => {
           this.loading = false;
-           this.toastr.success(res.message)
-           this.modalService.dismissAll();
-           this.getProjects();
-           //MyToastr.make('success',"Gestion des agents ","Modification effectuée avec succès",this.toastrService)
-
-      },
-      (err:any)=>{
-          this.loading=false;
+          this.toastr.success(res.message);
+          this.get();
+        },
+        (err: any) => {
+          this.loading = false;
           this.toastr.error(err?.error?.message ?? 'Opération échouée');
-      })
+        }
+      );
+    });
   }     
     
     
@@ -399,6 +401,38 @@ actionSurDocument(acte: any): void {
   // ── Retour liste ───────────────────────────────────────────────────────────
   back2(): void {
     this.router.navigate(['admin/eservice/espace-traitement/' + this.prestation]);
+  }
+
+  // ── Régression admin ───────────────────────────────────────────────────────
+  openRegresser(content: any): void {
+    this.etapesPrecedentes = [];
+    this.requeteService.getEtapesPrecedentes(this.selected_data.id).subscribe({
+      next: (res: any) => {
+        this.etapesPrecedentes = res.data ?? [];
+        this.modalService.open(content, { size: 'md' });
+      },
+      error: () => this.toastr.error('Impossible de charger les étapes')
+    });
+  }
+
+  submitRegresser(value: any): void {
+    if (!value.etape_id) { this.toastr.warning('Sélectionnez une étape'); return; }
+    AppSweetAlert.confirmBox('warning', 'Régression', 'Régresser cette demande vers l\'étape sélectionnée ?').then((r: any) => {
+      if (!r.isConfirmed) return;
+      this.loading = true;
+      this.requeteService.regresser(this.selected_data.id, value.etape_id, value.comment).subscribe({
+        next: () => {
+          this.loading = false;
+          this.modalService.dismissAll();
+          this.toastr.success('Demande regressée avec succès');
+          this.get();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
   }
 
   // ── Permissions (conservé pour les cas spécifiques restants) ──────────────

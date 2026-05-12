@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PrestationService } from '../../../../core/services/prestation.service';
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 import { OfficerService } from '../../../../core/services/officer.service';
+import { PermissionUtils } from '../../../../core/utils/permission-utils';
 declare var bootstrap: any;
 
 
@@ -53,6 +54,7 @@ selectedId: number | null = null;
   role_name=""
   role:any
   user:any
+  isGlobalAdmin = false;
   pg={
     pageSize:10,
     p:1,
@@ -90,6 +92,7 @@ selectedId: number | null = null;
   ngOnInit(): void {
     this.user=this.lsService.get(GlobalName.userName)
     this.role=this.user.roles[0].name
+    this.isGlobalAdmin = PermissionUtils.isGlobalAdmin(this.user);
     this.init()
     this.buttonsPermission = {
       show:true,
@@ -278,7 +281,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.allSelected = checked;
   }
 
-  private syncAllSelected(): void {
+  syncAllSelected(): void {
     this.allSelected = this.prestations.length > 0 && this.prestations.every((p:any) => p.state);
   }
 

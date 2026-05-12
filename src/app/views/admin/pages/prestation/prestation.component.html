@@ -247,7 +247,7 @@
             <input type="text" class="form-control" name="name" ngModel required>
           </div>
 
-          <div class="form-group col-12 mb-3" *ngIf="roles=='Admin national'">
+          <div class="form-group col-12 mb-3" *ngIf="isGlobalAdmin">
             <label>Entité Admin</label>
             <ng-select name="entite_admin_id" ngModel placeholder="Sélectionner une entité">
               <ng-option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</ng-option>
@@ -389,7 +389,7 @@
             <input type="text" class="form-control" name="name" [(ngModel)]="selected_data.name" required>
           </div>
 
-          <div class="form-group col-12 mb-3" *ngIf="roles=='Admin national'">
+          <div class="form-group col-12 mb-3" *ngIf="isGlobalAdmin">
             <label>Entité Admin</label>
             <ng-select name="entite_admin_id" [(ngModel)]="selected_data.entite_admin_id" placeholder="Sélectionner une entité">
               <ng-option [value]="t.id" *ngFor="let t of data3">{{t.libelle}}</ng-option>

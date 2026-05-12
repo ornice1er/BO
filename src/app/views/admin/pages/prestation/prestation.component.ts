@@ -16,6 +16,7 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { NgToggleComponent, NgToggleModule } from 'ng-toggle-button';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { PermissionUtils } from '../../../../core/utils/permission-utils';
 
 @Component({
     selector: 'ngx-prestation',
@@ -28,6 +29,7 @@ export class PrestationComponent implements OnInit {
   selected_data: any
   user: any
   roles: any
+  isGlobalAdmin = false;
   add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false,  need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false,decision:"" }
   data:any[]=[]
   permissions:any[]=[]
@@ -73,6 +75,7 @@ remoteSearchData: any[] = []
       this.getUnityAdminsAll()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
+      this.isGlobalAdmin = PermissionUtils.isGlobalAdmin(this.user);
        this.buttonsPermission = {
       show:true,
       add:true,

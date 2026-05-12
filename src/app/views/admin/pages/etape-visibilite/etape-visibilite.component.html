@@ -3,13 +3,49 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="card custom-card">
+
+      <!-- ── Barre d'outils ── -->
       <div class="card-header-actions">
-        <div class="d-flex justify-content-between align-items-center">
-          <button class="btn btn-primary-custom" (click)="add(addContent)">
-            <i class="bi bi-plus-lg me-2"></i>Ajouter
-          </button>
-          <div class="search-controls d-flex align-items-center">
-            <div class="input-group">
+        <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center">
+
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <button class="btn btn-primary-custom" (click)="add(addContent)">
+              <i class="bi bi-plus-lg me-2"></i>Ajouter
+            </button>
+
+            <!-- Filtre prestation -->
+            <div class="prestation-filter">
+              <select class="form-select form-select-sm"
+                      [(ngModel)]="selectedPrestationId"
+                      (ngModelChange)="filterByPrestation($event)">
+                <option [ngValue]="null">Toutes les prestations</option>
+                <option *ngFor="let p of prestations" [ngValue]="p.id">{{ p.name }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Vue et recherche -->
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+
+            <!-- Toggle tableau / diagramme -->
+            <div class="view-toggle btn-group" role="group">
+              <button type="button" class="btn btn-sm"
+                      [class.btn-primary]="viewMode === 'table'"
+                      [class.btn-outline-secondary]="viewMode !== 'table'"
+                      (click)="viewMode = 'table'">
+                <i class="bi bi-table me-1"></i>Tableau
+              </button>
+              <button type="button" class="btn btn-sm"
+                      [class.btn-primary]="viewMode === 'diagram'"
+                      [class.btn-outline-secondary]="viewMode !== 'diagram'"
+                      [disabled]="!selectedPrestationId"
+                      (click)="viewMode = 'diagram'">
+                <i class="bi bi-diagram-3 me-1"></i>Diagramme
+              </button>
+            </div>
+
+            <!-- Recherche (visible en mode tableau uniquement) -->
+            <div *ngIf="viewMode === 'table'" class="input-group input-group-sm" style="width:260px">
               <input
                 type="text"
                 class="form-control search-input"
@@ -17,132 +53,206 @@
                 [(ngModel)]="search_text"
                 (ngModelChange)="onSearchChange()"
                 placeholder="Rechercher par rôle...">
-              <button (click)="resetSearch()" class="btn btn-outline-primary reset-btn" type="button">
+              <button (click)="resetSearch()" class="btn btn-outline-secondary" type="button">
                 <i class="fa fa-rotate-left"></i>
               </button>
             </div>
+
           </div>
         </div>
       </div>
 
       <div class="card-body">
-        <div class="results-info mb-3">
-          <p class="text-muted mb-0">
-            <i class="bi bi-list-ul me-2"></i>{{data.length}} règle(s)
-          </p>
-        </div>
 
-        <div class="table-responsive">
-          <table class="table custom-table">
-            <thead>
-              <tr>
-                <th style="width: 50px;">#</th>
-                <th>Transition</th>
-                <th>Rôle</th>
-                <th>Portée</th>
-                <th>Document produit</th>
-                <th>Lecture</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Skeleton loader -->
-              <ng-container *ngIf="loading">
+        <!-- ═══════════════════ VUE TABLEAU ═══════════════════ -->
+        <ng-container *ngIf="viewMode === 'table'">
+
+          <div class="results-info mb-3">
+            <p class="text-muted mb-0">
+              <i class="bi bi-list-ul me-2"></i>{{ filteredData.length }} règle(s)
+              <span *ngIf="selectedPrestationId" class="ms-2 badge bg-primary-subtle text-primary-emphasis">
+                {{ prestationName(selectedPrestationId) }}
+              </span>
+            </p>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table custom-table">
+              <thead>
+                <tr>
+                  <th style="width:50px">#</th>
+                  <th>Transition</th>
+                  <th>Rôle</th>
+                  <th>Portée</th>
+                  <th>Document produit</th>
+                  <th>Lecture</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Skeleton -->
+                <ng-container *ngIf="loading2">
                   <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
-                      <td *ngFor="let j of [1,2,3,4,5,6,7]">
-                          <span class="placeholder col-10 rounded"></span>
-                      </td>
+                    <td *ngFor="let j of [1,2,3,4,5,6,7]">
+                      <span class="placeholder col-10 rounded"></span>
+                    </td>
                   </tr>
-              </ng-container>
+                </ng-container>
 
-              <ng-container *ngIf="!loading">
-              <tr *ngFor="let d of data | sampleSearch:search_text | paginate: {
-                id: 'ngxP1',
-                itemsPerPage: pg.pageSize,
-                currentPage: pg.p,
-                totalItems: pg.total }" class="table-row">
+                <ng-container *ngIf="!loading2">
+                  <tr *ngFor="let d of filteredData | sampleSearch:search_text | paginate: {
+                      id: 'ngxP1',
+                      itemsPerPage: pg.pageSize,
+                      currentPage: pg.p,
+                      totalItems: filteredData.length
+                    }" class="table-row">
 
-                <td class="position-relative checkbox-cell">
-                  <div class="form-check">
-                    <input
-                      (click)="checked(d)"
-                      class="form-check-input custom-radio"
-                      type="radio"
-                      name="selectedVis"
-                      [value]="d.id"
-                      [(ngModel)]="selectedId"
-                      id="radio-{{ d.id }}"
-                    />
-                  </div>
+                    <td class="position-relative checkbox-cell">
+                      <div class="form-check">
+                        <input
+                          (click)="checked(d)"
+                          class="form-check-input custom-radio"
+                          type="radio"
+                          name="selectedVis"
+                          [value]="d.id"
+                          [(ngModel)]="selectedId"
+                          id="radio-{{ d.id }}"
+                        />
+                      </div>
+                      <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                        <div class="overlay-actions-grid">
+                          <button (click)="show(showContent)" type="button" class="btn btn-action btn-view" title="Consulter" [disabled]="loading">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button (click)="edit(editContent)" type="button" class="btn btn-action btn-edit" title="Éditer" [disabled]="loading">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button (click)="delete()" type="button" class="btn btn-action btn-delete" title="Supprimer" [disabled]="loading">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                          <button type="button" class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
+                            <i class="bi bi-x-lg"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
 
-                  <div *ngIf="selectedId === d.id" class="overlay-panel-right">
-                    <div class="overlay-actions-grid">
-                      <button (click)="show(showContent)" type="button" class="btn btn-action btn-view" title="Consulter"[disabled]="loading"
->
-                        <i class="bi bi-eye"></i>
-                      </button>
-                      <button (click)="edit(editContent)" type="button" class="btn btn-action btn-edit" title="Éditer"[disabled]="loading"
->
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                      <button (click)="delete()" type="button" class="btn btn-action btn-delete" title="Supprimer"[disabled]="loading"
->
-                        <i class="bi bi-trash"></i>
-                      </button>
-                      <button type="button" class="btn btn-action btn-close-panel" (click)="selectedId = null" title="Fermer">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
+                    <td><small>{{ transitionLabel(resolveTransition(d)) }}</small></td>
+                    <td><code>{{ d?.role_name }}</code></td>
+                    <td>
+                      <span class="badge"
+                        [class.bg-primary]="d?.scope_type === 'requete'"
+                        [class.bg-info]="d?.scope_type === 'document'">
+                        {{ d?.scope_type }}
+                      </span>
+                    </td>
+                    <td>{{ d?.doc_produit?.name ?? '—' }}</td>
+                    <td>
+                      <span class="badge" [class.bg-success]="d?.can_read" [class.bg-secondary]="!d?.can_read">
+                        {{ d?.can_read ? 'Oui' : 'Non' }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [class.bg-success]="d?.can_act" [class.bg-secondary]="!d?.can_act">
+                        {{ d?.can_act ? 'Oui' : 'Non' }}
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="filteredData.length === 0" class="no-results-row">
+                    <td colspan="7" class="text-center py-5">
+                      <i class="bi bi-shield-slash fs-2 text-muted d-block mb-2"></i>
+                      <span class="text-muted">Aucune règle de visibilité pour cette prestation</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-container mt-4">
+            <pagination-controls
+              id="ngxP1"
+              (pageChange)="getPage($event)"
+              [maxSize]="9"
+              [directionLinks]="true"
+              [autoHide]="true"
+              [responsive]="true"
+              previousLabel="Précédent"
+              nextLabel="Suivant">
+            </pagination-controls>
+          </div>
+        </ng-container>
+
+        <!-- ═══════════════════ VUE DIAGRAMME ═══════════════════ -->
+        <ng-container *ngIf="viewMode === 'diagram'">
+
+          <div *ngIf="!selectedPrestationId" class="text-center py-5 text-muted">
+            <i class="bi bi-funnel fs-2 d-block mb-2"></i>
+            Sélectionnez une prestation pour afficher le diagramme
+          </div>
+
+          <div *ngIf="selectedPrestationId && diagramGroups.length === 0" class="text-center py-5 text-muted">
+            <i class="bi bi-diagram-3 fs-2 d-block mb-2"></i>
+            Aucune transition configurée pour cette prestation
+          </div>
+
+          <div *ngIf="selectedPrestationId && diagramGroups.length > 0" class="diagram-wrapper">
+
+            <div class="diagram-legend mb-3">
+              <span class="legend-item"><span class="legend-dot bg-act"></span> Peut agir</span>
+              <span class="legend-item"><span class="legend-dot bg-read"></span> Peut lire seulement</span>
+              <span class="legend-item"><span class="legend-dot bg-none"></span> Aucune règle</span>
+            </div>
+
+            <div class="diagram-flow">
+              <div *ngFor="let g of diagramGroups" class="diagram-card">
+
+                <!-- Étape source -->
+                <div class="diagram-node diagram-node--from">
+                  <i class="bi bi-circle-fill me-1" style="font-size:8px"></i>
+                  {{ g.transition.etape_from?.name ?? 'Départ' }}
+                </div>
+
+                <!-- Flèche + infos transition -->
+                <div class="diagram-edge">
+                  <div class="edge-condition">{{ g.transition.condition_type }}</div>
+                  <div class="edge-line">
+                    <div class="edge-rules">
+                      <span *ngFor="let r of g.rules"
+                            class="role-pill"
+                            [class.role-pill--act]="r.can_act"
+                            [class.role-pill--read]="!r.can_act && r.can_read"
+                            [matTooltip]="r.role_name + ' : ' + (r.can_act ? 'Agir + Lire' : 'Lire uniquement')">
+                        <i class="bi" [class.bi-pencil-fill]="r.can_act" [class.bi-eye-fill]="!r.can_act"></i>
+                        {{ r.role_name }}
+                      </span>
+                      <span *ngIf="g.rules.length === 0" class="role-pill role-pill--empty">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>Aucune règle
+                      </span>
                     </div>
+                    <div class="edge-arrow">&#8595;</div>
                   </div>
-                </td>
+                </div>
 
-                <td>
-                  <small>{{ transitionLabel(resolveTransition(d)) }}</small>
-                </td>
-                <td><code>{{ d?.role_name }}</code></td>
-                <td>
-                  <span class="badge"
-                    [class.bg-primary]="d?.scope_type === 'requete'"
-                    [class.bg-info]="d?.scope_type === 'document'">
-                    {{ d?.scope_type }}
-                  </span>
-                </td>
-                <td>{{ d?.doc_produit?.name ?? '—' }}</td>
-                <td>
-                  <span class="badge" [class.bg-success]="d?.can_read" [class.bg-secondary]="!d?.can_read">
-                    {{ d?.can_read ? 'Oui' : 'Non' }}
-                  </span>
-                </td>
-                <td>
-                  <span class="badge" [class.bg-success]="d?.can_act" [class.bg-secondary]="!d?.can_act">
-                    {{ d?.can_act ? 'Oui' : 'Non' }}
-                  </span>
-                </td>
-              </tr>
-              </ng-container><!-- end *ngIf="!loading" -->
-            </tbody>
-          </table>
-        </div>
+                <!-- Étape destination -->
+                <div class="diagram-node diagram-node--to">
+                  <i class="bi bi-circle-fill me-1" style="font-size:8px"></i>
+                  {{ g.transition.etape_to?.name ?? 'Terminal' }}
+                </div>
 
-        <div class="pagination-container mt-4">
-          <pagination-controls
-            id="ngxP1"
-            (pageChange)="getPage($event)"
-            [maxSize]="9"
-            [directionLinks]="true"
-            [autoHide]="true"
-            [responsive]="true"
-            [previousLabel]="'Précédent'"
-            [nextLabel]="'Suivant'">
-          </pagination-controls>
-        </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
       </div>
     </div>
   </div>
 </div>
 
 
-<!-- MODAL ADD -->
+<!-- ══ MODAL ADD ══ -->
 <ng-template #addContent let-c="close" let-d="dismiss">
   <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
     <div class="modal-header">
@@ -155,9 +265,7 @@
         <div class="form-group col-12 mb-3">
           <label>Transition <span class="text-danger">(*)</span></label>
           <ng-select name="workflow_transition_id" ngModel required placeholder="Sélectionner une transition">
-            <ng-option [value]="t?.id" *ngFor="let t of transitions">
-              {{ transitionLabel(t) }}
-            </ng-option>
+            <ng-option [value]="t?.id" *ngFor="let t of transitions">{{ transitionLabel(t) }}</ng-option>
           </ng-select>
         </div>
 
@@ -210,7 +318,7 @@
 </ng-template>
 
 
-<!-- MODAL EDIT -->
+<!-- ══ MODAL EDIT ══ -->
 <ng-template #editContent let-c="close" let-d="dismiss">
   <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
     <div class="modal-header">
@@ -223,9 +331,7 @@
         <div class="form-group col-12 mb-3">
           <label>Transition <span class="text-danger">(*)</span></label>
           <ng-select name="workflow_transition_id" [(ngModel)]="selected_data.workflow_transition_id" required placeholder="Sélectionner une transition">
-            <ng-option [value]="t?.id" *ngFor="let t of transitions">
-              {{ transitionLabel(t) }}
-            </ng-option>
+            <ng-option [value]="t?.id" *ngFor="let t of transitions">{{ transitionLabel(t) }}</ng-option>
           </ng-select>
         </div>
 
@@ -278,11 +384,11 @@
 </ng-template>
 
 
-<!-- MODAL SHOW -->
+<!-- ══ MODAL SHOW ══ -->
 <ng-template #showContent let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Détails de la règle de visibilité</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
     <table class="table table-bordered">

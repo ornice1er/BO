@@ -26,9 +26,11 @@
           routerLink="{{ m.link }}"
           routerLinkActive="menu-link-active"
           class="menu-link"
+          [title]="menuOpen ? '' : m.title"
         >
           <i class="{{ m.icon || 'fas fa-circle' }} menu-link-icon"></i>
           <span class="menu-link-label">{{ m.title }}</span>
+          <span *ngIf="m.newCount && m.newCount > 0" class="menu-badge">{{ m.newCount }}</span>
         </a>
 
         <!-- Menu déroulant -->
@@ -38,10 +40,12 @@
             [class.menu-link-active]="isMenuActive(m)"
             [class.menu-link-open]="m.expanded"
             (click)="toggleSubmenu(i, $event)"
+            [title]="menuOpen ? '' : m.title"
             href="#"
           >
             <i class="{{ m.icon || 'fas fa-folder' }} menu-link-icon"></i>
             <span class="menu-link-label">{{ m.title }}</span>
+            <span *ngIf="m.newCount && m.newCount > 0" class="menu-badge">{{ m.newCount }}</span>
             <i class="fas fa-chevron-down menu-arrow" [class.menu-arrow-open]="m.expanded"></i>
           </a>
           <ul class="submenu-list" [@slideDown]="m.expanded ? 'expanded' : 'collapsed'">
@@ -68,10 +72,14 @@
     <!-- Header -->
     <header class="admin-header">
       <div class="header-left">
-        <button class="hamburger" (click)="toggleMenu()" type="button" title="Menu">
+        <button class="hamburger" (click)="toggleMenu()" type="button" title="Réduire le menu">
           <i class="fas fa-bars"></i>
         </button>
-        <h1 class="header-title">Backoffice</h1>
+        <div>
+          <h1 class="header-title">
+            Backoffice <span class="header-subtitle">eService</span>
+          </h1>
+        </div>
       </div>
 
       <div class="header-right">

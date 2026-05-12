@@ -30,9 +30,9 @@
   </button>
 
   <!-- Retirer du projet -->
-  <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id != null && peutAgir"
-    class="ts-btn ts-btn--danger" (click)="add(addContent)">
-    <i class="bi bi-folder-minus"></i> Retirer du projet : {{ selected_data?.project?.title }}
+  <button *ngIf="selected_data?.project_id != null && peutAgir"
+    class="ts-btn ts-btn--danger" (click)="dissociate()" [disabled]="loading">
+    <i class="bi bi-folder-minus"></i> Retirer cette demdande du projet
   </button>
 
   <!-- Traiter la demande -->
@@ -67,6 +67,12 @@
   <button *ngIf="peutAgir && selected_data?.current_status?.short_name === 'en_attente_signature'"
     class="ts-btn ts-btn--teal" (click)="traiter('prevalider')" [disabled]="loading">
     <i class="bi bi-check2-circle"></i> Pré-valider
+  </button>
+
+  <!-- Régresser (admin global uniquement) -->
+  <button *ngIf="hasPermission('access:admin-global')"
+    class="ts-btn ts-btn--grey" (click)="openRegresser(dialogRegresser)" [disabled]="loading">
+    <i class="bi bi-arrow-counterclockwise"></i> Régresser
   </button>
 
 </div>
@@ -116,6 +122,46 @@
           }">
           <i class="bi bi-clock"></i> {{ selected_data?.sla_restant }} jour(s)
         </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Session d'étude ───────────────────────────────────── -->
+  <div *ngIf="selected_data?.project" class="ts-section">
+    <div class="ts-section-header ts-section-header--amber">
+      <i class="bi bi-calendar2-week-fill"></i> Session d'étude
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-info-grid">
+        <div class="ts-info-item">
+          <div class="ts-info-label">Titre</div>
+          <div class="ts-info-value">{{ selected_data.project.title }}</div>
+        </div>
+        <div class="ts-info-item" *ngIf="selected_data.project.periode_etude">
+          <div class="ts-info-label">Période</div>
+          <div class="ts-info-value">{{ selected_data.project.periode_etude }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Du</div>
+          <div class="ts-info-value">{{ selected_data.project.date_start | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Au</div>
+          <div class="ts-info-value">{{ selected_data.project.date_end | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Statut</div>
+          <div class="ts-info-value">
+            <span class="ts-badge ts-badge--sm"
+              [ngClass]="{
+                'ts-badge--teal':  selected_data.project.status === 'open',
+                'ts-badge--amber': selected_data.project.status === 'en_cours_etude' || selected_data.project.status === 'en_attente_arrete',
+                'ts-badge--dark':  selected_data.project.status === 'closed'
+              }">
+              {{ selected_data.project.status }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -217,6 +263,7 @@
               <th>#</th>
               <th>De</th>
               <th>Vers</th>
+              <th>Type</th>
               <th>Statut</th>
               <th>Acteur</th>
               <th>Commentaire</th>
@@ -227,7 +274,7 @@
           <tbody>
             <ng-container *ngIf="loading">
               <tr *ngFor="let i of [1,2,3,4,5]">
-                <td *ngFor="let j of [1,2,3,4,5,6,7,8]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7,8,9]">
                   <span class="placeholder placeholder-glow col-10 rounded"></span>
                 </td>
               </tr>
@@ -246,6 +293,18 @@
                       <i *ngIf="v?.can_read" class="bi bi-file-earmark-text text-primary ms-1"></i>
                     </li>
                   </ul>
+                </td>
+                <td>
+                  <span class="ts-badge ts-badge--sm"
+                    [ngClass]="{
+                      'ts-badge--blue':   log?.transition?.condition_type === 'auto',
+                      'ts-badge--teal':   log?.transition?.condition_type === 'validation' || log?.transition?.condition_type === 'prevalidation',
+                      'ts-badge--amber':  log?.transition?.condition_type === 'paraphe' || log?.transition?.condition_type === 'signature',
+                      'ts-badge--danger': log?.transition?.condition_type === 'rejet',
+                      'ts-badge--grey':   !log?.transition?.condition_type
+                    }">
+                    {{ log?.transition?.condition_type ?? '—' }}
+                  </span>
                 </td>
                 <td><span class="ts-badge ts-badge--cyan ts-badge--sm">{{ log?.status?.name }}</span></td>
                 <td class="small">
@@ -417,6 +476,44 @@
       <button type="button" class="ts-btn-footer ts-btn-footer--cancel" (click)="d('Cross click')">Annuler</button>
       <button type="submit" class="ts-btn-footer ts-btn-footer--submit" [disabled]="addForm.invalid || loading">
         <i class="bi bi-check2-circle"></i> Sauvegarder
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Modal Régression admin -->
+<ng-template #dialogRegresser let-c="close" let-d="dismiss">
+  <form #regresserForm="ngForm" (ngSubmit)="submitRegresser(regresserForm.value)">
+    <div class="modal-header ts-modal-header ts-modal-header--dark">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ts-modal-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Régression administrative</h5>
+          <small>Retour à une étape précédente — action admin</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="d()"></button>
+    </div>
+    <div class="modal-body ts-modal-body">
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-diagram-3"></i> Étape cible</div>
+        <select name="etape_id" class="ts-select" ngModel required>
+          <option value="">Sélectionner une étape...</option>
+          <option *ngFor="let e of etapesPrecedentes" [value]="e.id">
+            {{ e.name }} <span *ngIf="e.transitioned_at"> — {{ e.transitioned_at | date:'dd/MM/yyyy' }}</span>
+          </option>
+        </select>
+      </div>
+      <div class="ts-modal-section mt-3">
+        <div class="ts-modal-section-title"><i class="bi bi-chat-left-text"></i> Motif (optionnel)</div>
+        <textarea name="comment" class="ts-input" ngModel rows="3" placeholder="Raison de la régression..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer ts-modal-footer">
+      <button type="button" class="ts-btn-footer ts-btn-footer--cancel" (click)="d()">Annuler</button>
+      <button type="submit" class="ts-btn-footer ts-btn-footer--submit" [disabled]="regresserForm.invalid || loading">
+        <i class="bi bi-arrow-counterclockwise"></i> Régresser
         <app-loading [isVisible]="loading"></app-loading>
       </button>
     </div>

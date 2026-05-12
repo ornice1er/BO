@@ -54,6 +54,16 @@ export class RequeteService {
     return this.http.get<any>(`${this.url}/${id}/completude`);
   }
 
+  /** Étapes précédentes disponibles pour régression (admin) */
+  getEtapesPrecedentes(id: any): any {
+    return this.http.get<any>(`${this.url}/${id}/etapes-precedentes`);
+  }
+
+  /** Régresser vers une étape précédente (admin) */
+  regresser(id: any, etapeId: number, comment: string): any {
+    return this.http.post<any>(`${this.url}/${id}/regresser`, { etape_id: etapeId, comment });
+  }
+
 
 
 
