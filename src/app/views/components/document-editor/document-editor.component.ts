@@ -77,19 +77,19 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <div class="form-group mb-3">
         <label class="fw-semibold">Corps du document</label>
         <div class="border rounded p-2 bg-light small mt-1">
-          <p class="mb-1 text-muted">Variables disponibles :</p>
+          <p class="mb-1 text-muted fw-semibold">Variables disponibles — cliquer pour insérer au curseur :</p>
           <span *ngFor="let v of variableKeys"
-                class="badge bg-secondary me-1 mb-1 cursor-pointer"
+                class="badge bg-secondary me-1 mb-1"
                 (click)="insererVariable(v)"
-                style="cursor:pointer">
+                style="cursor:pointer; user-select:none">
             {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
           </span>
         </div>
         <quill-editor
           [(ngModel)]="formData.content"
           [modules]="quillModules"
-          placeholder="Saisissez le corps du document..."
-          style="min-height: 300px; display:block; margin-top:8px;">
+          (onEditorCreated)="onGenererEditorCreated($event)"
+          placeholder="Saisissez le corps du document...">
         </quill-editor>
       </div>
 
@@ -113,7 +113,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <p class="text-muted small mb-3">
         Éditez le document librement. Les variables entre
         <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code>
-        seront remplacées automatiquement lors de la génération PDF.
+        seront remplacées automatiquement <strong>uniquement lorsque le document est généré par le système</strong>
+        (onglet <em>Générer</em>). Un document uploadé manuellement ne bénéficie pas de ce remplacement.
       </p>
 
       <div class="form-group mb-3">
@@ -121,8 +122,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         <quill-editor
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
-          placeholder="Rédigez le contenu..."
-          style="min-height: 300px; display:block; margin-top:8px;">
+          placeholder="Rédigez le contenu...">
         </quill-editor>
       </div>
 
@@ -136,14 +136,16 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     </div>
 
     <!-- ── ONGLET 3 : UPLOAD ──────────────────────────────────────────────── -->
-    <div *ngIf="activeTab === 'upload' && contentType==2" >
+    <div *ngIf="activeTab === 'upload'">
       <p class="text-muted small mb-3">
-        Uploadez un PDF préparé en dehors du système
-        (Word exporté en PDF, document scanné signé...).
+        Uploadez le document produit préparé en dehors du système
+        (Word exporté en PDF, document scanné, acte signé...).
+        Les variables <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code> ne seront
+        <strong>pas remplacées</strong> — le fichier est enregistré tel quel.
       </p>
 
       <div class="form-group mb-3">
-        <label class="fw-semibold">Fichier PDF</label>
+        <label class="fw-semibold">Document produit (PDF)</label>
         <input type="file" class="form-control mt-1"
                accept="application/pdf"
                (change)="onFileSelected($event)">
@@ -158,7 +160,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <button class="btn btn-primary" (click)="uploadPdf()"
               [disabled]="!selectedFile || loading">
         <i class="bi bi-upload me-1"></i>
-        Uploader
+        Uploader le document
         <app-loading [isVisible]="loading"></app-loading>
       </button>
     </div>
@@ -202,7 +204,14 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
   </div>
 </ng-template>
   `,
-  encapsulation:ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    app-document-editor quill-editor { display: block; margin-top: 8px; }
+    app-document-editor .ql-container { min-height: 500px; }
+    app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }
+    app-document-editor .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
+    app-document-editor .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
+  `],
 })
 export class DocumentEditorComponent implements OnInit {
 
@@ -228,27 +237,52 @@ export class DocumentEditorComponent implements OnInit {
     htmlContent: '',
   };
 
-  quillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['clean']]
-  };
+  quillModules: any = null;
+
+  private genererEditor: any = null;
 
   private baseUrl = ConfigService.toApiUrl('document-actes');
-@ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
+  @ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
 
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
-    private offcanvasService: NgbOffcanvas, 
+    private offcanvasService: NgbOffcanvas,
   ) {}
 
   ngOnInit(): void {
- 
-   
+    this.initQuill(); // appelle initialiser() en fin de chaîne async
+  }
+
+  // ── Enregistrement du plugin HTML source ─────────────────────────────────
+  private async initQuill(): Promise<void> {
+    const Quill = (await import('quill')).default;
+    const htmlEditButton = (await import('quill-html-edit-button')).default;
+    Quill.register('modules/htmlEditButton', htmlEditButton);
+
+    this.quillModules = {
+      toolbar: [
+        [{ font: [] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ script: 'sub' }, { script: 'super' }],
+        ['blockquote', 'code-block'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+        ['link', 'image'],
+        ['clean'],
+        ['htmlEditButton'],
+      ],
+      htmlEditButton: {
+        buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        buttonTitle: 'Voir / éditer le code source HTML',
+      },
+    };
+
     this.initialiser();
   }
 
@@ -301,9 +335,21 @@ export class DocumentEditorComponent implements OnInit {
       });
   }
 
-  // ── Insérer variable dans le textarea ────────────────────────────────────
+  onGenererEditorCreated(editor: any): void {
+    this.genererEditor = editor;
+  }
+
+  // ── Insérer variable au curseur dans l'éditeur Quill ─────────────────────
   insererVariable(key: string): void {
-    this.formData.content += ` {{${key}}} `;
+    const text = `{{${key}}}`;
+    if (this.genererEditor) {
+      const range = this.genererEditor.getSelection(true);
+      const index = range ? range.index : this.genererEditor.getLength() - 1;
+      this.genererEditor.insertText(index, ` ${text} `, 'user');
+      this.genererEditor.setSelection(index + text.length + 2, 0);
+    } else {
+      this.formData.content += ` ${text} `;
+    }
   }
 
   // ── Générer via template ──────────────────────────────────────────────────

@@ -1462,3 +1462,26 @@ ul.ngx-pagination {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+
+/* ── PDF Offcanvas (global — panel rendu hors du composant) ── */
+.offcanvas-pdf {
+  width: 78vw !important;
+  min-width: 340px;
+}
+.offcanvas-pdf .offcanvas-body {
+  padding: 0;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.offcanvas-pdf .offcanvas-body iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  display: block;
+}
+@media (max-width: 768px) {
+  .offcanvas-pdf { width: 100vw !important; }
+}
