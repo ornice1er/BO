@@ -77,19 +77,20 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <div class="form-group mb-3">
         <label class="fw-semibold">Corps du document</label>
         <div class="border rounded p-2 bg-light small mt-1">
-          <p class="mb-1 text-muted">Variables disponibles :</p>
+          <p class="mb-1 text-muted fw-semibold">Variables disponibles — cliquer pour insérer au curseur :</p>
           <span *ngFor="let v of variableKeys"
-                class="badge bg-secondary me-1 mb-1 cursor-pointer"
+                class="badge bg-secondary me-1 mb-1"
                 (click)="insererVariable(v)"
-                style="cursor:pointer">
+                style="cursor:pointer; user-select:none">
             {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
           </span>
         </div>
         <quill-editor
           [(ngModel)]="formData.content"
           [modules]="quillModules"
+          (onEditorCreated)="onGenererEditorCreated($event)"
           placeholder="Saisissez le corps du document..."
-          style="min-height: 300px; display:block; margin-top:8px;">
+          style="min-height: 550px; display:block; margin-top:8px;">
         </quill-editor>
       </div>
 
@@ -122,7 +123,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
           placeholder="Rédigez le contenu..."
-          style="min-height: 300px; display:block; margin-top:8px;">
+          style="min-height: 550px; display:block; margin-top:8px;">
         </quill-editor>
       </div>
 
@@ -230,11 +231,22 @@ export class DocumentEditorComponent implements OnInit {
 
   quillModules = {
     toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['clean']]
+      [{ font: [] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+      ['link', 'image'],
+      ['clean'],
+    ],
   };
+
+  private genererEditor: any = null;
 
   private baseUrl = ConfigService.toApiUrl('document-actes');
 @ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
@@ -301,9 +313,21 @@ export class DocumentEditorComponent implements OnInit {
       });
   }
 
-  // ── Insérer variable dans le textarea ────────────────────────────────────
+  onGenererEditorCreated(editor: any): void {
+    this.genererEditor = editor;
+  }
+
+  // ── Insérer variable au curseur dans l'éditeur Quill ─────────────────────
   insererVariable(key: string): void {
-    this.formData.content += ` {{${key}}} `;
+    const text = `{{${key}}}`;
+    if (this.genererEditor) {
+      const range = this.genererEditor.getSelection(true);
+      const index = range ? range.index : this.genererEditor.getLength() - 1;
+      this.genererEditor.insertText(index, ` ${text} `, 'user');
+      this.genererEditor.setSelection(index + text.length + 2, 0);
+    } else {
+      this.formData.content += ` ${text} `;
+    }
   }
 
   // ── Générer via template ──────────────────────────────────────────────────
