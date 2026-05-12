@@ -89,8 +89,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
           [(ngModel)]="formData.content"
           [modules]="quillModules"
           (onEditorCreated)="onGenererEditorCreated($event)"
-          placeholder="Saisissez le corps du document..."
-          style="min-height: 550px; display:block; margin-top:8px;">
+          placeholder="Saisissez le corps du document...">
         </quill-editor>
       </div>
 
@@ -122,8 +121,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         <quill-editor
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
-          placeholder="Rédigez le contenu..."
-          style="min-height: 550px; display:block; margin-top:8px;">
+          placeholder="Rédigez le contenu...">
         </quill-editor>
       </div>
 
@@ -203,7 +201,12 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
   </div>
 </ng-template>
   `,
-  encapsulation:ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    app-document-editor quill-editor { display: block; margin-top: 8px; }
+    app-document-editor .ql-container { min-height: 500px; }
+    app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }
+  `],
 })
 export class DocumentEditorComponent implements OnInit {
 
