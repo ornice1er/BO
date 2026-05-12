@@ -36,6 +36,8 @@ import { ContentChange } from 'ngx-quill';
   ]
 })
 export class QuillEditorWrapperComponent implements ControlValueAccessor {
+  private static registered = false;
+
   isBrowser = false;
   ready = false;
   content = '';
@@ -53,8 +55,11 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
 
   async init() {
     const Quill = (await import('quill')).default;
-    const htmlEditButton = (await import('quill-html-edit-button')).default;
-    Quill.register('modules/htmlEditButton', htmlEditButton);
+    if (!QuillEditorWrapperComponent.registered) {
+      const htmlEditButton = (await import('quill-html-edit-button')).default;
+      Quill.register('modules/htmlEditButton', htmlEditButton, true);
+      QuillEditorWrapperComponent.registered = true;
+    }
 
     this.modules = {
       toolbar: [
@@ -70,7 +75,6 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
         [{ align: [] }],
         ['link', 'image'],
         ['clean'],
-        ['htmlEditButton'],
       ],
       htmlEditButton: {
         buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
