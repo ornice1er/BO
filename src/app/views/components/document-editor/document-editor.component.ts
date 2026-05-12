@@ -113,7 +113,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <p class="text-muted small mb-3">
         Éditez le document librement. Les variables entre
         <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code>
-        seront remplacées automatiquement lors de la génération PDF.
+        seront remplacées automatiquement <strong>uniquement lorsque le document est généré par le système</strong>
+        (onglet <em>Générer</em>). Un document uploadé manuellement ne bénéficie pas de ce remplacement.
       </p>
 
       <div class="form-group mb-3">
@@ -135,14 +136,16 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     </div>
 
     <!-- ── ONGLET 3 : UPLOAD ──────────────────────────────────────────────── -->
-    <div *ngIf="activeTab === 'upload' && contentType==2" >
+    <div *ngIf="activeTab === 'upload'">
       <p class="text-muted small mb-3">
-        Uploadez un PDF préparé en dehors du système
-        (Word exporté en PDF, document scanné signé...).
+        Uploadez le document produit préparé en dehors du système
+        (Word exporté en PDF, document scanné, acte signé...).
+        Les variables <code>{{ '{' }}{{ '{' }}variable{{ '}' }}{{ '}' }}</code> ne seront
+        <strong>pas remplacées</strong> — le fichier est enregistré tel quel.
       </p>
 
       <div class="form-group mb-3">
-        <label class="fw-semibold">Fichier PDF</label>
+        <label class="fw-semibold">Document produit (PDF)</label>
         <input type="file" class="form-control mt-1"
                accept="application/pdf"
                (change)="onFileSelected($event)">
@@ -157,7 +160,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <button class="btn btn-primary" (click)="uploadPdf()"
               [disabled]="!selectedFile || loading">
         <i class="bi bi-upload me-1"></i>
-        Uploader
+        Uploader le document
         <app-loading [isVisible]="loading"></app-loading>
       </button>
     </div>
