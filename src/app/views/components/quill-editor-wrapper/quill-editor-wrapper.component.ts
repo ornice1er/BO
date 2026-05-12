@@ -36,7 +36,8 @@ import { ContentChange } from 'ngx-quill';
   ]
 })
 export class QuillEditorWrapperComponent implements ControlValueAccessor {
-  private static registered = false;
+  private static registered   = false;
+  private static htmlButtonOk = false;
 
   isBrowser = false;
   ready = false;
@@ -55,32 +56,45 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
 
   async init() {
     const Quill = (await import('quill')).default;
+
     if (!QuillEditorWrapperComponent.registered) {
-      const htmlEditButton = (await import('quill-html-edit-button')).default;
-      Quill.register('modules/htmlEditButton', htmlEditButton, true);
+      try {
+        const mod: any = await import('quill-html-edit-button');
+        const HtmlEditButton = typeof mod?.default === 'function' ? mod.default
+                             : typeof mod        === 'function' ? mod
+                             : null;
+        if (HtmlEditButton) {
+          Quill.register('modules/htmlEditButton', HtmlEditButton, true);
+          QuillEditorWrapperComponent.htmlButtonOk = true;
+        }
+      } catch { /* indisponible en prod — on continue sans */ }
       QuillEditorWrapperComponent.registered = true;
     }
 
-    this.modules = {
-      toolbar: [
-        [{ font: [] }],
-        [{ size: ['small', false, 'large', 'huge'] }],
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ color: [] }, { background: [] }],
-        [{ script: 'sub' }, { script: 'super' }],
-        ['blockquote', 'code-block'],
-        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-        ['link', 'image'],
-        ['clean'],
-      ],
-      htmlEditButton: {
-        buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-        buttonTitle: 'Voir / éditer le code source HTML',
-      },
-    };
+    const toolbar = [
+      [{ font: [] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+      ['link', 'image'],
+      ['clean'],
+    ];
+
+    this.modules = QuillEditorWrapperComponent.htmlButtonOk
+      ? {
+          toolbar,
+          htmlEditButton: {
+            buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+            buttonTitle: 'Voir / éditer le code source HTML',
+          },
+        }
+      : { toolbar };
 
     this.ready = true;
   }
