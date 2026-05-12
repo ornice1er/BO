@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, forwardRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, forwardRef, Inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { ContentChange } from 'ngx-quill';
@@ -14,11 +14,16 @@ import { ContentChange } from 'ngx-quill';
         [ngModelOptions]="{ standalone: true }"
         [modules]="modules"
         (onContentChanged)="onContentChanged($event)"
-        (blur)="onTouched()"
-        style="min-height:300px; width: 100%" >
+        (blur)="onTouched()">
       </quill-editor>
     </ng-container>
   `,
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    app-quill-wrapper quill-editor { display: block; width: 100%; }
+    app-quill-wrapper .ql-container { min-height: 350px; }
+    app-quill-wrapper .ql-editor   { min-height: 350px; font-size: 13px; }
+  `],
   imports: [CommonModule, FormsModule, QuillModule],
   providers: [
     {
@@ -50,8 +55,22 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
     Quill.register('modules/htmlEditButton', htmlEditButton);
 
     this.modules = {
-      toolbar: [['bold', 'italic'], ['htmlEditButton']],
-      htmlEditButton: {}
+      toolbar: [
+        [{ font: [] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ script: 'sub' }, { script: 'super' }],
+        ['blockquote', 'code-block'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+        ['link', 'image'],
+        ['clean'],
+        ['htmlEditButton'],
+      ],
+      htmlEditButton: {},
     };
 
     this.ready = true;
