@@ -532,14 +532,7 @@
   box-shadow: 0 2px 7px rgba(12,87,78,0.25);
 }
 
-/* ── PDF Offcanvas ────────────────────────────────────── */
-:host ::ng-deep .offcanvas-pdf {
-  width: 70vw !important;
-  min-width: 340px;
-}
-:host ::ng-deep .offcanvas-pdf .offcanvas-body {
-  height: calc(100vh - 60px);
-}
+/* offcanvas-pdf : styles globaux dans styles.css */
 
 /* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -550,7 +543,6 @@
   .ts-files-grid { grid-template-columns: 1fr 1fr; }
   .ts-doc-grid { grid-template-columns: 1fr; }
   .ts-decision-row { flex-direction: column; }
-  :host ::ng-deep .offcanvas-pdf { width: 100vw !important; }
 }
 
 @media (max-width: 480px) {

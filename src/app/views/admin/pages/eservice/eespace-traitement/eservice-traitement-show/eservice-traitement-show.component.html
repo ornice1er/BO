@@ -163,6 +163,47 @@
     </div>
   </div>
 
+  <!-- ── Documents produits ──────────────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.document_actes?.length > 0">
+    <div class="ts-section-header ts-section-header--teal">
+      <i class="bi bi-file-earmark-check-fill"></i> Documents produits
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-doc-grid">
+        <div *ngFor="let acte of selected_data?.document_actes" class="ts-doc-card">
+          <div class="ts-doc-card-header">
+            <div class="ts-doc-name">{{ acte?.doc_produit?.name }}</div>
+            <span class="ts-badge ts-badge--sm"
+              [ngClass]="{
+                'ts-badge--grey':   acte?.status === 'en_edition',
+                'ts-badge--amber':  acte?.status === 'en_circuit',
+                'ts-badge--teal':   acte?.status === 'complet',
+                'ts-badge--danger': acte?.status === 'rejete'
+              }">
+              {{ acte?.status }}
+            </span>
+          </div>
+          <div class="ts-doc-meta" *ngIf="acte?.numero_identification">
+            N° {{ acte?.numero_identification }}
+          </div>
+          <div class="ts-doc-meta" *ngIf="acte?.current_circuit_step">
+            Étape : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
+            ({{ acte?.current_circuit_step?.action_type }})
+          </div>
+          <div class="ts-doc-actions">
+            <button *ngIf="acte?.file_path" class="ts-btn-sm ts-btn-sm--dark" (click)="showDocumentActe(acte)">
+              <i class="bi bi-eye"></i> Visualiser
+            </button>
+            <button *ngIf="peutAgirSurDocument(acte)" class="ts-btn-sm ts-btn-sm--blue"
+              (click)="traiterDocument(acte)" [disabled]="loading">
+              <i class="bi bi-pen"></i> {{ acte?.current_circuit_step?.action_type | titlecase }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Historique des transitions ─────────────────────── -->
   <div class="ts-section" *ngIf="selected_data?.requete_etape_logs?.length > 0">
     <div class="ts-section-header ts-section-header--dark">
@@ -224,47 +265,6 @@
             </ng-container>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Documents produits ──────────────────────────────── -->
-  <div class="ts-section" *ngIf="selected_data?.document_actes?.length > 0">
-    <div class="ts-section-header ts-section-header--teal">
-      <i class="bi bi-file-earmark-check-fill"></i> Documents produits
-    </div>
-    <div class="ts-section-body">
-      <div class="ts-doc-grid">
-        <div *ngFor="let acte of selected_data?.document_actes" class="ts-doc-card">
-          <div class="ts-doc-card-header">
-            <div class="ts-doc-name">{{ acte?.doc_produit?.name }}</div>
-            <span class="ts-badge ts-badge--sm"
-              [ngClass]="{
-                'ts-badge--grey':   acte?.status === 'en_edition',
-                'ts-badge--amber':  acte?.status === 'en_circuit',
-                'ts-badge--teal':   acte?.status === 'complet',
-                'ts-badge--danger': acte?.status === 'rejete'
-              }">
-              {{ acte?.status }}
-            </span>
-          </div>
-          <div class="ts-doc-meta" *ngIf="acte?.numero_identification">
-            N° {{ acte?.numero_identification }}
-          </div>
-          <div class="ts-doc-meta" *ngIf="acte?.current_circuit_step">
-            Étape : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
-            ({{ acte?.current_circuit_step?.action_type }})
-          </div>
-          <div class="ts-doc-actions">
-            <button *ngIf="acte?.file_path" class="ts-btn-sm ts-btn-sm--dark" (click)="showDocumentActe(acte)">
-              <i class="bi bi-eye"></i> Visualiser
-            </button>
-            <button *ngIf="peutAgirSurDocument(acte)" class="ts-btn-sm ts-btn-sm--blue"
-              (click)="traiterDocument(acte)" [disabled]="loading">
-              <i class="bi bi-pen"></i> {{ acte?.current_circuit_step?.action_type | titlecase }}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -434,6 +434,6 @@
     <button type="button" class="btn-close" (click)="offcanvas.dismiss()"></button>
   </div>
   <div class="offcanvas-body p-0">
-    <object [data]="pdfSrc" type="application/pdf" width="100%" height="100%"></object>
+    <iframe [src]="pdfSrc"></iframe>
   </div>
 </ng-template>
