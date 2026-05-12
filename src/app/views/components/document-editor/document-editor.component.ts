@@ -206,6 +206,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     app-document-editor quill-editor { display: block; margin-top: 8px; }
     app-document-editor .ql-container { min-height: 500px; }
     app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }
+    app-document-editor .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
+    app-document-editor .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
   `],
 })
 export class DocumentEditorComponent implements OnInit {
@@ -272,7 +274,10 @@ export class DocumentEditorComponent implements OnInit {
         ['clean'],
         ['htmlEditButton'],
       ],
-      htmlEditButton: {},
+      htmlEditButton: {
+        buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        buttonTitle: 'Voir / éditer le code source HTML',
+      },
     };
 
     this.initialiser();

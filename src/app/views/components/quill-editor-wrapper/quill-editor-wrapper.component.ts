@@ -23,6 +23,8 @@ import { ContentChange } from 'ngx-quill';
     app-quill-wrapper quill-editor { display: block; width: 100%; }
     app-quill-wrapper .ql-container { min-height: 350px; }
     app-quill-wrapper .ql-editor   { min-height: 350px; font-size: 13px; }
+    app-quill-wrapper .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
+    app-quill-wrapper .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
   `],
   imports: [CommonModule, FormsModule, QuillModule],
   providers: [
@@ -70,7 +72,10 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
         ['clean'],
         ['htmlEditButton'],
       ],
-      htmlEditButton: {},
+      htmlEditButton: {
+        buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        buttonTitle: 'Voir / éditer le code source HTML',
+      },
     };
 
     this.ready = true;
