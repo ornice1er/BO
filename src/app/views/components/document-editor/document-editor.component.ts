@@ -309,15 +309,25 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
     if (!DocumentEditorComponent.quillRegistered) {
       try {
         const mod: any = await import('quill-html-edit-button');
-        // esbuild CJS interop : le constructeur peut être à .default ou à la racine
-        const HtmlEditButton = typeof mod?.default === 'function' ? mod.default
-                             : typeof mod        === 'function' ? mod
-                             : null;
+        // UMD/CJS interop : esbuild (prod) et webpack (dev) exposent la classe
+        // sous des formes différentes — on sonde tous les emplacements connus.
+        const candidates = [
+          mod?.default,
+          mod?.default?.default,
+          mod,
+          mod?.HtmlEditButton,
+          mod?.default?.HtmlEditButton,
+        ];
+        const HtmlEditButton: any =
+          candidates.find(c => typeof c === 'function')
+          ?? (Object.values(mod?.default ?? {}).find((v: any) => typeof v === 'function') as any)
+          ?? (Object.values(mod ?? {}).find((v: any) => typeof v === 'function') as any)
+          ?? null;
         if (HtmlEditButton) {
           Quill.register('modules/htmlEditButton', HtmlEditButton, true);
           DocumentEditorComponent.htmlButtonOk = true;
         }
-      } catch { /* module indisponible en prod — on continue sans */ }
+      } catch { /* module indisponible — on continue sans le bouton HTML */ }
       DocumentEditorComponent.quillRegistered = true;
     }
 
