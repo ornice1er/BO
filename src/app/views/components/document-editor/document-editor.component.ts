@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { QuillModule } from 'ngx-quill';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
@@ -76,7 +76,13 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       </div>
 
       <div class="form-group mb-3">
-        <label class="fw-semibold">Corps du document</label>
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="fw-semibold mb-0">Corps du document</label>
+          <button type="button" class="btn btn-sm btn-outline-secondary"
+                  (click)="ouvrirHtmlSource('content')">
+            <i class="bi bi-code-slash me-1"></i>Code source
+          </button>
+        </div>
         <div class="border rounded p-2 bg-light small mt-1">
           <p class="mb-1 text-muted fw-semibold">Variables disponibles — cliquer pour insérer au curseur :</p>
           <span *ngFor="let v of variableKeys"
@@ -141,7 +147,13 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       </p>
 
       <div class="form-group mb-3">
-        <label class="fw-semibold">Corps du document</label>
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="fw-semibold mb-0">Corps du document</label>
+          <button type="button" class="btn btn-sm btn-outline-secondary"
+                  (click)="ouvrirHtmlSource('htmlContent')">
+            <i class="bi bi-code-slash me-1"></i>Code source
+          </button>
+        </div>
         <quill-editor
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
@@ -217,7 +229,29 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
   <p class="mt-2 text-muted">Initialisation du document...</p>
 </div>
 
-<!-- Ajouter ce template offcanvas -->
+<!-- Modal code source HTML -->
+<ng-template #htmlSourceModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="bi bi-code-slash me-2"></i>Code source HTML
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body p-0">
+    <textarea class="form-control font-monospace border-0 rounded-0"
+              style="height: 60vh; resize: none; font-size: 12px;"
+              [(ngModel)]="htmlModalBuffer">
+    </textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="appliquerHtmlSource(modal)">
+      <i class="bi bi-check2 me-1"></i>Appliquer
+    </button>
+  </div>
+</ng-template>
+
+<!-- Template offcanvas PDF -->
 <ng-template #pdfOffcanvas let-offcanvas>
   <div class="offcanvas-header">
     <h4 class="offcanvas-title">
@@ -249,14 +283,10 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     app-document-editor quill-editor { display: block; margin-top: 8px; }
     app-document-editor .ql-container { min-height: 500px; }
     app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }
-    app-document-editor .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
-    app-document-editor .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
     .offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }
   `],
 })
 export class DocumentEditorComponent implements OnInit, OnDestroy {
-  private static quillRegistered = false;
-  private static htmlButtonOk    = false;
 
   @Input() requeteId!: number;
   @Input() contentType!: number;
@@ -284,82 +314,54 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
     htmlContent: '',
   };
 
-  quillModules: any = null;
+  quillModules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
+
+  // ── Modal code source HTML ────────────────────────────────────────────────
+  htmlModalBuffer = '';
+  private htmlModalTarget: 'content' | 'htmlContent' = 'htmlContent';
 
   private genererEditor: any = null;
 
   private baseUrl = ConfigService.toApiUrl('document-actes');
-  @ViewChild('pdfOffcanvas') pdfOffcanvasRef!: TemplateRef<any>;
+  @ViewChild('pdfOffcanvas')   pdfOffcanvasRef!:   TemplateRef<any>;
+  @ViewChild('htmlSourceModal') htmlSourceModalRef!: TemplateRef<any>;
 
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
     private sanitizer: DomSanitizer,
     private offcanvasService: NgbOffcanvas,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
-    this.initQuill(); // appelle initialiser() en fin de chaîne async
+    this.initialiser();
   }
 
-  // ── Enregistrement du plugin HTML source ─────────────────────────────────
-  private readonly toolbar = [
-    [{ font: [] }],
-    [{ size: ['small', false, 'large', 'huge'] }],
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ color: [] }, { background: [] }],
-    [{ script: 'sub' }, { script: 'super' }],
-    ['blockquote', 'code-block'],
-    [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-    [{ indent: '-1' }, { indent: '+1' }],
-    [{ align: [] }],
-    ['link', 'image'],
-    ['clean'],
-  ];
+  ouvrirHtmlSource(target: 'content' | 'htmlContent'): void {
+    this.htmlModalTarget = target;
+    this.htmlModalBuffer = this.formData[target];
+    this.modalService.open(this.htmlSourceModalRef, { size: 'lg', scrollable: true });
+  }
 
-  private readonly htmlEditButtonConfig = {
-    buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    buttonTitle: 'Voir / éditer le code source HTML',
-  };
-
-  private async initQuill(): Promise<void> {
-    // Initialisation synchrone : l'éditeur s'affiche immédiatement
-    // avec l'état déjà connu (htmlButtonOk peut être true si déjà chargé
-    // dans la même session Angular).
-    this.quillModules = DocumentEditorComponent.htmlButtonOk
-      ? { toolbar: this.toolbar, htmlEditButton: this.htmlEditButtonConfig }
-      : { toolbar: this.toolbar };
-
-    if (!DocumentEditorComponent.quillRegistered) {
-      try {
-        const Quill  = (await import('quill')).default;
-        const mod: any = await import('quill-html-edit-button');
-
-        /*
-         * esbuild (prod) wraps the UMD via __commonJS :
-         *   export default Ml()  →  mod.default = { __esModule:true, default: class, htmlEditButton: class }
-         * webpack (dev) :
-         *   mod.default = class  directement
-         */
-        const cjsExports = mod?.default;
-        const HtmlEditButton: any =
-          typeof cjsExports === 'function'                   ? cjsExports
-          : typeof cjsExports?.default === 'function'        ? cjsExports.default
-          : typeof cjsExports?.htmlEditButton === 'function' ? cjsExports.htmlEditButton
-          : null;
-
-        if (HtmlEditButton) {
-          Quill.register('modules/htmlEditButton', HtmlEditButton, true);
-          DocumentEditorComponent.htmlButtonOk = true;
-          // Mise à jour des modules pour ajouter le bouton dans la toolbar
-          this.quillModules = { toolbar: this.toolbar, htmlEditButton: this.htmlEditButtonConfig };
-        }
-      } catch { /* module indisponible — on continue sans le bouton HTML */ }
-      DocumentEditorComponent.quillRegistered = true;
-    }
-
-    this.initialiser();
+  appliquerHtmlSource(modal: any): void {
+    this.formData[this.htmlModalTarget] = this.htmlModalBuffer;
+    modal.close();
   }
 
   // ── Initialisation ────────────────────────────────────────────────────────
