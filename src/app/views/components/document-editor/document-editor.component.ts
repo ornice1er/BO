@@ -86,7 +86,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
             {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
           </span>
         </div>
-        <quill-editor
+        <quill-editor *ngIf="quillModules"
           [(ngModel)]="formData.content"
           [modules]="quillModules"
           (onEditorCreated)="onGenererEditorCreated($event)"
@@ -142,7 +142,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
       <div class="form-group mb-3">
         <label class="fw-semibold">Corps du document</label>
-        <quill-editor
+        <quill-editor *ngIf="quillModules"
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
           placeholder="Rédigez le contenu...">
@@ -309,20 +309,19 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
     if (!DocumentEditorComponent.quillRegistered) {
       try {
         const mod: any = await import('quill-html-edit-button');
-        // UMD/CJS interop : esbuild (prod) et webpack (dev) exposent la classe
-        // sous des formes différentes — on sonde tous les emplacements connus.
-        const candidates = [
-          mod?.default,
-          mod?.default?.default,
-          mod,
-          mod?.HtmlEditButton,
-          mod?.default?.HtmlEditButton,
-        ];
+        /*
+         * esbuild (prod) : le chunk UMD est wrappé via __commonJS d'esbuild.
+         *   export default Ml()  →  mod.default = { __esModule:true, default: class, htmlEditButton: class }
+         * webpack (dev) :
+         *   mod.default = class  directement
+         */
+        const exports = mod?.default;
         const HtmlEditButton: any =
-          candidates.find(c => typeof c === 'function')
-          ?? (Object.values(mod?.default ?? {}).find((v: any) => typeof v === 'function') as any)
-          ?? (Object.values(mod ?? {}).find((v: any) => typeof v === 'function') as any)
-          ?? null;
+          typeof exports === 'function'                   ? exports                 // webpack
+          : typeof exports?.default === 'function'        ? exports.default         // esbuild CJS wrap
+          : typeof exports?.htmlEditButton === 'function' ? exports.htmlEditButton  // named export
+          : null;
+
         if (HtmlEditButton) {
           Quill.register('modules/htmlEditButton', HtmlEditButton, true);
           DocumentEditorComponent.htmlButtonOk = true;
