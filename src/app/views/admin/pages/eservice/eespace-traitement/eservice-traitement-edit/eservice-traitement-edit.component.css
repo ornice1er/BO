@@ -1,3 +1,6 @@
+/* ── Offcanvas ────────────────────────────────────────────── */
+.offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }
+
 /* ── Palette ──────────────────────────────────────────────── */
 :root {
   --te-blue:   #0A3764;

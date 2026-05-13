@@ -1,2 +1,29 @@
 import './polyfills.server.mjs';
-import{f as e,g as t,i as o,j as p,k as m}from"./chunk-W5DL3P4O.mjs";import{Ec as r}from"./chunk-MSS4HPMD.mjs";import"./chunk-LP2BSHXI.mjs";import"./chunk-J7L7NABO.mjs";import"./chunk-LQENHEGR.mjs";import"./chunk-IBPYRRGK.mjs";import"./chunk-Q2LFFEG2.mjs";import"./chunk-5MICJZ5M.mjs";import a from"./angular-app-manifest.mjs";e(a);export{m as default,p as \u0275destroyAngularServerApp,t as \u0275extractRoutesAndCreateRouteTree,o as \u0275getOrCreateAngularServerApp,r as \u0275resetCompiledComponents};
+import {
+  destroyAngularServerApp,
+  extractRoutesAndCreateRouteTree,
+  getOrCreateAngularServerApp,
+  main_server_default,
+  setAngularAppManifest
+} from "./chunk-UVTX5QJ3.mjs";
+import {
+  resetCompiledComponents
+} from "./chunk-KDKC75LW.mjs";
+import "./chunk-EMMA7IES.mjs";
+import "./chunk-B2CR42TJ.mjs";
+import "./chunk-37HTQPMB.mjs";
+import "./chunk-A6SVRKS3.mjs";
+import "./chunk-SLDM7ROK.mjs";
+import "./chunk-DFQCVRK3.mjs";
+
+// angular:main-server-inject-manifest:angular:main-server-inject-manifest
+import manifest from "./angular-app-manifest.mjs";
+setAngularAppManifest(manifest);
+export {
+  main_server_default as default,
+  destroyAngularServerApp as \u0275destroyAngularServerApp,
+  extractRoutesAndCreateRouteTree as \u0275extractRoutesAndCreateRouteTree,
+  getOrCreateAngularServerApp as \u0275getOrCreateAngularServerApp,
+  resetCompiledComponents as \u0275resetCompiledComponents
+};
+//# sourceMappingURL=main.server.mjs.map

@@ -34,6 +34,7 @@ import { QuillModule } from 'ngx-quill';
 export class EserviceTraitementEditComponent implements OnInit {
 
   @ViewChild('contentPDF') contentPDF: TemplateRef<any> | undefined;
+  @ViewChild('editeurOffcanvas') editeurOffcanvasRef!: TemplateRef<any>;
 
   // ── Données ────────────────────────────────────────────────────────────────
   selectedData: any;
@@ -80,9 +81,10 @@ export class EserviceTraitementEditComponent implements OnInit {
   };
 
   // Circuit documentaire
-documentsDuCircuit: any[] = [];    // document_actes liés à la requête
-docProduitCourant: any = null;     // doc produit configuré pour l'étape courante
-documentDejaSoumis = false;  
+documentsDuCircuit: any[] = [];
+  docProduitCourant: any = null;
+  documentDejaSoumis = false;
+  acteAModifier: any = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -378,10 +380,26 @@ actionSurDocument(acte: any): void {
   });
 }
  
-/** Appelé quand le document est soumis depuis l'éditeur */
+/** Appelé quand le document est soumis depuis l'éditeur (première édition) */
 onDocumentSoumis(_data: any): void {
   this.toastr.success('Document soumis au circuit de signature');
-  this.get(); // Recharger — documentDejaSoumis passera à true
+  this.get();
+}
+
+/** Ouvre l'offcanvas de modification sur un document déjà en circuit */
+modifierDocument(acte: any): void {
+  this.acteAModifier = acte;
+  this.offcanvasService.open(this.editeurOffcanvasRef, {
+    position: 'end',
+    panelClass: 'offcanvas-wide',
+  });
+}
+
+/** Appelé quand le document est re-généré depuis l'offcanvas de modification */
+onDocumentModifie(): void {
+  this.offcanvasService.dismiss();
+  this.toastr.success('Document modifié et re-généré');
+  this.get();
 }
  
 /** Vérifie si l'étape nécessite une édition (pas encore en circuit) */
