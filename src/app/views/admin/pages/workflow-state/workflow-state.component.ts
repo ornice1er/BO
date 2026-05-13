@@ -101,6 +101,7 @@ export class WorkflowStateComponent implements OnInit {
     this.selectedTransition = transition;
     this.transitionComment  = '';
     this.selectedMotifId    = null;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'md' });
   }
 

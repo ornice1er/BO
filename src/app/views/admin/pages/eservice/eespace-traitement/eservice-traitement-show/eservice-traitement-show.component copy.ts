@@ -219,6 +219,7 @@ export class EserviceTraitementShowComponent implements OnInit {
   }
 
   open(content:any) {
+(document.activeElement as HTMLElement)?.blur();
 this.modalService.open(content);
       
   }

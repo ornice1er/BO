@@ -300,6 +300,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.new_is_trade = false;
     this.prestations.forEach((e:any) => e.state = false);
     this.allSelected = false;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -307,11 +308,13 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }

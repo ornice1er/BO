@@ -98,6 +98,7 @@ AppErrorShow.showError("Gestion des rôles",err)
 
   
   add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
   
@@ -113,6 +114,7 @@ AppErrorShow.showError("Gestion des rôles",err)
   
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -151,6 +153,7 @@ AppErrorShow.showError("Gestion des rôles",err)
 
     show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
   copy(value:any){

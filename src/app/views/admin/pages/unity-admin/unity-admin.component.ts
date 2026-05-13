@@ -169,6 +169,7 @@ permissions=[]
     this.selected_dept_for_commune = null;
     this.getTypeUnityAdmin();
     this.getEntities();
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg', scrollable:true});
   }
 
@@ -176,6 +177,7 @@ permissions=[]
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -183,6 +185,7 @@ permissions=[]
     if(!this.verifyIfElementChecked()) return ;
     this.getTypeUnityAdmin();
     this.getEntities();
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg', scrollable:true});
   }
 

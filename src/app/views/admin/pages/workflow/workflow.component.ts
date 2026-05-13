@@ -186,6 +186,7 @@ export class WorkflowComponent {
       this.zoomLevel = 1;
       const prestation = this.prestations.find((p: any) => p.id === this.filterPrestationId);
       this.fluxPrestationName = prestation?.name ?? '';
+      (document.activeElement as HTMLElement)?.blur();
       this.modalService.open(content, { size: 'xl', scrollable: true });
       if (!this.filterPrestationId) return;
 
@@ -232,12 +233,14 @@ export class WorkflowComponent {
     
 
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
 
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -246,6 +249,7 @@ add(content:any){
     if (this.selected_data?.prestation_id) {
       this.onPrestationChange(this.selected_data.prestation_id);
     }
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
