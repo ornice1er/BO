@@ -86,7 +86,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
             {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
           </span>
         </div>
-        <quill-editor *ngIf="quillModules"
+        <quill-editor
           [(ngModel)]="formData.content"
           [modules]="quillModules"
           (onEditorCreated)="onGenererEditorCreated($event)"
@@ -142,7 +142,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
       <div class="form-group mb-3">
         <label class="fw-semibold">Corps du document</label>
-        <quill-editor *ngIf="quillModules"
+        <quill-editor
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
           placeholder="Rédigez le contenu...">
@@ -303,57 +303,61 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
   }
 
   // ── Enregistrement du plugin HTML source ─────────────────────────────────
+  private readonly toolbar = [
+    [{ font: [] }],
+    [{ size: ['small', false, 'large', 'huge'] }],
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ color: [] }, { background: [] }],
+    [{ script: 'sub' }, { script: 'super' }],
+    ['blockquote', 'code-block'],
+    [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+    [{ indent: '-1' }, { indent: '+1' }],
+    [{ align: [] }],
+    ['link', 'image'],
+    ['clean'],
+  ];
+
+  private readonly htmlEditButtonConfig = {
+    buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    buttonTitle: 'Voir / éditer le code source HTML',
+  };
+
   private async initQuill(): Promise<void> {
-    const Quill = (await import('quill')).default;
+    // Initialisation synchrone : l'éditeur s'affiche immédiatement
+    // avec l'état déjà connu (htmlButtonOk peut être true si déjà chargé
+    // dans la même session Angular).
+    this.quillModules = DocumentEditorComponent.htmlButtonOk
+      ? { toolbar: this.toolbar, htmlEditButton: this.htmlEditButtonConfig }
+      : { toolbar: this.toolbar };
 
     if (!DocumentEditorComponent.quillRegistered) {
       try {
+        const Quill  = (await import('quill')).default;
         const mod: any = await import('quill-html-edit-button');
+
         /*
-         * esbuild (prod) : le chunk UMD est wrappé via __commonJS d'esbuild.
+         * esbuild (prod) wraps the UMD via __commonJS :
          *   export default Ml()  →  mod.default = { __esModule:true, default: class, htmlEditButton: class }
          * webpack (dev) :
          *   mod.default = class  directement
          */
-        const exports = mod?.default;
+        const cjsExports = mod?.default;
         const HtmlEditButton: any =
-          typeof exports === 'function'                   ? exports                 // webpack
-          : typeof exports?.default === 'function'        ? exports.default         // esbuild CJS wrap
-          : typeof exports?.htmlEditButton === 'function' ? exports.htmlEditButton  // named export
+          typeof cjsExports === 'function'                   ? cjsExports
+          : typeof cjsExports?.default === 'function'        ? cjsExports.default
+          : typeof cjsExports?.htmlEditButton === 'function' ? cjsExports.htmlEditButton
           : null;
 
         if (HtmlEditButton) {
           Quill.register('modules/htmlEditButton', HtmlEditButton, true);
           DocumentEditorComponent.htmlButtonOk = true;
+          // Mise à jour des modules pour ajouter le bouton dans la toolbar
+          this.quillModules = { toolbar: this.toolbar, htmlEditButton: this.htmlEditButtonConfig };
         }
       } catch { /* module indisponible — on continue sans le bouton HTML */ }
       DocumentEditorComponent.quillRegistered = true;
     }
-
-    const toolbar = [
-      [{ font: [] }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      [{ script: 'sub' }, { script: 'super' }],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
-      ['link', 'image'],
-      ['clean'],
-    ];
-
-    this.quillModules = DocumentEditorComponent.htmlButtonOk
-      ? {
-          toolbar,
-          htmlEditButton: {
-            buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-            buttonTitle: 'Voir / éditer le code source HTML',
-          },
-        }
-      : { toolbar };
 
     this.initialiser();
   }
