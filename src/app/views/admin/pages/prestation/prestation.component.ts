@@ -144,6 +144,7 @@ remoteSearchData: any[] = []
     
     open(content:any) {
   
+      (document.activeElement as HTMLElement)?.blur();
       this.modalService.open(
         content);
         
@@ -153,6 +154,7 @@ remoteSearchData: any[] = []
     
   add(content: any) {
     this.add_data = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -160,11 +162,13 @@ remoteSearchData: any[] = []
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }

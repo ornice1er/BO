@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;5f0fcd47cc96fc5a66b70d97ef115876cf56ebdf63e7a2c7c412e20aeea3157e;/home/benking/Bureau/Projets/BO/BO/src/app/views/components/document-editor/document-editor.component.ts"],
-  "sourcesContent": ["\n    app-document-editor quill-editor { display: block; margin-top: 8px; }\n    app-document-editor .ql-container { min-height: 500px; }\n    app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }\n    app-document-editor .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }\n    app-document-editor .ql-toolbar .ql-html svg { width: 16px; height: 16px; }\n    .offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }\n  "],
-  "mappings": ";AACI,oBAAoB;AAAe,WAAS;AAAO,cAAY;AAAK;AACpE,oBAAoB,CAAC;AAAe,cAAY;AAAO;AACvD,oBAAoB,CAAC;AAAc,cAAY;AAAO,aAAW;AAAM;AACvE,oBAAoB,CAAC,WAAW,CAAC;AAAU,SAAO;AAAM,UAAQ;AAAM,WAAS;AAAK,WAAS;AAAa,eAAa;AAAQ,mBAAiB;AAAQ;AACxJ,oBAAoB,CADC,WACW,CADC,QACQ;AAAM,SAAO;AAAM,UAAQ;AAAM;AAC1E,CAAC;AAAiB,aAAW;AAAiB,SAAO;AAAiB;",
-  "names": []
-}

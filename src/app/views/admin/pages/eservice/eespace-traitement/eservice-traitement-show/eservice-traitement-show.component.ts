@@ -143,6 +143,7 @@ export class EserviceTraitementShowComponent implements OnInit {
 
       
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -387,6 +388,7 @@ actionSurDocument(acte: any): void {
 
   // ── Modals ─────────────────────────────────────────────────────────────────
   open(content: any): void {
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content);
   }
 
@@ -409,6 +411,7 @@ actionSurDocument(acte: any): void {
     this.requeteService.getEtapesPrecedentes(this.selected_data.id).subscribe({
       next: (res: any) => {
         this.etapesPrecedentes = res.data ?? [];
+        (document.activeElement as HTMLElement)?.blur();
         this.modalService.open(content, { size: 'md' });
       },
       error: () => this.toastr.error('Impossible de charger les étapes')

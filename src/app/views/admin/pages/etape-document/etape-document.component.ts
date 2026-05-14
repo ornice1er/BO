@@ -105,6 +105,7 @@ export class EtapeDocumentComponent implements OnInit {
 
   add(content: any) {
     this.add_data = { is_required: true, accepted_mime_types: [], slug: '' };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -119,11 +120,13 @@ export class EtapeDocumentComponent implements OnInit {
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 

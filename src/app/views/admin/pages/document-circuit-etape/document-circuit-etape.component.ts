@@ -130,11 +130,13 @@ export class DocumentCircuitEtapeComponent implements OnInit {
   add(content: any) {
     this.add_data = { is_blocking: true };
     this.prestationStatuses = [];
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -144,6 +146,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     if (this.selected_data.doc_produit_id) {
       this.onDocProduitChange(this.selected_data.doc_produit_id, 'edit');
     }
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 

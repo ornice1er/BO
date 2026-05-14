@@ -101,6 +101,7 @@ export class WorkflowStateComponent implements OnInit {
     this.selectedTransition = transition;
     this.transitionComment  = '';
     this.selectedMotifId    = null;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'md' });
   }
 
@@ -148,6 +149,7 @@ export class WorkflowStateComponent implements OnInit {
       paraphe:       'btn-info',
       prevalidation: 'btn-secondary',
       choix_sortie:  'btn-primary',
+      correction:    'btn-warning',
     };
     return map[condition] ?? 'btn-secondary';
   }
@@ -164,6 +166,7 @@ export class WorkflowStateComponent implements OnInit {
       paraphe:       'bi-pencil-square',
       prevalidation: 'bi-shield-check',
       choix_sortie:  'bi-list-check',
+      correction:    'bi-arrow-return-left',
     };
     return map[condition] ?? 'bi-arrow-right';
   }
@@ -180,6 +183,7 @@ export class WorkflowStateComponent implements OnInit {
       paraphe:       'Parapher',
       prevalidation: 'Pré-valider',
       choix_sortie:  'Choisir la sortie',
+      correction:    'Retour correction',
     };
     return map[condition] ?? condition;
   }

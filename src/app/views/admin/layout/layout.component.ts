@@ -466,6 +466,14 @@ toggleMenu() {
           );
           }
 
+          this.menu.push({
+            title: 'RDV général',
+            icon: 'fas fa-calendar-alt',
+            link: '/admin/agenda',
+            isTitle: false,
+            hasChildren: false,
+          });
+
           this.menu.push( {
             title: 'Support',
             icon: 'fas fa-headset',

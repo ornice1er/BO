@@ -1,6 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, forwardRef, Inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
+import { Component, forwardRef, Inject, PLATFORM_ID, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QuillModule } from 'ngx-quill';
 import { ContentChange } from 'ngx-quill';
 
@@ -8,7 +9,13 @@ import { ContentChange } from 'ngx-quill';
   selector: 'app-quill-wrapper',
   standalone: true,
   template: `
-    <ng-container *ngIf="isBrowser && ready">
+    <ng-container *ngIf="isBrowser">
+      <div class="d-flex justify-content-end mb-1">
+        <button type="button" class="btn btn-sm btn-outline-secondary"
+                (click)="ouvrirSource()">
+          <i class="bi bi-code-slash me-1"></i>Code source
+        </button>
+      </div>
       <quill-editor
         [ngModel]="content"
         [ngModelOptions]="{ standalone: true }"
@@ -17,16 +24,35 @@ import { ContentChange } from 'ngx-quill';
         (blur)="onTouched()">
       </quill-editor>
     </ng-container>
+
+    <ng-template #htmlSourceModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-code-slash me-2"></i>Code source HTML
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+      </div>
+      <div class="modal-body p-0">
+        <textarea class="form-control font-monospace border-0 rounded-0"
+                  style="height: 60vh; resize: none; font-size: 12px;"
+                  [(ngModel)]="htmlModalBuffer">
+        </textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Annuler</button>
+        <button type="button" class="btn btn-primary" (click)="appliquerSource(modal)">
+          <i class="bi bi-check2 me-1"></i>Appliquer
+        </button>
+      </div>
+    </ng-template>
   `,
   encapsulation: ViewEncapsulation.None,
   styles: [`
     app-quill-wrapper quill-editor { display: block; width: 100%; }
     app-quill-wrapper .ql-container { min-height: 350px; }
     app-quill-wrapper .ql-editor   { min-height: 350px; font-size: 13px; }
-    app-quill-wrapper .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }
-    app-quill-wrapper .ql-toolbar .ql-html svg { width: 16px; height: 16px; }
   `],
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule, NgbModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -36,42 +62,12 @@ import { ContentChange } from 'ngx-quill';
   ]
 })
 export class QuillEditorWrapperComponent implements ControlValueAccessor {
-  private static registered   = false;
-  private static htmlButtonOk = false;
 
   isBrowser = false;
-  ready = false;
   content = '';
-  modules: any;
 
-  private onChangeFn: (value: any) => void = () => {};
-  private onTouchedFn: () => void = () => {};
-
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-    if (this.isBrowser) {
-      this.init();
-    }
-  }
-
-  async init() {
-    const Quill = (await import('quill')).default;
-
-    if (!QuillEditorWrapperComponent.registered) {
-      try {
-        const mod: any = await import('quill-html-edit-button');
-        const HtmlEditButton = typeof mod?.default === 'function' ? mod.default
-                             : typeof mod        === 'function' ? mod
-                             : null;
-        if (HtmlEditButton) {
-          Quill.register('modules/htmlEditButton', HtmlEditButton, true);
-          QuillEditorWrapperComponent.htmlButtonOk = true;
-        }
-      } catch { /* indisponible en prod — on continue sans */ }
-      QuillEditorWrapperComponent.registered = true;
-    }
-
-    const toolbar = [
+  modules = {
+    toolbar: [
       [{ font: [] }],
       [{ size: ['small', false, 'large', 'huge'] }],
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -84,32 +80,42 @@ export class QuillEditorWrapperComponent implements ControlValueAccessor {
       [{ align: [] }],
       ['link', 'image'],
       ['clean'],
-    ];
+    ],
+  };
 
-    this.modules = QuillEditorWrapperComponent.htmlButtonOk
-      ? {
-          toolbar,
-          htmlEditButton: {
-            buttonHTML: '<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><polyline points="5,4 1,9 5,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="13,4 17,9 13,14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="10" y1="3" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-            buttonTitle: 'Voir / éditer le code source HTML',
-          },
-        }
-      : { toolbar };
+  htmlModalBuffer = '';
+  @ViewChild('htmlSourceModal') htmlSourceModalRef!: TemplateRef<any>;
 
-    this.ready = true;
+  private onChangeFn:   (value: any) => void = () => {};
+  private onTouchedFn: () => void            = () => {};
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
+    private modalService: NgbModal,
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
-  // ✅ Utiliser onContentChanged qui retourne { html, text, delta, ... }
+  ouvrirSource(): void {
+    this.htmlModalBuffer = this.content;
+    this.modalService.open(this.htmlSourceModalRef, { size: 'lg', scrollable: true });
+  }
+
+  appliquerSource(modal: any): void {
+    this.content = this.htmlModalBuffer;
+    this.onChangeFn(this.content);
+    modal.close();
+  }
+
   onContentChanged(event: ContentChange): void {
     this.content = event.html ?? '';
-    this.onChangeFn(this.content); // 🔥 Notifie le ngForm parent avec du HTML
+    this.onChangeFn(this.content);
   }
 
   onTouched(): void {
     this.onTouchedFn();
   }
 
-  // ControlValueAccessor
   writeValue(value: any): void {
     this.content = value ?? '';
   }

@@ -31,7 +31,7 @@
           <!-- Recherche droite -->
           <div class="search-controls d-flex align-items-center">
             <div class="input-group">
-              <select class="form-select filter-select" (change)="loadData($event)">
+              <select *ngIf="!codeP" class="form-select filter-select" (change)="loadData($event)">
                 <option value="">Filtrer par prestation</option>
                 <option *ngFor="let p of user_prestations" [value]="p.prestation.code">
                   {{ p.prestation.name }}
@@ -66,7 +66,6 @@
                 <th>Prestation</th>
                 <th>Date début</th>
                 <th>Date fin</th>
-                <th>Session</th>
                 <th>Type RDV</th>
                 <th>Priorité</th>
                 <th>Statut</th>
@@ -81,7 +80,7 @@
               <!-- Skeleton -->
               <ng-container *ngIf="loading2">
                 <tr *ngFor="let i of [1,2,3,4,5,6,7]">
-                  <td *ngFor="let j of [1,2,3,4,5,6,7,8,9,10,11,12,13]">
+                  <td *ngFor="let j of [1,2,3,4,5,6,7,8,9,10,11,12]">
                     <span class="placeholder placeholder-glow col-10 rounded"></span>
                   </td>
                 </tr>
@@ -137,16 +136,6 @@
                   <!-- Date fin -->
                   <td class="small text-nowrap text-muted">
                     {{ d?.date_end ? (d?.date_end | date:'dd/MM/yyyy HH:mm') : '—' }}
-                  </td>
-
-                  <!-- Session -->
-                  <td class="small">
-                    <span [ngSwitch]="d?.session_type">
-                      <span *ngSwitchCase="'matinee'">Matinée</span>
-                      <span *ngSwitchCase="'apres_midi'">Après-midi</span>
-                      <span *ngSwitchCase="'journee_entiere'">Journée entière</span>
-                      <span *ngSwitchDefault class="text-muted">—</span>
-                    </span>
                   </td>
 
                   <!-- Type RDV -->
@@ -208,7 +197,7 @@
                 <!-- Aucun résultat -->
                 <tr *ngIf="search_text !== '' && (data | sampleSearch:search_text).length === 0"
                   class="no-results-row">
-                  <td colspan="13" class="text-center py-4">
+                  <td colspan="12" class="text-center py-4">
                     <div class="no-results">
                       <i class="bi bi-search mb-2 d-block fs-4 text-muted"></i>
                       <p class="text-muted mb-2">Aucun résultat pour « {{ search_text }} »</p>
@@ -298,14 +287,6 @@
             <label class="ag-label">Date fin</label>
             <input type="datetime-local" class="ag-input" name="date_end" ngModel>
           </div>
-          <div class="col-md-6">
-            <label class="ag-label">Durée (minutes)</label>
-            <input type="number" class="ag-input" name="duration_minutes" ngModel min="1" placeholder="ex. 30">
-          </div>
-          <div class="col-md-6">
-            <label class="ag-label">Slots max</label>
-            <input type="number" class="ag-input" name="max_slots" ngModel min="1" placeholder="ex. 10">
-          </div>
           <div class="col-12">
             <label class="ag-label">Description</label>
             <textarea name="description" ngModel class="ag-input" rows="2" placeholder="Détails supplémentaires..."></textarea>
@@ -316,17 +297,7 @@
       <div class="ag-form-section">
         <div class="ag-section-title"><i class="bi bi-sliders"></i> Paramètres</div>
         <div class="row g-3">
-          <div class="col-md-6">
-            <label class="ag-label">Type de session <span class="text-danger">*</span></label>
-            <select class="ag-input" name="session_type" ngModel required #session_type="ngModel">
-              <option selected disabled value="">— Sélectionner —</option>
-              <option value="matinee">Matinée</option>
-              <option value="apres_midi">Après-midi</option>
-              <option value="journee_entiere">Journée entière</option>
-            </select>
-            <small *ngIf="session_type.invalid && session_type.touched" class="text-danger">Champ requis.</small>
-          </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="ag-label">Type de RDV <span class="text-danger">*</span></label>
             <select class="ag-input" name="rdv_type" ngModel required #rdv_type="ngModel">
               <option selected disabled value="">— Sélectionner —</option>
@@ -335,15 +306,6 @@
               <option value="suivi_traitement">Suivi traitement</option>
             </select>
             <small *ngIf="rdv_type.invalid && rdv_type.touched" class="text-danger">Champ requis.</small>
-          </div>
-          <div class="col-md-4">
-            <label class="ag-label">Statut <span class="text-danger">*</span></label>
-            <select class="ag-input" name="status" ngModel required #status="ngModel">
-              <option selected disabled value="">— Sélectionner —</option>
-              <option value="Ouvert">Ouvert</option>
-              <option value="Clos">Clos</option>
-            </select>
-            <small *ngIf="status.invalid && status.touched" class="text-danger">Champ requis.</small>
           </div>
           <div class="col-md-4">
             <label class="ag-label">Priorité <span class="text-danger">*</span></label>
@@ -363,20 +325,6 @@
               <option value="Métier">Métier</option>
             </select>
             <small *ngIf="from.invalid && from.touched" class="text-danger">Champ requis.</small>
-          </div>
-          <div class="col-md-6">
-            <label class="ag-label">Réponse usager attendue</label>
-            <select class="ag-input" name="usager_response" ngModel>
-              <option value="0">Non</option>
-              <option value="1">Oui</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="ag-label">Notifications</label>
-            <select class="ag-input" name="has_notif" ngModel>
-              <option value="0">Désactivées</option>
-              <option value="1">Activées</option>
-            </select>
           </div>
         </div>
       </div>
@@ -437,14 +385,6 @@
             <label class="ag-label">Date fin</label>
             <input type="datetime-local" class="ag-input" name="date_end" [(ngModel)]="selected_data.date_end">
           </div>
-          <div class="col-md-6">
-            <label class="ag-label">Durée (minutes)</label>
-            <input type="number" class="ag-input" name="duration_minutes" [(ngModel)]="selected_data.duration_minutes" min="1">
-          </div>
-          <div class="col-md-6">
-            <label class="ag-label">Slots max</label>
-            <input type="number" class="ag-input" name="max_slots" [(ngModel)]="selected_data.max_slots" min="1">
-          </div>
           <div class="col-12">
             <label class="ag-label">Description</label>
             <textarea name="description" [(ngModel)]="selected_data.description" class="ag-input" rows="2"></textarea>
@@ -455,16 +395,7 @@
       <div class="ag-form-section">
         <div class="ag-section-title"><i class="bi bi-sliders"></i> Paramètres</div>
         <div class="row g-3">
-          <div class="col-md-6">
-            <label class="ag-label">Type de session <span class="text-danger">*</span></label>
-            <select class="ag-input" name="session_type" [(ngModel)]="selected_data.session_type" required>
-              <option disabled value="">— Sélectionner —</option>
-              <option value="matinee">Matinée</option>
-              <option value="apres_midi">Après-midi</option>
-              <option value="journee_entiere">Journée entière</option>
-            </select>
-          </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="ag-label">Type de RDV <span class="text-danger">*</span></label>
             <select class="ag-input" name="rdv_type" [(ngModel)]="selected_data.rdv_type" required>
               <option disabled value="">— Sélectionner —</option>
@@ -490,18 +421,12 @@
               <option value="Haute">Haute</option>
             </select>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="ag-label">Réponse usager</label>
             <select class="ag-input" name="usager_response" [(ngModel)]="selected_data.usager_response">
-              <option value="0">Non</option>
-              <option value="1">Oui</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="ag-label">Notifications</label>
-            <select class="ag-input" name="has_notif" [(ngModel)]="selected_data.has_notif">
-              <option value="0">Désactivées</option>
-              <option value="1">Activées</option>
+              <option value="">— En attente —</option>
+              <option value="0">Indisponible</option>
+              <option value="1">Disponible</option>
             </select>
           </div>
         </div>
@@ -569,28 +494,6 @@
       <div class="ag-detail-item">
         <span class="ag-detail-label">Date fin</span>
         <span class="ag-detail-value">{{ selected_data?.date_end ? (selected_data?.date_end | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
-      </div>
-
-      <div class="ag-detail-item">
-        <span class="ag-detail-label">Durée</span>
-        <span class="ag-detail-value">{{ selected_data?.duration_minutes ? selected_data?.duration_minutes + ' min' : '—' }}</span>
-      </div>
-
-      <div class="ag-detail-item">
-        <span class="ag-detail-label">Slots max</span>
-        <span class="ag-detail-value">{{ selected_data?.max_slots ?? '—' }}</span>
-      </div>
-
-      <div class="ag-detail-item">
-        <span class="ag-detail-label">Type de session</span>
-        <span class="ag-detail-value">
-          <span [ngSwitch]="selected_data?.session_type">
-            <span *ngSwitchCase="'matinee'">Matinée</span>
-            <span *ngSwitchCase="'apres_midi'">Après-midi</span>
-            <span *ngSwitchCase="'journee_entiere'">Journée entière</span>
-            <span *ngSwitchDefault>—</span>
-          </span>
-        </span>
       </div>
 
       <div class="ag-detail-item">

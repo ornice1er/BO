@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;33e1e116b562bb633dc2a3446bbfa720a4632aff1729df59283d4911f1577049;/home/benking/Bureau/Projets/BO/BO/src/app/views/components/quill-editor-wrapper/quill-editor-wrapper.component.ts"],
-  "sourcesContent": ["\n    app-quill-wrapper quill-editor { display: block; width: 100%; }\n    app-quill-wrapper .ql-container { min-height: 350px; }\n    app-quill-wrapper .ql-editor   { min-height: 350px; font-size: 13px; }\n    app-quill-wrapper .ql-toolbar .ql-html { width: 28px; height: 24px; padding: 3px; display: inline-flex; align-items: center; justify-content: center; }\n    app-quill-wrapper .ql-toolbar .ql-html svg { width: 16px; height: 16px; }\n  "],
-  "mappings": ";AACI,kBAAkB;AAAe,WAAS;AAAO,SAAO;AAAM;AAC9D,kBAAkB,CAAC;AAAe,cAAY;AAAO;AACrD,kBAAkB,CAAC;AAAc,cAAY;AAAO,aAAW;AAAM;AACrE,kBAAkB,CAAC,WAAW,CAAC;AAAU,SAAO;AAAM,UAAQ;AAAM,WAAS;AAAK,WAAS;AAAa,eAAa;AAAQ,mBAAiB;AAAQ;AACtJ,kBAAkB,CADC,WACW,CADC,QACQ;AAAM,SAAO;AAAM,UAAQ;AAAM;",
-  "names": []
-}

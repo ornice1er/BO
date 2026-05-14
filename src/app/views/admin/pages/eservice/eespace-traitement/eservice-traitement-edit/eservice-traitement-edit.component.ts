@@ -338,7 +338,8 @@ identifierDocProduitCourant(): void {
 
   this.docActeService.getDocProduit(
     this.selectedData.prestation_id,
-    this.selectedData.current_etape_id
+    this.selectedData.current_etape_id,
+    this.selectedData.id
   ).subscribe({
     next: (res: any) => {
       console.log('getDocProduit response:', res);

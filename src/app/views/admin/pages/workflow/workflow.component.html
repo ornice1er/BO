@@ -10,6 +10,12 @@
               <i class="bi bi-plus-lg me-2"></i>Ajouter
             </button>
             <button
+              class="btn btn-warning text-white"
+              (click)="addCorrection(addContent)"
+              [title]="selectedId ? 'Créer la transition inverse de la sélection (retour pour correction)' : 'Créer une transition de correction'">
+              <i class="bi bi-arrow-return-left me-2"></i>Retour correction
+            </button>
+            <button
               class="btn btn-outline-secondary"
               (click)="openFluxModal(fluxContent)"
               title="Visualiser le flux de transitions">
@@ -151,7 +157,8 @@
                     'bg-primary':   d.condition_type === 'signature' || d.condition_type === 'choix_sortie',
                     'bg-info text-dark': d.condition_type === 'paraphe',
                     'bg-secondary': d.condition_type === 'auto' || d.condition_type === 'prevalidation',
-                    'bg-dark':      d.condition_type === 'cloture'
+                    'bg-dark':      d.condition_type === 'cloture',
+                    'badge-correction': d.condition_type === 'correction'
                   }">{{ d.condition_type }}</span>
                 </td>
                 <td>{{ d?.status_result?.name }}</td>
@@ -208,21 +215,21 @@
       <div class="row">
         <div class="form-group col-12 mb-3">
           <label>Prestation <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="prestation_id" [required]="true" (ngModelChange)="onPrestationChange($event)">
+          <ng-select [(ngModel)]="add_data.prestation_id" name="prestation_id" [required]="true" (ngModelChange)="onPrestationChange($event)">
             <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Étape source <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="etape_from_id" [required]="true">
+          <ng-select [(ngModel)]="add_data.etape_from_id" name="etape_from_id" [required]="true">
             <ng-option *ngFor="let e of etapes" [value]="e.id">{{ e.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Étape cible <small class="text-muted">(vide = terminal)</small></label>
-          <ng-select ngModel name="etape_to_id">
+          <ng-select [(ngModel)]="add_data.etape_to_id" name="etape_to_id">
             <ng-option [value]="null">— Terminal —</ng-option>
             <ng-option *ngFor="let e of etapes" [value]="e.id">{{ e.name }}</ng-option>
           </ng-select>
@@ -230,7 +237,7 @@
 
         <div class="form-group col-md-6 mb-3">
           <label>Type de condition <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="condition_type" [required]="true">
+          <ng-select [(ngModel)]="add_data.condition_type" name="condition_type" [required]="true">
             <ng-option *ngFor="let c of conditionTypes" [value]="c.value">{{ c.label }}</ng-option>
           </ng-select>
         </div>
@@ -244,8 +251,8 @@
         </div>
 
         <div class="form-group col-md-4 mb-3">
-          <label>Ordre</label>
-          <input type="number" class="form-control" ngModel name="order" value="0" min="0" />
+          <label>Ordre <span class="text-danger">(*)</span></label>
+          <input type="number" class="form-control" ngModel name="order" min="1" required />
         </div>
 
         <div class="col-md-4 mb-3 d-flex align-items-center gap-3 mt-4">
@@ -276,6 +283,13 @@
            <div class="form-group col-md-4 mb-3">
           <label>Clé de décision</label>
           <input type="text" class="form-control" [(ngModel)]="add_data.decision" name="decision"/>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Observation</label>
+          <textarea class="form-control" ngModel name="observation" rows="3"
+            placeholder="Contexte, motif de la correction, instructions au destinataire…"
+            style="resize: vertical;"></textarea>
         </div>
 
       </div>
@@ -337,8 +351,8 @@
         </div>
 
         <div class="form-group col-md-4 mb-3">
-          <label>Ordre</label>
-          <input type="number" class="form-control" [(ngModel)]="selected_data.order" name="order" min="0" />
+          <label>Ordre <span class="text-danger">(*)</span></label>
+          <input type="number" class="form-control" [(ngModel)]="selected_data.order" name="order" min="1" required />
         </div>
 
         <div class="col-md-4 mb-3 d-flex align-items-center gap-3 mt-4">
@@ -370,6 +384,14 @@
           <label>Clé de décision</label>
           <input type="text" class="form-control" [(ngModel)]="selected_data.decision" name="decision"/>
         </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Observation</label>
+          <textarea class="form-control" [(ngModel)]="selected_data.observation" name="observation" rows="3"
+            placeholder="Contexte, motif de la correction, instructions au destinataire…"
+            style="resize: vertical;"></textarea>
+        </div>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -435,6 +457,15 @@
         <tr><th>Notifier agent</th><td>{{ selected_data?.notify_agent ? 'Oui' : 'Non' }}</td></tr>
         <tr><th>Ordre</th><td>{{ selected_data?.order }}</td></tr>
         <tr><th>Actif</th><td>{{ selected_data?.is_active ? 'Oui' : 'Non' }}</td></tr>
+        <tr>
+          <th style="vertical-align: top; padding-top: 0.75rem;">Observation</th>
+          <td>
+            <ng-container *ngIf="selected_data?.observation; else noObs">
+              <div class="observation-block">{{ selected_data.observation }}</div>
+            </ng-container>
+            <ng-template #noObs><em class="text-muted">—</em></ng-template>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

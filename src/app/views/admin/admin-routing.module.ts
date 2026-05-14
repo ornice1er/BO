@@ -205,6 +205,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'eservice/configurations/workflows',
                 component: WorkflowComponent,
             },
+            {
+                path: 'eservice/configurations/workflows/:slug',
+                component: WorkflowComponent,
+            },
              {
                 path: 'eservice/workflow-state/:id',
                 component: WorkflowStateComponent,

@@ -66,15 +66,18 @@ export class MunicipalityComponent implements OnInit {
 
   checked(el: any) { this.selected_data = el; }
 
-  add(content: any) { this.modalService.open(content, { size: 'lg' }); }
+  add(content: any) { (document.activeElement as HTMLElement)?.blur();
+ this.modalService.open(content, { size: 'lg' }); }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 

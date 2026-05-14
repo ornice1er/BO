@@ -143,6 +143,7 @@ private _initWithPrestationAndRequete(codePrestation: string, codeRequete: strin
       if (req) {
         this.reqId = req.id;
       }
+      (document.activeElement as HTMLElement)?.blur();
       this.modalService.open(this.addContentTpl, { size: 'lg' });
     });
   }
@@ -202,6 +203,7 @@ loadData(event:any){
   
     
  add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -209,11 +211,13 @@ loadData(event:any){
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }

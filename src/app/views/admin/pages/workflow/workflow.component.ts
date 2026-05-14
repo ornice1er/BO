@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { EtapeService } from '../../../../core/services/etape.service';
@@ -29,7 +30,12 @@ import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 })
 export class WorkflowComponent {
   isDtInitialized: boolean = false;
-  add_data: any = { can_act_pns: false, decision: ''};
+  add_data: any = {
+    prestation_id: null, etape_from_id: null, etape_to_id: null,
+    condition_type: null, status_result_id: null, order: null,
+    'notify_requérant': false, notify_agent: false, is_active: true,
+    can_act_pns: false, decision: '', observation: '',
+  };
 
   selected_data: any;
   user: any;
@@ -65,6 +71,7 @@ export class WorkflowComponent {
     { value: 'paraphe',       label: 'Paraphe' },
     { value: 'prevalidation', label: 'Pré-validation' },
     { value: 'choix_sortie',  label: 'Choix sortie' },
+    { value: 'correction',    label: 'Correction' },
   ];
 
   constructor(
@@ -77,6 +84,7 @@ export class WorkflowComponent {
     config: NgbModalConfig,
     private modalService: NgbModal,
     private toastrService: ToastrService,
+    private route: ActivatedRoute,
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -101,6 +109,15 @@ export class WorkflowComponent {
   getPrestations() {
     this.prestationService.getAll().subscribe((res: any) => {
       this.prestations = res.data;
+      const slug = this.route.snapshot.paramMap.get('slug');
+      if (slug) {
+        const prestation = this.prestations.find((p: any) => p.slug === slug);
+        if (prestation) {
+          this.filterPrestationId = prestation.id;
+          this.onPrestationChange(prestation.id);
+          this.applyPrestationFilter();
+        }
+      }
     });
   }
 
@@ -157,7 +174,14 @@ export class WorkflowComponent {
       this.data.forEach((t: any) => {
         const fromId = `E${t.etape_from_id}`;
         const fromLabel = (t.etape_from?.name ?? `Étape ${t.etape_from_id}`).replace(/"/g, "'");
-        const label = t.condition_type + (t.can_act_pns ? ' ⚡PNS' : '');
+        const notifParts: string[] = [];
+        if (t['notify_requérant']) notifParts.push('🔔req');
+        if (t.notify_agent)        notifParts.push('📨agt');
+        const label = [
+          t.condition_type,
+          t.can_act_pns ? `⚡PNS${t.decision ? ':' + t.decision : ''}` : '',
+          ...notifParts,
+        ].filter(Boolean).join(' ');
 
         if (t.can_act_pns) pnsIndices.push(linkIdx);
         linkIdx++;
@@ -186,6 +210,7 @@ export class WorkflowComponent {
       this.zoomLevel = 1;
       const prestation = this.prestations.find((p: any) => p.id === this.filterPrestationId);
       this.fluxPrestationName = prestation?.name ?? '';
+      (document.activeElement as HTMLElement)?.blur();
       this.modalService.open(content, { size: 'xl', scrollable: true });
       if (!this.filterPrestationId) return;
 
@@ -231,13 +256,38 @@ export class WorkflowComponent {
   
     
 
-add(content:any){
-    this.modalService.open(content,{size:'lg'});
+add(content: any) {
+    this.add_data = {
+      prestation_id: this.filterPrestationId ?? null, etape_from_id: null, etape_to_id: null,
+      condition_type: null, status_result_id: null, order: null,
+      'notify_requérant': false, notify_agent: false, is_active: true,
+      can_act_pns: false, decision: '', observation: '',
+    };
+    if (this.filterPrestationId) this.onPrestationChange(this.filterPrestationId);
+    (document.activeElement as HTMLElement)?.blur();
+    this.modalService.open(content, { size: 'lg' });
+  }
+
+  addCorrection(content: any) {
+    const pd = this.selected_data?.prestation_id ?? this.filterPrestationId ?? null;
+    this.add_data = {
+      prestation_id: pd,
+      etape_from_id: this.selected_data?.etape_to_id ?? null,
+      etape_to_id:   this.selected_data?.etape_from_id ?? null,
+      condition_type: 'correction',
+      status_result_id: null, order: null,
+      'notify_requérant': false, notify_agent: false, is_active: true,
+      can_act_pns: false, decision: '', observation: '',
+    };
+    if (pd) this.onPrestationChange(pd);
+    (document.activeElement as HTMLElement)?.blur();
+    this.modalService.open(content, { size: 'lg' });
   }
 
 
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -246,6 +296,7 @@ add(content:any){
     if (this.selected_data?.prestation_id) {
       this.onPrestationChange(this.selected_data.prestation_id);
     }
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 

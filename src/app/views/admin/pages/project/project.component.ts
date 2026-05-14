@@ -157,6 +157,7 @@ remoteSearchData: any[] = []
   
     
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -164,11 +165,11 @@ add(content:any){
   show(){
     if(!this.verifyIfElementChecked()) return ;
     this.router.navigate(['/admin/projects/'+this.selected_data?.id])
-   // this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }

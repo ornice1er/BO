@@ -514,6 +514,7 @@ export class EspaceValidationVisaComponent implements OnInit {
   }
   
   add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -521,6 +522,7 @@ export class EspaceValidationVisaComponent implements OnInit {
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
