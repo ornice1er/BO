@@ -1972,8 +1972,8 @@ export default {
   ]
 },
   assets: {
-    'index.csr.html': {size: 57264, hash: 'f4f76e0393a42f48ec40daab2ca820a1af1119dd71917da4e823dec74b5957b4', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1994, hash: '980e63adb5dbdaa4e104f753be23aabe5f0da9faf29cf77624772b29f78b1df9', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 57264, hash: '82d19fd612c78c6cd34528b1876f2ce5d7fedd94c04af8c4f820042f45a8ee13', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1994, hash: 'e35dc3df8a30a492d1200defe338c6cb069d1e2da501f35a7745f09737d3a502', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-PQKO6L46.css': {size: 522243, hash: '7/hPj9HsjwY', text: () => import('./assets-chunks/styles-PQKO6L46_css.mjs').then(m => m.default)}
   },
 };
