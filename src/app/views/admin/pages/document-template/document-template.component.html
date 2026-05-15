@@ -1,0 +1,184 @@
+<h2 class="text-center mb-4 page-subtitle">Modèles de documents</h2>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card custom-card">
+      <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-primary-custom" (click)="add(addContent)">
+              <i class="bi bi-plus-lg me-2"></i>Ajouter
+            </button>
+            <button class="btn btn-outline-primary" (click)="edit(editContent)" [disabled]="!selected_data">
+              <i class="bi bi-pencil me-2"></i>Modifier
+            </button>
+            <button class="btn btn-outline-danger" (click)="delete()" [disabled]="!selected_data">
+              <i class="bi bi-trash me-2"></i>Supprimer
+              <app-loading [isVisible]="loading"></app-loading>
+            </button>
+          </div>
+          <div class="input-group" style="max-width:280px;">
+            <input type="text" class="form-control search-input" [(ngModel)]="search_text" placeholder="Rechercher...">
+            <button class="btn btn-outline-primary reset-btn" type="button" (click)="search_text=''">
+              <i class="fa fa-rotate-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="results-info mb-3">
+          <p class="text-muted mb-0">
+            <i class="bi bi-list-ul me-2"></i>{{ data.length }} élément(s)
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table custom-table">
+            <thead>
+              <tr>
+                <th style="width:50px;">#</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Actif</th>
+                <th>Créé le</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="loading2">
+                <tr *ngFor="let i of [1,2,3,4,5]" class="table-skeleton">
+                  <td *ngFor="let j of [1,2,3,4,5]">
+                    <span class="placeholder col-10 rounded"></span>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="!loading2">
+                <tr *ngFor="let d of data | sampleSearch:search_text | paginate:{
+                      id:'ngxP1', itemsPerPage:pg.pageSize, currentPage:pg.p, totalItems:data.length
+                    }; let i = index"
+                    class="table-row"
+                    [class.table-active]="selected_data?.id === d.id">
+                  <td class="checkbox-cell">
+                    <div class="form-check">
+                      <input class="form-check-input custom-radio" type="radio" name="selTemplate"
+                             [value]="d.id" [(ngModel)]="selectedId" (click)="checked(d)" id="r-{{d.id}}">
+                      <label class="form-check-label" for="r-{{d.id}}">{{ i + 1 }}</label>
+                    </div>
+                  </td>
+                  <td>{{ d.name }}</td>
+                  <td>
+                    <span class="badge bg-secondary text-capitalize">{{ d.type }}</span>
+                  </td>
+                  <td>
+                    <span class="badge" [class.bg-success]="d.is_active" [class.bg-danger]="!d.is_active">
+                      {{ d.is_active ? 'Oui' : 'Non' }}
+                    </span>
+                  </td>
+                  <td>{{ d.created_at | date:'dd/MM/yyyy' }}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-container mt-4">
+          <pagination-controls id="ngxP1" (pageChange)="getPage($event)"
+            [maxSize]="9" [directionLinks]="true" [autoHide]="true" [responsive]="true"
+            previousLabel="Précédent" nextLabel="Suivant">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Modal Ajouter ───────────────────────────────────────────────────────── -->
+<ng-template #addContent let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nouveau modèle</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row g-3">
+
+      <div class="col-md-8">
+        <label class="form-label fw-semibold">Nom <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="add_data.name" placeholder="Ex : Modèle d'agrément standard">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Type</label>
+        <select class="form-select" [(ngModel)]="add_data.type">
+          <option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label fw-semibold">Actif</label>
+        <div>
+          <ng-toggle [(ngModel)]="add_data.is_active" [color]="{checked:'#0d6efd', unchecked:'#adb5bd'}"></ng-toggle>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label fw-semibold">Contenu du modèle</label>
+        <app-quill-editor-wrapper [(ngModel)]="add_data.content"></app-quill-editor-wrapper>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="store()" [disabled]="loading || !add_data.name">
+      <i class="bi bi-check-lg me-1"></i>Enregistrer
+      <app-loading [isVisible]="loading"></app-loading>
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- ── Modal Modifier ──────────────────────────────────────────────────────── -->
+<ng-template #editContent let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier le modèle</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row g-3" *ngIf="selected_data">
+
+      <div class="col-md-8">
+        <label class="form-label fw-semibold">Nom <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="selected_data.name">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Type</label>
+        <select class="form-select" [(ngModel)]="selected_data.type">
+          <option *ngFor="let t of types" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label fw-semibold">Actif</label>
+        <div>
+          <ng-toggle [(ngModel)]="selected_data.is_active" [color]="{checked:'#0d6efd', unchecked:'#adb5bd'}"></ng-toggle>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label fw-semibold">Contenu du modèle</label>
+        <app-quill-editor-wrapper [(ngModel)]="selected_data.content"></app-quill-editor-wrapper>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="update()" [disabled]="loading || !selected_data?.name">
+      <i class="bi bi-check-lg me-1"></i>Mettre à jour
+      <app-loading [isVisible]="loading"></app-loading>
+    </button>
+  </div>
+</ng-template>

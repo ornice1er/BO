@@ -219,6 +219,8 @@ get(): void {
         paraphe:       'parapher',
         prevalidation: 'prevalider',
         cloture:       'cloturer',
+        choix_sortie:  'valider',
+        correction:    'retour_correction',
       };
 
       const decision = decisionMap[transition?.condition_type] ?? 'valider';

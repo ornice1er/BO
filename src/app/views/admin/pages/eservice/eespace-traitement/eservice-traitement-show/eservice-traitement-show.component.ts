@@ -133,11 +133,14 @@ export class EserviceTraitementShowComponent implements OnInit {
     })
   }
 
-  creerRdv(){
-    if (this.selected_data == null) {
-      this.toastrService.warning("Aucun élément selectionné");
-      return;
-    }
+  creerRdv(): void {
+    if (!this.selected_data) { this.toastrService.warning('Aucun élément sélectionné'); return; }
+    this.router.navigate(['admin/agenda', this.prestation, this.selected_data.code]);
+  }
+
+  voirAgenda(): void {
+    // L'agenda a été créé automatiquement depuis le slot PNS — naviguer vers la liste agenda
+    // avec le code de la demande pour que l'agent puisse envoyer la confirmation
     this.router.navigate(['admin/agenda', this.prestation, this.selected_data.code]);
   }
 
@@ -220,12 +223,13 @@ add(content:any){
   // ── TRAITEMENT (valider / rejeter / parapher / signer / prévalider) ────────
   traiter(decision: string, options: any = {}): void {
     const labels: Record<string, string> = {
-      valider:     'Valider cette demande ?',
-      rejeter:     'Rejeter cette demande ?',
-      parapher:    'Apposer votre paraphe sur ce document ?',
-      signer:      'Signer définitivement ce document ?',
-      prevalider:  'Pré-valider cette demande ?',
-      cloturer:    'Clôturer définitivement cette demande ?',
+      valider:            'Valider cette demande ?',
+      rejeter:            'Rejeter cette demande ?',
+      parapher:           'Apposer votre paraphe sur ce document ?',
+      signer:             'Signer définitivement ce document ?',
+      prevalider:         'Pré-valider cette demande ?',
+      cloturer:           'Clôturer définitivement cette demande ?',
+      retour_correction:  'Renvoyer cette demande pour correction ?',
     };
 
     AppSweetAlert.confirmBox('warning','Traitement de la demande',labels[decision] ?? 'Confirmer ?').then((result: any) => {
@@ -436,6 +440,13 @@ actionSurDocument(acte: any): void {
         }
       });
     });
+  }
+
+  etapeDejaTraversee(): boolean {
+    const etapeId = this.selected_data?.current_etape?.id;
+    if (!etapeId) return false;
+    return (this.selected_data?.requete_etape_logs ?? [])
+      .some((log: any) => log?.etape_from?.id === etapeId);
   }
 
   // ── Permissions (conservé pour les cas spécifiques restants) ──────────────

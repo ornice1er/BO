@@ -30,7 +30,7 @@ export class PrestationComponent implements OnInit {
   user: any
   roles: any
   isGlobalAdmin = false;
-  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false,  need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false,decision:"" }
+  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false, need_validation: false, needOut: false, has_document_circuit: false, decision: "" }
   data:any[]=[]
   permissions:any[]=[]
   data2:any[]=[]
@@ -153,7 +153,7 @@ remoteSearchData: any[] = []
       
     
   add(content: any) {
-    this.add_data = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false };
+    this.add_data = { from_pns: false, is_automatic_delivered: false, need_validation: false, needOut: false, has_document_circuit: false };
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }

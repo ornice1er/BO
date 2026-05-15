@@ -291,17 +291,14 @@
             <input type="number" class="form-control" name="delay" ngModel required min="1" max="365">
           </div>
 
+          <div class="form-group col-md-6 mb-3">
+            <label>Clé de décision</label>
+            <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision">
+          </div>
+
           <div class="form-group col-12 mb-3">
             <label>Description</label>
             <textarea name="desc" class="form-control" ngModel rows="3"></textarea>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Nécessité de rendez-vous</label>
-            <ng-toggle name="need_meeting" [(ngModel)]="add_data.need_meeting"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
           </div>
 
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
@@ -320,18 +317,13 @@
             </ng-toggle>
           </div>
 
-            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance groupé</label>
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance groupée</label>
             <ng-toggle name="is_group_delivered" [(ngModel)]="add_data.is_group_delivered"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>
           </div>
-             <div class="form-group col-md-4 mb-3">
-          <label>Clé de décision</label>
-          <input type="text" class="form-control" [(ngModel)]="add_data.decision" name="decision"/>
-        </div>
-
 
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Formulaire sur le portail national</label>
@@ -360,6 +352,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="d('Cross click')">Annuler</button>
         <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
           Sauvegarder <app-loading [isVisible]="loading"></app-loading>
         </button>
@@ -432,17 +425,14 @@
             <input type="number" class="form-control" name="delay" [(ngModel)]="selected_data.delay" required min="1" max="365">
           </div>
 
+          <div class="form-group col-md-6 mb-3">
+            <label>Clé de décision</label>
+            <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision">
+          </div>
+
           <div class="form-group col-12 mb-3">
             <label>Description</label>
             <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc" rows="3"></textarea>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Nécessité de rendez-vous</label>
-            <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
           </div>
 
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
@@ -461,19 +451,14 @@
             </ng-toggle>
           </div>
 
-
-            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance groupé</label>
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Délivrance groupée</label>
             <ng-toggle name="is_group_delivered" [(ngModel)]="selected_data.is_group_delivered"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>
           </div>
 
-             <div class="form-group col-md-4 mb-3">
-          <label>Clé de décision</label>
-          <input type="text" class="form-control" [(ngModel)]="selected_data.decision" name="decision"/>
-        </div>
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Formulaire sur le portail national</label>
             <ng-toggle name="from_pns" [(ngModel)]="selected_data.from_pns"
@@ -501,6 +486,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="d('Cross click')">Annuler</button>
         <button type="submit" class="btn btn-outline-primary" [disabled]="editForm.invalid || loading">
           Sauvegarder <app-loading [isVisible]="loading"></app-loading>
         </button>

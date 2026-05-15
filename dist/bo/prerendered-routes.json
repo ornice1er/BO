@@ -9,6 +9,7 @@
     "/admin/dashboard": {},
     "/admin/departments": {},
     "/admin/districts": {},
+    "/admin/document-templates": {},
     "/admin/entities": {},
     "/admin/entity-type": {},
     "/admin/eservice/configurations/document-circuit-etapes": {},

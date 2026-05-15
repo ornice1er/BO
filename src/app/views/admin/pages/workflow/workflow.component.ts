@@ -44,6 +44,8 @@ export class WorkflowComponent {
   etapes: any[] = [];
   statuses: any[] = [];
   filteredStatuses: any[] = [];
+  filteredEtapes: any[] = [];
+  isCorrection = false;
   permissions: any[] = [];
 
   loading = false;
@@ -129,9 +131,20 @@ export class WorkflowComponent {
 
   onPrestationChange(prestationId: number) {
     this.filteredStatuses = [];
+    this.filteredEtapes = [];
     if (!prestationId) return;
     this.psService.getByPrestation(prestationId).subscribe((res: any) => {
       this.filteredStatuses = res.data.map((ps: any) => ps.status);
+    });
+    this.wService.getAll().subscribe((res: any) => {
+      const ids = new Set<number>();
+      (res.data as any[])
+        .filter((t: any) => t.prestation_id === prestationId)
+        .forEach((t: any) => {
+          if (t.etape_from_id) ids.add(t.etape_from_id);
+          if (t.etape_to_id)   ids.add(t.etape_to_id);
+        });
+      this.filteredEtapes = this.etapes.filter((e: any) => ids.has(e.id));
     });
   }
 
@@ -257,6 +270,7 @@ export class WorkflowComponent {
     
 
 add(content: any) {
+    this.isCorrection = false;
     this.add_data = {
       prestation_id: this.filterPrestationId ?? null, etape_from_id: null, etape_to_id: null,
       condition_type: null, status_result_id: null, order: null,
@@ -269,16 +283,26 @@ add(content: any) {
   }
 
   addCorrection(content: any) {
-    const pd = this.selected_data?.prestation_id ?? this.filterPrestationId ?? null;
+    if (!this.selected_data) {
+      this.toastrService.warning('Sélectionnez une transition à inverser pour créer un retour correction');
+      return;
+    }
+    const pd = this.selected_data.prestation_id;
     this.add_data = {
-      prestation_id: pd,
-      etape_from_id: this.selected_data?.etape_to_id ?? null,
-      etape_to_id:   this.selected_data?.etape_from_id ?? null,
-      condition_type: 'correction',
-      status_result_id: null, order: null,
-      'notify_requérant': false, notify_agent: false, is_active: true,
-      can_act_pns: false, decision: '', observation: '',
+      prestation_id:    pd,
+      etape_from_id:    this.selected_data.etape_to_id   ?? null,
+      etape_to_id:      this.selected_data.etape_from_id ?? null,
+      condition_type:   'correction',
+      status_result_id: null,
+      order:            null,
+      'notify_requérant': false,
+      notify_agent:     false,
+      is_active:        true,
+      can_act_pns:      false,
+      decision:         '',
+      observation:      '',
     };
+    this.isCorrection = true;
     if (pd) this.onPrestationChange(pd);
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
@@ -310,18 +334,18 @@ add(content: any) {
   }
   
     store(value:any) {
-      this.loading=true; 
+      this.loading=true;
 
         this.wService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
-            this.modalService.dismissAll()
+            this.modalService.dismissAll();
+            this.toastrService.success('Transition enregistrée avec succès');
             this.all();
-            //MyToastr.make('success',"Gestion des agents ","Enrehistrement effectué avec succès",this.toastrService)
-
         },
         (err:any)=>{
             this.loading=false;
+            this.toastrService.error(err?.error?.message ?? 'Enregistrement échoué');
         })
   
   }

@@ -1,8 +1,11 @@
 
 export const MENU_ADMIN_NATIONAL: any[] = [
   { title: 'Principal', isTitle: true },
-  { title: 'Tableau de bord',         icon: 'fas fa-home',          link: '/admin/dashboard' },
-  { title: 'Comptes Admin Sectoriels', icon: 'fas fa-users',         link: '/admin/users' },
+  { title: 'Tableau de bord',          icon: 'fas fa-home',             link: '/admin/dashboard' },
+  { title: 'Comptes Admin Sectoriels', icon: 'fas fa-users',            link: '/admin/users' },
+  { title: 'e-Services', isTitle: true },
+  { title: 'Déclaration périodique',   icon: 'fas fa-file-signature',   link: '/admin/projects' },
+  { title: 'Modèles de documents',      icon: 'fas fa-file-alt',         link: '/admin/document-templates' },
   { title: 'Référentiels', isTitle: true },
   {
     title: 'Découpage territorial', icon: 'fas fa-map-marked-alt',
@@ -26,19 +29,32 @@ export const MENU_ADMIN_NATIONAL: any[] = [
 
   export const MENU_ADMIN_SECTORIEL: any[] = [
     { title: 'Principal', isTitle: true },
-    { title: 'Tableau de bord',      icon: 'fas fa-home',             link: '/admin/dashboard' },
-    { title: 'Agents',               icon: 'fas fa-id-badge',         link: '/admin/officers' },
-    { title: 'Comptes utilisateurs', icon: 'fas fa-users',            link: '/admin/users' },
-    { title: 'e-Services', isTitle: true },
-    { title: 'Prestations',          icon: 'fas fa-award',            link: '/admin/prestations' },
-    { title: 'Déclaration périodique', icon: 'fas fa-file-signature', link: '/admin/projects' },
+    { title: 'Tableau de bord', icon: 'fas fa-home', link: '/admin/dashboard' },
+
+    { title: 'Utilisateurs', isTitle: true },
+    { title: 'Agents',               icon: 'fas fa-id-badge',      link: '/admin/officers' },
+    { title: 'Comptes utilisateurs', icon: 'fas fa-users',          link: '/admin/users' },
     {
-      title: 'Configuration eServices', icon: 'fas fa-tools',
+      title: 'Accès & Sécurité', icon: 'fas fa-shield-alt',
       isTitle: false, hasChildren: true, collapse: false,
       children: [
-        { title: 'Statuts',                 link: '/admin/eservice/configurations/status' },
+        { title: 'Profils',      link: '/admin/profiles' },
+        { title: 'Rôles',        link: '/admin/roles' },
+        { title: 'Permissions',  link: '/admin/permissions' },
+      ]
+    },
+
+    { title: 'e-Services', isTitle: true },
+    { title: 'Prestations',            icon: 'fas fa-award',          link: '/admin/prestations' },
+    { title: 'Déclaration périodique', icon: 'fas fa-file-signature', link: '/admin/projects' },
+    { title: 'Modèles de documents',   icon: 'fas fa-file-alt',       link: '/admin/document-templates' },
+    {
+      title: 'Configuration',  icon: 'fas fa-tools',
+      isTitle: false, hasChildren: true, collapse: false,
+      children: [
+        { title: 'Prestations & Statuts',   link: '/admin/eservice/configurations/prestation-status' },
         { title: 'Étapes',                  link: '/admin/eservice/configurations/etapes' },
-        { title: 'Statuts par prestation',  link: '/admin/eservice/configurations/prestation-status' },
+        { title: 'Statuts',                 link: '/admin/eservice/configurations/status' },
         { title: 'Workflow',                link: '/admin/eservice/configurations/workflows' },
         { title: 'Documents produits',      link: '/admin/eservice/configurations/etape-documents-produits' },
         { title: 'Circuit de signature',    link: '/admin/eservice/configurations/document-circuit-etapes' },
@@ -48,9 +64,10 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         { title: 'Créneaux RDV',            link: '/admin/eservice/configurations/planning-slots' },
       ]
     },
+
     { title: 'Référentiels', isTitle: true },
-    { title: 'Unité Admin',    icon: 'fas fa-sitemap',        link: '/admin/unity-admins' },
-    { title: 'Fonction Agent', icon: 'fas fa-briefcase',      link: '/admin/posts' },
+    { title: 'Unité Admin',    icon: 'fas fa-sitemap',   link: '/admin/unity-admins' },
+    { title: 'Fonction Agent', icon: 'fas fa-briefcase', link: '/admin/posts' },
     {
       title: 'Découpage territorial', icon: 'fas fa-map-marked-alt',
       isTitle: false, hasChildren: true, collapse: false,
@@ -61,12 +78,14 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         { title: 'Villages',      link: '/admin/villages' },
       ]
     },
+
     { title: 'Analyses', isTitle: true },
-    { title: 'RDV général',    icon: 'fas fa-calendar-alt', link: '/admin/agenda' },
-    { title: 'Statistiques',   icon: 'fas fa-chart-bar',    link: '/admin/eservice/statistiques' },
+    { title: 'RDV général',  icon: 'fas fa-calendar-alt', link: '/admin/agenda' },
+    { title: 'Statistiques', icon: 'fas fa-chart-bar',    link: '/admin/eservice/statistiques' },
+
     { title: 'Système', isTitle: true },
-    { title: 'Paramètres',     icon: 'fas fa-cog',          link: '/admin/settings' },
-    { title: 'Support',        icon: 'fas fa-headset',       link: '/admin/billings' },
+    { title: 'Paramètres',      icon: 'fas fa-cog',             link: '/admin/settings' },
+    { title: 'Support',         icon: 'fas fa-headset',          link: '/admin/billings' },
     { title: 'Sujet de support', icon: 'fas fa-question-circle', link: '/admin/type-billings' },
   ];
 
