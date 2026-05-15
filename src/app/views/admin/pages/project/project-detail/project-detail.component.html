@@ -9,12 +9,20 @@
       <option *ngFor="let s of statuses" [value]="s.short_name">{{ s.name }}</option>
     </select>
 
-    <!-- Bouton export (sur la sélection filtrée) -->
-    <button class="btn btn-primary-custom" (click)="exportList()" [disabled]="loading2 || filteredRequetes.length === 0">
-      <i class="bi bi-download me-2"></i>
-      Exporter{{ selectedStatus ? ' (' + filteredRequetes.length + ')' : '' }}
-      <app-loading [isVisible]="loading2"></app-loading>
-    </button>
+    <div class="d-flex gap-2">
+      <!-- Bouton Générer l'agrément -->
+      <button class="btn btn-primary-custom" (click)="ouvrirAgrement()">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        Générer l'agrément
+      </button>
+
+      <!-- Bouton export -->
+      <button class="btn btn-outline-secondary" (click)="exportList()" [disabled]="loading2 || filteredRequetes.length === 0">
+        <i class="bi bi-download me-2"></i>
+        Exporter{{ selectedStatus ? ' (' + filteredRequetes.length + ')' : '' }}
+        <app-loading [isVisible]="loading2"></app-loading>
+      </button>
+    </div>
 
   </div>
 </div>
@@ -68,7 +76,7 @@
           </td>
           <td>{{ d?.current_status?.name }}</td>
         </tr>
-        </ng-container><!-- end *ngIf="!loading2" -->
+        </ng-container>
       </tbody>
     </table>
   </div>
@@ -89,3 +97,100 @@
     </pagination-controls>
   </div>
 </div>
+
+
+<!-- ── Offcanvas : Éditeur d'agrément ─────────────────────────────────────── -->
+<ng-template #agrementOffcanvas let-offcanvas>
+  <div class="offcanvas-header" style="background: linear-gradient(135deg,#0A3764,#0d4e8a); color:#fff;">
+    <h5 class="offcanvas-title mb-0">
+      <i class="bi bi-file-earmark-text me-2"></i>
+      Générer l'agrément
+    </h5>
+    <button type="button" class="btn-close btn-close-white" (click)="offcanvas.dismiss()"></button>
+  </div>
+
+  <div class="offcanvas-body p-4">
+
+    <!-- Choix du modèle -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        <i class="bi bi-layout-text-window me-1"></i>Modèle de document
+      </label>
+      <ng-select
+        [(ngModel)]="selectedTemplateId"
+        (ngModelChange)="onTemplateChange($event)"
+        placeholder="Sélectionner un modèle..."
+        [clearable]="false">
+        <ng-option *ngFor="let t of templates" [value]="t.id">
+          {{ t.name }}
+          <span class="text-muted ms-1 small">({{ t.type }})</span>
+        </ng-option>
+      </ng-select>
+      <small class="text-muted" *ngIf="!selectedTemplateId">
+        <i class="bi bi-info-circle me-1"></i>
+        Choisissez un modèle pour charger son contenu dans l'éditeur.
+      </small>
+    </div>
+
+    <!-- Chargement initial -->
+    <div *ngIf="loadingAgrement" class="text-center py-4">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2 text-muted small">Chargement du modèle...</p>
+    </div>
+
+    <!-- Éditeur (visible quand un doc est chargé) -->
+    <ng-container *ngIf="agrementDoc && !loadingAgrement">
+
+      <!-- Titre -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Titre du document</label>
+        <input type="text" class="form-control"
+               [(ngModel)]="agrementTitle"
+               placeholder="Ex : Lettre d'agrément N° ...">
+      </div>
+
+      <!-- Éditeur Quill -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contenu</label>
+        <quill-editor
+          [(ngModel)]="agrementContent"
+          [modules]="quillModules"
+          placeholder="Rédigez ou modifiez le contenu de l'agrément..."
+          style="display:block;">
+        </quill-editor>
+      </div>
+
+      <!-- Statut du document -->
+      <div *ngIf="agrementDoc?.status === 'complet'" class="alert alert-success d-flex align-items-center gap-2 mt-2">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>PDF généré —
+          <a [href]="agrementDoc?.file_url" target="_blank" class="alert-link">
+            <i class="bi bi-eye me-1"></i>Visualiser
+          </a>
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex gap-2 mt-4 flex-wrap">
+        <button class="btn btn-outline-secondary" (click)="sauvegarder()" [disabled]="loadingAgrement">
+          <i class="bi bi-save me-1"></i>
+          Sauvegarder
+          <app-loading [isVisible]="loadingAgrement"></app-loading>
+        </button>
+        <button class="btn btn-primary" (click)="genererPdf()" [disabled]="loadingAgrement || !agrementContent">
+          <i class="bi bi-file-pdf me-1"></i>
+          Générer le PDF
+          <app-loading [isVisible]="loadingAgrement"></app-loading>
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- État vide (aucun modèle sélectionné) -->
+    <div *ngIf="!agrementDoc && !loadingAgrement" class="text-center text-muted py-5">
+      <i class="bi bi-layout-text-window" style="font-size:3rem; opacity:0.3;"></i>
+      <p class="mt-3">Sélectionnez un modèle pour commencer l'édition.</p>
+    </div>
+
+  </div>
+</ng-template>

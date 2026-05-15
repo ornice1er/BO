@@ -53,6 +53,7 @@ import { PlanningSlotComponent } from "./pages/planning-slot/planning-slot.compo
 import { MunicipalityComponent } from "./pages/municipality/municipality.component";
 import { DistrictComponent } from "./pages/district/district.component";
 import { VillageComponent } from "./pages/village/village.component";
+import { DocumentTemplateComponent } from "./pages/document-template/document-template.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -359,6 +360,7 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
         { path: 'roles', component: RoleComponent },
         { path: 'permissions', component: PermissionComponent },
         { path: 'profils', component: ProfileComponent },
+        { path: 'document-templates', component: DocumentTemplateComponent },
 
       ]
     }

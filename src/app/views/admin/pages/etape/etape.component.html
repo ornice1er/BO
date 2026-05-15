@@ -53,6 +53,7 @@
                 <th scope="col">SLA (jours)</th>
                 <th scope="col">Terminale</th>
                 <th scope="col">Sauv. partielle</th>
+                <th scope="col">RDV requis</th>
             </tr>
             </thead>
             <tbody>
@@ -178,6 +179,11 @@
                     {{ d?.allow_partial_save ? 'Oui' : 'Non' }}
                   </span>
                 </td>
+                <td>
+                  <span class="badge" [class.bg-success]="d?.need_meeting" [class.bg-secondary]="!d?.need_meeting">
+                    {{ d?.need_meeting ? 'Oui' : 'Non' }}
+                  </span>
+                </td>
 
             </tr>
             </ng-container><!-- end *ngIf="!loading" -->
@@ -274,6 +280,14 @@
             </ng-toggle>
           </div>
 
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Création de RDV requise</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="add_data.need_meeting"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer">
@@ -344,6 +358,14 @@
            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
             <label class="mb-0">Association à un projet possible</label>
             <ng-toggle name="can_associate" [(ngModel)]="selected_data.can_associate"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Création de RDV requise</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>

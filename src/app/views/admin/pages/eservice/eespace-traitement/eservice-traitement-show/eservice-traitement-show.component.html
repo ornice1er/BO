@@ -10,13 +10,21 @@
   </button>
 
   <!-- Prise de RDV -->
-  <button *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir"
+  <!-- <button *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir"
     class="ts-btn ts-btn--blue" (click)="prendreEnCharge()" [disabled]="loading">
     <i class="bi bi-calendar2-check"></i> Prise de RDV
+  </button> -->
+
+  <!-- RDV depuis slot PNS : agenda auto-créé, l'agent confirme depuis l'agenda -->
+  <button *ngIf="selected_data?.current_etape?.need_meeting
+              && selected_data?.planning_slot_id
+              && selected_data?.agendas?.length > 0"
+    class="ts-btn ts-btn--dark" (click)="voirAgenda()">
+    <i class="bi bi-calendar-check"></i> Voir l'agenda / Confirmer
   </button>
 
-  <!-- Créer RDV -->
-  <button *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien')"
+  <!-- RDV manuel : l'étape demande un meeting mais sans slot PNS -->
+  <button *ngIf="selected_data?.current_etape?.need_meeting && !selected_data?.planning_slot_id"
     class="ts-btn ts-btn--dark" (click)="creerRdv()"
     [disabled]="selected_data?.agendas?.length > 0"
     [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà' : ''">
@@ -39,7 +47,7 @@
   <button *ngIf="selected_data?.current_status?.short_name != 'en_attente'
               && selected_data?.current_status?.short_name != 'demande'
               && selected_data?.current_status?.short_name != 'pris_en_charge'
-              && selected_data?.current_status?.short_name != 'en_attente_visite'
+              && (selected_data?.current_status?.short_name != 'en_attente_visite' || etapeDejaTraversee())
               && !selected_data?.current_etape?.is_terminal
               && peutAgir"
     class="ts-btn ts-btn--amber" (click)="open2()" [disabled]="loading">
@@ -122,6 +130,58 @@
           }">
           <i class="bi bi-clock"></i> {{ selected_data?.sla_restant }} jour(s)
         </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Créneau RDV pré-sélectionné depuis le PNS ────────── -->
+  <div *ngIf="selected_data?.planning_slot" class="ts-section">
+    <div class="ts-section-header ts-section-header--blue">
+      <i class="bi bi-calendar2-check-fill"></i> Créneau RDV sélectionné
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-info-grid">
+        <div class="ts-info-item">
+          <div class="ts-info-label">Date</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.slot_date | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Heure</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.heure_debut | slice:0:5 }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Durée</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.duration_minutes ?? 20 }} min
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Lieu</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.unite_admin?.libelle ?? '—' }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Session</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.session_type }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Agenda</div>
+          <div class="ts-info-value">
+            <span *ngIf="selected_data.agendas?.length > 0" class="ts-badge ts-badge--teal ts-badge--sm">
+              <i class="bi bi-check-circle-fill"></i> Créé automatiquement
+            </span>
+            <span *ngIf="!selected_data.agendas?.length" class="ts-badge ts-badge--amber ts-badge--sm">
+              <i class="bi bi-hourglass-split"></i> En attente
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

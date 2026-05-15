@@ -9,6 +9,7 @@
     "/pprod-bo/admin/dashboard": {},
     "/pprod-bo/admin/departments": {},
     "/pprod-bo/admin/districts": {},
+    "/pprod-bo/admin/document-templates": {},
     "/pprod-bo/admin/entities": {},
     "/pprod-bo/admin/entity-type": {},
     "/pprod-bo/admin/eservice/configurations/document-circuit-etapes": {},

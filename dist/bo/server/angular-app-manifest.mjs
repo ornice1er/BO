@@ -372,7 +372,7 @@ export default {
   ],
   "node_modules/@angular/animations/fesm2022/browser.mjs": [
     {
-      "path": "chunk-CFJOIFKD.js",
+      "path": "chunk-DPES2Y34.js",
       "dynamicImport": false
     }
   ],
@@ -1972,8 +1972,8 @@ export default {
   ]
 },
   assets: {
-    'index.csr.html': {size: 57264, hash: '82d19fd612c78c6cd34528b1876f2ce5d7fedd94c04af8c4f820042f45a8ee13', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1994, hash: 'e35dc3df8a30a492d1200defe338c6cb069d1e2da501f35a7745f09737d3a502', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 57264, hash: 'e14968b4c4cea196c76b2016cbe6b776ed5c918769cf8851ac5b41a56eac51c1', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1994, hash: 'cb9f591b1cbcb13915537d4d665a7bc283ac44679629f14111efc5cd3f1c73b5', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-PQKO6L46.css': {size: 522243, hash: '7/hPj9HsjwY', text: () => import('./assets-chunks/styles-PQKO6L46_css.mjs').then(m => m.default)}
   },
 };
