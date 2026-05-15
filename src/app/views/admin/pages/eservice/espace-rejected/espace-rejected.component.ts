@@ -11,7 +11,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../core/services/response.service';
 import { ConfigService } from '../../../../../core/utils/config-service';
@@ -99,7 +98,6 @@ export class EspaceRejectedComponent implements OnInit {
       constructor(
         private activatedRoute:ActivatedRoute ,
          private locService:LocalStorageService,
-        private affService:AffectationService,
         private requeteService:RequeteService,
         private toastrService:ToastrService,
         private router:Router,
@@ -378,23 +376,8 @@ export class EspaceRejectedComponent implements OnInit {
 
         //MyToastr.make('info',"Affectation",`Opération en cours`,this.toastrService)
 
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:1,
-          instruction:value.instruction,
-          delay:value.delay,
-        }).subscribe(
-            (res:any)=>{
-               this.toastrService.success("`La demande ${this.selected_data.code} a été affectée avec succès");
-            this.loading=false;
-            this.all();
-        },
-        (err:any)=>{
-            this.loading=false;
-            //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
-    
-        })
+        this.loading = false;
+        this.all();
       //}})
   
   }
@@ -475,22 +458,8 @@ export class EspaceRejectedComponent implements OnInit {
     .onClose.subscribe(result =>{
       if(result){*/
         //MyToastr.make('info',"Transmission",`Opération en cours`,this.toastrService)
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-            this.loading=false;
-            this.all();
-            //MyToastr.make('success',"Transmission",`La demande ${this.selected_data.code} a été transmise avec succès`,this.toastrService)
-    
-        },
-        (err:any)=>{
-            this.loading=false;
-            //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
-    
-        })
+        this.loading = false;
+        this.all();
     //  }
    // });
    

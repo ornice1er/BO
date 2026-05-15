@@ -10,7 +10,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {} from '../../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../../core/services/response.service';
 import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
@@ -85,7 +84,6 @@ export class EspaceSignatureShowComponent implements OnInit {
     private router:Router,
     private toastrService:ToastrService,
     private uaService:UnityAdminService,
-    private affService:AffectationService,
     private responseService:ResponseService,
     config: NgbModalConfig, private modalService: NgbModal
 
@@ -235,22 +233,8 @@ this.modalService.open(content);
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
 
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          unite_admin_down_id:value.ua_down_id,
-          sens:1,
-          instruction:value.instruction,
-          delay:value.delay,
-        }).subscribe(
-            (res:any)=>{
-               this.toastrService.success(`La demande ${this.selected_data.code} a été affectée avec succès`);
-              this.router.navigate(['/admin/eservice/espace-traitement/'+this.prestation])
-        },
-        (err:any)=>{
-          AppErrorShow.showError("Opération échouée", err)
-    
-        })
+        this.loading = false;
+        this.get();
       }})
   
   }
@@ -332,22 +316,8 @@ this.modalService.open(content);
     AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cet enregistrement ?").then((result:any) =>{
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-            this.loading=false;
-            this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-            this.toastrService.info(`La demande ${this.selected_data.code} a été transmise avec succès`)
-    
-        },
-        (err:any)=>{
-            this.loading=false;
-            AppErrorShow.showError("Opération échouée", err)
-    
-        })
+        this.loading = false;
+        this.get();
       }
     });
    
