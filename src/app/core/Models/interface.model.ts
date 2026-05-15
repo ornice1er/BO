@@ -58,7 +58,7 @@ export type EtapeType = 'depot' | 'traitement' | 'commission' | 'delivrance';
 
 export type TransitionCondition =
   | 'auto' | 'validation' | 'rejet' | 'complement'
-  | 'signature' | 'cloture' | 'paraphe' | 'prevalidation' | 'choix_sortie' | 'correction';
+  | 'signature' | 'cloture' | 'paraphe' | 'prevalidation' | 'choix_sortie' | 'correction' | 'retour_correction';
 
 export interface Etape {
   id: number;

@@ -13,7 +13,7 @@
               class="btn btn-warning text-white"
               (click)="addCorrection(addContent)"
               [title]="selectedId ? 'Créer la transition inverse de la sélection (retour pour correction)' : 'Créer une transition de correction'">
-              <i class="bi bi-arrow-return-left me-2"></i>Retour correction
+              <i class="bi bi-arrow-return-left me-2"></i>Retour pour correction
             </button>
             <button
               class="btn btn-outline-secondary"
@@ -158,7 +158,8 @@
                     'bg-info text-dark': d.condition_type === 'paraphe',
                     'bg-secondary': d.condition_type === 'auto' || d.condition_type === 'prevalidation',
                     'bg-dark':      d.condition_type === 'cloture',
-                    'badge-correction': d.condition_type === 'correction'
+                    'badge-correction':        d.condition_type === 'correction',
+                    'badge-retour-correction': d.condition_type === 'retour_correction'
                   }">{{ d.condition_type }}</span>
                 </td>
                 <td>{{ d?.status_result?.name }}</td>

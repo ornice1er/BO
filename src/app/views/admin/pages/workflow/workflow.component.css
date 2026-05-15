@@ -3,6 +3,11 @@
   color: #fff;
 }
 
+.badge-retour-correction {
+  background-color: #8e44ad;
+  color: #fff;
+}
+
 .observation-block {
   white-space: pre-wrap;
   background: #f8f9fa;

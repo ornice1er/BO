@@ -73,7 +73,8 @@ export class WorkflowComponent {
     { value: 'paraphe',       label: 'Paraphe' },
     { value: 'prevalidation', label: 'Pré-validation' },
     { value: 'choix_sortie',  label: 'Choix sortie' },
-    { value: 'correction',    label: 'Correction' },
+    { value: 'correction',        label: 'Retour pour correction (métier)' },
+    { value: 'retour_correction', label: 'Retour pour correction (requérant)' },
   ];
 
   constructor(
