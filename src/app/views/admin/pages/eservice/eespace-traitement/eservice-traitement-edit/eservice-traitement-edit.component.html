@@ -178,8 +178,8 @@
       </quill-editor>
     </div>
 
-    <!-- Pièce jointe -->
-    <div class="te-form-group" *ngIf="showAddingField.note_file">
+    <!-- Pièce jointe *ngIf="showAddingField.note_file" -->
+    <div class="te-form-group" >
       <label class="te-label"><i class="bi bi-paperclip me-1"></i>Joindre une note ou PJ</label>
       <input type="file" class="te-input" (change)="upload($event)">
 
