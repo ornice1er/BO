@@ -46,4 +46,11 @@ export class WorkflowService {
     return this.http.delete(`${this.url}/by-prestation/${prestationId}`);
   }
 
+  copyFromPrestation(fromPrestationId: number, toPrestationId: number) {
+    return this.http.post(`${this.url}/copy-from-prestation`, {
+      from_prestation_id: fromPrestationId,
+      to_prestation_id:   toPrestationId,
+    });
+  }
+
 }

@@ -60,6 +60,11 @@ export class WorkflowComponent {
   selectedFilter = '';
   filterPrestationId: number | null = null;
   allData: any[] = [];
+
+  // ── Copie workflow ──────────────────────────────────────────────────────────
+  copyFromPrestationId: number | null = null;
+  copyToPrestationId:   number | null = null;
+  loadingCopy = false;
   fluxPrestationName = '';
   zoomLevel = 1;
 
@@ -393,6 +398,36 @@ async deleteAllForPrestation() {
     }
   });
 }
+
+  openCopyModal(modal: any): void {
+    this.copyFromPrestationId = null;
+    this.copyToPrestationId   = this.filterPrestationId;
+    this.modalService.open(modal, { size: 'md' });
+  }
+
+  copyWorkflow(): void {
+    if (!this.copyFromPrestationId || !this.copyToPrestationId) {
+      this.toastrService.warning('Sélectionnez les deux prestations');
+      return;
+    }
+    if (this.copyFromPrestationId === this.copyToPrestationId) {
+      this.toastrService.warning('Source et destination doivent être différentes');
+      return;
+    }
+    this.loadingCopy = true;
+    this.wService.copyFromPrestation(this.copyFromPrestationId, this.copyToPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Workflow copié avec succès');
+        this.loadingCopy = false;
+        this.modalService.dismissAll();
+        this.all();
+      },
+      error: (err: any) => {
+        this.loadingCopy = false;
+        AppErrorShow.showError('Copie échouée', err);
+      }
+    });
+  }
 
 async delete() {
   this.loading=true;

@@ -49,6 +49,11 @@ export class EtapeVisibiliteComponent implements OnInit {
   viewMode: 'table' | 'diagram' = 'table';
   selectedPrestationId: number | null = null;
 
+  // ── Suppression / Copie par prestation ─────────────────────────────────────
+  copyFromPrestationId: number | null = null;
+  copyToPrestationId:   number | null = null;
+  loadingCopy = false;
+
   constructor(
     private service: EtapeVisibiliteService,
     private workflowService: WorkflowService,
@@ -227,6 +232,52 @@ export class EtapeVisibiliteComponent implements OnInit {
         () => { this.loading = false; }
       );
     }
+  }
+
+  async deleteAllForPrestation(): Promise<void> {
+    if (!this.selectedPrestationId) return;
+    const name  = this.prestationName(this.selectedPrestationId);
+    const count = this.filteredData.length;
+    const msg   = `Supprimer les ${count} règle(s) de « ${name} » ?\n\nCette action est irréversible.`;
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', msg);
+    if (!result.isConfirmed) return;
+
+    this.loading = true;
+    this.service.deleteByPrestation(this.selectedPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Règles supprimées');
+        this.loading = false;
+        this.all();
+      },
+      error: () => { this.loading = false; }
+    });
+  }
+
+  openCopyModal(modal: any): void {
+    this.copyFromPrestationId = null;
+    this.copyToPrestationId   = this.selectedPrestationId;
+    this.modalService.open(modal, { size: 'md' });
+  }
+
+  copyVisibilites(): void {
+    if (!this.copyFromPrestationId || !this.copyToPrestationId) {
+      this.toastrService.warning('Sélectionnez les deux prestations');
+      return;
+    }
+    if (this.copyFromPrestationId === this.copyToPrestationId) {
+      this.toastrService.warning('Source et destination doivent être différentes');
+      return;
+    }
+    this.loadingCopy = true;
+    this.service.copyFromPrestation(this.copyFromPrestationId, this.copyToPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Règles copiées avec succès');
+        this.loadingCopy = false;
+        this.modalService.dismissAll();
+        this.all();
+      },
+      error: () => { this.loadingCopy = false; }
+    });
   }
 
   onSearchChange() {

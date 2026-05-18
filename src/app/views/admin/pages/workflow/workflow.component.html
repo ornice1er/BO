@@ -23,6 +23,14 @@
             </button>
             <button
               *ngIf="filterPrestationId"
+              class="btn btn-outline-primary"
+              (click)="openCopyModal(copyWorkflowModal)"
+              [disabled]="loading"
+              title="Copier le workflow d'une autre prestation vers celle-ci">
+              <i class="bi bi-copy me-2"></i>Copier depuis...
+            </button>
+            <button
+              *ngIf="filterPrestationId"
               class="btn btn-danger"
               (click)="deleteAllForPrestation()"
               [disabled]="loading"
@@ -475,5 +483,44 @@
         </tr>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<!-- ── Modale copie workflow ──────────────────────────────────────────────── -->
+<ng-template #copyWorkflowModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-copy me-2"></i>Copier un workflow</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p class="text-muted small mb-3">
+      Toutes les transitions de la prestation source seront copiées vers la prestation destination.
+      Les transitions existantes de la destination seront <strong>remplacées</strong>.
+    </p>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier depuis</label>
+      <ng-select
+        [(ngModel)]="copyFromPrestationId"
+        placeholder="Prestation source..."
+        [clearable]="true">
+        <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
+      </ng-select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier vers</label>
+      <ng-select
+        [(ngModel)]="copyToPrestationId"
+        placeholder="Prestation destination..."
+        [clearable]="true">
+        <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
+      </ng-select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss()" [disabled]="loadingCopy">Annuler</button>
+    <button class="btn btn-primary" (click)="copyWorkflow()" [disabled]="loadingCopy || !copyFromPrestationId || !copyToPrestationId">
+      <span *ngIf="loadingCopy" class="spinner-border spinner-border-sm me-1"></span>
+      Copier
+    </button>
   </div>
 </ng-template>

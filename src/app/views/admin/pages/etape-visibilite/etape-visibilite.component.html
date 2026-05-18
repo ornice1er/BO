@@ -12,6 +12,22 @@
             <button class="btn btn-primary-custom" (click)="add(addContent)">
               <i class="bi bi-plus-lg me-2"></i>Ajouter
             </button>
+            <button
+              *ngIf="selectedPrestationId"
+              class="btn btn-sm btn-outline-primary"
+              (click)="openCopyModal(copyVisibilitesModal)"
+              [disabled]="loading"
+              title="Copier les règles d'une autre prestation vers celle-ci">
+              <i class="bi bi-copy me-1"></i>Copier depuis...
+            </button>
+            <button
+              *ngIf="selectedPrestationId"
+              class="btn btn-sm btn-danger"
+              (click)="deleteAllForPrestation()"
+              [disabled]="loading"
+              title="Supprimer toutes les règles de cette prestation">
+              <i class="bi bi-trash me-1"></i>Supprimer toutes les règles
+            </button>
 
             <!-- Filtre prestation -->
             <div class="prestation-filter">
@@ -59,6 +75,7 @@
             </div>
 
           </div>
+
         </div>
       </div>
 
@@ -404,5 +421,40 @@
         <tr><th>Peut agir</th><td>{{ selected_data?.can_act ? 'Oui' : 'Non' }}</td></tr>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<!-- ── Modale copie règles visibilité ─────────────────────────────────────── -->
+<ng-template #copyVisibilitesModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-copy me-2"></i>Copier les règles de visibilité</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p class="text-muted small mb-3">
+      Toutes les règles de la prestation source seront copiées vers la prestation destination.
+      Les règles existantes de la destination seront <strong>remplacées</strong>.
+    </p>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier depuis</label>
+      <select class="form-select" [(ngModel)]="copyFromPrestationId">
+        <option [ngValue]="null">— Prestation source —</option>
+        <option *ngFor="let p of prestations" [ngValue]="p.id">{{ p.name }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier vers</label>
+      <select class="form-select" [(ngModel)]="copyToPrestationId">
+        <option [ngValue]="null">— Prestation destination —</option>
+        <option *ngFor="let p of prestations" [ngValue]="p.id">{{ p.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss()" [disabled]="loadingCopy">Annuler</button>
+    <button class="btn btn-primary" (click)="copyVisibilites()" [disabled]="loadingCopy || !copyFromPrestationId || !copyToPrestationId">
+      <span *ngIf="loadingCopy" class="spinner-border spinner-border-sm me-1"></span>
+      Copier
+    </button>
   </div>
 </ng-template>
