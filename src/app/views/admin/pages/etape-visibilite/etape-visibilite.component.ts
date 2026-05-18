@@ -149,11 +149,26 @@ export class EtapeVisibiliteComponent implements OnInit {
 
   // ── Helpers ─────────────────────────────────────────────────
 
+  private conditionLabels: Record<string, string> = {
+    auto:             'Automatique',
+    validation:       'Validation',
+    rejet:            'Rejet',
+    complement:       'Complément',
+    signature:        'Signature',
+    cloture:          'Clôture',
+    paraphe:          'Paraphe',
+    prevalidation:    'Pré-validation',
+    choix_sortie:     'Choix sortie',
+    correction:       'Correction métier',
+    retour_correction:'Retour correction',
+  };
+
   transitionLabel(t: any): string {
     if (!t) return '—';
-    const from = t.etape_from?.name ?? '?';
-    const to   = t.etape_to?.name  ?? 'Terminal';
-    return `${t.prestation?.code ?? ''} — ${from} → ${to} [${t.condition_type}]`;
+    const from      = t.etape_from?.name ?? '?';
+    const to        = t.etape_to?.name   ?? 'Terminal';
+    const condition = this.conditionLabels[t.condition_type] ?? t.condition_type ?? '?';
+    return `${t.prestation?.code ?? ''} — ${from} → ${to} [${condition}]`;
   }
 
   resolveTransition(d: any): any {

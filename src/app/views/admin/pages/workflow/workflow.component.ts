@@ -142,16 +142,7 @@ export class WorkflowComponent {
     this.psService.getByPrestation(prestationId).subscribe((res: any) => {
       this.filteredStatuses = res.data.map((ps: any) => ps.status);
     });
-    this.wService.getAll().subscribe((res: any) => {
-      const ids = new Set<number>();
-      (res.data as any[])
-        .filter((t: any) => t.prestation_id === prestationId)
-        .forEach((t: any) => {
-          if (t.etape_from_id) ids.add(t.etape_from_id);
-          if (t.etape_to_id)   ids.add(t.etape_to_id);
-        });
-      this.filteredEtapes = this.etapes.filter((e: any) => ids.has(e.id));
-    });
+    this.filteredEtapes = [...this.etapes];
   }
 
 

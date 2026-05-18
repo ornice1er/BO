@@ -163,7 +163,8 @@
                     [class.bg-primary]="d?.type === 'depot'"
                     [class.bg-info]="d?.type === 'traitement'"
                     [class.bg-warning]="d?.type === 'commission'"
-                    [class.bg-success]="d?.type === 'delivrance'">
+                    [class.bg-success]="d?.type === 'delivrance'"
+                    [class.bg-secondary]="d?.type === 'visite'">
                     {{ d?.type | titlecase }}
                   </span>
                 </td>

@@ -382,7 +382,6 @@ actionSurDocument(acte: any): void {
   private openPdfOffcanvas(url: string, title: string): void {
     this.pdfSrc   = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.pdfTitle = title;
-    console.log( this.pdfSrc  );
     this.offcanvasService.open(this.pdfViewerCanvas, {
       position: 'end',
       panelClass: 'offcanvas-pdf',

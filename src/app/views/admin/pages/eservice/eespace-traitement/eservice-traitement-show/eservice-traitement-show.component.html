@@ -186,6 +186,87 @@
     </div>
   </div>
 
+  <!-- ── Rendez-vous (agenda) ─────────────────────────────── -->
+  <div *ngIf="selected_data?.agendas?.length > 0" class="ts-section">
+    <div class="ts-section-header ts-section-header--teal">
+      <i class="bi bi-calendar-check-fill"></i> Rendez-vous
+    </div>
+    <div class="ts-section-body">
+      <div *ngFor="let rdv of selected_data.agendas; let i = index"
+           [class.mt-3]="i > 0"
+           [class.pt-3]="i > 0"
+           [class.border-top]="i > 0">
+        <div class="ts-info-grid">
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Titre</div>
+            <div class="ts-info-value fw-semibold">{{ rdv.title ?? '—' }}</div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Statut</div>
+            <div class="ts-info-value">
+              <span class="ts-badge ts-badge--sm"
+                [class.ts-badge--teal]="rdv.status === 'Ouvert'"
+                [class.ts-badge--dark]="rdv.status === 'Clos'">
+                <i class="bi" [class.bi-calendar-check]="rdv.status === 'Ouvert'" [class.bi-calendar-x]="rdv.status === 'Clos'"></i>
+                {{ rdv.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Date début</div>
+            <div class="ts-info-value">{{ rdv.date_start | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Date fin</div>
+            <div class="ts-info-value">{{ rdv.date_end | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.duration_minutes">
+            <div class="ts-info-label">Durée</div>
+            <div class="ts-info-value">{{ rdv.duration_minutes }} min</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.session_type">
+            <div class="ts-info-label">Type de session</div>
+            <div class="ts-info-value">{{ rdv.session_type }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.rdv_type">
+            <div class="ts-info-label">Type de RDV</div>
+            <div class="ts-info-value">{{ rdv.rdv_type }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.priority">
+            <div class="ts-info-label">Priorité</div>
+            <div class="ts-info-value">
+              <span class="ts-badge ts-badge--sm"
+                [class.ts-badge--danger]="rdv.priority === 'Haute'"
+                [class.ts-badge--amber]="rdv.priority === 'Moyenne'"
+                [class.ts-badge--grey]="rdv.priority === 'Faible'">
+                {{ rdv.priority }}
+              </span>
+            </div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.from">
+            <div class="ts-info-label">Initié par</div>
+            <div class="ts-info-value">{{ rdv.from }}</div>
+          </div>
+
+        </div>
+
+        <div *ngIf="rdv.description" class="mt-2 small text-muted">
+          <i class="bi bi-chat-text me-1"></i>{{ rdv.description }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- ── Session d'étude ───────────────────────────────────── -->
   <div *ngIf="selected_data?.project" class="ts-section">
     <div class="ts-section-header ts-section-header--amber">

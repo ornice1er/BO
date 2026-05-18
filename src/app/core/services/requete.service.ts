@@ -126,6 +126,14 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     return this.http.get<any>(`${this.url}/note-file-url?path=${encodeURIComponent(path)}`);
   }
 
+  downloadFile(path: string, name: string) {
+    const params = `path=${encodeURIComponent(path)}&name=${encodeURIComponent(name)}`;
+    return this.http.get(`${this.url}/download-file?${params}`, {
+      responseType: 'blob',
+      headers: { 'Accept': 'application/octet-stream' },
+    });
+  }
+
   /**
    * Action sur le circuit documentaire (paraphe, signature, prévalidation)
    *
