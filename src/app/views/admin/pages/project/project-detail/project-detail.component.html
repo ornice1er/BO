@@ -40,42 +40,89 @@
     <table class="table custom-table">
       <thead>
         <tr>
-          <th style="width: 50px;">#</th>
-          <th scope="col">Code PS</th>
+          <th style="width: 40px;">#</th>
+          <th scope="col">Prestation</th>
           <th scope="col">Code Demande</th>
           <th scope="col">Demandeur</th>
+          <th scope="col">Étape</th>
           <th scope="col">Statut</th>
+          <th scope="col">Date dépôt</th>
+          <th scope="col" style="width:70px"></th>
         </tr>
       </thead>
       <tbody>
         <!-- Skeleton loader -->
         <ng-container *ngIf="loading2">
             <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
-                <td *ngFor="let j of [1,2,3,4,5]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7,8]">
                     <span class="placeholder col-10 rounded"></span>
                 </td>
             </tr>
         </ng-container>
 
         <ng-container *ngIf="!loading2">
-        <tr *ngFor="let d of filteredRequetes | sampleSearch:search_text | paginate: {
+        <ng-container *ngFor="let d of filteredRequetes | sampleSearch:search_text | paginate: {
                         id: 'ngxP1',
                         itemsPerPage: pg.pageSize,
                         currentPage: pg.p,
                         totalItems: filteredRequetes.length
-                    }; let i = index"
-            class="table-row">
-          <td>{{ i + 1 }}</td>
-          <td>{{ d?.prestation?.code }}</td>
-          <td>{{ d?.code }}</td>
+                    }; let i = index">
+        <tr class="table-row">
+          <td class="text-muted">{{ i + 1 }}</td>
           <td>
-            <ul class="mb-0 ps-3">
-              <li><strong>Email :</strong> {{ d?.email }}</li>
-              <li><strong>Téléphone :</strong> {{ d?.phone }}</li>
-            </ul>
+            <span class="fw-semibold">{{ d?.prestation?.code }}</span>
+            <div class="text-muted small">{{ d?.prestation?.name }}</div>
           </td>
-          <td>{{ d?.current_status?.name }}</td>
+          <td><code>{{ d?.code }}</code></td>
+          <td>
+            <div class="small">{{ d?.email }}</div>
+            <div class="small text-muted">{{ d?.phone }}</div>
+          </td>
+          <td>
+            <span class="badge bg-primary-subtle text-primary-emphasis">
+              {{ d?.current_etape?.name ?? '—' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge"
+              [class.bg-secondary]="['en_attente','demande'].includes(d?.current_status?.short_name)"
+              [class.bg-primary]="['pris_en_charge','envoye','transmis'].includes(d?.current_status?.short_name)"
+              [class.bg-warning]="['paraphe','etudie','en_attente_signature'].includes(d?.current_status?.short_name)"
+              [class.bg-success]="['valide','prevalide'].includes(d?.current_status?.short_name)"
+              [class.bg-danger]="['rejete','rejete_clos','cloture'].includes(d?.current_status?.short_name)">
+              {{ d?.current_status?.name ?? '—' }}
+            </span>
+          </td>
+          <td class="small text-muted">{{ d?.created_at | date:'dd/MM/yyyy' }}</td>
+          <td class="text-nowrap">
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-dark"
+                      (click)="voirRequete(d)"
+                      title="Voir le détail">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button *ngIf="stepFields(d).length > 0"
+                      class="btn btn-sm btn-outline-secondary"
+                      (click)="toggleExpand(d.id)"
+                      [title]="expandedIds.has(d.id) ? 'Réduire' : 'Voir les données'">
+                <i class="bi" [class.bi-chevron-down]="!expandedIds.has(d.id)" [class.bi-chevron-up]="expandedIds.has(d.id)"></i>
+              </button>
+            </div>
+          </td>
         </tr>
+        <tr *ngIf="expandedIds.has(d.id)" class="table-light">
+          <td colspan="8" class="px-4 py-3">
+            <div class="row g-2">
+              <div *ngFor="let f of stepFields(d)" class="col-md-4 col-sm-6">
+                <div class="d-flex flex-column">
+                  <span class="text-muted small text-uppercase" style="font-size:0.7rem;letter-spacing:.05em;">{{ f.label }}</span>
+                  <span class="fw-semibold small">{{ f.value }}</span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </ng-container>
         </ng-container>
       </tbody>
     </table>

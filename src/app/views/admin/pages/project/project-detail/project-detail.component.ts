@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ProjectService } from '../../../../../core/services/project.service';
@@ -69,6 +69,7 @@ export class ProjectDetailComponent {
     private projectService: ProjectService,
     private projectDocService: ProjectDocumentService,
     private route: ActivatedRoute,
+    private router: Router,
     private locService: LocalStorageService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -221,6 +222,34 @@ export class ProjectDetailComponent {
   }
 
   // ────────────────────────────────────────────────────────────────────────────
+
+  expandedIds = new Set<number>();
+
+  toggleExpand(id: number): void {
+    this.expandedIds.has(id) ? this.expandedIds.delete(id) : this.expandedIds.add(id);
+  }
+
+  stepFields(d: any): { label: string; value: any }[] {
+    const steps: any[] = d?.step_contents ?? [];
+    const fields: { label: string; value: any }[] = [];
+    for (const step of steps) {
+      const content = step?.content ?? {};
+      for (const [key, val] of Object.entries(content)) {
+        if (val !== null && val !== '' && val !== undefined) {
+          fields.push({ label: key, value: val });
+        }
+      }
+    }
+    return fields;
+  }
+
+  voirRequete(d: any): void {
+    const code = d?.code;
+    const prestationCode = d?.prestation?.code;
+    if (code && prestationCode) {
+      this.router.navigate(['/admin/eservice/espace-traitement-show', code, prestationCode]);
+    }
+  }
 
   onStatusChange(): void {
     this.pg.p = 1;
