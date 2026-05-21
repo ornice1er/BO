@@ -18,11 +18,12 @@ import { LocalStorageService } from '../../../../../core/utils/local-stoarge-ser
 import { LoadingComponent } from '../../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-espace-retour-correction',
     templateUrl: './espace-retour-correction.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./espace-retour-correction.component.css']
 })
 export class EspaceRetourCorrectionComponent implements OnInit {

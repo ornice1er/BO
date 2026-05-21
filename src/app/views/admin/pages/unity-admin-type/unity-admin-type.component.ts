@@ -13,11 +13,12 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-unity-admin-type',
     templateUrl: './unity-admin-type.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./unity-admin-type.component.css']
 })
 export class UnityAdminTypeComponent implements OnInit {

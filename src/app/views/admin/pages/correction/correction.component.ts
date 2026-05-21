@@ -16,12 +16,13 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-correction',
     templateUrl: './correction.component.html',
     standalone:true,
-    imports: [CommonModule, FormsModule, NgbModule, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./correction.component.css']
 })
 export class CorrectionComponent implements OnInit,OnDestroy {

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/admin/pages/project/project-detail/project-detail.component.css"],
+  "sourcesContent": ["::ng-deep .offcanvas-agrement {\n  min-width: 60vw !important;\n  width: 60vw !important;\n}\n\n::ng-deep .offcanvas-agrement quill-editor .ql-container {\n  min-height: 400px;\n}\n\n::ng-deep .offcanvas-agrement quill-editor .ql-editor {\n  min-height: 400px;\n  font-size: 13px;\n  line-height: 1.7;\n}\n"],
+  "mappings": ";AAAA,UAAU,CAAC;AACT,aAAW;AACX,SAAO;AACT;AAEA,UAAU,CALC,mBAKmB,aAAa,CAAC;AAC1C,cAAY;AACd;AAEA,UAAU,CATC,mBASmB,aAAa,CAAC;AAC1C,cAAY;AACZ,aAAW;AACX,eAAa;AACf;",
+  "names": []
+}

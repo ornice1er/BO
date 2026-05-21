@@ -18,14 +18,14 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-document-circuit-etape',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
   templateUrl: './document-circuit-etape.component.html',
   styleUrl: './document-circuit-etape.component.css'
 })

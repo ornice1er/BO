@@ -14,10 +14,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-status',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     templateUrl: './status.component.html',
     styleUrl: './status.component.css'
 })

@@ -17,6 +17,7 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { QuillEditorWrapperComponent } from '../../../components/quill-editor-wrapper/quill-editor-wrapper.component';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 
 @Component({
@@ -24,8 +25,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent,QuillEditorWrapperComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent,QuillEditorWrapperComponent, HelpPanelComponent],
   templateUrl: './etape-document-produit.component.html',
   styleUrl: './etape-document-produit.component.css'
 })

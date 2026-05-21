@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;966379f19d8dff7e6ac7c7d3f521caf71e160926cab7325afbcd7d1a0aa85aa1;/home/benking/Bureau/Projets/BO/BO/src/app/views/components/quill-editor-wrapper/quill-editor-wrapper.component.ts"],
+  "sourcesContent": ["\n    app-quill-wrapper quill-editor { display: block; width: 100%; }\n    app-quill-wrapper .ql-container { min-height: 350px; }\n    app-quill-wrapper .ql-editor   { min-height: 350px; font-size: 13px; }\n  "],
+  "mappings": ";AACI,kBAAkB;AAAe,WAAS;AAAO,SAAO;AAAM;AAC9D,kBAAkB,CAAC;AAAe,cAAY;AAAO;AACrD,kBAAkB,CAAC;AAAc,cAAY;AAAO,aAAW;AAAM;",
+  "names": []
+}

@@ -13,11 +13,12 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-district',
   templateUrl: './district.component.html',
-  imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
   styleUrls: ['./district.component.css']
 })
 export class DistrictComponent implements OnInit {

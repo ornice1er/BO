@@ -15,11 +15,12 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { EntityService } from '../../../../core/services/entity.service';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-officer',
     templateUrl: './officer.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./officer.component.css']
 })
 export class OfficerComponent implements OnInit {

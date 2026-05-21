@@ -46,6 +46,7 @@ export const MENU_ADMIN_NATIONAL: any[] = [
 
     { title: 'e-Services', isTitle: true },
     { title: 'Prestations',            icon: 'fas fa-award',          link: '/admin/prestations' },
+    { title: 'Comptes de recette',     icon: 'fas fa-cash-register',  link: '/admin/payment-accounts' },
     { title: 'Déclaration périodique', icon: 'fas fa-file-signature', link: '/admin/projects' },
     { title: 'Modèles de documents',   icon: 'fas fa-file-alt',       link: '/admin/document-templates' },
     {

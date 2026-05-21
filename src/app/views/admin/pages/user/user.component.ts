@@ -19,13 +19,14 @@ import { PrestationService } from '../../../../core/services/prestation.service'
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 import { OfficerService } from '../../../../core/services/officer.service';
 import { PermissionUtils } from '../../../../core/utils/permission-utils';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 declare var bootstrap: any;
 
 
 @Component({
     selector: 'app-user',
     templateUrl: './user.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
     styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit,AfterViewInit  {

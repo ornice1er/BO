@@ -458,3 +458,24 @@
     </button>
   </div>
 </ng-template>
+
+<app-help-panel title="Guide — Visibilités">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Ajouter règle</strong> — définit qui voit cette étape</span></li>
+      <li><span class="help-icon help-icon--copy"><i class="bi bi-files"></i></span><span><strong>Copier depuis</strong> — clone les règles d'une autre prestation</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer toutes</strong> — efface toutes les règles après confirmation</span></li>
+      <li><span class="help-icon help-icon--flow"><i class="bi bi-table"></i></span><span><strong>Vue tableau / Diagramme</strong> — bascule l'affichage</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Règles de visibilité</div>
+    <p>Chaque règle associe une étape à un rôle ou une unité administrative. Scope : <code>requete</code> (par demande) ou <code>unite_admin</code> (par service).</p>
+  </div>
+
+</app-help-panel>

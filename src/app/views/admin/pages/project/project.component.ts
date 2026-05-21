@@ -18,10 +18,11 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { ConfigService } from '../../../../core/utils/config-service';
 import { Router } from '@angular/router';
 import { PrestationService } from '../../../../core/services/prestation.service';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-project',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     templateUrl: './project.component.html',
     styleUrl: './project.component.css'
 })

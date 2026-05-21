@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/admin/pages/planning-slot/planning-slot.component.css"],
+  "sourcesContent": [".badge-available {\n  background-color: #198754;\n  color: #fff;\n  padding: 4px 10px;\n  border-radius: 12px;\n  font-size: 0.75rem;\n}\n\n.badge-closed {\n  background-color: #dc3545;\n  color: #fff;\n  padding: 4px 10px;\n  border-radius: 12px;\n  font-size: 0.75rem;\n}\n\n.badge-full {\n  background-color: #fd7e14;\n  color: #fff;\n  padding: 4px 10px;\n  border-radius: 12px;\n  font-size: 0.75rem;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACP,WAAS,IAAI;AACb,iBAAe;AACf,aAAW;AACb;AAEA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACP,WAAS,IAAI;AACb,iBAAe;AACf,aAAW;AACb;AAEA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACP,WAAS,IAAI;AACb,iBAAe;AACf,aAAW;AACb;",
+  "names": []
+}

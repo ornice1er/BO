@@ -34,6 +34,7 @@ import { PermissionComponent } from "./pages/permission/permission.component";
 import { PostComponent } from "./pages/post/post.component";
 import { PrestationStatusComponent } from "./pages/prestation-status/prestation-status.component";
 import { PrestationComponent } from "./pages/prestation/prestation.component";
+import { PaymentAccountComponent } from "./pages/payment-account/payment-account.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { ProjectDetailComponent } from "./pages/project/project-detail/project-detail.component";
 import { ProjectComponent } from "./pages/project/project.component";
@@ -164,6 +165,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
             {
                 path: 'prestations',
                 component: PrestationComponent,
+            },
+            {
+                path: 'payment-accounts',
+                component: PaymentAccountComponent,
             },
             {
                 path: 'projects',

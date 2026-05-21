@@ -1,0 +1,12 @@
+<button class="help-fab" (click)="toggle()" [class.help-fab--open]="visible" title="Aide">
+  <i class="bi" [ngClass]="visible ? 'bi-x-lg' : 'bi-question-lg'"></i>
+</button>
+
+<div class="help-panel" [class.help-panel--visible]="visible">
+  <div class="help-panel-header">
+    <i class="bi bi-info-circle-fill me-2"></i>{{ title }}
+  </div>
+  <div class="help-panel-body">
+    <ng-content></ng-content>
+  </div>
+</div>

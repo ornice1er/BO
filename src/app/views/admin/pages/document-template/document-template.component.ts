@@ -10,6 +10,7 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { QuillEditorWrapperComponent } from '../../../components/quill-editor-wrapper/quill-editor-wrapper.component';
 import { DocumentTemplateService } from '../../../../core/services/document-template.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-document-template',
@@ -17,8 +18,7 @@ import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgxPaginationModule, NgToggleModule, NgToggleComponent,
-    QuillEditorWrapperComponent,
-  ],
+    QuillEditorWrapperComponent, HelpPanelComponent],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './document-template.component.html',
 })

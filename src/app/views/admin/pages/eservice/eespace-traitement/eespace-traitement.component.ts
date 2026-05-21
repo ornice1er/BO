@@ -20,10 +20,11 @@ import { LoadingComponent } from '../../../../components/loading/loading.compone
 import { PrestationDetails } from '../prestation-details';
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../../components/help-panel/help-panel.component';
 @Component({
     selector: 'ngx-eespace-traitement',
     templateUrl: './eespace-traitement.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./eespace-traitement.component.css']
 })
 export class EespaceTraitementComponent implements OnInit,AfterViewInit {

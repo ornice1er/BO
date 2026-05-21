@@ -556,7 +556,43 @@
   </form>
 </ng-template>
 
-  <ng-template #showContent let-modal>
+<app-help-panel title="Guide — Gestion des utilisateurs">
+
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner. Un panneau d'actions apparaît à droite.</p>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Actions sur la ligne</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie email, rôles, prestations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+      <li><span class="help-icon help-icon--on"><i class="bi bi-toggle-on"></i></span><span><strong>Activer / Désactiver</strong> — bascule le statut du compte</span></li>
+      <li><span class="help-icon help-icon--reset"><i class="bi bi-arrow-counterclockwise"></i></span><span><strong>Réinitialiser</strong> — définit un nouveau mot de passe (min. 8 caractères)</span></li>
+    </ul>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Créer un compte</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche. Le formulaire contient&nbsp;:</p>
+    <ol class="help-ol">
+      <li>Email + Contact</li>
+      <li>Agent associé + Rôle(s)</li>
+      <li>Toggle <em>Acteur métier</em></li>
+      <li>Prestations accessibles</li>
+    </ol>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Recherche</div>
+    <p>Filtre d'abord localement. Si aucun résultat et saisie &gt;&nbsp;2&nbsp;car., lance une recherche API automatiquement. Le bouton <i class="bi bi-arrow-counterclockwise"></i> recharge la liste complète.</p>
+  </div>
+
+</app-help-panel>
+
+<ng-template #showContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>

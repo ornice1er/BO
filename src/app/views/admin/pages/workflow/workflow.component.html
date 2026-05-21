@@ -524,3 +524,24 @@
     </button>
   </div>
 </ng-template>
+
+<app-help-panel title="Guide — Workflow">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--flow"><i class="bi bi-diagram-2"></i></span><span><strong>Voir flux</strong> — affiche le diagramme de transitions</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Ajouter transition</strong> — ouvre le formulaire de transition</span></li>
+      <li><span class="help-icon help-icon--copy"><i class="bi bi-files"></i></span><span><strong>Copier depuis</strong> — clone le workflow d'une autre prestation</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer toutes</strong> — supprime toutes les transitions après confirmation</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Transitions</div>
+    <p>Une transition relie deux étapes avec une condition : <code>auto</code>, <code>validation</code>, <code>rejet</code>, <code>signature</code>, <code>complement</code>…</p>
+  </div>
+
+</app-help-panel>

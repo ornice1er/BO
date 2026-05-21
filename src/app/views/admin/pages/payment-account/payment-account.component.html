@@ -1,0 +1,286 @@
+<h2 class="text-center mb-4 page-subtitle">Comptes de recette — Agrégateurs de paiement</h2>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card custom-card">
+
+      <div class="card-header-actions">
+        <div class="d-flex justify-content-between align-items-center">
+          <button class="btn btn-primary-custom" (click)="add(addTpl)">
+            <i class="bi bi-plus-lg me-2"></i>Ajouter un compte
+          </button>
+          <div class="input-group" style="max-width:320px">
+            <input type="text" class="form-control search-input" [(ngModel)]="search_text" placeholder="Rechercher...">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <app-loading [isVisible]="loading"></app-loading>
+
+        <div class="row g-3 mt-1" *ngIf="!loading">
+
+          <!-- Agrégateurs disponibles (badges informatifs) -->
+          <div class="col-12 mb-2">
+            <div class="d-flex gap-3 flex-wrap">
+              <div *ngFor="let agg of aggregators" class="aggregator-badge">
+                <i class="bi {{agg.logo}} me-1"></i>{{ agg.label }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Tableau -->
+          <div class="col-12">
+            <div class="table-responsive">
+              <table class="table custom-table">
+                <thead>
+                  <tr>
+                    <th style="width:50px">#</th>
+                    <th>Nom du compte</th>
+                    <th>Agrégateur</th>
+                    <th>Environnement</th>
+                    <th>Clé API (publique)</th>
+                    <th>Webhook</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of data | sampleSearch:search_text | paginate:{id:'pgPA', itemsPerPage:pg.pageSize, currentPage:pg.p, totalItems:pg.total}" class="table-row">
+                    <td class="position-relative checkbox-cell">
+                      <div class="form-check">
+                        <input (click)="checked(d)" class="form-check-input custom-radio" type="radio"
+                          name="selPA" [value]="d.id" [(ngModel)]="selectedId" id="rPA-{{d.id}}">
+                      </div>
+                      <div *ngIf="selectedId === d.id" class="overlay-panel-right">
+                        <div class="overlay-actions-grid">
+                          <button (click)="edit(editTpl)" class="btn btn-action btn-edit" title="Éditer" [disabled]="loading">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button (click)="delete()" class="btn btn-action btn-delete" title="Supprimer" [disabled]="loading">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                          <button *ngIf="!d.is_active" (click)="setStatus(1)" class="btn btn-action btn-activate" title="Activer" [disabled]="loading">
+                            <i class="bi bi-toggle-on"></i>
+                          </button>
+                          <button *ngIf="d.is_active" (click)="setStatus(0)" class="btn btn-action btn-deactivate" title="Désactiver" [disabled]="loading">
+                            <i class="bi bi-toggle-off"></i>
+                          </button>
+                          <button class="btn btn-action btn-close-panel" (click)="selectedId=null" title="Fermer">
+                            <i class="bi bi-x-lg"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                    <td><strong>{{ d.name }}</strong></td>
+                    <td>
+                      <span class="aggregator-pill aggregator-pill--{{d.type}}">
+                        <i class="bi {{aggregatorIcon(d.type)}} me-1"></i>{{ aggregatorLabel(d.type) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="d.env === 'production' ? 'bg-success' : 'bg-warning text-dark'">
+                        {{ d.env }}
+                      </span>
+                    </td>
+                    <td>
+                      <code *ngIf="d.api_key" class="text-muted small">{{ d.api_key | slice:0:18 }}…</code>
+                      <span *ngIf="!d.api_key" class="text-muted">—</span>
+                    </td>
+                    <td>
+                      <span *ngIf="d.webhook_url" class="text-muted small">{{ d.webhook_url | slice:0:30 }}…</span>
+                      <span *ngIf="!d.webhook_url" class="text-muted">—</span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="d.is_active ? 'bg-success' : 'bg-secondary'">
+                        {{ d.is_active ? 'Actif' : 'Inactif' }}
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="!loading && data.length === 0">
+                    <td colspan="7" class="text-center py-5 text-muted">
+                      <i class="bi bi-credit-card fs-2 d-block mb-2"></i>
+                      Aucun compte de recette configuré. Cliquez sur <strong>Ajouter</strong> pour en créer un.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-container mt-4">
+              <pagination-controls id="pgPA" (pageChange)="pg.p=$event"
+                previousLabel="Précédent" nextLabel="Suivant" [autoHide]="true">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Modal Ajouter ───────────────────────────────────────────────────── -->
+<ng-template #addTpl let-c="close" let-d="dismiss">
+  <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
+    <div class="modal-header" style="background:linear-gradient(135deg,#0A3764,#1a5fa8);color:white">
+      <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nouveau compte de recette</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="d()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Nom du compte <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="name" ngModel required placeholder="ex: Compte principal BJPAY">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Agrégateur <span class="text-danger">*</span></label>
+          <select class="form-select" name="type" [(ngModel)]="add_data.type" required>
+            <option value="bjpay">BJ PAY</option>
+            <option value="fedapay">FEDAPAY</option>
+            <option value="kkiapay">KKIAPAY</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Clé API publique (merchant ID)</label>
+          <input type="text" class="form-control font-monospace" name="api_key" ngModel placeholder="pk_...">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Clé secrète</label>
+          <input type="password" class="form-control font-monospace" name="secret_key" ngModel placeholder="sk_...">
+          <div class="form-text">Stockée chiffrée côté serveur.</div>
+        </div>
+
+        <div class="col-md-8">
+          <label class="form-label fw-semibold">URL Webhook de callback</label>
+          <input type="url" class="form-control" name="webhook_url" ngModel placeholder="https://votre-domaine.bj/api/payment/callback">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Environnement <span class="text-danger">*</span></label>
+          <select class="form-select" name="env" [(ngModel)]="add_data.env" required>
+            <option value="test">Test / Sandbox</option>
+            <option value="production">Production</option>
+          </select>
+        </div>
+
+        <!-- Info bloc par agrégateur -->
+        <div class="col-12">
+          <div class="alert alert-info py-2 mb-0 small" *ngIf="add_data.type === 'bjpay'">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>BJ PAY</strong> — Renseignez le <em>Merchant ID</em> comme clé API et votre <em>clé secrète HMAC</em>.
+          </div>
+          <div class="alert alert-info py-2 mb-0 small" *ngIf="add_data.type === 'fedapay'">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>FEDAPAY</strong> — Utilisez la <em>clé publique</em> (pk_...) et la <em>clé secrète</em> (sk_...) disponibles dans votre tableau de bord FedaPay.
+          </div>
+          <div class="alert alert-info py-2 mb-0 small" *ngIf="add_data.type === 'kkiapay'">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>KKIAPAY</strong> — Renseignez votre <em>Public Key</em> et <em>Private Key</em> depuis le portail KKiaPay.
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="d()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid || loading">
+        <i class="bi bi-floppy me-1"></i>Enregistrer
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- ── Modal Éditer ────────────────────────────────────────────────────── -->
+<ng-template #editTpl let-c="close" let-d="dismiss">
+  <form #editForm="ngForm" (ngSubmit)="update(editForm.value)">
+    <div class="modal-header" style="background:linear-gradient(135deg,#0A3764,#1a5fa8);color:white">
+      <h5 class="modal-title"><i class="bi bi-pencil me-2"></i>Modifier le compte — {{ edit_data.name }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="d()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Nom du compte <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="name" [(ngModel)]="edit_data.name" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Agrégateur <span class="text-danger">*</span></label>
+          <select class="form-select" name="type" [(ngModel)]="edit_data.type" required>
+            <option value="bjpay">BJ PAY</option>
+            <option value="fedapay">FEDAPAY</option>
+            <option value="kkiapay">KKIAPAY</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Clé API publique</label>
+          <input type="text" class="form-control font-monospace" name="api_key" [(ngModel)]="edit_data.api_key">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Clé secrète <small class="text-muted">(laisser vide pour ne pas modifier)</small></label>
+          <input type="password" class="form-control font-monospace" name="secret_key" ngModel>
+        </div>
+
+        <div class="col-md-8">
+          <label class="form-label fw-semibold">URL Webhook</label>
+          <input type="url" class="form-control" name="webhook_url" [(ngModel)]="edit_data.webhook_url">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Environnement <span class="text-danger">*</span></label>
+          <select class="form-select" name="env" [(ngModel)]="edit_data.env" required>
+            <option value="test">Test / Sandbox</option>
+            <option value="production">Production</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="d()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || loading">
+        <i class="bi bi-floppy me-1"></i>Mettre à jour
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+
+<app-help-panel title="Guide — Comptes de recette">
+
+  <div class="help-section">
+    <div class="help-section-title">Rôle de cette page</div>
+    <p>Configurer les accès aux agrégateurs de paiement (<strong>BJ PAY</strong>, <strong>FEDAPAY</strong>, <strong>KKIAPAY</strong>) utilisés pour les prestations payantes.</p>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie les clés et la configuration</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — supprime après confirmation</span></li>
+      <li><span class="help-icon help-icon--on"><i class="bi bi-toggle-on"></i></span><span><strong>Activer / Désactiver</strong> — bascule la disponibilité du compte</span></li>
+    </ul>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Créer un compte</div>
+    <p>Cliquez sur <strong>Ajouter</strong>. Choisissez l'agrégateur, renseignez les clés API fournies par la plateforme, puis sélectionnez l'environnement (<em>Test</em> pour les essais, <em>Production</em> en exploitation).</p>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Lier à une prestation</div>
+    <p>Dans <strong>Prestations</strong>, activez le toggle <em>Prestation payante</em> puis sélectionnez ce compte pour associer le paiement au service.</p>
+  </div>
+
+</app-help-panel>

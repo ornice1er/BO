@@ -13,11 +13,12 @@ import { LoadingComponent } from '../../../components/loading/loading.component'
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-entity-type',
     templateUrl: './entity-type.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./entity-type.component.css']
 })
 export class EntityTypeComponent implements OnInit {

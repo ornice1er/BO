@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/views/admin/pages/role/role.component.css"],
+  "sourcesContent": [".vertical-nav-menu li a.mm-active{\n    color: #C14F44 !important;\n}\n\n.vertical-nav-menu li a:hover{\n    color: #C14F44 !important;\n}\n"],
+  "mappings": ";AAAA,CAAC,kBAAkB,GAAG,CAAC,CAAC;AACpB,SAAO;AACX;AAEA,CAJC,kBAIkB,GAAG,CAAC;AACnB,SAAO;AACX;",
+  "names": []
+}

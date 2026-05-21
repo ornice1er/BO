@@ -59,6 +59,7 @@
               <th scope="col">Néceesité de rencontre</th>
               <th scope="col">Besoin de validation</th>
               <th scope="col">Mise en abandon</th>
+              <th scope="col">Paiement</th>
             </tr>
             </thead>
             <tbody>
@@ -184,6 +185,12 @@
               <td>{{d?.need_meeting ?'oui':'non'}}</td>
               <td>{{d?.need_validation ?'oui':'non'}}</td>
               <td>{{d?.delay}} jr(s)</td>
+              <td>
+                <span *ngIf="d?.is_payant" class="badge bg-success">
+                  <i class="bi bi-credit-card me-1"></i>{{ d?.montant | number }} FCFA
+                </span>
+                <span *ngIf="!d?.is_payant" class="badge bg-light text-muted">Gratuit</span>
+              </td>
             </tr>
             </ng-container><!-- end *ngIf="!loading" -->
 
@@ -291,14 +298,47 @@
             <input type="number" class="form-control" name="delay" ngModel required min="1" max="365">
           </div>
 
-          <div class="form-group col-md-6 mb-3">
-            <label>Clé de décision</label>
-            <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision">
-          </div>
-
           <div class="form-group col-12 mb-3">
             <label>Description</label>
             <textarea name="desc" class="form-control" ngModel rows="3"></textarea>
+          </div>
+
+          <div class="form-group col-md-6 mb-3" *ngIf="add_data.from_pns">
+            <label>Clé de décision <small class="text-muted">(requis pour action PNS)</small></label>
+            <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision">
+          </div>
+
+          <!-- ── Paiement ─────────────────────────────────────────────── -->
+          <div class="col-12">
+            <div class="payment-section">
+              <div class="fw-bold text-success mb-3 small text-uppercase" style="letter-spacing:.05em">
+                <i class="bi bi-credit-card me-1"></i>Paiement
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6 d-flex justify-content-between align-items-center">
+                  <label class="mb-0">Prestation payante</label>
+                  <ng-toggle name="is_payant" [(ngModel)]="add_data.is_payant"
+                    [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                    [values]="{ checked: true, unchecked: false }">
+                  </ng-toggle>
+                </div>
+                <ng-container *ngIf="add_data.is_payant">
+                  <div class="col-md-6">
+                    <label class="form-label">Montant (FCFA) <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" name="montant" ngModel min="0" [required]="add_data.is_payant">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Compte de recette (agrégateur) <span class="text-danger">*</span></label>
+                    <ng-select name="payment_account_id" ngModel [required]="add_data.is_payant" placeholder="Sélectionner un compte">
+                      <ng-option [value]="pa.id" *ngFor="let pa of paymentAccounts">
+                        <span class="aggregator-pill aggregator-pill--{{pa.type}}">{{pa.type | uppercase}}</span>
+                        {{ pa.name }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
           </div>
 
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
@@ -425,14 +465,47 @@
             <input type="number" class="form-control" name="delay" [(ngModel)]="selected_data.delay" required min="1" max="365">
           </div>
 
-          <div class="form-group col-md-6 mb-3">
-            <label>Clé de décision</label>
-            <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision">
-          </div>
-
           <div class="form-group col-12 mb-3">
             <label>Description</label>
             <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc" rows="3"></textarea>
+          </div>
+
+          <div class="form-group col-md-6 mb-3" *ngIf="selected_data.from_pns">
+            <label>Clé de décision <small class="text-muted">(requis pour action PNS)</small></label>
+            <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision">
+          </div>
+
+          <!-- ── Paiement ─────────────────────────────────────────────── -->
+          <div class="col-12">
+            <div class="payment-section">
+              <div class="fw-bold text-success mb-3 small text-uppercase" style="letter-spacing:.05em">
+                <i class="bi bi-credit-card me-1"></i>Paiement
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6 d-flex justify-content-between align-items-center">
+                  <label class="mb-0">Prestation payante</label>
+                  <ng-toggle name="is_payant" [(ngModel)]="selected_data.is_payant"
+                    [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                    [values]="{ checked: true, unchecked: false }">
+                  </ng-toggle>
+                </div>
+                <ng-container *ngIf="selected_data.is_payant">
+                  <div class="col-md-6">
+                    <label class="form-label">Montant (FCFA) <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" name="montant" [(ngModel)]="selected_data.montant" min="0" [required]="selected_data.is_payant">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Compte de recette (agrégateur) <span class="text-danger">*</span></label>
+                    <ng-select name="payment_account_id" [(ngModel)]="selected_data.payment_account_id" [required]="selected_data.is_payant" placeholder="Sélectionner un compte">
+                      <ng-option [value]="pa.id" *ngFor="let pa of paymentAccounts">
+                        <span class="aggregator-pill aggregator-pill--{{pa.type}}">{{pa.type | uppercase}}</span>
+                        {{ pa.name }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
           </div>
 
           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
@@ -545,3 +618,27 @@
         </div>
       </div>
 </ng-template>
+
+<app-help-panel title="Guide — Prestations">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie les informations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Ajouter</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche pour créer une nouvelle prestation.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Points de départ</div>
+    <p>Chaque prestation peut avoir un ou plusieurs points de départ de workflow. Configurer via l'icône <strong>Flux</strong> sur la ligne.</p>
+  </div>
+
+</app-help-panel>

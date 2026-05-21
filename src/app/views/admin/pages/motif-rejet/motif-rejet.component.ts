@@ -16,14 +16,14 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-motif-rejet',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
   templateUrl: './motif-rejet.component.html',
   styleUrl: './motif-rejet.component.css'
 })

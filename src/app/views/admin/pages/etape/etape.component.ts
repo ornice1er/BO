@@ -16,10 +16,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-etape',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
     templateUrl: './etape.component.html',
     styleUrl: './etape.component.css'
 })

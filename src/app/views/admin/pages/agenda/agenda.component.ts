@@ -15,11 +15,12 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-agenda',
     templateUrl: './agenda.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./agenda.component.css'],
     encapsulation: ViewEncapsulation.None
 })

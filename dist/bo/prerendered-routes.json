@@ -26,6 +26,7 @@
     "/admin/files": {},
     "/admin/municipalities": {},
     "/admin/officers": {},
+    "/admin/payment-accounts": {},
     "/admin/permissions": {},
     "/admin/posts": {},
     "/admin/prestations": {},

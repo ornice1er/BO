@@ -21,10 +21,11 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { TransitionCondition } from '../../../../core/Models/interface.model';
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-workflow',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule,NgToggleModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule,NgToggleModule, NgToggleComponent, HelpPanelComponent],
     templateUrl: './workflow.component.html',
     styleUrl: './workflow.component.css'
 })
