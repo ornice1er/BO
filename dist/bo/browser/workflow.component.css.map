@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/views/admin/pages/workflow/workflow.component.css"],
-  "sourcesContent": [".badge-correction {\n  background-color: #e67e22;\n  color: #fff;\n}\n\n.badge-retour-correction {\n  background-color: #8e44ad;\n  color: #fff;\n}\n\n.observation-block {\n  white-space: pre-wrap;\n  background: #f8f9fa;\n  border-left: 3px solid #e67e22;\n  padding: 0.5rem 0.75rem;\n  border-radius: 0 4px 4px 0;\n  font-size: 0.875rem;\n  line-height: 1.5;\n}\n"],
-  "mappings": ";AAAA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACT;AAEA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACT;AAEA,CAAC;AACC,eAAa;AACb,cAAY;AACZ,eAAa,IAAI,MAAM;AACvB,WAAS,OAAO;AAChB,iBAAe,EAAE,IAAI,IAAI;AACzB,aAAW;AACX,eAAa;AACf;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;4ec731f46e0ac2b03068907aa25f4a46c7ca5eb6f55a232b21a17b022e80d93b;/home/benking/Bureau/Projets/BO/BO/src/app/views/components/document-editor/document-editor.component.ts"],
-  "sourcesContent": ["\n    app-document-editor quill-editor { display: block; margin-top: 8px; }\n    app-document-editor .ql-container { min-height: 500px; }\n    app-document-editor .ql-editor   { min-height: 500px; font-size: 13px; }\n    .offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }\n  "],
-  "mappings": ";AACI,oBAAoB;AAAe,WAAS;AAAO,cAAY;AAAK;AACpE,oBAAoB,CAAC;AAAe,cAAY;AAAO;AACvD,oBAAoB,CAAC;AAAc,cAAY;AAAO,aAAW;AAAM;AACvE,CAAC;AAAiB,aAAW;AAAiB,SAAO;AAAiB;",
-  "names": []
-}
