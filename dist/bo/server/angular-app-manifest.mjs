@@ -2,7 +2,7 @@
 export default {
   bootstrap: () => import('./main.server.mjs').then(m => m.default),
   inlineCriticalCss: true,
-  baseHref: '/',
+  baseHref: 'https://preprodmtfp.gouv.bj/pprod-bo/',
   locale: undefined,
   routes: undefined,
   entryPointToBrowserMapping: {
@@ -1972,8 +1972,8 @@ export default {
   ]
 },
   assets: {
-    'index.csr.html': {size: 57264, hash: '22e2d42634b449eb6cb5bcb15bd3b34ddf7f71eaccc6a2aea569c505e18d0be8', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1994, hash: '029446b4a24a7d4bf399c1ac0b26a3dff36f5585b7a988b0149072fb96031f04', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 57300, hash: '8831b8c76b7ced1677ba93ca8cb46e4a76468757470e4427f48460b63d6acf76', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 2030, hash: '797946f71c1b30f8155683ec4e45482ca6b7fa3a6adabc391495ea92daf1e071', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-6YXGFLK6.css': {size: 525357, hash: 'uIl25pgugQ8', text: () => import('./assets-chunks/styles-6YXGFLK6_css.mjs').then(m => m.default)}
   },
 };
