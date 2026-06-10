@@ -124,7 +124,7 @@
 
       <div class="col-12">
         <label class="form-label fw-semibold">Contenu du modèle</label>
-        <app-quill-editor-wrapper [(ngModel)]="add_data.content"></app-quill-editor-wrapper>
+        <app-quill-wrapper [(ngModel)]="add_data.content" name="content" ngDefaultControl></app-quill-wrapper>
       </div>
 
     </div>
@@ -169,7 +169,7 @@
 
       <div class="col-12">
         <label class="form-label fw-semibold">Contenu du modèle</label>
-        <app-quill-editor-wrapper [(ngModel)]="selected_data.content"></app-quill-editor-wrapper>
+        <app-quill-wrapper [(ngModel)]="selected_data.content" name="content" ngDefaultControl></app-quill-wrapper>
       </div>
 
     </div>
