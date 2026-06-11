@@ -41,6 +41,7 @@
     "/pprod-bo/admin/unity-admins": {},
     "/pprod-bo/admin/users": {},
     "/pprod-bo/admin/villages": {},
+    "/pprod-bo/first-password": {},
     "/pprod-bo/forget-password": {},
     "/pprod-bo/login": {},
     "/pprod-bo/sso-callback": {},

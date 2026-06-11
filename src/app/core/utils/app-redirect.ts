@@ -9,7 +9,11 @@ export const AppRedirect: any = {
         let user=localService.get(GlobalName.userName)
        // let spaces=localService.get(GlobalName.features).spaces
         let url="/admin/dashboard"
-        console.log(user)
+
+        // Première connexion : forcer le changement du mot de passe généré
+        if (user?.first_signin) {
+            return "/first-password";
+        }
 
         // switch(user.space){
         //     case spaces[2]:

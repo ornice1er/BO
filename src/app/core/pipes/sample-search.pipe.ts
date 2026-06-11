@@ -28,6 +28,12 @@ export class SampleSearchPipe implements PipeTransform {
               item?.prestation?.short_name?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.current_status?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.current_status?.short_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.doc_produit?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.unite_admin?.libelle?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.role_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.action_type?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.status_after?.toLowerCase().includes(searchText.toLowerCase()) ||
+              item?.requete_status_after?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.created_at?.toLowerCase().includes(searchText.toLowerCase()) ||
               item?.updated_at?.toLowerCase().includes(searchText.toLowerCase())
         }) : value;

@@ -6,6 +6,7 @@ import { AdminRoutes } from './views/admin/admin-routing.module';
 import { AccountActivationComponent } from './views/auth/account-activation/account-activation.component';
 import { ForgetPasswordComponent } from './views/auth/forget-password/forget-password.component';
 import { LoginComponent } from './views/auth/login/login.component';
+import { FirstPasswordComponent } from './views/auth/first-password/first-password.component';
 import { RecoveryPasswordComponent } from './views/auth/recovery-password/recovery-password.component';
 import { UserProfilComponent } from './views/auth/user-profil/user-profil.component';
 import { UserSettingComponent } from './views/auth/user-setting/user-setting.component';
@@ -44,6 +45,11 @@ export const routes: Routes = [
       ]
     },
    
+    {
+      path:"first-password",
+      canActivate:[AuthGuard],
+      component:FirstPasswordComponent
+    },
     {
       path:"user-account",
       canActivate:[AuthGuard],

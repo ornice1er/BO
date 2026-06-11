@@ -46,6 +46,7 @@ export class EtapeDocumentProduitComponent implements OnInit {
   remoteSearchData: any[] = [];
   isPaginate = true;
   pg = { pageSize: 10, p: 1, total: 0 };
+  slugManuallyEdited = false;
 generate_from:any="pns"
 quillModules: any
 
@@ -114,9 +115,34 @@ formats = [
   }
 
   add(content: any) {
-    this.add_data = { allow_correction: true, avancer_workflow: false, content: '' };
+    this.add_data = { allow_correction: true, avancer_workflow: false, content: '', name: '', slug: '' };
+    this.slugManuallyEdited = false;
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
+  }
+
+  /** Transforme un libellé en slug technique (minuscules, sans accents, tirets) */
+  slugify(value: string): string {
+    return (value ?? '')
+      .normalize('NFD').replace(/[̀-ͯ]/g, '') // retire les accents
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')                       // non alphanum -> tiret
+      .replace(/^-+|-+$/g, '');                          // tirets en bord
+  }
+
+  /** À la saisie du libellé : propose le slug tant qu'il n'a pas été édité manuellement */
+  onNameChange(value: string) {
+    this.add_data.name = value;
+    if (!this.slugManuallyEdited) {
+      this.add_data.slug = this.slugify(value);
+    }
+  }
+
+  /** L'utilisateur a modifié le slug à la main : on cesse de l'écraser */
+  onSlugChange(value: string) {
+    this.add_data.slug = value;
+    this.slugManuallyEdited = true;
   }
 
   show(content: any) {

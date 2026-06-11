@@ -405,9 +405,11 @@ onDocumentModifie(): void {
   this.get();
 }
  
-/** Vérifie si l'étape nécessite une édition (pas encore en circuit) */
+/** Vérifie si l'étape nécessite une édition (pas encore en circuit).
+ *  Aligné sur la nouvelle archi : l'étape produit un document ssi un
+ *  EtapeDocumentProduit est configuré (résolu dans docProduitCourant). */
 etapeNecessiteEdition(): boolean {
-  return this.selectedData?.current_etape?.produces_document === true
+  return !!this.docProduitCourant
       && !this.documentDejaSoumis;
 }
  

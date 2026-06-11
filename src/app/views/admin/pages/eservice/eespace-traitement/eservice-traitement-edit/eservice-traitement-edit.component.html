@@ -92,7 +92,7 @@
 
 
 <!-- ── BLOC A : Éditeur de document ────────────────────────── -->
-<ng-container *ngIf="selectedData?.current_etape?.produces_document && !documentDejaSoumis">
+<ng-container *ngIf="docProduitCourant && !documentDejaSoumis">
 
   <!-- Éditeur -->
   <div class="te-section mb-4">
@@ -120,7 +120,7 @@
 
 <!-- ── BLOC B : Décision workflow ───────────────────────────── -->
 <div class="te-section mb-4"
-  *ngIf="!selectedData?.current_etape?.produces_document || documentDejaSoumis">
+  *ngIf="!docProduitCourant || documentDejaSoumis">
 
   <div class="te-section__header">
     <i class="bi bi-send-check"></i>
@@ -218,7 +218,7 @@
     <i class="bi bi-arrow-left"></i> Annuler
   </button>
   <button
-    *ngIf="!selectedData?.current_etape?.produces_document || documentDejaSoumis"
+    *ngIf="!docProduitCourant || documentDejaSoumis"
     class="te-btn te-btn--primary"
     [disabled]="!responseData.transition_id || loading"
     (click)="soumettre()">

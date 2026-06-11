@@ -385,10 +385,18 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
             this.formData.conclusion  = saved.conclusion  ?? '';
             this.formData.htmlContent = saved.content     ?? '';
           }else{
-            this.formData.htmlContent     = res.data?.doc_produit?.content ?? '';
+            // Contenu prédéfini du document produit : préchargé dans le corps
+            // du volet « Générer » ET dans l'« Éditeur ».
+            const predefini = res.data?.doc_produit?.content ?? '';
+            this.formData.content     = predefini;
+            this.formData.htmlContent = predefini;
           }
 
-           switch (this.contentType) {
+           // Génération depuis le PNS → onglet « Éditeur » présélectionné
+           if ((res.data?.doc_produit?.generate_from) === 'pns') {
+              this.activeTab = 'wysiwyg';
+           } else {
+             switch (this.contentType) {
               case 0: // Demande d'agrément
                 this.activeTab ='generer';
                 break;
@@ -404,6 +412,7 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
               default:
                 this.toastr.error('Type de contenu inconnu pour l\'éditeur de document');
                 return;
+             }
             }
         },
         error: () => {

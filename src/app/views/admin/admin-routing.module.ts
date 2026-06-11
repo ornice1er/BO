@@ -1,4 +1,5 @@
 import { AuthGuard } from "../../core/guards/auth.guard";
+import { FirstSigninGuard } from "../../core/guards/first-signin.guard";
 import { LayoutComponent } from "./layout/layout.component";
 import { AgendaComponent } from "./pages/agenda/agenda.component";
 import { BillingComponent } from "./pages/billing/billing.component";
@@ -60,7 +61,7 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
       path: 'admin',
       component: LayoutComponent,
-      canActivate:[AuthGuard],
+      canActivate:[AuthGuard, FirstSigninGuard],
       children: [
         { path: 'dashboard', component: DashboardComponent },
 
