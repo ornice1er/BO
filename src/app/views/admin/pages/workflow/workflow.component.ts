@@ -12,6 +12,8 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { WorkflowService } from '../../../../core/services/workflow.service';
 import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
+import { EtapeDocumentProduitService } from '../../../../core/services/etape-document-produit.service';
+import { DocumentCircuitEtapeService } from '../../../../core/services/document-circuit-etape.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -44,6 +46,12 @@ export class WorkflowComponent {
   prestations: any[] = [];
   etapes: any[] = [];
   statuses: any[] = [];
+
+  // ── Flux : circuit documentaire ──────────────────────────────────────────
+  fluxTab: 'transitions' | 'circuit' = 'transitions';   // onglet actif (option B)
+  showCircuit = false;                                   // inclure le circuit dans le flux (option A)
+  docProduits: any[] = [];                               // documents produits de la prestation
+  circuitSteps: any[] = [];                              // étapes de circuit de la prestation
   filteredStatuses: any[] = [];
   filteredEtapes: any[] = [];
   isCorrection = false;
@@ -89,6 +97,8 @@ export class WorkflowComponent {
     private prestationService: PrestationService,
     private statusService: StatusService,
     private psService: PrestationStatusService,
+    private docProduitService: EtapeDocumentProduitService,
+    private circuitService: DocumentCircuitEtapeService,
     private locService: LocalStorageService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -210,6 +220,44 @@ export class WorkflowComponent {
         lines.push(`  linkStyle ${i} stroke:#e67e22,stroke-width:2.5px,color:#e67e22`);
       });
 
+      // ── Option A : greffer le circuit documentaire (pointillés) ──────────────
+      if (this.showCircuit) {
+        const circStepIds: string[] = [];
+        this.docProduits.forEach((dp: any) => {
+          const steps = this.stepsOf(dp.id);
+          if (!steps.length) return;
+          const dpName = (dp.name ?? `Doc ${dp.id}`).replace(/"/g, "'");
+          // lien étape d'édition -.-> document
+          lines.push(`  E${dp.etape_edition_id} -.->|📄 génère| DOC${dp.id}{{"${dpName}"}}`);
+          lines.push(`  subgraph CIRC${dp.id} ["🖋️ Circuit : ${dpName}"]`);
+          lines.push('    direction LR');
+          steps.forEach((s: any, i: number) => {
+            const last = i === steps.length - 1;
+            const label = `${s.order ?? i + 1}. ${s.role_name ?? '?'} · ${s.action_type ?? '?'}${last ? ' ✓' : ''}`
+              .replace(/"/g, "'");
+            lines.push(`    S${s.id}["${label}"]`);
+            if (i > 0) lines.push(`    S${steps[i - 1].id} --> S${s.id}`);
+            circStepIds.push(`S${s.id}`);
+          });
+          lines.push('  end');
+          lines.push(`  DOC${dp.id} -.-> S${steps[0].id}`);
+          circStepIds.push(`DOC${dp.id}`);
+
+          // Couplage action_type = condition_type : chaque step déclenche la
+          // transition de requête de même condition_type (hors subgraph).
+          steps.forEach((s: any) => {
+            const match = this.data.find((t: any) => t.condition_type === s.action_type);
+            if (!match) return;
+            const target = match.etape_to_id ? `E${match.etape_to_id}` : 'FIN';
+            lines.push(`  S${s.id} -.->|⇄ ${s.action_type}| ${target}`);
+          });
+        });
+        if (circStepIds.length) {
+          lines.push('  classDef circ fill:#fff3e0,stroke:#e67e22,color:#7a3e00;');
+          lines.push(`  class ${circStepIds.join(',')} circ;`);
+        }
+      }
+
       return lines.join('\n');
     }
 
@@ -219,12 +267,55 @@ export class WorkflowComponent {
 
     async openFluxModal(content: any) {
       this.zoomLevel = 1;
+      this.fluxTab = 'transitions';
       const prestation = this.prestations.find((p: any) => p.id === this.filterPrestationId);
       this.fluxPrestationName = prestation?.name ?? '';
       (document.activeElement as HTMLElement)?.blur();
-      this.modalService.open(content, { size: 'xl', scrollable: true });
+      this.modalService.open(content, { size: 'xl', scrollable: true, windowClass: 'flux-modal-xxl' });
       if (!this.filterPrestationId) return;
 
+      await this.loadCircuitData();
+      this.renderDiagram();
+    }
+
+    /** Charge les documents produits et leurs étapes de circuit pour la prestation filtrée */
+    private loadCircuitData(): Promise<void> {
+      return new Promise((resolve) => {
+        let pending = 2;
+        const done = () => { if (--pending === 0) resolve(); };
+        this.docProduitService.getAll().subscribe({
+          next: (res: any) => {
+            this.docProduits = (res.data ?? res ?? [])
+              .filter((dp: any) => dp.prestation_id === this.filterPrestationId);
+            done();
+          },
+          error: () => { this.docProduits = []; done(); }
+        });
+        this.circuitService.getAll().subscribe({
+          next: (res: any) => {
+            this.circuitSteps = (res.data ?? res ?? [])
+              .filter((c: any) => c?.doc_produit?.prestation_id === this.filterPrestationId)
+              .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+            done();
+          },
+          error: () => { this.circuitSteps = []; done(); }
+        });
+      });
+    }
+
+    /** Bascule d'onglet (transitions ⇄ circuit documentaire) */
+    setFluxTab(tab: 'transitions' | 'circuit') {
+      this.fluxTab = tab;
+      this.renderDiagram();
+    }
+
+    /** Toggle « inclure le circuit dans le flux » (onglet transitions) */
+    onToggleCircuit() {
+      this.renderDiagram();
+    }
+
+    /** Rend le diagramme mermaid courant dans le conteneur, selon l'onglet actif */
+    private renderDiagram() {
       setTimeout(async () => {
         const container = document.getElementById('mermaid-flux-container');
         if (!container) return;
@@ -232,7 +323,9 @@ export class WorkflowComponent {
         try {
           const { default: mermaid } = await import('mermaid');
           mermaid.initialize({ startOnLoad: false, theme: 'default', flowchart: { padding: 24, nodeSpacing: 50, rankSpacing: 80 } });
-          const code = this.buildMermaidCode();
+          const code = this.fluxTab === 'circuit'
+            ? this.buildCircuitMermaidCode()
+            : this.buildMermaidCode();
           const id = 'mermaid-svg-' + Date.now();
           const { svg } = await mermaid.render(id, code);
           container.innerHTML = svg;
@@ -255,7 +348,56 @@ export class WorkflowComponent {
         } catch {
           container.innerHTML = '<p class="text-danger text-center">Erreur lors du rendu du diagramme.</p>';
         }
-      }, 200);
+      }, 150);
+    }
+
+    /** Nom d'une étape à partir de son id (via la liste etapes chargée) */
+    private etapeName(id: any): string {
+      const e = this.etapes.find((x: any) => x.id === id);
+      return (e?.name ?? `Étape ${id}`).replace(/"/g, "'");
+    }
+
+    /** Étapes de circuit d'un document produit, ordonnées */
+    private stepsOf(docProduitId: any): any[] {
+      return this.circuitSteps
+        .filter((c: any) => c.doc_produit_id === docProduitId)
+        .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+    }
+
+    /** Option B — Diagramme dédié au circuit documentaire */
+    buildCircuitMermaidCode(): string {
+      const docs = this.docProduits;
+      if (!docs.length) return 'flowchart LR\n  MSG["Aucun document produit pour cette prestation"]';
+
+      const lines: string[] = ['flowchart LR'];
+      let any = false;
+
+      docs.forEach((dp: any) => {
+        const steps = this.stepsOf(dp.id);
+        const dpName = (dp.name ?? `Doc ${dp.id}`).replace(/"/g, "'");
+        const edName = this.etapeName(dp.etape_edition_id);
+        lines.push(`  subgraph DP${dp.id} ["📄 ${dpName} — édition: ${edName}"]`);
+        lines.push('    direction LR');
+        if (!steps.length) {
+          lines.push(`    DPN${dp.id}["(aucune étape de circuit)"]`);
+        } else {
+          steps.forEach((s: any, i: number) => {
+            const last = i === steps.length - 1;
+            const label = `${s.order ?? i + 1}. ${s.role_name ?? '?'} · ${s.action_type ?? '?'}${last ? ' ✓' : ''}`
+              .replace(/"/g, "'");
+            lines.push(`    S${s.id}["${label}"]`);
+            if (i > 0) lines.push(`    S${steps[i - 1].id} --> S${s.id}`);
+          });
+        }
+        lines.push('  end');
+        any = any || steps.length > 0;
+      });
+
+      if (!any) lines.push('  NOTE["Aucune étape de circuit configurée"]');
+      lines.push('  classDef circ fill:#fff3e0,stroke:#e67e22,color:#7a3e00;');
+      // appliquer la classe à tous les noeuds de circuit
+      this.circuitSteps.forEach((s: any) => lines.push(`  class S${s.id} circ;`));
+      return lines.join('\n');
     }
 
  

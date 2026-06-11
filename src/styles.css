@@ -1655,3 +1655,25 @@ ul.ngx-pagination {
   padding: 14px 16px;
   margin-top: 4px;
 }
+
+/* Modal « Flux de transitions » (workflows) — agrandi pour le diagramme mermaid */
+.flux-modal-xxl .modal-dialog {
+  max-width: 95vw;
+  margin: 1.2rem auto;
+}
+.flux-modal-xxl .modal-content {
+  min-height: 88vh;
+}
+/* Onglets du flux : lisibilité de l'onglet inactif */
+.flux-modal-xxl .nav-tabs .nav-link {
+  color: #0A3764;
+  cursor: pointer;
+}
+.flux-modal-xxl .nav-tabs .nav-link:hover {
+  color: #07294a;
+  background-color: #f1f5f9;
+}
+.flux-modal-xxl .nav-tabs .nav-link.active {
+  color: #0A3764;
+  font-weight: 600;
+}

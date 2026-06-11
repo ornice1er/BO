@@ -49,6 +49,19 @@ remoteSearchData: any[] = []
   isPaginate=true
   selectedId: number | null = null;
          selectedFilter = '';
+  selectedPrestationId: any = null;
+
+  /** Données affichées, filtrées par prestation */
+  get displayedData(): any[] {
+    if (!this.selectedPrestationId) return this.data;
+    return this.data.filter(
+      (d: any) => (d?.prestation_id ?? d?.prestation?.id) === this.selectedPrestationId
+    );
+  }
+
+  onPrestationFilterChange() {
+    this.selectedId = null;
+  }
 
 
          fileInput:any
@@ -270,6 +283,7 @@ async delete() {
 
 resetSearch() {
   this.search_text = '';
+  this.selectedPrestationId = null;
   this.isPaginate=true;
   this.pg.p = 1; // reset pagination si utilisée
   this.all(); // méthode pour recharger les données initiales

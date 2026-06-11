@@ -200,11 +200,10 @@
         </div>
 
         <div class="form-group col-12 mb-3">
-          <label>Clé de template <span class="text-danger" *ngIf="generate_from === 'system'">(*)</span></label>
+          <label>Clé de template</label>
           <input type="text" name="template_key" class="form-control" ngModel
-                 [required]="generate_from === 'system'"
                  placeholder="ex: documents.agrement.projet_lettre">
-          <small class="text-muted">Obligatoire si le document est généré depuis le système.</small>
+          <small class="text-muted">Optionnelle.</small>
         </div>
 
         <div class="form-group col-12 mb-3">
@@ -339,8 +338,8 @@
         </div>
 
         <div class="form-group col-12 mb-3">
-          <label>Clé de template <span class="text-danger">(*)</span></label>
-          <input type="text" name="template_key" class="form-control" [(ngModel)]="selected_data.template_key" required>
+          <label>Clé de template</label>
+          <input type="text" name="template_key" class="form-control" [(ngModel)]="selected_data.template_key">
         </div>
 
         <div class="form-group col-12 mb-3">

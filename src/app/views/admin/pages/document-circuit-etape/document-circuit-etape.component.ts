@@ -13,6 +13,7 @@ import { EtapeDocumentProduitService } from '../../../../core/services/etape-doc
 import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { RoleService } from '../../../../core/services/role.service';
 import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
+import { PrestationService } from '../../../../core/services/prestation.service';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
@@ -36,6 +37,8 @@ export class DocumentCircuitEtapeComponent implements OnInit {
   add_data: any = { is_blocking: true };
   data: any[] = [];
   docProduits: any[] = [];
+  prestations: any[] = [];
+  selectedPrestationId: any = null;
   uniteAdmins: any[] = [];
   roles: any[] = [];
   prestationStatuses: any[] = [];
@@ -62,6 +65,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     private uniteAdminService: UnityAdminService,
     private roleService: RoleService,
     private prestationStatusService: PrestationStatusService,
+    private prestationService: PrestationService,
     private locService: LocalStorageService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -74,6 +78,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
   ngOnInit(): void {
     this.all();
     this.allDocProduits();
+    this.allPrestations();
     this.allUniteAdmins();
     this.allRoles();
     this.user = this.locService.get(GlobalName.userName);
@@ -96,6 +101,25 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     this.docProduitService.getAll().subscribe((res: any) => {
       this.docProduits = res.data;
     });
+  }
+
+  allPrestations() {
+    this.prestationService.getAll().subscribe((res: any) => {
+      this.prestations = res.data ?? res;
+    });
+  }
+
+  /** Données affichées, filtrées par prestation (via doc_produit.prestation_id) */
+  get displayedData(): any[] {
+    if (!this.selectedPrestationId) return this.data;
+    return this.data.filter(
+      (d: any) => d?.doc_produit?.prestation_id === this.selectedPrestationId
+    );
+  }
+
+  onPrestationFilterChange() {
+    this.selectedId = null;
+    this.pg.p = 1;
   }
 
   allUniteAdmins() {
@@ -225,6 +249,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
 
   resetSearch() {
     this.search_text = '';
+    this.selectedPrestationId = null;
     this.isPaginate = true;
     this.pg.p = 1;
     this.all();
