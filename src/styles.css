@@ -1677,3 +1677,12 @@ ul.ngx-pagination {
   color: #0A3764;
   font-weight: 600;
 }
+
+/* Panneau (offcanvas) de génération d'agrément — largeur min 75% */
+.offcanvas-agrement {
+  width: 75vw !important;
+  max-width: 100vw;
+}
+@media (max-width: 768px) {
+  .offcanvas-agrement { width: 100vw !important; }
+}

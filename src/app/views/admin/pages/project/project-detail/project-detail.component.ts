@@ -131,7 +131,17 @@ export class ProjectDetailComponent {
           this.agrementDoc = docs[0];
           this.selectedTemplateId  = this.agrementDoc.template_id;
           this.agrementTitle   = this.agrementDoc.title ?? '';
-          this.agrementContent = this.agrementDoc.content ?? '';
+          if (this.agrementDoc.content) {
+            // Contenu déjà sauvegardé
+            this.agrementContent = this.agrementDoc.content;
+          } else if (this.agrementDoc.template_id) {
+            // Doc sans contenu → précharger le contenu prédéfini du modèle
+            this.onTemplateChange(this.agrementDoc.template_id);
+          }
+        } else if (this.templates?.length === 1) {
+          // Aucun doc encore : précharger automatiquement l'unique modèle
+          this.selectedTemplateId = this.templates[0].id;
+          this.onTemplateChange(this.templates[0].id);
         }
       },
       error: () => {}
