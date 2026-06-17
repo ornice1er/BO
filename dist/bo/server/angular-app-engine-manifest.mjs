@@ -1,6 +1,6 @@
 
 export default {
-  basePath: 'https://preprodmtfp.gouv.bj/pprod-bo',
+  basePath: '/pprod-bo',
   allowedHosts: [],
   supportedLocales: {
   "en-US": ""
