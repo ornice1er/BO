@@ -32,7 +32,7 @@ export class PrestationComponent implements OnInit {
   user: any
   roles: any
   isGlobalAdmin = false;
-  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false, need_validation: false, needOut: false, has_document_circuit: false, decision: '', is_payant: false }
+  add_data: any = { from_pns: false, is_group_delivered: false, decision: '', is_payant: false }
   paymentAccounts: any[] = []
   data:any[]=[]
   permissions:any[]=[]
@@ -164,7 +164,7 @@ remoteSearchData: any[] = []
       
     
   add(content: any) {
-    this.add_data = { from_pns: false, is_automatic_delivered: false, need_validation: false, needOut: false, has_document_circuit: false, is_payant: false, decision: '' };
+    this.add_data = { from_pns: false, is_group_delivered: false, is_payant: false, decision: '' };
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
@@ -332,17 +332,4 @@ resetSearch() {
     }
   }
 
-  addSP(value:any){
-    this.loading=true
-    this.prestationService.saveStartPoint(value).subscribe((res:any)=>{
-      this.modalService.dismissAll()
-      this.all()
-      this.loading=false
-
-    },
-    (error:any)=>{
-      this.loading=false
-
-    })
-  }
 }

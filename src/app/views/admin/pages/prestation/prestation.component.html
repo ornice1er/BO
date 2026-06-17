@@ -11,9 +11,7 @@
             <i class="bi bi-plus-lg me-2"></i>
             Ajouter
         </button>
-          <button class=" btn btn-sm btn-secondary" (click)="open(dialogSP)">Ajouter de nouveaux points d'entrées</button>
 
-        
         <div class="search-controls d-flex align-items-center">
             <div class="input-group">
             <select class="form-select filter-select" [(ngModel)]="selectedFilter">
@@ -54,11 +52,6 @@
                 <th scope="col">Description</th>
               <th scope="col">type de contenu</th>
               <th scope="col">Structure</th>
-              <th scope="col">Signataire</th>
-              <th scope="col">Point d'entrée</th>
-              <th scope="col">Néceesité de rencontre</th>
-              <th scope="col">Besoin de validation</th>
-              <th scope="col">Mise en abandon</th>
               <th scope="col">Paiement</th>
             </tr>
             </thead>
@@ -167,24 +160,6 @@
               <td><p [innerHTML]="d?.desc"></p> </td>
               <td>{{getContentType(d?.content_type)}}</td>
               <td>{{d?.unite_admin?.libelle}}</td>
-              <td>{{d?.signer2?.libelle}}</td>
-              <td>
-                  <b>Point d'entrée central</b>
-                  <br>
-                  {{d?.start_point2?.libelle}}
-                  <br>
-                  <b>Point d'entrée Secondaire</b>
-                  <br>
-                  <br>
-                 
-                  <ul>
-                    <li *ngFor="let sp of d?.start_points">{{sp?.unite_admin?.libelle}}</li>
-                  </ul>
-                
-                </td>
-              <td>{{d?.need_meeting ?'oui':'non'}}</td>
-              <td>{{d?.need_validation ?'oui':'non'}}</td>
-              <td>{{d?.delay}} jr(s)</td>
               <td>
                 <span *ngIf="d?.is_payant" class="badge bg-success">
                   <i class="bi bi-credit-card me-1"></i>{{ d?.montant | number }} FCFA
@@ -303,14 +278,9 @@
             <textarea name="desc" class="form-control" ngModel rows="3"></textarea>
           </div>
 
-          <div class="form-group col-md-6 mb-3" *ngIf="add_data.from_pns">
-            <label>Clé de décision <small class="text-muted">(requis pour action PNS)</small></label>
-            <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision">
-          </div>
-
           <!-- ── Paiement ─────────────────────────────────────────────── -->
           <div class="col-12">
-            <div class="payment-section">
+            <div class="payment-section mb-4">
               <div class="fw-bold text-success mb-3 small text-uppercase" style="letter-spacing:.05em">
                 <i class="bi bi-credit-card me-1"></i>Paiement
               </div>
@@ -341,52 +311,37 @@
             </div>
           </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Besoin de validation</label>
-            <ng-toggle name="need_validation" [(ngModel)]="add_data.need_validation"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
+          <!-- ── Options de délivrance ────────────────────────────────── -->
+          <div class="col-12">
+            <div class="fw-bold text-secondary mb-2 small text-uppercase" style="letter-spacing:.05em">
+              <i class="bi bi-box-seam me-1"></i>Options de délivrance
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-md-6 d-flex justify-content-between align-items-center">
+                <label class="mb-0">Délivrance groupée</label>
+                <ng-toggle name="is_group_delivered" [(ngModel)]="add_data.is_group_delivered"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }">
+                </ng-toggle>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between align-items-center">
+                <label class="mb-0">Formulaire sur le portail national</label>
+                <ng-toggle name="from_pns" [(ngModel)]="add_data.from_pns"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }">
+                </ng-toggle>
+              </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance automatique</label>
-            <ng-toggle name="is_automatic_delivered" [(ngModel)]="add_data.is_automatic_delivered"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance groupée</label>
-            <ng-toggle name="is_group_delivered" [(ngModel)]="add_data.is_group_delivered"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Formulaire sur le portail national</label>
-            <ng-toggle name="from_pns" [(ngModel)]="add_data.from_pns"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Sortie physique requise</label>
-            <ng-toggle name="needOut" [(ngModel)]="add_data.needOut"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Circuit documentaire</label>
-            <ng-toggle name="has_document_circuit" [(ngModel)]="add_data.has_document_circuit"
-              [color]="{ unchecked: '#939da2', checked: '#1a6b3c' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
+              <!-- Clé de décision : requise pour la délivrance groupée -->
+              <div class="col-12" *ngIf="add_data.is_group_delivered">
+                <label class="form-label">
+                  Clé de décision
+                  <small class="text-muted">(délivrance groupée)</small>
+                </label>
+                <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision"
+                       placeholder="ex : cloture…">
+              </div>
+            </div>
           </div>
 
         </div>
@@ -470,14 +425,9 @@
             <textarea name="desc" class="form-control" [(ngModel)]="selected_data.desc" rows="3"></textarea>
           </div>
 
-          <div class="form-group col-md-6 mb-3" *ngIf="selected_data.from_pns">
-            <label>Clé de décision <small class="text-muted">(requis pour action PNS)</small></label>
-            <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision">
-          </div>
-
           <!-- ── Paiement ─────────────────────────────────────────────── -->
           <div class="col-12">
-            <div class="payment-section">
+            <div class="payment-section mb-4">
               <div class="fw-bold text-success mb-3 small text-uppercase" style="letter-spacing:.05em">
                 <i class="bi bi-credit-card me-1"></i>Paiement
               </div>
@@ -508,53 +458,39 @@
             </div>
           </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Besoin de validation</label>
-            <ng-toggle name="need_validation" [(ngModel)]="selected_data.need_validation"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
+          <!-- ── Options de délivrance ────────────────────────────────── -->
+          <div class="col-12">
+            <div class="fw-bold text-secondary mb-2 small text-uppercase" style="letter-spacing:.05em">
+              <i class="bi bi-box-seam me-1"></i>Options de délivrance
+            </div>
+            <div class="row g-3 align-items-center">
+              <div class="col-md-6 d-flex justify-content-between align-items-center">
+                <label class="mb-0">Délivrance groupée</label>
+                <ng-toggle name="is_group_delivered" [(ngModel)]="selected_data.is_group_delivered"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }">
+                </ng-toggle>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between align-items-center">
+                <label class="mb-0">Formulaire sur le portail national</label>
+                <ng-toggle name="from_pns" [(ngModel)]="selected_data.from_pns"
+                  [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+                  [values]="{ checked: true, unchecked: false }">
+                </ng-toggle>
+              </div>
+
+              <!-- Clé de décision : requise pour la délivrance groupée -->
+              <div class="col-12" *ngIf="selected_data.is_group_delivered">
+                <label class="form-label">
+                  Clé de décision
+                  <small class="text-muted">(délivrance groupée)</small>
+                </label>
+                <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision"
+                       placeholder="ex : cloture…">
+              </div>
+            </div>
           </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance automatique</label>
-            <ng-toggle name="is_automatic_delivered" [(ngModel)]="selected_data.is_automatic_delivered"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Délivrance groupée</label>
-            <ng-toggle name="is_group_delivered" [(ngModel)]="selected_data.is_group_delivered"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Formulaire sur le portail national</label>
-            <ng-toggle name="from_pns" [(ngModel)]="selected_data.from_pns"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Sortie physique requise</label>
-            <ng-toggle name="needOut" [(ngModel)]="selected_data.needOut"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Circuit documentaire</label>
-            <ng-toggle name="has_document_circuit" [(ngModel)]="selected_data.has_document_circuit"
-              [color]="{ unchecked: '#939da2', checked: '#1a6b3c' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
 
         </div>
       </div>
@@ -566,46 +502,6 @@
       </div>
     </form>
   </ng-template>
-<ng-template #dialogSP let-c="close" let-d="dismiss">
-  <form #addSPForm="ngForm" (ngSubmit)="addSP(addSPForm.value)">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Ajout des points d'entrée</h4>
-      <button type="button" class="btn btn-dark"  (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="typeLabel">Prestation</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="prestation_id" ngModel>
-            <option [value]="t.id" *ngFor="let t of data">{{t.name}}</option>
-        </select>
-       </div>
-       <div class="form-group">
-        <label for="typeLabel">Unité administrative</label>
-        <select type="text" class="form-control" id="typeLabel" aria-describedby="typeLabelHelp" required #type="ngModel" name="unite_admin_id" ngModel>
-            <option [value]="t.id" *ngFor="let t of data4">{{t.libelle}}</option>
-        </select>
-       </div>
-    
-       <!--div class="form-group">
-        <ng-select2
-        *ngIf="exampleData.length >0"
-          name="value"
-           [data]="exampleData"
-            [options]="options"
-            [(ngModel)]="value">
-        </ng-select2>
-       </!--div-->
-
-    </div>
-
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary" [disabled]="addSPForm.invalid || loading">Sauvegarder <app-loading [isVisible]="loading"></app-loading> </button>
-
-    </div>
-
-  </form>
-
-</ng-template>
 <ng-template #showContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>

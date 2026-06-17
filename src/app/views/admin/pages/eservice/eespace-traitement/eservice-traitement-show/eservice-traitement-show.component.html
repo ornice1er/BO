@@ -46,7 +46,7 @@
   <!-- Traiter la demande -->
   <button *ngIf="selected_data?.current_status?.short_name != 'en_attente'
               && selected_data?.current_status?.short_name != 'demande'
-              && selected_data?.current_status?.short_name != 'pris_en_charge'
+              
               && (selected_data?.current_status?.short_name != 'en_attente_visite' || etapeDejaTraversee())
               && !selected_data?.current_etape?.is_terminal
               && peutAgir"
