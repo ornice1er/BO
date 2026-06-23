@@ -7,10 +7,16 @@
     <!-- Card Header with Actions -->
     <div class="card-header-actions">
         <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-primary-custom" (click)="add(addContent)">
-            <i class="bi bi-plus-lg me-2"></i>
-            Ajouter
-        </button>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary-custom" (click)="add(addContent)">
+                <i class="bi bi-plus-lg me-2"></i>
+                Ajouter
+            </button>
+            <button class="btn btn-outline-primary" (click)="copy(copyContent)">
+                <i class="bi bi-files me-2"></i>
+                Copier les statuts
+            </button>
+        </div>
         
         <div class="search-controls d-flex align-items-center gap-2">
             <ng-select
@@ -251,6 +257,47 @@
     </div>
 </form>
 
+  </ng-template>
+
+  <ng-template #copyContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Copier les statuts d'une prestation</h4>
+      <button type="button" class="btn btn-dark" (click)="d('Cross click')"> <i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-12 mb-3">
+            <label for="">Prestation source <span class="text-danger ml-2">(*)</span></label>
+            <ng-select [(ngModel)]="copySourcePrestationId" name="copy_source" placeholder="Sélectionner la prestation à copier">
+                <ng-option *ngFor="let p of prestations" [value]="p.id">{{p?.name}}</ng-option>
+            </ng-select>
+        </div>
+
+        <div class="alert alert-info py-2" *ngIf="copySourcePrestationId">
+            <small>
+                <i class="bi bi-list-ul me-1"></i>
+                {{ copySourceStatuses.length }} statut(s) à copier :
+                <span *ngFor="let d of copySourceStatuses; let last = last">
+                    {{ d?.status?.name }}<span *ngIf="!last">, </span>
+                </span>
+                <span *ngIf="copySourceStatuses.length === 0">Aucun statut associé à cette prestation.</span>
+            </small>
+        </div>
+
+        <div class="form-group col-12 mb-3">
+            <label for="">Prestation(s) cible(s) <span class="text-danger ml-2">(*)</span></label>
+            <ng-select [(ngModel)]="copyTargetPrestationIds" name="copy_targets" [multiple]="true"
+                       placeholder="Sélectionner une ou plusieurs prestations cibles">
+                <ng-option *ngFor="let p of copyTargetPrestations" [value]="p.id">{{p?.name}}</ng-option>
+            </ng-select>
+            <small class="text-muted">Les statuts déjà présents sur une cible ne seront pas dupliqués.</small>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-primary" (click)="copyStatuses()"
+              [disabled]="loading || !copySourcePrestationId || copyTargetPrestationIds.length === 0">
+          Copier <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
   </ng-template>
 
   <ng-template #showContent let-modal>

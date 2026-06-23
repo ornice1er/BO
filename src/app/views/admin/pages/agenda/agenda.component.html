@@ -326,6 +326,14 @@
             </select>
             <small *ngIf="from.invalid && from.touched" class="text-danger">Champ requis.</small>
           </div>
+          <div class="col-md-4">
+            <label class="ag-label">Confirmation de l'usager ?</label>
+            <select class="ag-input" name="need_confirmation" ngModel>
+              <option [ngValue]="false">Non requise</option>
+              <option [ngValue]="true">Demander confirmation</option>
+            </select>
+            <small class="text-muted">Si « Demander », le statut se mettra à jour au retour de l'usager.</small>
+          </div>
         </div>
       </div>
 

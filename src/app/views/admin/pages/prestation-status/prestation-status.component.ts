@@ -17,6 +17,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-prestation-status',
@@ -50,6 +51,23 @@ remoteSearchData: any[] = []
   selectedId: number | null = null;
          selectedFilter = '';
   selectedPrestationId: any = null;
+
+  /** Copie des statuts d'une prestation vers une (ou plusieurs) autre(s) */
+  copySourcePrestationId: any = null;
+  copyTargetPrestationIds: any[] = [];
+
+  /** Statuts associés à la prestation source (pour aperçu) */
+  get copySourceStatuses(): any[] {
+    if (!this.copySourcePrestationId) return [];
+    return this.data.filter(
+      (d: any) => (d?.prestation_id ?? d?.prestation?.id) === this.copySourcePrestationId
+    );
+  }
+
+  /** Prestations sélectionnables comme cible (on exclut la source) */
+  get copyTargetPrestations(): any[] {
+    return this.prestations.filter((p: any) => p?.id !== this.copySourcePrestationId);
+  }
 
   /** Données affichées, filtrées par prestation */
   get displayedData(): any[] {
@@ -155,6 +173,52 @@ remoteSearchData: any[] = []
 add(content:any){
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
+  }
+
+  copy(content:any){
+    this.copySourcePrestationId = null;
+    this.copyTargetPrestationIds = [];
+    (document.activeElement as HTMLElement)?.blur();
+    this.modalService.open(content,{size:'lg'});
+  }
+
+  /** Copie les statuts de la prestation source vers la/les prestation(s) cible(s) */
+  copyStatuses(){
+    if (!this.copySourcePrestationId) {
+      this.toastrService.warning("Veuillez sélectionner la prestation source");
+      return;
+    }
+    if (!this.copyTargetPrestationIds || this.copyTargetPrestationIds.length === 0) {
+      this.toastrService.warning("Veuillez sélectionner au moins une prestation cible");
+      return;
+    }
+
+    const statusIds = this.copySourceStatuses.map(
+      (d:any) => d?.status_id ?? d?.status?.id
+    ).filter((id:any) => id != null);
+
+    if (statusIds.length === 0) {
+      this.toastrService.warning("La prestation source ne possède aucun statut à copier");
+      return;
+    }
+
+    this.loading = true;
+    const requests = this.copyTargetPrestationIds.map((prestationId:any) =>
+      this.psStatus.store({ prestation_id: prestationId, status_ids: statusIds })
+    );
+
+    forkJoin(requests).subscribe(
+      (res:any)=>{
+        this.loading = false;
+        this.modalService.dismissAll();
+        this.toastrService.success("Statuts copiés avec succès");
+        this.all();
+      },
+      (err:any)=>{
+        this.loading = false;
+        AppErrorShow.showError("Copie échouée", err);
+      }
+    );
   }
 
 

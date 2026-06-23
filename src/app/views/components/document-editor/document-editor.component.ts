@@ -78,12 +78,18 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <div class="form-group mb-3">
         <div class="d-flex justify-content-between align-items-center">
           <label class="fw-semibold mb-0">Corps du document</label>
-          <button type="button" class="btn btn-sm btn-outline-secondary"
-                  (click)="ouvrirHtmlSource('content')">
-            <i class="bi bi-code-slash me-1"></i>Code source
-          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-info"
+                    (click)="showApercu = !showApercu">
+              <i class="bi bi-eye me-1"></i>{{ showApercu ? 'Masquer' : 'Aperçu' }}
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    (click)="ouvrirHtmlSource('content')">
+              <i class="bi bi-code-slash me-1"></i>Code source
+            </button>
+          </div>
         </div>
-        <div class="border rounded p-2 bg-light small mt-1">
+        <div class="border rounded p-2 bg-light small mt-1" *ngIf="variableKeys.length">
           <p class="mb-1 text-muted fw-semibold">Variables disponibles — cliquer pour insérer au curseur :</p>
           <span *ngFor="let v of variableKeys"
                 class="badge bg-secondary me-1 mb-1"
@@ -98,6 +104,14 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
           (onEditorCreated)="onGenererEditorCreated($event)"
           placeholder="Saisissez le corps du document...">
         </quill-editor>
+
+        <!-- Aperçu live : valeurs interpolées -->
+        <div *ngIf="showApercu" class="mt-2 border rounded">
+          <div class="px-2 py-1 bg-light small fw-semibold text-muted border-bottom">
+            <i class="bi bi-eye me-1"></i>Aperçu (variables remplacées par leurs valeurs)
+          </div>
+          <div class="p-3" [innerHTML]="apercuHtml"></div>
+        </div>
       </div>
 
       <div class="form-group mb-3">
@@ -149,16 +163,40 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
       <div class="form-group mb-3">
         <div class="d-flex justify-content-between align-items-center">
           <label class="fw-semibold mb-0">Corps du document</label>
-          <button type="button" class="btn btn-sm btn-outline-secondary"
-                  (click)="ouvrirHtmlSource('htmlContent')">
-            <i class="bi bi-code-slash me-1"></i>Code source
-          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-info"
+                    (click)="showApercu = !showApercu">
+              <i class="bi bi-eye me-1"></i>{{ showApercu ? 'Masquer' : 'Aperçu' }}
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    (click)="ouvrirHtmlSource('htmlContent')">
+              <i class="bi bi-code-slash me-1"></i>Code source
+            </button>
+          </div>
+        </div>
+        <div class="border rounded p-2 bg-light small mt-1" *ngIf="variableKeys.length">
+          <p class="mb-1 text-muted fw-semibold">Variables disponibles — cliquer pour insérer au curseur :</p>
+          <span *ngFor="let v of variableKeys"
+                class="badge bg-secondary me-1 mb-1"
+                (click)="insererVariable(v)"
+                style="cursor:pointer; user-select:none">
+            {{ '{' }}{{ '{' }}{{ v }}{{ '}' }}{{ '}' }}
+          </span>
         </div>
         <quill-editor
           [(ngModel)]="formData.htmlContent"
           [modules]="quillModules"
+          (onEditorCreated)="onWysiwygEditorCreated($event)"
           placeholder="Rédigez le contenu...">
         </quill-editor>
+
+        <!-- Aperçu live : valeurs interpolées -->
+        <div *ngIf="showApercu" class="mt-2 border rounded">
+          <div class="px-2 py-1 bg-light small fw-semibold text-muted border-bottom">
+            <i class="bi bi-eye me-1"></i>Aperçu (variables remplacées par leurs valeurs)
+          </div>
+          <div class="p-3" [innerHTML]="apercuHtml"></div>
+        </div>
       </div>
 
       <div class="d-flex align-items-center gap-2">
@@ -336,6 +374,8 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
   private htmlModalTarget: 'content' | 'htmlContent' = 'htmlContent';
 
   private genererEditor: any = null;
+  private wysiwygEditor: any = null;
+  showApercu = false;
 
   private baseUrl = ConfigService.toApiUrl('document-actes');
   @ViewChild('pdfOffcanvas')   pdfOffcanvasRef!:   TemplateRef<any>;
@@ -426,17 +466,39 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
     this.genererEditor = editor;
   }
 
-  // ── Insérer variable au curseur dans l'éditeur Quill ─────────────────────
+  onWysiwygEditorCreated(editor: any): void {
+    this.wysiwygEditor = editor;
+  }
+
+  // ── Insérer une variable au curseur de l'éditeur de l'onglet actif ───────
   insererVariable(key: string): void {
     const text = `{{${key}}}`;
-    if (this.genererEditor) {
-      const range = this.genererEditor.getSelection(true);
-      const index = range ? range.index : this.genererEditor.getLength() - 1;
-      this.genererEditor.insertText(index, ` ${text} `, 'user');
-      this.genererEditor.setSelection(index + text.length + 2, 0);
+    const isWysiwyg = this.activeTab === 'wysiwyg';
+    const editor    = isWysiwyg ? this.wysiwygEditor : this.genererEditor;
+    const field: 'content' | 'htmlContent' = isWysiwyg ? 'htmlContent' : 'content';
+
+    if (editor) {
+      const range = editor.getSelection(true);
+      const index = range ? range.index : editor.getLength() - 1;
+      editor.insertText(index, ` ${text} `, 'user');
+      editor.setSelection(index + text.length + 2, 0);
     } else {
-      this.formData.content += ` ${text} `;
+      this.formData[field] += ` ${text} `;
     }
+  }
+
+  // ── Aperçu live : remplace les {{variable}} par leurs valeurs ────────────
+  interpoler(html: string): string {
+    if (!html) return '';
+    return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (m: string, key: string) => {
+      const val = this.variables?.[key];
+      return (val !== undefined && val !== null && val !== '') ? String(val) : m;
+    });
+  }
+
+  get apercuHtml(): string {
+    const src = this.activeTab === 'wysiwyg' ? this.formData.htmlContent : this.formData.content;
+    return this.interpoler(src ?? '');
   }
 
   // ── Générer via template ──────────────────────────────────────────────────

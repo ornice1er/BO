@@ -125,12 +125,24 @@ export class EserviceTraitementShowComponent implements OnInit {
   getProjects(){
     this.projectService.getAll(this.prestation).subscribe({
       next:(res:any)=>{
-        this.projects=res.data ?? [];
+        // Association possible uniquement vers des projets non clos
+        this.projects = (res.data ?? []).filter((p: any) => p?.status !== 'closed');
       },
       error:()=>{
         this.toastr.error('Erreur lors de la récupération des données de session');
       }
     })
+  }
+
+  /** Libellé du statut d'un RDV selon la demande de confirmation usager */
+  rdvStatut(agenda: any): string {
+    if (!agenda) return '—';
+    if (agenda.need_confirmation) {
+      if (agenda.usager_response === true)  return "Confirmé par l'usager";
+      if (agenda.usager_response === false) return "Décliné par l'usager";
+      return 'En attente de confirmation';
+    }
+    return agenda.status ?? 'Planifié';
   }
 
   creerRdv(): void {

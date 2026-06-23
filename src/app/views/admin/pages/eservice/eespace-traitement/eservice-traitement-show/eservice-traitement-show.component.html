@@ -23,13 +23,26 @@
     <i class="bi bi-calendar-check"></i> Voir l'agenda / Confirmer
   </button>
 
-  <!-- RDV manuel : l'étape demande un meeting mais sans slot PNS -->
-  <button *ngIf="selected_data?.current_etape?.need_meeting && !selected_data?.planning_slot_id"
-    class="ts-btn ts-btn--dark" (click)="creerRdv()"
-    [disabled]="selected_data?.agendas?.length > 0"
-    [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà' : ''">
+  <!-- RDV manuel : l'étape demande un meeting, sans slot PNS et aucun RDV existant -->
+  <button *ngIf="selected_data?.current_etape?.need_meeting
+              && !selected_data?.planning_slot_id
+              && !(selected_data?.agendas?.length > 0)
+              && peutAgir"
+    class="ts-btn ts-btn--dark" (click)="creerRdv()">
     <i class="bi bi-calendar-plus"></i> Créer un rendez-vous
   </button>
+
+  <!-- Statut du RDV (confirmation de l'usager) -->
+  <span *ngIf="selected_data?.agendas?.length > 0"
+        class="ts-badge ts-badge--sm"
+        [ngClass]="{
+          'ts-badge--teal':   selected_data.agendas[0]?.usager_response === true,
+          'ts-badge--danger': selected_data.agendas[0]?.usager_response === false,
+          'ts-badge--amber':  selected_data.agendas[0]?.need_confirmation && selected_data.agendas[0]?.usager_response == null,
+          'ts-badge--grey':   !selected_data.agendas[0]?.need_confirmation
+        }">
+    <i class="bi bi-calendar-check me-1"></i>RDV : {{ rdvStatut(selected_data.agendas[0]) }}
+  </span>
 
   <!-- Associer à un projet -->
   <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id == null && peutAgir"
@@ -449,7 +462,9 @@
                 </td>
                 <td><span class="ts-badge ts-badge--cyan ts-badge--sm">{{ log?.status?.name }}</span></td>
                 <td class="small">
-                  {{ log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—') }}
+                  {{ log?.triggered_by_type === 'usager'
+                       ? (selected_data?.identity || ((selected_data?.firstname || '') + ' ' + (selected_data?.lastname || '')).trim() || 'Usager')
+                       : (log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—')) }}
                 </td>
                 <td class="text-muted small" [innerHTML]="log?.comment ?? '—'"></td>
                 <td>
