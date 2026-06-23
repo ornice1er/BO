@@ -253,6 +253,9 @@ get(): void {
       metadata,
       link,
       note_file_path:  noteFilePath,
+      // Transition EXACTE choisie (lève l'ambiguïté quand plusieurs transitions
+      // partagent le même condition_type depuis l'étape courante)
+      transition_id:   this.transitionSelectionnee?.id ?? this.responseData.transition_id ?? null,
     }).subscribe({
       next: () => {
         this.loading = false;

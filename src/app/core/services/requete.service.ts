@@ -112,6 +112,7 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     metadata?: any;
     link?: string | null;
     note_file_path?: string | null;
+    transition_id?: number | null;
   }): any {
     return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
   }
