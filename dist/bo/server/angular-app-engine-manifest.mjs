@@ -1,6 +1,6 @@
 
 export default {
-  basePath: '/pprod/bo',
+  basePath: '/',
   allowedHosts: [],
   supportedLocales: {
   "en-US": ""
