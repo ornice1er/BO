@@ -265,6 +265,65 @@ export class WorkflowComponent {
     zoomOut()   { this.zoomLevel = Math.max(0.3, +(this.zoomLevel - 0.1).toFixed(1)); }
     resetZoom() { this.zoomLevel = 1; }
 
+    // ── Export du flux en image (SVG / PNG) ──────────────────────────────────
+    private getFluxSvg(): SVGSVGElement | null {
+      const container = document.getElementById('mermaid-flux-container');
+      return container?.querySelector('svg') ?? null;
+    }
+
+    private fluxFilename(ext: string): string {
+      const presta = (this.fluxPrestationName || 'flux').replace(/[^\w\-]+/g, '_');
+      const onglet = this.fluxTab === 'circuit' ? 'circuit' : 'transitions';
+      return `flux_${presta}_${onglet}.${ext}`;
+    }
+
+    private telecharger(url: string, filename: string): void {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    exporterSvg(): void {
+      const svg = this.getFluxSvg();
+      if (!svg) { this.toastrService.warning('Aucun diagramme à exporter'); return; }
+      const source = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+      this.telecharger(URL.createObjectURL(blob), this.fluxFilename('svg'));
+    }
+
+    exporterPng(): void {
+      const svg = this.getFluxSvg();
+      if (!svg) { this.toastrService.warning('Aucun diagramme à exporter'); return; }
+      const source = new XMLSerializer().serializeToString(svg);
+      const vb = (svg as any).viewBox?.baseVal;
+      const width  = (vb && vb.width)  ? vb.width  : ((svg as any).clientWidth  || 1200);
+      const height = (vb && vb.height) ? vb.height : ((svg as any).clientHeight || 800);
+      const scale = 2; // qualité ×2
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width  = width * scale;
+        canvas.height = height * scale;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { this.toastrService.error('Conversion PNG impossible'); return; }
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          if (blob) this.telecharger(URL.createObjectURL(blob), this.fluxFilename('png'));
+          else this.toastrService.error('Échec de la génération PNG');
+        }, 'image/png');
+      };
+      img.onerror = () => this.toastrService.error('Échec de la conversion en PNG');
+      // base64 en gérant l'UTF-8 (accents) du SVG
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(source)));
+    }
+
     async openFluxModal(content: any) {
       this.zoomLevel = 1;
       this.fluxTab = 'transitions';

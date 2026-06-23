@@ -463,6 +463,15 @@
           <i class="bi bi-aspect-ratio me-1"></i>100%
         </button>
 
+        <!-- Export du flux en image -->
+        <span class="text-muted small ms-2 me-1"><i class="bi bi-download"></i> Exporter :</span>
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="exporterPng()" title="Exporter en PNG">
+          <i class="bi bi-filetype-png me-1"></i>PNG
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary ms-1" (click)="exporterSvg()" title="Exporter en SVG">
+          <i class="bi bi-filetype-svg me-1"></i>SVG
+        </button>
+
         <!-- Option A : inclure le circuit dans le flux des transitions -->
         <div class="form-check form-switch ms-3" *ngIf="fluxTab === 'transitions'">
           <input class="form-check-input" type="checkbox" id="toggleCircuit"

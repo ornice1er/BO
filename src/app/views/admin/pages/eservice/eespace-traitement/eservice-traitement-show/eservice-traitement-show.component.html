@@ -23,26 +23,14 @@
     <i class="bi bi-calendar-check"></i> Voir l'agenda / Confirmer
   </button>
 
-  <!-- RDV manuel : l'étape demande un meeting, sans slot PNS et aucun RDV existant -->
+  <!-- RDV manuel : l'étape demande un meeting, sans slot PNS (plusieurs RDV possibles) -->
   <button *ngIf="selected_data?.current_etape?.need_meeting
               && !selected_data?.planning_slot_id
-              && !(selected_data?.agendas?.length > 0)
               && peutAgir"
     class="ts-btn ts-btn--dark" (click)="creerRdv()">
-    <i class="bi bi-calendar-plus"></i> Créer un rendez-vous
+    <i class="bi bi-calendar-plus"></i>
+    {{ selected_data?.agendas?.length > 0 ? 'Ajouter un rendez-vous' : 'Créer un rendez-vous' }}
   </button>
-
-  <!-- Statut du RDV (confirmation de l'usager) -->
-  <span *ngIf="selected_data?.agendas?.length > 0"
-        class="ts-badge ts-badge--sm"
-        [ngClass]="{
-          'ts-badge--teal':   selected_data.agendas[0]?.usager_response === true,
-          'ts-badge--danger': selected_data.agendas[0]?.usager_response === false,
-          'ts-badge--amber':  selected_data.agendas[0]?.need_confirmation && selected_data.agendas[0]?.usager_response == null,
-          'ts-badge--grey':   !selected_data.agendas[0]?.need_confirmation
-        }">
-    <i class="bi bi-calendar-check me-1"></i>RDV : {{ rdvStatut(selected_data.agendas[0]) }}
-  </span>
 
   <!-- Associer à un projet -->
   <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id == null && peutAgir"
@@ -144,6 +132,12 @@
           <i class="bi bi-clock"></i> {{ selected_data?.sla_restant }} jour(s)
         </span>
       </div>
+      <div class="ts-status-item" *ngIf="selected_data?.closed_at">
+        <span class="ts-status-label">Clôturée le</span>
+        <span class="ts-badge ts-badge--dark">
+          <i class="bi bi-calendar2-x"></i> {{ selected_data?.closed_at | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+      </div>
     </div>
   </div>
 
@@ -224,6 +218,20 @@
                 [class.ts-badge--dark]="rdv.status === 'Clos'">
                 <i class="bi" [class.bi-calendar-check]="rdv.status === 'Ouvert'" [class.bi-calendar-x]="rdv.status === 'Clos'"></i>
                 {{ rdv.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.need_confirmation">
+            <div class="ts-info-label">Confirmation usager</div>
+            <div class="ts-info-value">
+              <span class="ts-badge ts-badge--sm"
+                [ngClass]="{
+                  'ts-badge--teal':   rdv.usager_response === true,
+                  'ts-badge--danger': rdv.usager_response === false,
+                  'ts-badge--amber':  rdv.usager_response == null
+                }">
+                <i class="bi bi-calendar-check me-1"></i>{{ rdvStatut(rdv) }}
               </span>
             </div>
           </div>
