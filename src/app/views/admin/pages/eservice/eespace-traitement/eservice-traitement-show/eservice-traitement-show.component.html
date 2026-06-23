@@ -236,6 +236,11 @@
             </div>
           </div>
 
+          <div class="ts-info-item ts-info-item--full" *ngIf="rdv.usager_comment">
+            <div class="ts-info-label">Commentaire de l'usager</div>
+            <div class="ts-info-value fst-italic">« {{ rdv.usager_comment }} »</div>
+          </div>
+
           <div class="ts-info-item">
             <div class="ts-info-label">Date début</div>
             <div class="ts-info-value">{{ rdv.date_start | date:'dd/MM/yyyy HH:mm' }}</div>

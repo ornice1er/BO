@@ -11,14 +11,12 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(prestation_codes?:any): any {
-     if (prestation_codes) {
-          return this.http.get<any>(`${ConfigService.toApiUrl('projects')}?prestation_codes=${prestation_codes}`, );
-
-    } else {
-          return this.http.get<any>(`${ConfigService.toApiUrl('projects')}`, );
-
-    }
+  getAll(prestation_codes?:any, excludeClosed:boolean=false): any {
+    const params: string[] = [];
+    if (prestation_codes) params.push(`prestation_codes=${prestation_codes}`);
+    if (excludeClosed)    params.push(`exclude_closed=1`);
+    const query = params.length ? `?${params.join('&')}` : '';
+    return this.http.get<any>(`${ConfigService.toApiUrl('projects')}${query}`, );
   }
 
 

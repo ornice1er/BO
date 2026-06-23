@@ -123,10 +123,11 @@ export class EserviceTraitementShowComponent implements OnInit {
   }
 
   getProjects(){
-    this.projectService.getAll(this.prestation).subscribe({
+    // exclude_closed=true côté backend + filtre front (cohérence garantie)
+    this.projectService.getAll(this.prestation, true).subscribe({
       next:(res:any)=>{
-        // Association possible uniquement vers des projets non clos
-        this.projects = (res.data ?? []).filter((p: any) => p?.status !== 'closed');
+        const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? []);
+        this.projects = list.filter((p: any) => p?.status !== 'closed');
       },
       error:()=>{
         this.toastr.error('Erreur lors de la récupération des données de session');
