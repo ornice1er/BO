@@ -1686,3 +1686,15 @@ ul.ngx-pagination {
 @media (max-width: 768px) {
   .offcanvas-agrement { width: 100vw !important; }
 }
+
+/* Palette institutionnelle exposée globalement : les modals/offcanvas ngb sont
+   rendus au niveau <body> (hors :host des composants) et ne voyaient pas ces
+   variables → en-têtes/boutons en blanc sur blanc. */
+:root {
+  --blue:    #0A3764;
+  --blue-l:  #1a5fa8;
+  --teal:    #0C574E;
+  --teal-l:  #1a8a7a;
+  --amber:   #b45309;
+  --amber-l: #d97706;
+}
