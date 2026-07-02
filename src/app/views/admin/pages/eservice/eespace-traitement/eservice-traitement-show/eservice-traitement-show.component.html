@@ -32,16 +32,16 @@
     {{ selected_data?.agendas?.length > 0 ? 'Ajouter un rendez-vous' : 'Créer un rendez-vous' }}
   </button>
 
-  <!-- Associer à un projet -->
+  <!-- Associer à une session -->
   <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id == null && peutAgir"
     class="ts-btn ts-btn--dark" (click)="add(addContent)">
-    <i class="bi bi-folder-plus"></i> Associer à un projet
+    <i class="bi bi-folder-plus"></i> Associer à une session
   </button>
 
-  <!-- Retirer du projet -->
+  <!-- Retirer de la session -->
   <button *ngIf="selected_data?.project_id != null && peutAgir"
     class="ts-btn ts-btn--danger" (click)="dissociate()" [disabled]="loading">
-    <i class="bi bi-folder-minus"></i> Retirer cette demdande du projet
+    <i class="bi bi-folder-minus"></i> Retirer cette demande de la session
   </button>
 
   <!-- Traiter la demande -->
@@ -624,8 +624,8 @@
       <div class="d-flex align-items-center gap-3">
         <div class="ts-modal-icon"><i class="bi bi-folder-plus"></i></div>
         <div>
-          <h5 class="modal-title mb-0">Associer à un projet</h5>
-          <small>Sélectionnez un projet en cours</small>
+          <h5 class="modal-title mb-0">Associer à une session</h5>
+          <small>Sélectionnez une session en cours</small>
         </div>
       </div>
       <button type="button" class="btn-close btn-close-white" (click)="d('Cross click')"></button>
@@ -633,9 +633,9 @@
 
     <div class="modal-body ts-modal-body">
       <div class="ts-modal-section">
-        <div class="ts-modal-section-title"><i class="bi bi-collection-fill"></i> Projet</div>
+        <div class="ts-modal-section-title"><i class="bi bi-collection-fill"></i> Session</div>
         <select name="project_id" class="ts-select" ngModel required>
-          <option value="">Sélectionner un projet...</option>
+          <option value="">Sélectionner une session...</option>
           <option *ngFor="let project of projects" [value]="project.id">{{ project.title }}</option>
         </select>
       </div>

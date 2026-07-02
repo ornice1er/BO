@@ -148,10 +148,9 @@
       </small>
     </div>
 
-    <!-- Motif de rejet -->
+    <!-- Motif de rejet — uniquement pour une transition de rejet -->
     <div class="te-form-group"
-      *ngIf="transitionSelectionnee?.condition_type === 'rejet'
-          || transitionSelectionnee?.condition_type === 'cloture'">
+      *ngIf="transitionSelectionnee?.condition_type === 'rejet'">
       <label class="te-label">Motif de rejet</label>
       <ng-select name="motif_id" [(ngModel)]="responseData.motif_id" placeholder="Sélectionner un motif...">
         <ng-option *ngFor="let m of motifsRejet" [value]="m.id">

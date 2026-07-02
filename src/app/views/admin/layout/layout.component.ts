@@ -170,7 +170,7 @@ toggleMenu() {
         hasChildren: false,
       })
       this.menu.push({
-        title: 'Déclaration périodique',
+        title: 'Session',
         icon: 'fas fa-file-signature',
         link: '/admin/projects',
         home: true,

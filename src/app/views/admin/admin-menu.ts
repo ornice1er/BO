@@ -4,7 +4,7 @@ export const MENU_ADMIN_NATIONAL: any[] = [
   { title: 'Tableau de bord',          icon: 'fas fa-home',             link: '/admin/dashboard' },
   { title: 'Comptes Admin Sectoriels', icon: 'fas fa-users',            link: '/admin/users' },
   { title: 'e-Services', isTitle: true },
-  { title: 'Déclaration périodique',   icon: 'fas fa-file-signature',   link: '/admin/projects' },
+  { title: 'Session',   icon: 'fas fa-file-signature',   link: '/admin/projects' },
   { title: 'Modèles de documents',      icon: 'fas fa-file-alt',         link: '/admin/document-templates' },
   { title: 'Référentiels', isTitle: true },
   {
@@ -47,7 +47,7 @@ export const MENU_ADMIN_NATIONAL: any[] = [
     { title: 'e-Services', isTitle: true },
     { title: 'Prestations',            icon: 'fas fa-award',          link: '/admin/prestations' },
     { title: 'Comptes de recette',     icon: 'fas fa-cash-register',  link: '/admin/payment-accounts' },
-    { title: 'Déclaration périodique', icon: 'fas fa-file-signature', link: '/admin/projects' },
+    { title: 'Session', icon: 'fas fa-file-signature', link: '/admin/projects' },
     { title: 'Modèles de documents',   icon: 'fas fa-file-alt',       link: '/admin/document-templates' },
     {
       title: 'Configuration',  icon: 'fas fa-tools',
