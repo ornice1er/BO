@@ -28,6 +28,7 @@ import { DocumentCircuitEtapeComponent } from "./pages/document-circuit-etape/do
 import { EtapeDocumentComponent } from "./pages/etape-document/etape-document.component";
 import { MotifRejetComponent } from "./pages/motif-rejet/motif-rejet.component";
 import { EtapeVisibiliteComponent } from "./pages/etape-visibilite/etape-visibilite.component";
+import { EtapePrestationComponent } from "./pages/etape-prestation/etape-prestation.component";
 import { FilesComponent } from "./pages/files/files.component";
 import { HistoriqueComponent } from "./pages/historique/historique.component";
 import { OfficerComponent } from "./pages/officer/officer.component";
@@ -227,6 +228,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
              {
                 path: 'eservice/configurations/etape-visibilites',
                 component: EtapeVisibiliteComponent,
+            },
+            {
+                path: 'eservice/configurations/etape-prestations',
+                component: EtapePrestationComponent,
             },
             {
                 path: 'eservice/configurations/planning-slots',

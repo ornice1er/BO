@@ -15,6 +15,7 @@
     "/pprod-bo/admin/eservice/configurations/document-circuit-etapes": {},
     "/pprod-bo/admin/eservice/configurations/etape-documents": {},
     "/pprod-bo/admin/eservice/configurations/etape-documents-produits": {},
+    "/pprod-bo/admin/eservice/configurations/etape-prestations": {},
     "/pprod-bo/admin/eservice/configurations/etape-visibilites": {},
     "/pprod-bo/admin/eservice/configurations/etapes": {},
     "/pprod-bo/admin/eservice/configurations/motifs-rejet": {},

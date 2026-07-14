@@ -235,10 +235,39 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         {{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} Mo)
       </div>
 
+      <!-- Partage au Portail national des services -->
+      <div class="border rounded p-3 mb-3 bg-light">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="shareToPns"
+                 [(ngModel)]="shareToPns" [ngModelOptions]="{ standalone: true }">
+          <label class="form-check-label fw-semibold" for="shareToPns">
+            Partager ce document au Portail national (PNS)
+          </label>
+        </div>
+        <small class="text-muted d-block mt-1">
+          Le lien du fichier uploadé est transmis au PNS, qui le met à disposition de l'usager.
+        </small>
+
+        <div class="row g-2 mt-2" *ngIf="shareToPns">
+          <div class="col-md-5">
+            <label class="form-label small mb-1">Clé de décision PNS</label>
+            <input type="text" class="form-control form-control-sm"
+                   [(ngModel)]="pnsDecision" [ngModelOptions]="{ standalone: true }"
+                   placeholder="ex : sign_doc, gendoc…">
+          </div>
+          <div class="col-md-7">
+            <label class="form-label small mb-1">Observations (optionnel)</label>
+            <input type="text" class="form-control form-control-sm"
+                   [(ngModel)]="pnsComment" [ngModelOptions]="{ standalone: true }"
+                   placeholder="Message joint au document">
+          </div>
+        </div>
+      </div>
+
       <button class="btn btn-primary" (click)="uploadPdf()"
               [disabled]="!selectedFile || loading">
         <i class="bi bi-upload me-1"></i>
-        Uploader le document
+        {{ shareToPns ? 'Uploader et partager au PNS' : 'Uploader le document' }}
         <app-loading [isVisible]="loading"></app-loading>
       </button>
     </div>
@@ -341,6 +370,11 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
   pdfSrc: any = null;
   pdfLoadError = false;
   selectedFile: File | null = null;
+
+  /** Onglet Upload — partage du fichier uploadé au Portail national. */
+  shareToPns  = false;
+  pnsDecision = '';
+  pnsComment  = '';
   countdown: number | null = null;
 
   private countdownTimer: any = null;
@@ -620,13 +654,23 @@ export class DocumentEditorComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
 
+    if (this.shareToPns) {
+      formData.append('share_to_pns', '1');
+      if (this.pnsDecision) formData.append('decision', this.pnsDecision);
+      if (this.pnsComment)  formData.append('comment', this.pnsComment);
+    }
+
     this.http.post<any>(`${this.baseUrl}/${this.acte.id}/upload`, formData)
       .subscribe({
         next: (res) => {
           this.loading      = false;
           this.acte         = { ...res.data.acte };
           this.selectedFile = null;
-          this.toastr.success('PDF uploadé avec succès');
+          this.toastr.success(
+            this.shareToPns
+              ? 'PDF uploadé et partagé au PNS'
+              : 'PDF uploadé avec succès'
+          );
         },
         error: (err) => {
           this.loading = false;

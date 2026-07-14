@@ -49,7 +49,7 @@
               && selected_data?.current_status?.short_name != 'demande'
               
               && (selected_data?.current_status?.short_name != 'en_attente_visite' || etapeDejaTraversee())
-              && !selected_data?.current_etape?.is_terminal
+              && !selected_data?.etape_terminale
               && peutAgir"
     class="ts-btn ts-btn--amber" (click)="open2()" [disabled]="loading">
     <i class="bi bi-pencil-square"></i> Traiter la demande

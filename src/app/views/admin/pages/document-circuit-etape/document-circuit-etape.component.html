@@ -119,6 +119,10 @@
                     [class.bg-danger]="d?.action_type === 'correction'">
                     {{ actionTypeLabel(d?.action_type) }}
                   </span>
+                  <span class="badge bg-warning text-dark ms-1" *ngIf="d?.can_act_pns"
+                        [title]="'Déclenche le PNS' + (d?.decision ? ' — décision : ' + d.decision : '')">
+                    <i class="bi bi-broadcast me-1"></i>PNS
+                  </span>
                 </td>
                 <td><small>{{ d?.status_after }}</small></td>
                 <td><small class="text-muted">{{ d?.requete_status_after ?? '—' }}</small></td>
@@ -164,7 +168,8 @@
 
         <div class="form-group col-12 mb-3">
           <label>Document produit <span class="text-danger">(*)</span></label>
-          <ng-select name="doc_produit_id" ngModel required placeholder="Sélectionner un document"
+          <ng-select name="doc_produit_id" [(ngModel)]="add_data.doc_produit_id" required
+            placeholder="Sélectionner un document"
             (ngModelChange)="onDocProduitChange($event, 'add')">
             <ng-option [value]="p?.id" *ngFor="let p of docProduits">{{ p?.name }}</ng-option>
           </ng-select>
@@ -186,10 +191,30 @@
 
         <div class="form-group col-md-6 mb-3">
           <label>Type d'action <span class="text-danger">(*)</span></label>
-          <select name="action_type" class="form-select" ngModel required>
+          <select name="action_type" class="form-select" [(ngModel)]="add_data.action_type" required>
             <option value="">-- Sélectionner --</option>
             <option *ngFor="let a of actionTypes" [value]="a.value">{{ a.label }}</option>
           </select>
+        </div>
+
+        <!-- Guidage : cohérence action_type ⇄ condition_type du workflow -->
+        <div class="col-12 mb-3" *ngIf="matchCondition(add_data.doc_produit_id, add_data.action_type) as m">
+          <div class="alert py-2 px-3 small mb-0"
+               [ngClass]="m.ok ? 'alert-success' : 'alert-warning'">
+            <i class="bi me-1" [ngClass]="m.ok ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+            <ng-container *ngIf="m.ok">
+              <strong>Cohérent.</strong> {{ m.count }} transition(s) workflow avec
+              <code>condition_type = {{ m.action }}</code> pour « {{ m.prestation }} » :
+              <em>{{ m.etapes.join(' ; ') }}</em>.
+              La requête avancera bien après cette action.
+            </ng-container>
+            <ng-container *ngIf="!m.ok">
+              <strong>Attention.</strong> Aucune transition workflow avec
+              <code>condition_type = {{ m.action }}</code> pour « {{ m.prestation }} ».
+              L'acte avancera dans le circuit mais <strong>la requête restera bloquée</strong>.
+              Crée d'abord la transition correspondante (ou choisis un autre type d'action).
+            </ng-container>
+          </div>
         </div>
 
         <div class="form-group col-md-6 mb-3">
@@ -229,6 +254,25 @@
             [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
             [values]="{ checked: true, unchecked: false }">
           </ng-toggle>
+        </div>
+
+        <!-- Déclenchement PNS depuis le circuit -->
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">
+            Déclencher le PNS après cette action
+            <small class="text-muted d-block">Ex. : sur une signature, demander au PNS de générer le document signé.</small>
+          </label>
+          <ng-toggle name="can_act_pns" [(ngModel)]="add_data.can_act_pns"
+            [color]="{ unchecked: '#939da2', checked: '#e67e22' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="form-group col-12 mb-3" *ngIf="add_data.can_act_pns">
+          <label>Clé de décision PNS <span class="text-danger">(*)</span></label>
+          <input type="text" class="form-control" name="decision" [(ngModel)]="add_data.decision"
+                 [required]="add_data.can_act_pns" placeholder="ex : sign_doc, gendoc…">
+          <small class="text-muted">Clé convenue avec le PNS pour identifier l'action à réaliser.</small>
         </div>
 
       </div>
@@ -282,6 +326,26 @@
           </select>
         </div>
 
+        <!-- Guidage : cohérence action_type ⇄ condition_type du workflow -->
+        <div class="col-12 mb-3" *ngIf="matchCondition(selected_data.doc_produit_id, selected_data.action_type) as m">
+          <div class="alert py-2 px-3 small mb-0"
+               [ngClass]="m.ok ? 'alert-success' : 'alert-warning'">
+            <i class="bi me-1" [ngClass]="m.ok ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+            <ng-container *ngIf="m.ok">
+              <strong>Cohérent.</strong> {{ m.count }} transition(s) workflow avec
+              <code>condition_type = {{ m.action }}</code> pour « {{ m.prestation }} » :
+              <em>{{ m.etapes.join(' ; ') }}</em>.
+              La requête avancera bien après cette action.
+            </ng-container>
+            <ng-container *ngIf="!m.ok">
+              <strong>Attention.</strong> Aucune transition workflow avec
+              <code>condition_type = {{ m.action }}</code> pour « {{ m.prestation }} ».
+              L'acte avancera dans le circuit mais <strong>la requête restera bloquée</strong>.
+              Crée d'abord la transition correspondante (ou choisis un autre type d'action).
+            </ng-container>
+          </div>
+        </div>
+
         <div class="form-group col-md-6 mb-3">
           <label>Statut document après <span class="text-danger">(*)</span></label>
           <ng-select name="status_after" [(ngModel)]="selected_data.status_after" required
@@ -321,6 +385,25 @@
           </ng-toggle>
         </div>
 
+        <!-- Déclenchement PNS depuis le circuit -->
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">
+            Déclencher le PNS après cette action
+            <small class="text-muted d-block">Ex. : sur une signature, demander au PNS de générer le document signé.</small>
+          </label>
+          <ng-toggle name="can_act_pns" [(ngModel)]="selected_data.can_act_pns"
+            [color]="{ unchecked: '#939da2', checked: '#e67e22' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="form-group col-12 mb-3" *ngIf="selected_data.can_act_pns">
+          <label>Clé de décision PNS <span class="text-danger">(*)</span></label>
+          <input type="text" class="form-control" name="decision" [(ngModel)]="selected_data.decision"
+                 [required]="selected_data.can_act_pns" placeholder="ex : sign_doc, gendoc…">
+          <small class="text-muted">Clé convenue avec le PNS pour identifier l'action à réaliser.</small>
+        </div>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -348,6 +431,8 @@
         <tr><th>Statut document après</th><td>{{ selected_data?.status_after }}</td></tr>
         <tr><th>Statut requête après</th><td>{{ selected_data?.requete_status_after ?? '—' }}</td></tr>
         <tr><th>Bloquant</th><td>{{ selected_data?.is_blocking ? 'Oui' : 'Non' }}</td></tr>
+        <tr><th>Déclenche le PNS</th><td>{{ selected_data?.can_act_pns ? 'Oui' : 'Non' }}</td></tr>
+        <tr *ngIf="selected_data?.can_act_pns"><th>Clé de décision PNS</th><td><code>{{ selected_data?.decision ?? '—' }}</code></td></tr>
         <tr><th>Ordre</th><td>{{ selected_data?.order }}</td></tr>
       </tbody>
     </table>

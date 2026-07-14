@@ -14,6 +14,7 @@ import { UnityAdminService } from '../../../../core/services/unity_admin.service
 import { RoleService } from '../../../../core/services/role.service';
 import { PrestationStatusService } from '../../../../core/services/prestation-status.service';
 import { PrestationService } from '../../../../core/services/prestation.service';
+import { WorkflowService } from '../../../../core/services/workflow.service';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
@@ -34,7 +35,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
 
   selected_data: any;
   user: any;
-  add_data: any = { is_blocking: true };
+  add_data: any = { is_blocking: true, can_act_pns: false };
   data: any[] = [];
   docProduits: any[] = [];
   prestations: any[] = [];
@@ -51,6 +52,35 @@ export class DocumentCircuitEtapeComponent implements OnInit {
   isPaginate = true;
   pg = { pageSize: 10, p: 1, total: 0 };
 
+  /** Toutes les transitions workflow (pour vérifier le match condition_type ⇄ action_type) */
+  transitions: any[] = [];
+
+  /**
+   * Guidage : une action de circuit (`action_type`) ne fait avancer la REQUÊTE
+   * que s'il existe une transition workflow de MÊME `condition_type` dans la
+   * prestation du document produit. Sinon, l'acte avance mais pas la demande.
+   */
+  matchCondition(docProduitId: any, actionType: string): any {
+    if (!docProduitId || !actionType) return null;
+
+    const dp = this.docProduits.find((d: any) => d.id === docProduitId);
+    if (!dp?.prestation_id) return null;
+
+    const matches = this.transitions.filter(
+      (t: any) => t.prestation_id === dp.prestation_id && t.condition_type === actionType
+    );
+
+    return {
+      ok: matches.length > 0,
+      count: matches.length,
+      action: actionType,
+      prestation: dp?.prestation?.name ?? '',
+      etapes: matches.map(
+        (t: any) => `${t.etape_from?.name ?? '?'} → ${t.etape_to?.name ?? '?'}`
+      ),
+    };
+  }
+
   actionTypes = [
     { value: 'edition', label: 'Édition' },
     { value: 'paraphe', label: 'Paraphe' },
@@ -66,6 +96,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     private roleService: RoleService,
     private prestationStatusService: PrestationStatusService,
     private prestationService: PrestationService,
+    private workflowService: WorkflowService,
     private locService: LocalStorageService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -79,10 +110,30 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     this.all();
     this.allDocProduits();
     this.allPrestations();
+    this.allTransitions();
     this.allUniteAdmins();
     this.allRoles();
     this.user = this.locService.get(GlobalName.userName);
     this.permissions = this.user.roles[0].permissions;
+  }
+
+  /** Données affichées, filtrées par la prestation du document produit. */
+  get displayedData(): any[] {
+    if (!this.selectedPrestationId) return this.data;
+    return this.data.filter(
+      (d: any) => (d?.doc_produit?.prestation_id ?? d?.doc_produit?.prestation?.id) === this.selectedPrestationId
+    );
+  }
+
+  onPrestationFilterChange() {
+    this.selectedId = null;
+    this.pg.p = 1;
+  }
+
+  allPrestations() {
+    this.prestationService.getAll().subscribe((res: any) => {
+      this.prestations = res.data ?? res ?? [];
+    });
   }
 
   all() {
@@ -103,23 +154,10 @@ export class DocumentCircuitEtapeComponent implements OnInit {
     });
   }
 
-  allPrestations() {
-    this.prestationService.getAll().subscribe((res: any) => {
-      this.prestations = res.data ?? res;
+  allTransitions() {
+    this.workflowService.getAll().subscribe((res: any) => {
+      this.transitions = res.data ?? res ?? [];
     });
-  }
-
-  /** Données affichées, filtrées par prestation (via doc_produit.prestation_id) */
-  get displayedData(): any[] {
-    if (!this.selectedPrestationId) return this.data;
-    return this.data.filter(
-      (d: any) => d?.doc_produit?.prestation_id === this.selectedPrestationId
-    );
-  }
-
-  onPrestationFilterChange() {
-    this.selectedId = null;
-    this.pg.p = 1;
   }
 
   allUniteAdmins() {
@@ -152,7 +190,7 @@ export class DocumentCircuitEtapeComponent implements OnInit {
   }
 
   add(content: any) {
-    this.add_data = { is_blocking: true };
+    this.add_data = { is_blocking: true, can_act_pns: false };
     this.prestationStatuses = [];
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
