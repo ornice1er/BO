@@ -9,12 +9,20 @@
       <option *ngFor="let s of statuses" [value]="s.short_name">{{ s.name }}</option>
     </select>
 
-    <!-- Bouton export (sur la sélection filtrée) -->
-    <button class="btn btn-primary-custom" (click)="exportList()" [disabled]="loading2 || filteredRequetes.length === 0">
-      <i class="bi bi-download me-2"></i>
-      Exporter{{ selectedStatus ? ' (' + filteredRequetes.length + ')' : '' }}
-      <app-loading [isVisible]="loading2"></app-loading>
-    </button>
+    <div class="d-flex gap-2">
+      <!-- Bouton Générer l'agrément -->
+      <button class="btn btn-primary-custom" (click)="ouvrirAgrement()">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        Générer l'agrément
+      </button>
+
+      <!-- Bouton export -->
+      <button class="btn btn-outline-secondary" (click)="exportList()" [disabled]="loading2 || filteredRequetes.length === 0">
+        <i class="bi bi-download me-2"></i>
+        Exporter{{ selectedStatus ? ' (' + filteredRequetes.length + ')' : '' }}
+        <app-loading [isVisible]="loading2"></app-loading>
+      </button>
+    </div>
 
   </div>
 </div>
@@ -32,43 +40,90 @@
     <table class="table custom-table">
       <thead>
         <tr>
-          <th style="width: 50px;">#</th>
-          <th scope="col">Code PS</th>
+          <th style="width: 40px;">#</th>
+          <th scope="col">Prestation</th>
           <th scope="col">Code Demande</th>
           <th scope="col">Demandeur</th>
+          <th scope="col">Étape</th>
           <th scope="col">Statut</th>
+          <th scope="col">Date dépôt</th>
+          <th scope="col" style="width:70px"></th>
         </tr>
       </thead>
       <tbody>
         <!-- Skeleton loader -->
         <ng-container *ngIf="loading2">
             <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
-                <td *ngFor="let j of [1,2,3,4,5]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7,8]">
                     <span class="placeholder col-10 rounded"></span>
                 </td>
             </tr>
         </ng-container>
 
         <ng-container *ngIf="!loading2">
-        <tr *ngFor="let d of filteredRequetes | sampleSearch:search_text | paginate: {
+        <ng-container *ngFor="let d of filteredRequetes | sampleSearch:search_text | paginate: {
                         id: 'ngxP1',
                         itemsPerPage: pg.pageSize,
                         currentPage: pg.p,
                         totalItems: filteredRequetes.length
-                    }; let i = index"
-            class="table-row">
-          <td>{{ i + 1 }}</td>
-          <td>{{ d?.prestation?.code }}</td>
-          <td>{{ d?.code }}</td>
+                    }; let i = index">
+        <tr class="table-row">
+          <td class="text-muted">{{ i + 1 }}</td>
           <td>
-            <ul class="mb-0 ps-3">
-              <li><strong>Email :</strong> {{ d?.email }}</li>
-              <li><strong>Téléphone :</strong> {{ d?.phone }}</li>
-            </ul>
+            <span class="fw-semibold">{{ d?.prestation?.code }}</span>
+            <div class="text-muted small">{{ d?.prestation?.name }}</div>
           </td>
-          <td>{{ d?.current_status?.name }}</td>
+          <td><code>{{ d?.code }}</code></td>
+          <td>
+            <div class="small">{{ d?.email }}</div>
+            <div class="small text-muted">{{ d?.phone }}</div>
+          </td>
+          <td>
+            <span class="badge bg-primary-subtle text-primary-emphasis">
+              {{ d?.current_etape?.name ?? '—' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge"
+              [class.bg-secondary]="['en_attente','demande'].includes(d?.current_status?.short_name)"
+              [class.bg-primary]="['pris_en_charge','envoye','transmis'].includes(d?.current_status?.short_name)"
+              [class.bg-warning]="['paraphe','etudie','en_attente_signature'].includes(d?.current_status?.short_name)"
+              [class.bg-success]="['valide','prevalide'].includes(d?.current_status?.short_name)"
+              [class.bg-danger]="['rejete','rejete_clos','cloture'].includes(d?.current_status?.short_name)">
+              {{ d?.current_status?.name ?? '—' }}
+            </span>
+          </td>
+          <td class="small text-muted">{{ d?.created_at | date:'dd/MM/yyyy' }}</td>
+          <td class="text-nowrap">
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-dark"
+                      (click)="voirRequete(d)"
+                      title="Voir le détail">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button *ngIf="stepFields(d).length > 0"
+                      class="btn btn-sm btn-outline-secondary"
+                      (click)="toggleExpand(d.id)"
+                      [title]="expandedIds.has(d.id) ? 'Réduire' : 'Voir les données'">
+                <i class="bi" [class.bi-chevron-down]="!expandedIds.has(d.id)" [class.bi-chevron-up]="expandedIds.has(d.id)"></i>
+              </button>
+            </div>
+          </td>
         </tr>
-        </ng-container><!-- end *ngIf="!loading2" -->
+        <tr *ngIf="expandedIds.has(d.id)" class="table-light">
+          <td colspan="8" class="px-4 py-3">
+            <div class="row g-2">
+              <div *ngFor="let f of stepFields(d)" class="col-md-4 col-sm-6">
+                <div class="d-flex flex-column">
+                  <span class="text-muted small text-uppercase" style="font-size:0.7rem;letter-spacing:.05em;">{{ f.label }}</span>
+                  <span class="fw-semibold small">{{ f.value }}</span>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </ng-container>
+        </ng-container>
       </tbody>
     </table>
   </div>
@@ -89,3 +144,100 @@
     </pagination-controls>
   </div>
 </div>
+
+
+<!-- ── Offcanvas : Éditeur d'agrément ─────────────────────────────────────── -->
+<ng-template #agrementOffcanvas let-offcanvas>
+  <div class="offcanvas-header" style="background: linear-gradient(135deg,#0A3764,#0d4e8a); color:#fff;">
+    <h5 class="offcanvas-title mb-0">
+      <i class="bi bi-file-earmark-text me-2"></i>
+      Générer l'agrément
+    </h5>
+    <button type="button" class="btn-close btn-close-white" (click)="offcanvas.dismiss()"></button>
+  </div>
+
+  <div class="offcanvas-body p-4">
+
+    <!-- Choix du modèle -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        <i class="bi bi-layout-text-window me-1"></i>Modèle de document
+      </label>
+      <ng-select
+        [(ngModel)]="selectedTemplateId"
+        (ngModelChange)="onTemplateChange($event)"
+        placeholder="Sélectionner un modèle..."
+        [clearable]="false">
+        <ng-option *ngFor="let t of templates" [value]="t.id">
+          {{ t.name }}
+          <span class="text-muted ms-1 small">({{ t.type }})</span>
+        </ng-option>
+      </ng-select>
+      <small class="text-muted" *ngIf="!selectedTemplateId">
+        <i class="bi bi-info-circle me-1"></i>
+        Choisissez un modèle pour charger son contenu dans l'éditeur.
+      </small>
+    </div>
+
+    <!-- Chargement initial -->
+    <div *ngIf="loadingAgrement" class="text-center py-4">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2 text-muted small">Chargement du modèle...</p>
+    </div>
+
+    <!-- Éditeur (visible quand un doc est chargé) -->
+    <ng-container *ngIf="agrementDoc && !loadingAgrement">
+
+      <!-- Titre -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Titre du document</label>
+        <input type="text" class="form-control"
+               [(ngModel)]="agrementTitle"
+               placeholder="Ex : Lettre d'agrément N° ...">
+      </div>
+
+      <!-- Éditeur Quill -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contenu</label>
+        <quill-editor
+          [(ngModel)]="agrementContent"
+          [modules]="quillModules"
+          placeholder="Rédigez ou modifiez le contenu de l'agrément..."
+          style="display:block;">
+        </quill-editor>
+      </div>
+
+      <!-- Statut du document -->
+      <div *ngIf="agrementDoc?.status === 'complet'" class="alert alert-success d-flex align-items-center gap-2 mt-2">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>PDF généré —
+          <a [href]="agrementDoc?.file_url" target="_blank" class="alert-link">
+            <i class="bi bi-eye me-1"></i>Visualiser
+          </a>
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex gap-2 mt-4 flex-wrap">
+        <button class="btn btn-outline-secondary" (click)="sauvegarder()" [disabled]="loadingAgrement">
+          <i class="bi bi-save me-1"></i>
+          Sauvegarder
+          <app-loading [isVisible]="loadingAgrement"></app-loading>
+        </button>
+        <button class="btn btn-primary" (click)="genererPdf()" [disabled]="loadingAgrement || !agrementContent">
+          <i class="bi bi-file-pdf me-1"></i>
+          Générer le PDF
+          <app-loading [isVisible]="loadingAgrement"></app-loading>
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- État vide (aucun modèle sélectionné) -->
+    <div *ngIf="!agrementDoc && !loadingAgrement" class="text-center text-muted py-5">
+      <i class="bi bi-layout-text-window" style="font-size:3rem; opacity:0.3;"></i>
+      <p class="mt-3">Sélectionnez un modèle pour commencer l'édition.</p>
+    </div>
+
+  </div>
+</ng-template>

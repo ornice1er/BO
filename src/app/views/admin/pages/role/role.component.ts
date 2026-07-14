@@ -12,11 +12,12 @@ import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-role',
     templateUrl: './role.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, RouterModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, RouterModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./role.component.css']
 })
 export class RoleComponent implements OnInit {
@@ -98,6 +99,7 @@ AppErrorShow.showError("Gestion des rôles",err)
 
   
   add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
   
@@ -113,6 +115,7 @@ AppErrorShow.showError("Gestion des rôles",err)
   
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -151,6 +154,7 @@ AppErrorShow.showError("Gestion des rôles",err)
 
     show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
   copy(value:any){
@@ -215,7 +219,7 @@ AppErrorShow.showError("Gestion des rôles",err)
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

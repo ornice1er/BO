@@ -277,7 +277,7 @@
       <div class="form-section">
         <div class="form-section-title"><i class="bi bi-shield-fill"></i> Rôle &amp; Affectation</div>
         <div class="row g-3">
-          <div class="col-12" *ngIf="role!='Admin national'">
+          <div class="col-12" *ngIf="!isGlobalAdmin">
             <label class="form-label">Agent associé</label>
             <ng-select name="agent_id" ngModel placeholder="Sélectionner un agent">
               <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
@@ -318,20 +318,21 @@
       </div>
 
       <!-- Accès aux prestations -->
-      <div class="form-section" *ngIf="role != 'Admin national'">
+      <div class="form-section" *ngIf="!isGlobalAdmin">
         <div class="form-section-title d-flex justify-content-between align-items-center">
           <span><i class="bi bi-grid-fill"></i> Accès aux prestations
           <span class="prestations-count">{{prestations.length}} prestation(s)</span></span>
           <div class="form-check form-check-inline mb-0">
             <input class="form-check-input" type="checkbox" id="add-select-all"
               [(ngModel)]="allSelected"
+              [ngModelOptions]="{standalone: true}"
               (ngModelChange)="toggleAllPrestations($event)">
             <label class="form-check-label small" for="add-select-all">Tout sélectionner</label>
           </div>
         </div>
         <div class="prestations-grid">
           <div class="prestation-item" *ngFor="let p of prestations; let i=index">
-            <input class="prestation-checkbox" type="checkbox" name="state" [(ngModel)]="p.state" [id]="'add-prest-'+i">
+            <input class="prestation-checkbox" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="p.state" [id]="'add-prest-'+i" (ngModelChange)="syncAllSelected()">
             <label [for]="'add-prest-'+i" class="prestation-label">
               <i class="bi bi-check2 check-icon"></i>
               {{p.name}}
@@ -388,7 +389,7 @@
       <div class="form-section">
         <div class="form-section-title"><i class="bi bi-shield-fill"></i> Rôle &amp; Affectation</div>
         <div class="row g-3">
-          <div class="col-12" *ngIf="role!='Admin national'">
+          <div class="col-12" *ngIf="!isGlobalAdmin">
             <label class="form-label">Agent associé</label>
             <ng-select name="agent_id" [(ngModel)]="selected_data.agent_id" placeholder="Sélectionner un agent">
               <ng-option [value]="t?.id" *ngFor="let t of data2">{{t?.lastname}} {{t?.firstname}}</ng-option>
@@ -429,20 +430,21 @@
       </div>
 
       <!-- Accès aux prestations -->
-      <div class="form-section" *ngIf="role != 'Admin national'">
+      <div class="form-section" *ngIf="!isGlobalAdmin">
         <div class="form-section-title d-flex justify-content-between align-items-center">
           <span><i class="bi bi-grid-fill"></i> Accès aux prestations
           <span class="prestations-count">{{prestations.length}} prestation(s)</span></span>
           <div class="form-check form-check-inline mb-0">
             <input class="form-check-input" type="checkbox" id="edit-select-all"
               [(ngModel)]="allSelected"
+              [ngModelOptions]="{standalone: true}"
               (ngModelChange)="toggleAllPrestations($event)">
             <label class="form-check-label small" for="edit-select-all">Tout sélectionner</label>
           </div>
         </div>
         <div class="prestations-grid">
           <div class="prestation-item" *ngFor="let p of prestations; let i=index">
-            <input class="prestation-checkbox" type="checkbox" name="state" [(ngModel)]="p.state" [id]="'edit-prest-'+i">
+            <input class="prestation-checkbox" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="p.state" [id]="'edit-prest-'+i" (ngModelChange)="syncAllSelected()">
             <label [for]="'edit-prest-'+i" class="prestation-label">
               <i class="bi bi-check2 check-icon"></i>
               {{p.name}}
@@ -524,14 +526,14 @@
       </div>
 
       <!-- Accès aux prestations -->
-      <div class="form-section" *ngIf="role != 'Admin national'">
+      <div class="form-section" *ngIf="!isGlobalAdmin">
         <div class="form-section-title">
           <i class="bi bi-grid-fill"></i> Accès aux prestations
           <span class="prestations-count">{{prestations.length}} prestation(s)</span>
         </div>
         <div class="prestations-grid">
           <div class="prestation-item" *ngFor="let p of prestations; let i=index">
-            <input class="prestation-checkbox" type="checkbox" [checked]="p.state" name="state{{i}}" [(ngModel)]="p.state" [id]="'reset-prest-'+i">
+            <input class="prestation-checkbox" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="p.state" [id]="'reset-prest-'+i">
             <label [for]="'reset-prest-'+i" class="prestation-label">
               <i class="bi bi-check2 check-icon"></i>
               {{p.name}}
@@ -554,7 +556,43 @@
   </form>
 </ng-template>
 
-  <ng-template #showContent let-modal>
+<app-help-panel title="Guide — Gestion des utilisateurs">
+
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner. Un panneau d'actions apparaît à droite.</p>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Actions sur la ligne</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie email, rôles, prestations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+      <li><span class="help-icon help-icon--on"><i class="bi bi-toggle-on"></i></span><span><strong>Activer / Désactiver</strong> — bascule le statut du compte</span></li>
+      <li><span class="help-icon help-icon--reset"><i class="bi bi-arrow-counterclockwise"></i></span><span><strong>Réinitialiser</strong> — définit un nouveau mot de passe (min. 8 caractères)</span></li>
+    </ul>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Créer un compte</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche. Le formulaire contient&nbsp;:</p>
+    <ol class="help-ol">
+      <li>Email + Contact</li>
+      <li>Agent associé + Rôle(s)</li>
+      <li>Toggle <em>Acteur métier</em></li>
+      <li>Prestations accessibles</li>
+    </ol>
+  </div>
+
+  <div class="help-section">
+    <div class="help-section-title">Recherche</div>
+    <p>Filtre d'abord localement. Si aucun résultat et saisie &gt;&nbsp;2&nbsp;car., lance une recherche API automatiquement. Le bouton <i class="bi bi-arrow-counterclockwise"></i> recharge la liste complète.</p>
+  </div>
+
+</app-help-panel>
+
+<ng-template #showContent let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Détails des informations</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>

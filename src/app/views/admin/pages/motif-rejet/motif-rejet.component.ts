@@ -15,14 +15,15 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-motif-rejet',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
   templateUrl: './motif-rejet.component.html',
   styleUrl: './motif-rejet.component.css'
 })
@@ -93,16 +94,19 @@ export class MotifRejetComponent implements OnInit {
 
   add(content: any) {
     this.add_data = { allow_complement: true, is_final: false, is_active: true };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -144,8 +148,9 @@ export class MotifRejetComponent implements OnInit {
     );
   }
 
-  delete() {
-    if (confirm('Voulez-vous supprimer cet élément ?')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez-vous supprimer cet élément ?');
+    if (result.isConfirmed) {
       this.loading = true;
       this.service.delete(this.selected_data.id).subscribe(
         () => {

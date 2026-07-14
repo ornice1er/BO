@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ToastrService } from 'ngx-toastr';
 import { EtapeService } from '../../../../core/services/etape.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
@@ -139,17 +140,20 @@ remoteSearchData: any[] = []
   
     
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
 
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -201,9 +205,10 @@ add(content:any){
 
 }
 
-delete() {
+async delete() {
   this.loading=true;
-  if(confirm('Voulez vous supprimer cet élément')){
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+  if (result.isConfirmed) {
     this.statusService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
@@ -230,7 +235,7 @@ delete() {
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

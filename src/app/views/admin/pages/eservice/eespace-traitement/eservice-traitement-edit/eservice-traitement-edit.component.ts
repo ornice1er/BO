@@ -15,8 +15,10 @@ import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { DocumentActeService } from '../../../../../../core/services/document-acte.service';
 import { DocumentEditorComponent } from '../../../../../components/document-editor/document-editor.component';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'ngx-eservice-traitement-edit',
@@ -24,7 +26,7 @@ import { DocumentEditorComponent } from '../../../../../components/document-edit
   standalone: true,
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgxExtendedPdfViewerModule,DocumentEditorComponent
+    MatTooltipModule, NgxExtendedPdfViewerModule, DocumentEditorComponent, QuillModule
   ],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./eservice-traitement-edit.component.css']
@@ -32,6 +34,7 @@ import { DocumentEditorComponent } from '../../../../../components/document-edit
 export class EserviceTraitementEditComponent implements OnInit {
 
   @ViewChild('contentPDF') contentPDF: TemplateRef<any> | undefined;
+  @ViewChild('editeurOffcanvas') editeurOffcanvasRef!: TemplateRef<any>;
 
   // ── Données ────────────────────────────────────────────────────────────────
   selectedData: any;
@@ -58,7 +61,18 @@ export class EserviceTraitementEditComponent implements OnInit {
   loading = false;
   pdfSrc: string | null = null;
   rdvDate: string | null = null;
-  fileUploaded: any = null;
+  fileUploaded: File | null = null;
+  sharePjToPns = false;
+  noteFilePath: string | null = null;
+
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ align: [] }],
+      ['clean'],
+    ],
+  };
 
   showAddingField = {
     rdv:          false,
@@ -67,9 +81,10 @@ export class EserviceTraitementEditComponent implements OnInit {
   };
 
   // Circuit documentaire
-documentsDuCircuit: any[] = [];    // document_actes liés à la requête
-docProduitCourant: any = null;     // doc produit configuré pour l'étape courante
-documentDejaSoumis = false;  
+documentsDuCircuit: any[] = [];
+  docProduitCourant: any = null;
+  documentDejaSoumis = false;
+  acteAModifier: any = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -163,6 +178,9 @@ get(): void {
     // Réinitialiser les champs additionnels
     this.showAddingField = { rdv: false, observation: true, note_file: false };
     this.responseData.motif_id = null;
+    this.fileUploaded  = null;
+    this.sharePjToPns  = false;
+    this.noteFilePath  = null;
 
     if (!this.transitionSelectionnee) return;
 
@@ -192,7 +210,6 @@ get(): void {
 
       this.loading = true;
 
-      // Mapper condition_type → decision pour le moteur
       const decisionMap: Record<string, string> = {
         auto:          'valider',
         validation:    'valider',
@@ -202,39 +219,63 @@ get(): void {
         paraphe:       'parapher',
         prevalidation: 'prevalider',
         cloture:       'cloturer',
+        choix_sortie:  'valider',
+        correction:    'retour_correction',
       };
 
       const decision = decisionMap[transition?.condition_type] ?? 'valider';
-
       const metadata: any = {};
       if (this.rdvDate) metadata.rdv_date = this.rdvDate;
 
-      this.requeteService.traiter(this.selectedData.id, {
-        decision,
-        comment:  this.responseData.comment  || null,
-        motif_id: this.responseData.motif_id || null,
-        metadata,
-      }).subscribe({
-        next: () => {
-          this.loading = false;
-          this.toastr.success('Décision enregistrée avec succès');
-          this.router.navigate([
-            'admin/eservice/espace-traitement-show/' +
-            this.selectedData.code + '/' + this.myPrestation?.code
-          ]);
-        },
-        error: (err: any) => {
-          this.loading = false;
-          this.toastr.error(err?.error?.message ?? 'Opération échouée');
-        }
-      });
+      if (this.fileUploaded) {
+        this.requeteService.uploadNoteFile(this.selectedData.id, this.fileUploaded).subscribe({
+          next: (uploadRes: any) => {
+            const signedUrl  = this.sharePjToPns ? (uploadRes?.data?.signed_url ?? null) : null;
+            const filePath   = uploadRes?.data?.path ?? null;
+            this._envoyerTraiter(decision, metadata, signedUrl, filePath);
+          },
+          error: (err: any) => {
+            this.loading = false;
+            this.toastr.error(err?.error?.message ?? 'Erreur lors de l\'upload du fichier');
+          }
+        });
+      } else {
+        this._envoyerTraiter(decision, metadata, null, null);
+      }
+    });
+  }
+
+  private _envoyerTraiter(decision: string, metadata: any, link: string | null, noteFilePath: string | null): void {
+    this.requeteService.traiter(this.selectedData.id, {
+      decision,
+      comment:         this.responseData.comment  || null,
+      motif_id:        this.responseData.motif_id || null,
+      metadata,
+      link,
+      note_file_path:  noteFilePath,
+    }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.toastr.success('Décision enregistrée avec succès');
+        this.router.navigate([
+          'admin/eservice/espace-traitement-show/' +
+          this.selectedData.code + '/' + this.myPrestation?.code
+        ]);
+      },
+      error: (err: any) => {
+        this.loading = false;
+        this.toastr.error(err?.error?.message ?? 'Opération échouée');
+      }
     });
   }
 
   // ── Utilitaires ────────────────────────────────────────────────────────────
   upload(event: any): void {
     if (event.target.files.length > 0) {
-      this.fileUploaded = event.target.files[0];
+      this.fileUploaded = event.target.files[0] as File;
+    } else {
+      this.fileUploaded = null;
+      this.sharePjToPns = false;
     }
   }
 
@@ -299,7 +340,8 @@ identifierDocProduitCourant(): void {
 
   this.docActeService.getDocProduit(
     this.selectedData.prestation_id,
-    this.selectedData.current_etape_id
+    this.selectedData.current_etape_id,
+    this.selectedData.id
   ).subscribe({
     next: (res: any) => {
       console.log('getDocProduit response:', res);
@@ -341,10 +383,26 @@ actionSurDocument(acte: any): void {
   });
 }
  
-/** Appelé quand le document est soumis depuis l'éditeur */
-onDocumentSoumis(data: any): void {
+/** Appelé quand le document est soumis depuis l'éditeur (première édition) */
+onDocumentSoumis(_data: any): void {
   this.toastr.success('Document soumis au circuit de signature');
-  this.get(); // Recharger — documentDejaSoumis passera à true
+  this.get();
+}
+
+/** Ouvre l'offcanvas de modification sur un document déjà en circuit */
+modifierDocument(acte: any): void {
+  this.acteAModifier = acte;
+  this.offcanvasService.open(this.editeurOffcanvasRef, {
+    position: 'end',
+    panelClass: 'offcanvas-wide',
+  });
+}
+
+/** Appelé quand le document est re-généré depuis l'offcanvas de modification */
+onDocumentModifie(): void {
+  this.offcanvasService.dismiss();
+  this.toastr.success('Document modifié et re-généré');
+  this.get();
 }
  
 /** Vérifie si l'étape nécessite une édition (pas encore en circuit) */

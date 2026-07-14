@@ -96,6 +96,69 @@
 .stat-decor-orange { background: #ea580c; }
 .stat-decor-purple { background: #9333ea; }
 
+/* Clickable card pointer */
+.stat-card--link {
+  cursor: pointer;
+}
+
+/* ===== SECTION LABELS ===== */
+.kpi-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 0.6rem;
+  padding-left: 2px;
+}
+
+/* ===== TREATMENT RATE CARD ===== */
+.rate-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+}
+.rate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+}
+.rate-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0A3764;
+}
+.rate-bar {
+  height: 8px;
+  background: #f0f2f5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.rate-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0A3764, #1a5fa8);
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+.rate-legend {
+  display: flex;
+  justify-content: space-between;
+}
+.rate-legend-item {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+.rate-legend-done { color: #0A3764; }
+
 /* ===== SELECTOR CARD ===== */
 .selector-card {
   background: white;
@@ -274,4 +337,201 @@
 .empty-state p {
   font-size: 0.875rem;
   margin: 0;
+}
+
+/* ===== STAT ARROW (coin haut-droit des stat-cards) ===== */
+.stat-arrow {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 0.72rem;
+  color: #d1d5db;
+  transition: color 0.2s, transform 0.2s;
+}
+.stat-card--link:hover .stat-arrow {
+  color: #6b7280;
+  transform: translateX(2px);
+}
+
+/* ===== QUICK LINKS ===== */
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.quick-link-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid #f0f2f5;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+  position: relative;
+  text-align: center;
+}
+.quick-link-card:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.quick-link-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.quick-link-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.2;
+}
+
+.quick-link-arrow {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  font-size: 0.65rem;
+  color: #e5e7eb;
+  transition: color 0.2s;
+}
+.quick-link-card:hover .quick-link-arrow { color: #9ca3af; }
+
+.quick-link-card--blue   .quick-link-icon { background: rgba(10,55,100,0.1);  color: #0A3764; }
+.quick-link-card--teal   .quick-link-icon { background: rgba(13,148,136,0.1); color: #0d9488; }
+.quick-link-card--orange .quick-link-icon { background: rgba(234,88,12,0.1);  color: #ea580c; }
+.quick-link-card--purple .quick-link-icon { background: rgba(147,51,234,0.1); color: #9333ea; }
+.quick-link-card--indigo .quick-link-icon { background: rgba(99,102,241,0.1); color: #4f46e5; }
+.quick-link-card--green  .quick-link-icon { background: rgba(31,136,63,0.1);  color: #1F883F; }
+
+/* ===== PRESTATION CARDS ===== */
+.prestation-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.prestation-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.prestation-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.prestation-card__name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.35;
+}
+.prestation-card__code {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: rgba(10,55,100,0.08);
+  color: #0A3764;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.prestation-card__stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 10px 0;
+  border-top: 1px solid #f0f2f5;
+  border-bottom: 1px solid #f0f2f5;
+}
+.prestation-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+.prestation-stat + .prestation-stat {
+  border-left: 1px solid #f0f2f5;
+}
+.prestation-stat__value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+.prestation-stat__value--amber { color: #b45309; }
+.prestation-stat__value--green { color: #1F883F; }
+.prestation-stat__value--red   { color: #dc2626; }
+.prestation-stat__label {
+  font-size: 0.65rem;
+  color: #9ca3af;
+  font-weight: 500;
+  text-align: center;
+}
+
+.prestation-card__rate-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.prestation-card__rate-label {
+  font-size: 0.72rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+.prestation-card__rate-value {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0A3764;
+}
+
+.prestation-card__arrow {
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+  font-size: 0.72rem;
+  color: #d1d5db;
+  transition: color 0.2s, transform 0.2s;
+}
+.prestation-card:hover .prestation-card__arrow {
+  color: #6b7280;
+  transform: translateX(2px);
+}
+
+.prestation-card__skeleton {
+  height: 140px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0f2f5 25%, #e5e7eb 50%, #f0f2f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
 }

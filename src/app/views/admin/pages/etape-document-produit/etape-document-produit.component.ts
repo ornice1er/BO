@@ -16,6 +16,8 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { QuillEditorWrapperComponent } from '../../../components/quill-editor-wrapper/quill-editor-wrapper.component';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 
 @Component({
@@ -23,8 +25,7 @@ import { QuillEditorWrapperComponent } from '../../../components/quill-editor-wr
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent,QuillEditorWrapperComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent,QuillEditorWrapperComponent, HelpPanelComponent],
   templateUrl: './etape-document-produit.component.html',
   styleUrl: './etape-document-produit.component.css'
 })
@@ -32,7 +33,7 @@ export class EtapeDocumentProduitComponent implements OnInit {
 
   selected_data: any;
   user: any;
-  add_data: any = { allow_correction: true , content: ''};
+  add_data: any = { allow_correction: true, avancer_workflow: false, content: '' };
   data: any[] = [];
   etapes: any[] = [];
   prestations: any[] = [];
@@ -113,17 +114,20 @@ formats = [
   }
 
   add(content: any) {
-    this.add_data = { allow_correction: true , content: ''};
+    this.add_data = { allow_correction: true, avancer_workflow: false, content: '' };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -175,8 +179,9 @@ formats = [
     );
   }
 
-  delete() {
-    if (confirm('Voulez-vous supprimer cet élément ?')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez-vous supprimer cet élément ?');
+    if (result.isConfirmed) {
       this.loading = true;
       this.service.delete(this.selected_data.id).subscribe(
         () => {

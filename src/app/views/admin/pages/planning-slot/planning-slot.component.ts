@@ -15,13 +15,13 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-planning-slot',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
-    SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule
-  ],
+    SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
   templateUrl: './planning-slot.component.html',
   styleUrl: './planning-slot.component.css'
 })
@@ -115,16 +115,19 @@ export class PlanningSlotComponent implements OnInit {
 
   add(content: any) {
     this.selected_data = null;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'md' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 

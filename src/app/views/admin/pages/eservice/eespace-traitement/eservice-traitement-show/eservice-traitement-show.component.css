@@ -175,6 +175,7 @@
 .ts-section-header--teal   { background: linear-gradient(135deg, var(--teal) 0%, var(--teal-l) 100%); }
 .ts-section-header--dark   { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
 .ts-section-header--grey   { background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%); }
+.ts-section-header--amber  { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
 
 .ts-section-body {
   padding: 18px;
@@ -532,14 +533,7 @@
   box-shadow: 0 2px 7px rgba(12,87,78,0.25);
 }
 
-/* ── PDF Offcanvas ────────────────────────────────────── */
-:host ::ng-deep .offcanvas-pdf {
-  width: 70vw !important;
-  min-width: 340px;
-}
-:host ::ng-deep .offcanvas-pdf .offcanvas-body {
-  height: calc(100vh - 60px);
-}
+/* offcanvas-pdf : styles globaux dans styles.css */
 
 /* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -550,7 +544,6 @@
   .ts-files-grid { grid-template-columns: 1fr 1fr; }
   .ts-doc-grid { grid-template-columns: 1fr; }
   .ts-decision-row { flex-direction: column; }
-  :host ::ng-deep .offcanvas-pdf { width: 100vw !important; }
 }
 
 @media (max-width: 480px) {

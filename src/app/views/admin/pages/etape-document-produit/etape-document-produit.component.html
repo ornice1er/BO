@@ -47,6 +47,8 @@
                 <th>Correction</th>
                 <th>Ordre</th>
                 <th>Généré depuis</th>
+                <th>Condition transition</th>
+                <th>Nature demandeur</th>
               </tr>
             </thead>
             <tbody>
@@ -126,6 +128,17 @@
                     {{ d?.generate_from | titlecase }}
                   </span>
                 </td>
+                <td>
+                  <span class="badge bg-secondary">{{ d?.condition_type ?? 'validation' }}</span>
+                </td>
+                <td>
+                  <span *ngIf="d?.demandeur_type" class="badge"
+                    [class.bg-primary]="d?.demandeur_type === 'physique'"
+                    [class.bg-warning]="d?.demandeur_type === 'morale'">
+                    {{ d?.demandeur_type | titlecase }}
+                  </span>
+                  <span *ngIf="!d?.demandeur_type" class="text-muted">Tous</span>
+                </td>
               </tr>
               </ng-container><!-- end *ngIf="!loading" -->
             </tbody>
@@ -178,6 +191,8 @@
             <option value="decision">Décision</option>
             <option value="attestation">Attestation</option>
             <option value="pv">Procès-verbal</option>
+            <option value="certificat">Certificat</option>
+            <option value="agrement">Agrément</option>
           </select>
         </div>
 
@@ -229,11 +244,41 @@
           <label>Clé de décision</label>
           <input type="text" class="form-control" ngModel name="decision"/>
         </div>
-          <div class="form-group mb-3" *ngIf="generate_from === 'pns'">
-        <label class="fw-semibold">Corps du document</label> <br>
-        <app-quill-wrapper *ngIf="generate_from === 'pns'" [(ngModel)]="add_data.content" name="content" ngDefaultControl></app-quill-wrapper>
 
-      </div>
+        <div class="form-group col-md-6 mb-3">
+          <label>Type de demandeur (requestType)</label>
+          <input type="text" name="demandeur_type" class="form-control" ngModel
+            placeholder="ex: physique, morale, entreprise… (vide = tous)">
+          <small class="text-muted">Doit correspondre exactement à la valeur de <code>meta.requestType</code> envoyée par le portail. Laisser vide pour appliquer à tous.</small>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Avancer le workflow si document récupéré/généré</label>
+          <ng-toggle name="avancer_workflow" [(ngModel)]="add_data.avancer_workflow"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="form-group col-md-6 mb-3" *ngIf="add_data.avancer_workflow">
+          <label>Condition de transition <span class="text-danger">(*)</span></label>
+          <select name="condition_type" class="form-select" ngModel>
+            <option value="validation">Validation</option>
+            <option value="auto">Automatique</option>
+            <option value="rejet">Rejet</option>
+            <option value="complement">Complément</option>
+            <option value="signature">Signature</option>
+            <option value="cloture">Clôture</option>
+            <option value="paraphe">Paraphe</option>
+            <option value="prevalidation">Pré-validation</option>
+            <option value="choix_sortie">Choix sortie</option>
+          </select>
+        </div>
+
+          <div class="form-group mb-3" *ngIf="generate_from === 'pns'">
+            <label class="fw-semibold">Corps du document</label> <br>
+            <app-quill-wrapper [(ngModel)]="add_data.content" name="content" ngDefaultControl></app-quill-wrapper>
+          </div>
 
         <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
           <label class="mb-0">Correction autorisée après génération</label>
@@ -282,6 +327,8 @@
             <option value="decision">Décision</option>
             <option value="attestation">Attestation</option>
             <option value="pv">Procès-verbal</option>
+            <option value="certificat">Certificat</option>
+            <option value="agrement">Agrément</option>
           </select>
         </div>
 
@@ -334,10 +381,40 @@
           <input type="text" class="form-control" [(ngModel)]="selected_data.decision" name="decision"/>
         </div>
 
+        <div class="form-group col-md-6 mb-3">
+          <label>Type de demandeur (requestType)</label>
+          <input type="text" name="demandeur_type" class="form-control" [(ngModel)]="selected_data.demandeur_type"
+            placeholder="ex: physique, morale, entreprise… (vide = tous)">
+          <small class="text-muted">Doit correspondre exactement à la valeur de <code>meta.requestType</code> envoyée par le portail. Laisser vide pour appliquer à tous.</small>
+        </div>
+
+        <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Avancer le workflow si document récupéré/généré</label>
+          <ng-toggle name="avancer_workflow" [(ngModel)]="selected_data.avancer_workflow"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="form-group col-md-6 mb-3" *ngIf="selected_data.avancer_workflow">
+          <label>Condition de transition <span class="text-danger">(*)</span></label>
+          <select name="condition_type" class="form-select" [(ngModel)]="selected_data.condition_type">
+            <option value="validation">Validation</option>
+            <option value="auto">Automatique</option>
+            <option value="rejet">Rejet</option>
+            <option value="complement">Complément</option>
+            <option value="signature">Signature</option>
+            <option value="cloture">Clôture</option>
+            <option value="paraphe">Paraphe</option>
+            <option value="prevalidation">Pré-validation</option>
+            <option value="choix_sortie">Choix sortie</option>
+          </select>
+        </div>
+
       <div class="form-group mb-3" *ngIf="selected_data.generate_from === 'pns'">
         <label class="fw-semibold">Corps du document</label>
         <br>
-                <app-quill-wrapper *ngIf="selected_data.generate_from === 'pns'" [(ngModel)]="selected_data.content" name="content" ngDefaultControl></app-quill-wrapper>
+        <app-quill-wrapper [(ngModel)]="selected_data.content" name="content" ngDefaultControl></app-quill-wrapper>
       </div>
 
 
@@ -379,7 +456,46 @@
         <tr><th>Clé de template</th><td><code>{{ selected_data?.template_key }}</code></td></tr>
         <tr><th>Correction autorisée</th><td>{{ selected_data?.allow_correction ? 'Oui' : 'Non' }}</td></tr>
         <tr><th>Ordre</th><td>{{ selected_data?.order }}</td></tr>
+        <tr>
+          <th>Avancer workflow si doc récupéré</th>
+          <td><span class="badge" [class.bg-success]="selected_data?.avancer_workflow" [class.bg-secondary]="!selected_data?.avancer_workflow">{{ selected_data?.avancer_workflow ? 'Oui' : 'Non' }}</span></td>
+        </tr>
+        <tr *ngIf="selected_data?.avancer_workflow">
+          <th>Condition de transition</th>
+          <td><span class="badge bg-secondary">{{ selected_data?.condition_type ?? 'validation' }}</span></td>
+        </tr>
+        <tr>
+          <th>Nature du demandeur</th>
+          <td>
+            <span *ngIf="selected_data?.demandeur_type" class="badge"
+              [class.bg-primary]="selected_data?.demandeur_type === 'physique'"
+              [class.bg-warning]="selected_data?.demandeur_type === 'morale'">
+              {{ selected_data?.demandeur_type | titlecase }}
+            </span>
+            <span *ngIf="!selected_data?.demandeur_type" class="text-muted">Tous</span>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </ng-template>
+
+<app-help-panel title="Guide — Documents produits par étape">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie les informations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Ajouter</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche pour créer un document produit.</p>
+  </div>
+
+</app-help-panel>

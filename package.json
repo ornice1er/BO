@@ -33,6 +33,7 @@
     "chart.js": "^4.5.0",
     "express": "^4.18.2",
     "jquery": "^3.7.1",
+    "mermaid": "^11.14.0",
     "ng-toggle-button": "^1.7.0",
     "ng2-charts": "^8.0.0",
     "ng2-pdf-viewer": "^10.4.0",

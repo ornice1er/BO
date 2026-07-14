@@ -18,6 +18,7 @@ import { LoadingComponent } from '../../../../../components/loading/loading.comp
 import { PrestationDetails } from '../../prestation-details';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 
 @Component({
     selector: 'ngx-eservice-traitement-generator',
@@ -181,7 +182,7 @@ editorConfig: AngularEditorConfig = {
         },
         (err:any)=>{
             this.loading=false;
-             this.toastrService.error("Opération échouée");
+             AppErrorShow.showError("Opération échouée", err);
     
         })
     //  }})
@@ -218,6 +219,7 @@ editorConfig: AngularEditorConfig = {
   }
 
   open(content:any) {
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content)
       
   }
@@ -259,7 +261,7 @@ editorConfig: AngularEditorConfig = {
         (error:any)=>{
        //   this.selected_data=null
           this.loading=false;
-          this.toastrService.error("Veuillez contactee l'administrateur")
+          AppErrorShow.showError("Opération échouée", error)
 
       })
   
@@ -293,7 +295,7 @@ delivered(){
         (error:any)=>{
           this.selected_data=null
           this.loading=false;
-          this.toastrService.error("Veuillez contactee l'administrateur")
+          AppErrorShow.showError("Opération échouée", error)
 
         })
      // }})

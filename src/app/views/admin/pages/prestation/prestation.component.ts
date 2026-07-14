@@ -15,11 +15,15 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { NgToggleComponent, NgToggleModule } from 'ng-toggle-button';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { PermissionUtils } from '../../../../core/utils/permission-utils';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
+import { PaymentAccountService } from '../../../../core/services/payment-account.service';
 
 @Component({
     selector: 'ngx-prestation',
     templateUrl: './prestation.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent, NgToggleModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleComponent, NgToggleModule, HelpPanelComponent],
     styleUrls: ['./prestation.component.css']
 })
 export class PrestationComponent implements OnInit {
@@ -27,7 +31,9 @@ export class PrestationComponent implements OnInit {
   selected_data: any
   user: any
   roles: any
-  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false,  need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false,decision:"" }
+  isGlobalAdmin = false;
+  add_data: any = { from_pns: false, is_automatic_delivered: false, is_group_delivered: false, need_validation: false, needOut: false, has_document_circuit: false, decision: '', is_payant: false }
+  paymentAccounts: any[] = []
   data:any[]=[]
   permissions:any[]=[]
   data2:any[]=[]
@@ -55,8 +61,8 @@ remoteSearchData: any[] = []
         private unityAdminService:UnityAdminService,
         private prestationService:PrestationService,
         private locService:LocalStorageService,
-        
         private entityService:EntityService,
+        private paymentAccountService:PaymentAccountService,
         config: NgbModalConfig, private modalService: NgbModal,
         private toastrService:ToastrService
         ){
@@ -70,8 +76,10 @@ remoteSearchData: any[] = []
       this.getUnityAdmins()
       this.getEntities()
       this.getUnityAdminsAll()
+      this.getPaymentAccounts()
       this.user=this.locService.get(GlobalName.userName);
       this.permissions=this.user.roles[0].permissions;
+      this.isGlobalAdmin = PermissionUtils.isGlobalAdmin(this.user);
        this.buttonsPermission = {
       show:true,
       add:true,
@@ -126,6 +134,13 @@ remoteSearchData: any[] = []
     }
   
   
+    getPaymentAccounts() {
+      this.paymentAccountService.getAll().subscribe({
+        next: (res: any) => { this.paymentAccounts = res.data; },
+        error: () => {},
+      });
+    }
+
     checked(el:any){
       this.selected_data=el
     }
@@ -140,6 +155,7 @@ remoteSearchData: any[] = []
     
     open(content:any) {
   
+      (document.activeElement as HTMLElement)?.blur();
       this.modalService.open(
         content);
         
@@ -148,7 +164,8 @@ remoteSearchData: any[] = []
       
     
   add(content: any) {
-    this.add_data = { from_pns: false, is_automatic_delivered: false, need_meeting: false, need_validation: false, needOut: false, has_document_circuit: false };
+    this.add_data = { from_pns: false, is_automatic_delivered: false, need_validation: false, needOut: false, has_document_circuit: false, is_payant: false, decision: '' };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -156,11 +173,13 @@ remoteSearchData: any[] = []
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -208,9 +227,10 @@ remoteSearchData: any[] = []
   }
   
   
-  delete() {
+  async delete() {
       this.loading=true;
-      if(confirm('Voulez vous supprimer cet élément')){
+      const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+      if (result.isConfirmed) {
         this.prestationService.delete(this.selected_data.id).subscribe(
           (res:any)=>{
           this.loading=false;
@@ -222,7 +242,7 @@ remoteSearchData: any[] = []
           this.loading=false;
       })
       }
-  
+
   }
 
     setStatus(value:any){
@@ -237,7 +257,7 @@ remoteSearchData: any[] = []
         (err:any)=>{
           this.loading=false
           console.log(err)
-            AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+            AppErrorShow.showError("Opération échouée", err)
         })
     }
   

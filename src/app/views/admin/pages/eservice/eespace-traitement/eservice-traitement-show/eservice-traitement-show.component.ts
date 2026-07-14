@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import {} from '../../../../../../core/pipes/sample-search.pipe';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LoadingComponent } from '../../../../../components/loading/loading.component';
@@ -41,6 +42,7 @@ export class EserviceTraitementShowComponent implements OnInit {
   stepContents: any[] = [];
   motifsRejet: any[] = [];
   projects: any[] = [];
+  etapesPrecedentes: any[] = [];
 
   private deptMap = new Map<string, string>();
   private muniMap = new Map<string, string>();
@@ -131,16 +133,20 @@ export class EserviceTraitementShowComponent implements OnInit {
     })
   }
 
-  creerRdv(){
-    if (this.selected_data == null) {
-      this.toastrService.warning("Aucun élément selectionné");
-      return;
-    }
+  creerRdv(): void {
+    if (!this.selected_data) { this.toastrService.warning('Aucun élément sélectionné'); return; }
+    this.router.navigate(['admin/agenda', this.prestation, this.selected_data.code]);
+  }
+
+  voirAgenda(): void {
+    // L'agenda a été créé automatiquement depuis le slot PNS — naviguer vers la liste agenda
+    // avec le code de la demande pour que l'agent puisse envoyer la confirmation
     this.router.navigate(['admin/agenda', this.prestation, this.selected_data.code]);
   }
 
       
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -217,12 +223,13 @@ add(content:any){
   // ── TRAITEMENT (valider / rejeter / parapher / signer / prévalider) ────────
   traiter(decision: string, options: any = {}): void {
     const labels: Record<string, string> = {
-      valider:     'Valider cette demande ?',
-      rejeter:     'Rejeter cette demande ?',
-      parapher:    'Apposer votre paraphe sur ce document ?',
-      signer:      'Signer définitivement ce document ?',
-      prevalider:  'Pré-valider cette demande ?',
-      cloturer:    'Clôturer définitivement cette demande ?',
+      valider:            'Valider cette demande ?',
+      rejeter:            'Rejeter cette demande ?',
+      parapher:           'Apposer votre paraphe sur ce document ?',
+      signer:             'Signer définitivement ce document ?',
+      prevalider:         'Pré-valider cette demande ?',
+      cloturer:           'Clôturer définitivement cette demande ?',
+      retour_correction:  'Renvoyer cette demande pour correction ?',
     };
 
     AppSweetAlert.confirmBox('warning','Traitement de la demande',labels[decision] ?? 'Confirmer ?').then((result: any) => {
@@ -279,20 +286,21 @@ add(content:any){
   }
 
   dissociate() {
-    this.loading = true;
-    this.requeteService.associateToProject(this.selected_data.id, null).subscribe(
-      (res:any) => {  
+    AppSweetAlert.confirmBox('warning', 'Retirer du projet', `Retirer cette demande du projet "${this.selected_data?.project?.title}" ?`).then((result: any) => {
+      if (!result.isConfirmed) return;
+      this.loading = true;
+      this.requeteService.associateToProject(this.selected_data.id, null).subscribe(
+        (res: any) => {
           this.loading = false;
-           this.toastr.success(res.message)
-           this.modalService.dismissAll();
-           this.getProjects();
-           //MyToastr.make('success',"Gestion des agents ","Modification effectuée avec succès",this.toastrService)
-
-      },
-      (err:any)=>{
-          this.loading=false;
+          this.toastr.success(res.message);
+          this.get();
+        },
+        (err: any) => {
+          this.loading = false;
           this.toastr.error(err?.error?.message ?? 'Opération échouée');
-      })
+        }
+      );
+    });
   }     
     
     
@@ -352,6 +360,16 @@ actionSurDocument(acte: any): void {
     this.openPdfOffcanvas(el.url, el.name ?? 'Fichier');
   }
 
+  viewNoteFile(path: string): void {
+    this.requeteService.getNoteFileUrl(path).subscribe({
+      next: (res: any) => {
+        const url = res?.data?.url;
+        if (url) window.open(url, '_blank');
+      },
+      error: () => this.toastr.error('Impossible de charger la note'),
+    });
+  }
+
   showResponseFile(url: string): void {
     this.openPdfOffcanvas(url, 'Document');
   }
@@ -364,7 +382,6 @@ actionSurDocument(acte: any): void {
   private openPdfOffcanvas(url: string, title: string): void {
     this.pdfSrc   = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.pdfTitle = title;
-    console.log( this.pdfSrc  );
     this.offcanvasService.open(this.pdfViewerCanvas, {
       position: 'end',
       panelClass: 'offcanvas-pdf',
@@ -374,6 +391,7 @@ actionSurDocument(acte: any): void {
 
   // ── Modals ─────────────────────────────────────────────────────────────────
   open(content: any): void {
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content);
   }
 
@@ -388,6 +406,46 @@ actionSurDocument(acte: any): void {
   // ── Retour liste ───────────────────────────────────────────────────────────
   back2(): void {
     this.router.navigate(['admin/eservice/espace-traitement/' + this.prestation]);
+  }
+
+  // ── Régression admin ───────────────────────────────────────────────────────
+  openRegresser(content: any): void {
+    this.etapesPrecedentes = [];
+    this.requeteService.getEtapesPrecedentes(this.selected_data.id).subscribe({
+      next: (res: any) => {
+        this.etapesPrecedentes = res.data ?? [];
+        (document.activeElement as HTMLElement)?.blur();
+        this.modalService.open(content, { size: 'md' });
+      },
+      error: () => this.toastr.error('Impossible de charger les étapes')
+    });
+  }
+
+  submitRegresser(value: any): void {
+    if (!value.etape_id) { this.toastr.warning('Sélectionnez une étape'); return; }
+    AppSweetAlert.confirmBox('warning', 'Régression', 'Régresser cette demande vers l\'étape sélectionnée ?').then((r: any) => {
+      if (!r.isConfirmed) return;
+      this.loading = true;
+      this.requeteService.regresser(this.selected_data.id, value.etape_id, value.comment).subscribe({
+        next: () => {
+          this.loading = false;
+          this.modalService.dismissAll();
+          this.toastr.success('Demande regressée avec succès');
+          this.get();
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.toastr.error(err?.error?.message ?? 'Opération échouée');
+        }
+      });
+    });
+  }
+
+  etapeDejaTraversee(): boolean {
+    const etapeId = this.selected_data?.current_etape?.id;
+    if (!etapeId) return false;
+    return (this.selected_data?.requete_etape_logs ?? [])
+      .some((log: any) => log?.etape_from?.id === etapeId);
   }
 
   // ── Permissions (conservé pour les cas spécifiques restants) ──────────────

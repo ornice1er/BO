@@ -47,7 +47,7 @@
             <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                 <th scope="col">Libellé</th>
+                <th scope="col">Libellé</th>
                 <th scope="col">Unité parent</th>
                 <th scope="col">Rattachement</th>
             </tr>
@@ -153,7 +153,7 @@
                 </div>
                 </td>
  <td>{{d?.libelle}}</td>
-                                    <td>{{d?.parent?.libelle}}</td>
+                                    <td>{{d?.parent?.libelle ?? '—'}}</td>
                                     <td>
                                         <span *ngIf="!d.department_id && !d.municipality_id">
                                             Unité administrative
@@ -505,3 +505,23 @@
       <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Fermer</button>
     </div>
   </ng-template>
+
+<app-help-panel title="Guide — Unités administratives">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie les informations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Ajouter</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche pour créer une nouvelle unité.</p>
+  </div>
+
+</app-help-panel>

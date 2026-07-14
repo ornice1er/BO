@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModalConfig, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { EtapeService } from '../../../../core/services/etape.service';
 import { PrestationService } from '../../../../core/services/prestation.service';
 import { StatusService } from '../../../../core/services/status.service';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../core/utils/config-service';
 import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
@@ -19,16 +21,22 @@ import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { TransitionCondition } from '../../../../core/Models/interface.model';
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-workflow',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule,NgToggleModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule,NgToggleModule, NgToggleComponent, HelpPanelComponent],
     templateUrl: './workflow.component.html',
     styleUrl: './workflow.component.css'
 })
 export class WorkflowComponent {
   isDtInitialized: boolean = false;
-  add_data: any = { can_act_pns: false, decision: ''};
+  add_data: any = {
+    prestation_id: null, etape_from_id: null, etape_to_id: null,
+    condition_type: null, status_result_id: null, order: null,
+    'notify_requérant': false, notify_agent: false, is_active: true,
+    can_act_pns: false, decision: '', observation: '',
+  };
 
   selected_data: any;
   user: any;
@@ -37,6 +45,8 @@ export class WorkflowComponent {
   etapes: any[] = [];
   statuses: any[] = [];
   filteredStatuses: any[] = [];
+  filteredEtapes: any[] = [];
+  isCorrection = false;
   permissions: any[] = [];
 
   loading = false;
@@ -49,6 +59,15 @@ export class WorkflowComponent {
   isPaginate = true;
   selectedId: number | null = null;
   selectedFilter = '';
+  filterPrestationId: number | null = null;
+  allData: any[] = [];
+
+  // ── Copie workflow ──────────────────────────────────────────────────────────
+  copyFromPrestationId: number | null = null;
+  copyToPrestationId:   number | null = null;
+  loadingCopy = false;
+  fluxPrestationName = '';
+  zoomLevel = 1;
 
   conditionTypes: { value: TransitionCondition; label: string }[] = [
     { value: 'auto',          label: 'Automatique' },
@@ -60,6 +79,8 @@ export class WorkflowComponent {
     { value: 'paraphe',       label: 'Paraphe' },
     { value: 'prevalidation', label: 'Pré-validation' },
     { value: 'choix_sortie',  label: 'Choix sortie' },
+    { value: 'correction',        label: 'Retour pour correction (métier)' },
+    { value: 'retour_correction', label: 'Retour pour correction (requérant)' },
   ];
 
   constructor(
@@ -72,6 +93,7 @@ export class WorkflowComponent {
     config: NgbModalConfig,
     private modalService: NgbModal,
     private toastrService: ToastrService,
+    private route: ActivatedRoute,
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -96,6 +118,15 @@ export class WorkflowComponent {
   getPrestations() {
     this.prestationService.getAll().subscribe((res: any) => {
       this.prestations = res.data;
+      const slug = this.route.snapshot.paramMap.get('slug');
+      if (slug) {
+        const prestation = this.prestations.find((p: any) => p.slug === slug);
+        if (prestation) {
+          this.filterPrestationId = prestation.id;
+          this.onPrestationChange(prestation.id);
+          this.applyPrestationFilter();
+        }
+      }
     });
   }
 
@@ -107,10 +138,12 @@ export class WorkflowComponent {
 
   onPrestationChange(prestationId: number) {
     this.filteredStatuses = [];
+    this.filteredEtapes = [];
     if (!prestationId) return;
     this.psService.getByPrestation(prestationId).subscribe((res: any) => {
       this.filteredStatuses = res.data.map((ps: any) => ps.status);
     });
+    this.filteredEtapes = [...this.etapes];
   }
 
 
@@ -119,14 +152,110 @@ export class WorkflowComponent {
     all() {
       this.loading2=true;
       this.wService.getAll().subscribe((res:any)=>{
-        this.data=res.data
+        this.allData=res.data;
+        this.applyPrestationFilter();
         this.loading2=false;
-                this.selectedId=null
+        this.selectedId=null;
       },
       (error:any)=>{
-        
         this.loading2=false;
       })
+    }
+
+    applyPrestationFilter() {
+      this.data = this.filterPrestationId
+        ? this.allData.filter((d: any) => d.prestation_id === this.filterPrestationId)
+        : [...this.allData];
+      this.pg.total = this.data.length;
+    }
+
+    onFilterPrestationChange() {
+      this.search_text = '';
+      this.pg.p = 1;
+      this.applyPrestationFilter();
+    }
+
+    buildMermaidCode(): string {
+      if (!this.data.length) return 'flowchart LR\n  MSG["Aucune transition disponible"]';
+
+      const lines: string[] = ['flowchart LR'];
+      const pnsIndices: number[] = [];
+      let linkIdx = 0;
+
+      this.data.forEach((t: any) => {
+        const fromId = `E${t.etape_from_id}`;
+        const fromLabel = (t.etape_from?.name ?? `Étape ${t.etape_from_id}`).replace(/"/g, "'");
+        const notifParts: string[] = [];
+        if (t['notify_requérant']) notifParts.push('🔔req');
+        if (t.notify_agent)        notifParts.push('📨agt');
+        const label = [
+          t.condition_type,
+          t.can_act_pns ? `⚡PNS${t.decision ? ':' + t.decision : ''}` : '',
+          ...notifParts,
+        ].filter(Boolean).join(' ');
+
+        if (t.can_act_pns) pnsIndices.push(linkIdx);
+        linkIdx++;
+
+        if (t.etape_to_id) {
+          const toId = `E${t.etape_to_id}`;
+          const toLabel = (t.etape_to?.name ?? `Étape ${t.etape_to_id}`).replace(/"/g, "'");
+          lines.push(`  ${fromId}["${fromLabel}"] -->|${label}| ${toId}["${toLabel}"]`);
+        } else {
+          lines.push(`  ${fromId}["${fromLabel}"] -->|${label}| FIN(("FIN"))`);
+        }
+      });
+
+      pnsIndices.forEach(i => {
+        lines.push(`  linkStyle ${i} stroke:#e67e22,stroke-width:2.5px,color:#e67e22`);
+      });
+
+      return lines.join('\n');
+    }
+
+    zoomIn()    { this.zoomLevel = Math.min(3.0, +(this.zoomLevel + 0.1).toFixed(1)); }
+    zoomOut()   { this.zoomLevel = Math.max(0.3, +(this.zoomLevel - 0.1).toFixed(1)); }
+    resetZoom() { this.zoomLevel = 1; }
+
+    async openFluxModal(content: any) {
+      this.zoomLevel = 1;
+      const prestation = this.prestations.find((p: any) => p.id === this.filterPrestationId);
+      this.fluxPrestationName = prestation?.name ?? '';
+      (document.activeElement as HTMLElement)?.blur();
+      this.modalService.open(content, { size: 'xl', scrollable: true });
+      if (!this.filterPrestationId) return;
+
+      setTimeout(async () => {
+        const container = document.getElementById('mermaid-flux-container');
+        if (!container) return;
+        container.innerHTML = '<p class="text-muted text-center">Génération du diagramme…</p>';
+        try {
+          const { default: mermaid } = await import('mermaid');
+          mermaid.initialize({ startOnLoad: false, theme: 'default', flowchart: { padding: 24, nodeSpacing: 50, rankSpacing: 80 } });
+          const code = this.buildMermaidCode();
+          const id = 'mermaid-svg-' + Date.now();
+          const { svg } = await mermaid.render(id, code);
+          container.innerHTML = svg;
+          const svgEl = container.querySelector('svg');
+          if (svgEl) {
+            // Expand viewBox by 20px on each side to avoid clipping at edges
+            const vb = svgEl.getAttribute('viewBox');
+            if (vb) {
+              const [x, y, w, h] = vb.split(' ').map(Number);
+              const pad = 40;
+              svgEl.setAttribute('viewBox', `${x - pad} ${y - pad} ${w + pad * 2} ${h + pad * 2}`);
+            }
+            const naturalWidth = svgEl.style.maxWidth;
+            svgEl.style.maxWidth = 'none';
+            svgEl.style.width  = (naturalWidth && naturalWidth !== 'none') ? naturalWidth : '';
+            svgEl.style.height = 'auto';
+            svgEl.removeAttribute('width');
+            svgEl.removeAttribute('height');
+          }
+        } catch {
+          container.innerHTML = '<p class="text-danger text-center">Erreur lors du rendu du diagramme.</p>';
+        }
+      }, 200);
     }
 
  
@@ -138,13 +267,49 @@ export class WorkflowComponent {
   
     
 
-add(content:any){
-    this.modalService.open(content,{size:'lg'});
+add(content: any) {
+    this.isCorrection = false;
+    this.add_data = {
+      prestation_id: this.filterPrestationId ?? null, etape_from_id: null, etape_to_id: null,
+      condition_type: null, status_result_id: null, order: null,
+      'notify_requérant': false, notify_agent: false, is_active: true,
+      can_act_pns: false, decision: '', observation: '',
+    };
+    if (this.filterPrestationId) this.onPrestationChange(this.filterPrestationId);
+    (document.activeElement as HTMLElement)?.blur();
+    this.modalService.open(content, { size: 'lg' });
+  }
+
+  addCorrection(content: any) {
+    if (!this.selected_data) {
+      this.toastrService.warning('Sélectionnez une transition à inverser pour créer un retour correction');
+      return;
+    }
+    const pd = this.selected_data.prestation_id;
+    this.add_data = {
+      prestation_id:    pd,
+      etape_from_id:    this.selected_data.etape_to_id   ?? null,
+      etape_to_id:      this.selected_data.etape_from_id ?? null,
+      condition_type:   'correction',
+      status_result_id: null,
+      order:            null,
+      'notify_requérant': false,
+      notify_agent:     false,
+      is_active:        true,
+      can_act_pns:      false,
+      decision:         '',
+      observation:      '',
+    };
+    this.isCorrection = true;
+    if (pd) this.onPrestationChange(pd);
+    (document.activeElement as HTMLElement)?.blur();
+    this.modalService.open(content, { size: 'lg' });
   }
 
 
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -153,6 +318,7 @@ add(content:any){
     if (this.selected_data?.prestation_id) {
       this.onPrestationChange(this.selected_data.prestation_id);
     }
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -166,18 +332,18 @@ add(content:any){
   }
   
     store(value:any) {
-      this.loading=true; 
+      this.loading=true;
 
         this.wService.store(value).subscribe(
             (res:any)=>{
             this.loading=false;
-            this.modalService.dismissAll()
+            this.modalService.dismissAll();
+            this.toastrService.success('Transition enregistrée avec succès');
             this.all();
-            //MyToastr.make('success',"Gestion des agents ","Enrehistrement effectué avec succès",this.toastrService)
-
         },
         (err:any)=>{
             this.loading=false;
+            this.toastrService.error(err?.error?.message ?? 'Enregistrement échoué');
         })
   
   }
@@ -201,9 +367,64 @@ add(content:any){
 
 }
 
-delete() {
+async deleteAllForPrestation() {
+  if (!this.filterPrestationId) return;
+  const prestation = this.prestations.find((p: any) => p.id === this.filterPrestationId);
+  const name = prestation?.name ?? `ID ${this.filterPrestationId}`;
+  const count = this.data.length;
+  const msg = `Supprimer les ${count} transition(s) de « ${name} » ?\n\nCette action est irréversible.`;
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', msg);
+  if (!result.isConfirmed) return;
+
+  this.loading = true;
+  this.wService.deleteByPrestation(this.filterPrestationId).subscribe({
+    next: (res: any) => {
+      this.toastrService.success(res.message ?? 'Transitions supprimées');
+      this.filterPrestationId = null;
+      this.loading = false;
+      this.all();
+    },
+    error: (err: any) => {
+      this.loading = false;
+      AppErrorShow.showError('Suppression échouée', err);
+    }
+  });
+}
+
+  openCopyModal(modal: any): void {
+    this.copyFromPrestationId = null;
+    this.copyToPrestationId   = this.filterPrestationId;
+    this.modalService.open(modal, { size: 'md' });
+  }
+
+  copyWorkflow(): void {
+    if (!this.copyFromPrestationId || !this.copyToPrestationId) {
+      this.toastrService.warning('Sélectionnez les deux prestations');
+      return;
+    }
+    if (this.copyFromPrestationId === this.copyToPrestationId) {
+      this.toastrService.warning('Source et destination doivent être différentes');
+      return;
+    }
+    this.loadingCopy = true;
+    this.wService.copyFromPrestation(this.copyFromPrestationId, this.copyToPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Workflow copié avec succès');
+        this.loadingCopy = false;
+        this.modalService.dismissAll();
+        this.all();
+      },
+      error: (err: any) => {
+        this.loadingCopy = false;
+        AppErrorShow.showError('Copie échouée', err);
+      }
+    });
+  }
+
+async delete() {
   this.loading=true;
-  if(confirm('Voulez vous supprimer cet élément')){
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+  if (result.isConfirmed) {
     this.wService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
@@ -230,7 +451,7 @@ delete() {
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 
@@ -265,9 +486,11 @@ delete() {
 
 resetSearch() {
   this.search_text = '';
-  this.isPaginate=true;
-  this.pg.p = 1; // reset pagination si utilisée
-  this.all(); // méthode pour recharger les données initiales
+  this.filterPrestationId = null;
+  this.isPaginate = true;
+  this.pg.p = 1;
+  this.data = [...this.allData];
+  this.pg.total = this.data.length;
 }
 
 

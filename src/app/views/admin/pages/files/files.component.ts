@@ -13,6 +13,7 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 @Component({
     selector: 'ngx-files',
     templateUrl: './files.component.html',
@@ -97,6 +98,7 @@ remoteSearchData: any[] = []
   
     
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -104,11 +106,13 @@ add(content:any){
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -151,9 +155,10 @@ add(content:any){
 
 }
 
-delete() {
+async delete() {
   this.loading=true;
-  if(confirm('Voulez vous supprimer cet élément')){
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+  if (result.isConfirmed) {
     this.fileService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
@@ -179,7 +184,7 @@ delete() {
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

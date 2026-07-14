@@ -5,10 +5,51 @@
     <div class="card custom-card">
       <div class="card-header-actions">
         <div class="d-flex justify-content-between align-items-center">
-          <button class="btn btn-primary-custom" (click)="add(addContent)">
-            <i class="bi bi-plus-lg me-2"></i>Ajouter
-          </button>
-          <div class="search-controls d-flex align-items-center">
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary-custom" (click)="add(addContent)">
+              <i class="bi bi-plus-lg me-2"></i>Ajouter
+            </button>
+            <button
+              class="btn btn-warning text-white"
+              (click)="addCorrection(addContent)"
+              [title]="selectedId ? 'Créer la transition inverse de la sélection (retour pour correction)' : 'Créer une transition de correction'">
+              <i class="bi bi-arrow-return-left me-2"></i>Retour pour correction
+            </button>
+            <button
+              class="btn btn-outline-secondary"
+              (click)="openFluxModal(fluxContent)"
+              title="Visualiser le flux de transitions">
+              <i class="bi bi-diagram-3 me-2"></i>Voir le flux
+            </button>
+            <button
+              *ngIf="filterPrestationId"
+              class="btn btn-outline-primary"
+              (click)="openCopyModal(copyWorkflowModal)"
+              [disabled]="loading"
+              title="Copier le workflow d'une autre prestation vers celle-ci">
+              <i class="bi bi-copy me-2"></i>Copier depuis...
+            </button>
+            <button
+              *ngIf="filterPrestationId"
+              class="btn btn-danger"
+              (click)="deleteAllForPrestation()"
+              [disabled]="loading"
+              title="Supprimer toutes les transitions de cette prestation">
+              <i class="bi bi-trash me-2"></i>Supprimer toutes les transitions
+            </button>
+          </div>
+          <div class="search-controls d-flex align-items-center gap-2">
+            <div style="min-width: 220px;">
+              <ng-select
+                [(ngModel)]="filterPrestationId"
+                name="filter_prestation_id"
+                (ngModelChange)="onFilterPrestationChange()"
+                placeholder="Filtrer par prestation..."
+                [clearable]="true"
+              >
+                <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
+              </ng-select>
+            </div>
             <div class="input-group">
               <input
                 type="text"
@@ -124,7 +165,9 @@
                     'bg-primary':   d.condition_type === 'signature' || d.condition_type === 'choix_sortie',
                     'bg-info text-dark': d.condition_type === 'paraphe',
                     'bg-secondary': d.condition_type === 'auto' || d.condition_type === 'prevalidation',
-                    'bg-dark':      d.condition_type === 'cloture'
+                    'bg-dark':      d.condition_type === 'cloture',
+                    'badge-correction':        d.condition_type === 'correction',
+                    'badge-retour-correction': d.condition_type === 'retour_correction'
                   }">{{ d.condition_type }}</span>
                 </td>
                 <td>{{ d?.status_result?.name }}</td>
@@ -172,88 +215,101 @@
 
 <!-- ── Modal Ajout ─────────────────────────────────────────────────────────── -->
 <ng-template #addContent let-c="close" let-d="dismiss">
-  <form #addForm="ngForm" (ngSubmit)="store(addForm.value)">
-    <div class="modal-header">
-      <h4 class="modal-title">Nouvelle transition</h4>
+  <form #addForm="ngForm" (ngSubmit)="store(add_data)">
+    <div class="modal-header" [class.bg-warning]="isCorrection" [class.bg-opacity-10]="isCorrection">
+      <h4 class="modal-title">
+        <span *ngIf="isCorrection"><i class="bi bi-arrow-return-left me-2"></i>Retour pour correction</span>
+        <span *ngIf="!isCorrection">Nouvelle transition</span>
+      </h4>
       <button type="button" class="btn btn-dark" (click)="d('Cross click')"><i class="fa fa-times"></i></button>
     </div>
     <div class="modal-body">
       <div class="row">
         <div class="form-group col-12 mb-3">
           <label>Prestation <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="prestation_id" [required]="true" (ngModelChange)="onPrestationChange($event)">
+          <ng-select [(ngModel)]="add_data.prestation_id" name="prestation_id" [required]="true"
+            (ngModelChange)="onPrestationChange($event)" [disabled]="isCorrection">
             <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Étape source <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="etape_from_id" [required]="true">
-            <ng-option *ngFor="let e of etapes" [value]="e.id">{{ e.name }}</ng-option>
+          <ng-select [(ngModel)]="add_data.etape_from_id" name="etape_from_id" [required]="true">
+            <ng-option *ngFor="let e of (filteredEtapes.length ? filteredEtapes : etapes)" [value]="e.id">{{ e.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Étape cible <small class="text-muted">(vide = terminal)</small></label>
-          <ng-select ngModel name="etape_to_id">
+          <ng-select [(ngModel)]="add_data.etape_to_id" name="etape_to_id">
             <ng-option [value]="null">— Terminal —</ng-option>
-            <ng-option *ngFor="let e of etapes" [value]="e.id">{{ e.name }}</ng-option>
+            <ng-option *ngFor="let e of (filteredEtapes.length ? filteredEtapes : etapes)" [value]="e.id">{{ e.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Type de condition <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="condition_type" [required]="true">
+          <ng-select [(ngModel)]="add_data.condition_type" name="condition_type" [required]="true" [disabled]="isCorrection">
             <ng-option *ngFor="let c of conditionTypes" [value]="c.value">{{ c.label }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-6 mb-3">
           <label>Statut résultat <span class="text-danger">(*)</span></label>
-          <ng-select ngModel name="status_result_id" [required]="true"
+          <ng-select [(ngModel)]="add_data.status_result_id" name="status_result_id" [required]="true"
             [placeholder]="filteredStatuses.length === 0 ? 'Sélectionnez d\'abord une prestation' : 'Sélectionner un statut'">
             <ng-option *ngFor="let s of filteredStatuses" [value]="s.id">{{ s.name }}</ng-option>
           </ng-select>
         </div>
 
         <div class="form-group col-md-4 mb-3">
-          <label>Ordre</label>
-          <input type="number" class="form-control" ngModel name="order" value="0" min="0" />
+          <label>Ordre <span class="text-danger">(*)</span></label>
+          <input type="number" class="form-control" [(ngModel)]="add_data.order" name="order" min="1" required />
         </div>
 
         <div class="col-md-4 mb-3 d-flex align-items-center gap-3 mt-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" ngModel name="notify_requérant" id="add_notif_req" />
+            <input class="form-check-input" type="checkbox" [(ngModel)]="add_data['notify_requérant']" name="notify_requérant" id="add_notif_req" />
             <label class="form-check-label" for="add_notif_req">Notifier requérant</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" ngModel name="notify_agent" id="add_notif_agent" />
+            <input class="form-check-input" type="checkbox" [(ngModel)]="add_data.notify_agent" name="notify_agent" id="add_notif_agent" />
             <label class="form-check-label" for="add_notif_agent">Notifier agent</label>
           </div>
         </div>
 
         <div class="col-md-4 mb-3 d-flex align-items-center mt-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" ngModel name="is_active" id="add_is_active" [ngModel]="true" />
+            <input class="form-check-input" type="checkbox" [(ngModel)]="add_data.is_active" name="is_active" id="add_is_active" />
             <label class="form-check-label" for="add_is_active">Actif</label>
           </div>
         </div>
 
-           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-          <label class="mb-0">Déclencer une action sur le PNS</label>
+        <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Déclencher une action sur le PNS</label>
           <ng-toggle name="can_act_pns" [(ngModel)]="add_data.can_act_pns"
             [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
             [values]="{ checked: true, unchecked: false }">
           </ng-toggle>
         </div>
-           <div class="form-group col-md-4 mb-3">
+
+        <div class="form-group col-md-6 mb-3">
           <label>Clé de décision</label>
-          <input type="text" class="form-control" [(ngModel)]="add_data.decision" name="decision"/>
+          <input type="text" class="form-control" [(ngModel)]="add_data.decision" name="decision" />
+        </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Observation</label>
+          <textarea class="form-control" [(ngModel)]="add_data.observation" name="observation" rows="3"
+            placeholder="Contexte, motif de la correction, instructions au destinataire…"
+            style="resize: vertical;"></textarea>
         </div>
 
       </div>
     </div>
     <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="d('Cross click')">Annuler</button>
       <button type="submit" class="btn btn-outline-primary" [disabled]="addForm.invalid || loading">
         Sauvegarder <app-loading [isVisible]="loading"></app-loading>
       </button>
@@ -310,8 +366,8 @@
         </div>
 
         <div class="form-group col-md-4 mb-3">
-          <label>Ordre</label>
-          <input type="number" class="form-control" [(ngModel)]="selected_data.order" name="order" min="0" />
+          <label>Ordre <span class="text-danger">(*)</span></label>
+          <input type="number" class="form-control" [(ngModel)]="selected_data.order" name="order" min="1" required />
         </div>
 
         <div class="col-md-4 mb-3 d-flex align-items-center gap-3 mt-4">
@@ -343,6 +399,14 @@
           <label>Clé de décision</label>
           <input type="text" class="form-control" [(ngModel)]="selected_data.decision" name="decision"/>
         </div>
+
+        <div class="form-group col-12 mb-3">
+          <label>Observation</label>
+          <textarea class="form-control" [(ngModel)]="selected_data.observation" name="observation" rows="3"
+            placeholder="Contexte, motif de la correction, instructions au destinataire…"
+            style="resize: vertical;"></textarea>
+        </div>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -353,6 +417,42 @@
   </form>
 </ng-template>
 
+
+<!-- ── Modal Flux de transitions ──────────────────────────────────────────── -->
+<ng-template #fluxContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center flex-wrap gap-2">
+      <i class="bi bi-diagram-3 me-1"></i>Flux de transitions
+      <span *ngIf="fluxPrestationName" class="badge bg-primary" style="font-size:0.8rem; font-weight:500;">{{ fluxPrestationName }}</span>
+    </h4>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="!filterPrestationId">
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-filter-circle" style="font-size: 3rem;"></i>
+        <p class="mt-3">Sélectionnez une prestation dans le filtre pour visualiser son flux.</p>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="filterPrestationId">
+      <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+        <button class="btn btn-sm btn-outline-secondary" (click)="zoomOut()" [disabled]="zoomLevel <= 0.3" title="Dézoomer">
+          <i class="bi bi-zoom-out"></i>
+        </button>
+        <span class="text-muted small px-1">{{ (zoomLevel * 100).toFixed(0) }}%</span>
+        <button class="btn btn-sm btn-outline-secondary" (click)="zoomIn()" [disabled]="zoomLevel >= 3.0" title="Zoomer">
+          <i class="bi bi-zoom-in"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="resetZoom()" title="Réinitialiser le zoom">
+          <i class="bi bi-aspect-ratio me-1"></i>100%
+        </button>
+      </div>
+      <div class="border rounded" style="max-height: 65vh; min-height: 200px; background: #fafafa; overflow-x: auto; overflow-y: auto;">
+        <div id="mermaid-flux-container" class="p-3" style="width: fit-content; min-width: 100%;" [style.zoom]="zoomLevel"></div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
 
 <!-- ── Modal Détails ──────────────────────────────────────────────────────── -->
 <ng-template #showContent let-modal>
@@ -372,7 +472,76 @@
         <tr><th>Notifier agent</th><td>{{ selected_data?.notify_agent ? 'Oui' : 'Non' }}</td></tr>
         <tr><th>Ordre</th><td>{{ selected_data?.order }}</td></tr>
         <tr><th>Actif</th><td>{{ selected_data?.is_active ? 'Oui' : 'Non' }}</td></tr>
+        <tr>
+          <th style="vertical-align: top; padding-top: 0.75rem;">Observation</th>
+          <td>
+            <ng-container *ngIf="selected_data?.observation; else noObs">
+              <div class="observation-block">{{ selected_data.observation }}</div>
+            </ng-container>
+            <ng-template #noObs><em class="text-muted">—</em></ng-template>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </ng-template>
+
+<!-- ── Modale copie workflow ──────────────────────────────────────────────── -->
+<ng-template #copyWorkflowModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-copy me-2"></i>Copier un workflow</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p class="text-muted small mb-3">
+      Toutes les transitions de la prestation source seront copiées vers la prestation destination.
+      Les transitions existantes de la destination seront <strong>remplacées</strong>.
+    </p>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier depuis</label>
+      <ng-select
+        [(ngModel)]="copyFromPrestationId"
+        placeholder="Prestation source..."
+        [clearable]="true">
+        <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
+      </ng-select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Copier vers</label>
+      <ng-select
+        [(ngModel)]="copyToPrestationId"
+        placeholder="Prestation destination..."
+        [clearable]="true">
+        <ng-option *ngFor="let p of prestations" [value]="p.id">{{ p.name }}</ng-option>
+      </ng-select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss()" [disabled]="loadingCopy">Annuler</button>
+    <button class="btn btn-primary" (click)="copyWorkflow()" [disabled]="loadingCopy || !copyFromPrestationId || !copyToPrestationId">
+      <span *ngIf="loadingCopy" class="spinner-border spinner-border-sm me-1"></span>
+      Copier
+    </button>
+  </div>
+</ng-template>
+
+<app-help-panel title="Guide — Workflow">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--flow"><i class="bi bi-diagram-2"></i></span><span><strong>Voir flux</strong> — affiche le diagramme de transitions</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Ajouter transition</strong> — ouvre le formulaire de transition</span></li>
+      <li><span class="help-icon help-icon--copy"><i class="bi bi-files"></i></span><span><strong>Copier depuis</strong> — clone le workflow d'une autre prestation</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer toutes</strong> — supprime toutes les transitions après confirmation</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Transitions</div>
+    <p>Une transition relie deux étapes avec une condition : <code>auto</code>, <code>validation</code>, <code>rejet</code>, <code>signature</code>, <code>complement</code>…</p>
+  </div>
+
+</app-help-panel>

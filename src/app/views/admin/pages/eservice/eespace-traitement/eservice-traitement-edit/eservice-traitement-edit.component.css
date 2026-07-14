@@ -1,3 +1,6 @@
+/* ── Offcanvas ────────────────────────────────────────────── */
+.offcanvas-wide { min-width: 70vw !important; width: 70vw !important; }
+
 /* ── Palette ──────────────────────────────────────────────── */
 :root {
   --te-blue:   #0A3764;
@@ -266,6 +269,13 @@ textarea.te-input { resize: vertical; min-height: 90px; }
   .te-actions { flex-direction: column; }
   .te-btn { width: 100%; justify-content: center; }
 }
+
+/* ── Quill éditeur observation ────────────────────────────── */
+.te-section__body quill-editor { display: block; margin-top: 6px; }
+.te-section__body .ql-container { min-height: 160px; border-radius: 0 0 8px 8px; border: 1.5px solid #d1d5db; }
+.te-section__body .ql-toolbar  { border-radius: 8px 8px 0 0; border: 1.5px solid #d1d5db; background: #f9fafb; }
+.te-section__body .ql-editor   { min-height: 160px; font-size: 0.875rem; }
+.te-section__body .ql-container.ql-snow { border-top: none; }
 
 /* Surcharge ng-select dans ce composant */
 .te-section__body .ng-select .ng-select-container {

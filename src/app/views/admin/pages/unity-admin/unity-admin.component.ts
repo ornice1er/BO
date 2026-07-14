@@ -8,8 +8,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { DepartmentService } from '../../../../core/services/department.service';
-import { EntityService } from '../../../../core/services/entity.service';
 import { MunicipalityService } from '../../../../core/services/municipality.service';
+import { EntityService } from '../../../../core/services/entity.service';
 import { UnityAdminService } from '../../../../core/services/unity_admin.service';
 import { UnityAdminTypeService } from '../../../../core/services/unity_admin_type.service';
 import { GlobalName } from '../../../../core/utils/global-name';
@@ -17,11 +17,13 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'ngx-unity-admin',
     templateUrl: './unity-admin.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./unity-admin.component.css']
 })
 export class UnityAdminComponent implements OnInit {
@@ -64,7 +66,6 @@ permissions=[]
             private toastrService:ToastrService,     
         config: NgbModalConfig, 
         private modalService: NgbModal
-
         ){
           config.backdrop = 'static';
           config.keyboard = false;
@@ -169,6 +170,7 @@ permissions=[]
     this.selected_dept_for_commune = null;
     this.getTypeUnityAdmin();
     this.getEntities();
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg', scrollable:true});
   }
 
@@ -176,6 +178,7 @@ permissions=[]
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -183,6 +186,7 @@ permissions=[]
     if(!this.verifyIfElementChecked()) return ;
     this.getTypeUnityAdmin();
     this.getEntities();
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg', scrollable:true});
   }
 
@@ -232,9 +236,10 @@ permissions=[]
 
 }
 
-delete() {
+async delete() {
   this.loading=true;
-  if(confirm('Voulez vous supprimer cet élément')){
+  const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+  if (result.isConfirmed) {
     this.unityAdminService.delete(this.selected_data.id).subscribe(
       (res:any)=>{
       this.loading=false;
@@ -243,6 +248,7 @@ delete() {
   },
   (err:any)=>{
       this.loading=false;
+      AppErrorShow.showError("Gestion des unités administratives", err);
   })
   }
 
@@ -258,8 +264,7 @@ delete() {
       },
       (err:any)=>{
         this.loading=false
-        console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Gestion des unités administratives", err);
       })
   }
 

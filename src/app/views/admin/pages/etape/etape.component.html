@@ -51,8 +51,7 @@
                 <th scope="col">Type</th>
                 <th scope="col">Unité admin</th>
                 <th scope="col">SLA (jours)</th>
-                <th scope="col">Terminale</th>
-                <th scope="col">Sauv. partielle</th>
+                <th scope="col">RDV requis</th>
             </tr>
             </thead>
             <tbody>
@@ -162,20 +161,16 @@
                     [class.bg-primary]="d?.type === 'depot'"
                     [class.bg-info]="d?.type === 'traitement'"
                     [class.bg-warning]="d?.type === 'commission'"
-                    [class.bg-success]="d?.type === 'delivrance'">
+                    [class.bg-success]="d?.type === 'delivrance'"
+                    [class.bg-secondary]="d?.type === 'visite'">
                     {{ d?.type | titlecase }}
                   </span>
                 </td>
                 <td>{{ d?.unite_admin?.libelle ?? '—' }}</td>
                 <td>{{ d?.sla_days ?? '—' }}</td>
                 <td>
-                  <span class="badge" [class.bg-success]="d?.is_terminal" [class.bg-secondary]="!d?.is_terminal">
-                    {{ d?.is_terminal ? 'Oui' : 'Non' }}
-                  </span>
-                </td>
-                <td>
-                  <span class="badge" [class.bg-success]="d?.allow_partial_save" [class.bg-secondary]="!d?.allow_partial_save">
-                    {{ d?.allow_partial_save ? 'Oui' : 'Non' }}
+                  <span class="badge" [class.bg-success]="d?.need_meeting" [class.bg-secondary]="!d?.need_meeting">
+                    {{ d?.need_meeting ? 'Oui' : 'Non' }}
                   </span>
                 </td>
 
@@ -250,25 +245,17 @@
             </ng-select>
           </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Étape terminale</label>
-            <ng-toggle name="is_terminal" [(ngModel)]="add_data.is_terminal"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Sauvegarde partielle autorisée</label>
-            <ng-toggle name="allow_partial_save" [(ngModel)]="add_data.allow_partial_save"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
              <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Association à un projet possible</label>
+            <label class="mb-0">Association à une session possible</label>
             <ng-toggle name="can_associate" [(ngModel)]="add_data.can_associate"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Création de RDV requise</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="add_data.need_meeting"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>
@@ -325,25 +312,17 @@
             </ng-select>
           </div>
 
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Étape terminale</label>
-            <ng-toggle name="is_terminal" [(ngModel)]="selected_data.is_terminal"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Sauvegarde partielle autorisée</label>
-            <ng-toggle name="allow_partial_save" [(ngModel)]="selected_data.allow_partial_save"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
            <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Association à un projet possible</label>
+            <label class="mb-0">Association à une session possible</label>
             <ng-toggle name="can_associate" [(ngModel)]="selected_data.can_associate"
+              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+              [values]="{ checked: true, unchecked: false }">
+            </ng-toggle>
+          </div>
+
+          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+            <label class="mb-0">Création de RDV requise</label>
+            <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
               [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
               [values]="{ checked: true, unchecked: false }">
             </ng-toggle>
@@ -371,3 +350,23 @@
         </div>
       </div>
 </ng-template>
+
+<app-help-panel title="Guide — Étapes de workflow">
+  <div class="help-section">
+    <div class="help-section-title">Sélectionner</div>
+    <p>Cliquer sur le bouton radio <code>●</code> d'une ligne pour la sélectionner.</p>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Actions disponibles</div>
+    <ul class="help-actions-list">
+      <li><span class="help-icon help-icon--view"><i class="bi bi-eye"></i></span><span><strong>Consulter</strong> — affiche les détails en lecture seule</span></li>
+      <li><span class="help-icon help-icon--edit"><i class="bi bi-pencil"></i></span><span><strong>Éditer</strong> — modifie les informations</span></li>
+      <li><span class="help-icon help-icon--delete"><i class="bi bi-trash"></i></span><span><strong>Supprimer</strong> — demande confirmation avant suppression</span></li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <div class="help-section-title">Ajouter</div>
+    <p>Bouton <strong>Ajouter</strong> en haut à gauche pour créer une nouvelle étape.</p>
+  </div>
+
+</app-help-panel>

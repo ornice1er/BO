@@ -12,6 +12,7 @@ import { GlobalName } from '../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../core/utils/app-error-show';
 
 @Component({
     selector: 'ngx-post',
@@ -81,6 +82,7 @@ selectedId: number | null = null;
   
     
 add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -88,11 +90,13 @@ add(content:any){
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -138,9 +142,10 @@ update(value:any) {
 
 }
 
-delete() {
+async delete() {
 this.loading=true;
-if(confirm('Voulez vous supprimer cet élément')){
+const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+if (result.isConfirmed) {
   this.fonctionAgentService.delete(this.selected_data.id).subscribe(
     (res:any)=>{
     this.loading=false;
@@ -166,7 +171,7 @@ if(confirm('Voulez vous supprimer cet élément')){
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

@@ -101,6 +101,7 @@ export class WorkflowStateComponent implements OnInit {
     this.selectedTransition = transition;
     this.transitionComment  = '';
     this.selectedMotifId    = null;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'md' });
   }
 
@@ -148,6 +149,8 @@ export class WorkflowStateComponent implements OnInit {
       paraphe:       'btn-info',
       prevalidation: 'btn-secondary',
       choix_sortie:  'btn-primary',
+      correction:         'btn-warning',
+      retour_correction:  'btn-purple',
     };
     return map[condition] ?? 'btn-secondary';
   }
@@ -155,15 +158,17 @@ export class WorkflowStateComponent implements OnInit {
   /** Icône Bootstrap Icons par condition */
   getIcon(condition: TransitionCondition): string {
     const map: Record<TransitionCondition, string> = {
-      auto:          'bi-arrow-right-circle',
-      validation:    'bi-check-circle',
-      rejet:         'bi-x-circle',
-      complement:    'bi-arrow-clockwise',
-      signature:     'bi-pen',
-      cloture:       'bi-lock',
-      paraphe:       'bi-pencil-square',
-      prevalidation: 'bi-shield-check',
-      choix_sortie:  'bi-list-check',
+      auto:              'bi-arrow-right-circle',
+      validation:        'bi-check-circle',
+      rejet:             'bi-x-circle',
+      complement:        'bi-arrow-clockwise',
+      signature:         'bi-pen',
+      cloture:           'bi-lock',
+      paraphe:           'bi-pencil-square',
+      prevalidation:     'bi-shield-check',
+      choix_sortie:      'bi-list-check',
+      correction:        'bi-arrow-return-left',
+      retour_correction: 'bi-arrow-return-right',
     };
     return map[condition] ?? 'bi-arrow-right';
   }
@@ -171,15 +176,17 @@ export class WorkflowStateComponent implements OnInit {
   /** Libellé lisible du type de condition */
   getConditionLabel(condition: TransitionCondition): string {
     const map: Record<TransitionCondition, string> = {
-      auto:          'Automatique',
-      validation:    'Valider',
-      rejet:         'Rejeter',
-      complement:    'Complément reçu',
-      signature:     'Signer',
-      cloture:       'Clôturer',
-      paraphe:       'Parapher',
-      prevalidation: 'Pré-valider',
-      choix_sortie:  'Choisir la sortie',
+      auto:              'Automatique',
+      validation:        'Valider',
+      rejet:             'Rejeter',
+      complement:        'Complément reçu',
+      signature:         'Signer',
+      cloture:           'Clôturer',
+      paraphe:           'Parapher',
+      prevalidation:     'Pré-valider',
+      choix_sortie:      'Choisir la sortie',
+      correction:        'Retour pour correction (métier)',
+      retour_correction: 'Retour pour correction (requérant)',
     };
     return map[condition] ?? condition;
   }

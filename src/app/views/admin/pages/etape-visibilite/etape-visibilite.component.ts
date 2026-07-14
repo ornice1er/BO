@@ -16,14 +16,15 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { GlobalName } from '../../../../core/utils/global-name';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-etape-visibilite',
   imports: [
     CommonModule, FormsModule, NgbModule, LoadingComponent,
     SampleSearchPipe, NgSelectModule, NgxPaginationModule,
-    MatTooltipModule, NgToggleModule, NgToggleComponent
-  ],
+    MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
   templateUrl: './etape-visibilite.component.html',
   styleUrl: './etape-visibilite.component.css'
 })
@@ -34,6 +35,7 @@ export class EtapeVisibiliteComponent implements OnInit {
   add_data: any = { can_read: true, can_act: false, scope_type: 'requete' };
   data: any[] = [];
   transitions: any[] = [];
+  prestations: any[] = [];
   docProduits: any[] = [];
   roles: any[] = [];
   permissions: any[] = [];
@@ -43,6 +45,14 @@ export class EtapeVisibiliteComponent implements OnInit {
   selectedId: number | null = null;
   isPaginate = true;
   pg = { pageSize: 10, p: 1, total: 0 };
+
+  viewMode: 'table' | 'diagram' = 'table';
+  selectedPrestationId: number | null = null;
+
+  // ── Suppression / Copie par prestation ─────────────────────────────────────
+  copyFromPrestationId: number | null = null;
+  copyToPrestationId:   number | null = null;
+  loadingCopy = false;
 
   constructor(
     private service: EtapeVisibiliteService,
@@ -82,6 +92,14 @@ export class EtapeVisibiliteComponent implements OnInit {
   allTransitions() {
     this.workflowService.getAll().subscribe((res: any) => {
       this.transitions = res.data ?? res;
+      // Extraire les prestations uniques depuis les transitions
+      const map = new Map<number, any>();
+      this.transitions.forEach((t: any) => {
+        const p = t.prestation;
+        if (p && !map.has(p.id)) map.set(p.id, p);
+      });
+      this.prestations = Array.from(map.values())
+        .sort((a, b) => a.name.localeCompare(b.name));
     });
   }
 
@@ -97,11 +115,60 @@ export class EtapeVisibiliteComponent implements OnInit {
     });
   }
 
+  // ── Filtrage ────────────────────────────────────────────────
+
+  get filteredData(): any[] {
+    if (!this.selectedPrestationId) return this.data;
+    return this.data.filter(d =>
+      (d.transition?.prestation?.id ?? null) === this.selectedPrestationId
+    );
+  }
+
+  filterByPrestation(id: number | null) {
+    this.selectedPrestationId = id;
+    this.pg.p = 1;
+    if (!id) this.viewMode = 'table';
+  }
+
+  prestationName(id: number | null): string {
+    return this.prestations.find(p => p.id === id)?.name ?? '';
+  }
+
+  // ── Diagramme ───────────────────────────────────────────────
+
+  get diagramGroups(): { transition: any; rules: any[] }[] {
+    if (!this.selectedPrestationId) return [];
+    const transForPrestation = this.transitions
+      .filter((t: any) => (t.prestation?.id ?? t.prestation_id) === this.selectedPrestationId)
+      .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+    return transForPrestation.map((t: any) => ({
+      transition: t,
+      rules: this.data.filter(d => d.workflow_transition_id === t.id),
+    }));
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────
+
+  private conditionLabels: Record<string, string> = {
+    auto:             'Automatique',
+    validation:       'Validation',
+    rejet:            'Rejet',
+    complement:       'Complément',
+    signature:        'Signature',
+    cloture:          'Clôture',
+    paraphe:          'Paraphe',
+    prevalidation:    'Pré-validation',
+    choix_sortie:     'Choix sortie',
+    correction:       'Correction métier',
+    retour_correction:'Retour correction',
+  };
+
   transitionLabel(t: any): string {
     if (!t) return '—';
-    const from = t.etape_from?.name ?? '?';
-    const to   = t.etape_to?.name  ?? 'Terminal';
-    return `${t.prestation?.code ?? ''} — ${from} → ${to} [${t.condition_type}]`;
+    const from      = t.etape_from?.name ?? '?';
+    const to        = t.etape_to?.name   ?? 'Terminal';
+    const condition = this.conditionLabels[t.condition_type] ?? t.condition_type ?? '?';
+    return `${t.prestation?.code ?? ''} — ${from} → ${to} [${condition}]`;
   }
 
   resolveTransition(d: any): any {
@@ -115,16 +182,19 @@ export class EtapeVisibiliteComponent implements OnInit {
 
   add(content: any) {
     this.add_data = { can_read: true, can_act: false, scope_type: 'requete' };
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -165,8 +235,9 @@ export class EtapeVisibiliteComponent implements OnInit {
     );
   }
 
-  delete() {
-    if (confirm('Voulez-vous supprimer cette règle ?')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez-vous supprimer cette règle ?');
+    if (result.isConfirmed) {
       this.loading = true;
       this.service.delete(this.selected_data.id).subscribe(
         () => {
@@ -176,6 +247,52 @@ export class EtapeVisibiliteComponent implements OnInit {
         () => { this.loading = false; }
       );
     }
+  }
+
+  async deleteAllForPrestation(): Promise<void> {
+    if (!this.selectedPrestationId) return;
+    const name  = this.prestationName(this.selectedPrestationId);
+    const count = this.filteredData.length;
+    const msg   = `Supprimer les ${count} règle(s) de « ${name} » ?\n\nCette action est irréversible.`;
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', msg);
+    if (!result.isConfirmed) return;
+
+    this.loading = true;
+    this.service.deleteByPrestation(this.selectedPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Règles supprimées');
+        this.loading = false;
+        this.all();
+      },
+      error: () => { this.loading = false; }
+    });
+  }
+
+  openCopyModal(modal: any): void {
+    this.copyFromPrestationId = null;
+    this.copyToPrestationId   = this.selectedPrestationId;
+    this.modalService.open(modal, { size: 'md' });
+  }
+
+  copyVisibilites(): void {
+    if (!this.copyFromPrestationId || !this.copyToPrestationId) {
+      this.toastrService.warning('Sélectionnez les deux prestations');
+      return;
+    }
+    if (this.copyFromPrestationId === this.copyToPrestationId) {
+      this.toastrService.warning('Source et destination doivent être différentes');
+      return;
+    }
+    this.loadingCopy = true;
+    this.service.copyFromPrestation(this.copyFromPrestationId, this.copyToPrestationId).subscribe({
+      next: (res: any) => {
+        this.toastrService.success(res.message ?? 'Règles copiées avec succès');
+        this.loadingCopy = false;
+        this.modalService.dismissAll();
+        this.all();
+      },
+      error: () => { this.loadingCopy = false; }
+    });
   }
 
   onSearchChange() {
@@ -209,6 +326,5 @@ export class EtapeVisibiliteComponent implements OnInit {
 
   getPage(event: any) {
     this.pg.p = event;
-    this.all();
   }
 }

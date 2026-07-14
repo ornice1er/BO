@@ -54,6 +54,16 @@ export class RequeteService {
     return this.http.get<any>(`${this.url}/${id}/completude`);
   }
 
+  /** Étapes précédentes disponibles pour régression (admin) */
+  getEtapesPrecedentes(id: any): any {
+    return this.http.get<any>(`${this.url}/${id}/etapes-precedentes`);
+  }
+
+  /** Régresser vers une étape précédente (admin) */
+  regresser(id: any, etapeId: number, comment: string): any {
+    return this.http.post<any>(`${this.url}/${id}/regresser`, { etape_id: etapeId, comment });
+  }
+
 
 
 
@@ -100,8 +110,28 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     comment?: string | null;
     motif_id?: number | null;
     metadata?: any;
+    link?: string | null;
+    note_file_path?: string | null;
   }): any {
     return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
+  }
+
+  uploadNoteFile(id: any, file: File): any {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.url}/${id}/upload-note-file`, form);
+  }
+
+  getNoteFileUrl(path: string): any {
+    return this.http.get<any>(`${this.url}/note-file-url?path=${encodeURIComponent(path)}`);
+  }
+
+  downloadFile(path: string, name: string) {
+    const params = `path=${encodeURIComponent(path)}&name=${encodeURIComponent(name)}`;
+    return this.http.get(`${this.url}/download-file?${params}`, {
+      responseType: 'blob',
+      headers: { 'Accept': 'application/octet-stream' },
+    });
   }
 
   /**

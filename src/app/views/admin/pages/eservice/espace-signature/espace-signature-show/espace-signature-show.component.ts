@@ -10,11 +10,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {} from '../../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../../core/services/response.service';
 import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
 import { AppSweetAlert } from '../../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../../core/utils/app-error-show';
 import { ConfigService } from '../../../../../../core/utils/config-service';
 import { GlobalName } from '../../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../../core/utils/local-stoarge-service';
@@ -84,7 +84,6 @@ export class EspaceSignatureShowComponent implements OnInit {
     private router:Router,
     private toastrService:ToastrService,
     private uaService:UnityAdminService,
-    private affService:AffectationService,
     private responseService:ResponseService,
     config: NgbModalConfig, private modalService: NgbModal
 
@@ -169,6 +168,7 @@ export class EspaceSignatureShowComponent implements OnInit {
   }
 
   open(content:any) {
+(document.activeElement as HTMLElement)?.blur();
 this.modalService.open(content);
       
   }
@@ -233,22 +233,8 @@ this.modalService.open(content);
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
 
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          unite_admin_down_id:value.ua_down_id,
-          sens:1,
-          instruction:value.instruction,
-          delay:value.delay,
-        }).subscribe(
-            (res:any)=>{
-               this.toastrService.success(`La demande ${this.selected_data.code} a été affectée avec succès`);
-              this.router.navigate(['/admin/eservice/espace-traitement/'+this.prestation])
-        },
-        (err:any)=>{
-          this.toastrService.error("Veuillez contactee l'administrateur")
-    
-        })
+        this.loading = false;
+        this.get();
       }})
   
   }
@@ -274,7 +260,7 @@ this.modalService.open(content);
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
      //   }
@@ -303,7 +289,7 @@ this.modalService.open(content);
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
    //     }
@@ -330,28 +316,15 @@ this.modalService.open(content);
     AppSweetAlert.confirmBox("Voulez vous vraiment transmettre cet enregistrement ?").then((result:any) =>{
       if(result.isConfirmed){
         this.toastrService.info("Opération en cours")
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-            this.loading=false;
-            this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
-            this.toastrService.info(`La demande ${this.selected_data.code} a été transmise avec succès`)
-    
-        },
-        (err:any)=>{
-            this.loading=false;
-            this.toastrService.error("Veuillez contactee l'administrateur")
-    
-        })
+        this.loading = false;
+        this.get();
       }
     });
    
   }
-  decline(value:any){
-    if(confirm("Envoyer le mail de rejet")){
+  async decline(value:any){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de rejet');
+    if (result.isConfirmed) {
            //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
            this.loading=true;
            this.responseService.decline({
@@ -364,19 +337,20 @@ this.modalService.open(content);
              this.selected_data=null;
              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
              //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
+
            },
            (error:any)=>{
-             
+
              this.loading=false;
              //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
+
            })
          }
-     
+
    }
-   validate(){
-    if(confirm("Envoyer le mail de validation")){
+   async validate(){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de validation');
+    if (result.isConfirmed) {
            //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
            this.loading=true;
            this.responseService.validate({
@@ -389,16 +363,16 @@ this.modalService.open(content);
              this.selected_data=null;
              this.router.navigate(['admin/eservice/espace-traitement/'+this.prestation])
              //MyToastr.make('success',"Rejet de demande",`La demande de code ${this.selected_data.code} a été rejetée avec succès`,this.toastrService)
- 
+
            },
            (error:any)=>{
-             
+
              this.loading=false;
              //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
- 
+
            })
          }
-     
+
    }
   hasPermission(permission:any){
     var check= this.permissions.find((e:any)=>e.name ==permission)
@@ -497,7 +471,7 @@ getMyCollab(){
     console.log(res)
   },
   (error:any)=>{
-    this.toastrService.error("Veuillez contactee l'administrateur")
+    AppErrorShow.showError("Opération échouée", error)
 
 })
 
@@ -525,7 +499,7 @@ deliveryrDoc(value:any){
        },
        (err:any)=>{
            this.loading=false;
-            this.toastrService.error("Opération échouée");
+            AppErrorShow.showError("Opération échouée", err);
    
        })
    //  }})
@@ -555,7 +529,7 @@ deliveryrDoc(value:any){
       (error:any)=>{
       //  this.selected_data=null
         this.loading=false;
-        this.toastrService.error("Veuillez contacter l'administrateur")
+        AppErrorShow.showError("Opération échouée", error)
 
     })
 

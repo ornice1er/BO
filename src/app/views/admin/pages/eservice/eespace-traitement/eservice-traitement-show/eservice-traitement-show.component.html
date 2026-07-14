@@ -10,13 +10,21 @@
   </button>
 
   <!-- Prise de RDV -->
-  <button *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir"
+  <!-- <button *ngIf="myPrestation?.need_meeting && selected_data?.current_status?.short_name === 'pris_en_charge' && peutAgir"
     class="ts-btn ts-btn--blue" (click)="prendreEnCharge()" [disabled]="loading">
     <i class="bi bi-calendar2-check"></i> Prise de RDV
+  </button> -->
+
+  <!-- RDV depuis slot PNS : agenda auto-créé, l'agent confirme depuis l'agenda -->
+  <button *ngIf="selected_data?.current_etape?.need_meeting
+              && selected_data?.planning_slot_id
+              && selected_data?.agendas?.length > 0"
+    class="ts-btn ts-btn--dark" (click)="voirAgenda()">
+    <i class="bi bi-calendar-check"></i> Voir l'agenda / Confirmer
   </button>
 
-  <!-- Créer RDV -->
-  <button *ngIf="myPrestation?.need_meeting && (selected_data?.current_status?.short_name === 'en_attente_visite' || selected_data?.current_status?.short_name === 'en_attente_entretien')"
+  <!-- RDV manuel : l'étape demande un meeting mais sans slot PNS -->
+  <button *ngIf="selected_data?.current_etape?.need_meeting && !selected_data?.planning_slot_id"
     class="ts-btn ts-btn--dark" (click)="creerRdv()"
     [disabled]="selected_data?.agendas?.length > 0"
     [title]="selected_data?.agendas?.length > 0 ? 'Un rendez-vous existe déjà' : ''">
@@ -30,17 +38,17 @@
   </button>
 
   <!-- Retirer du projet -->
-  <button *ngIf="selected_data?.current_etape?.can_associate && selected_data?.project_id != null && peutAgir"
-    class="ts-btn ts-btn--danger" (click)="add(addContent)">
-    <i class="bi bi-folder-minus"></i> Retirer du projet : {{ selected_data?.project?.title }}
+  <button *ngIf="selected_data?.project_id != null && peutAgir"
+    class="ts-btn ts-btn--danger" (click)="dissociate()" [disabled]="loading">
+    <i class="bi bi-folder-minus"></i> Retirer cette demdande du projet
   </button>
 
   <!-- Traiter la demande -->
   <button *ngIf="selected_data?.current_status?.short_name != 'en_attente'
               && selected_data?.current_status?.short_name != 'demande'
               && selected_data?.current_status?.short_name != 'pris_en_charge'
-              && selected_data?.current_status?.short_name != 'en_attente_visite'
-              && !selected_data?.current_etape?.is_terminal
+              && (selected_data?.current_status?.short_name != 'en_attente_visite' || etapeDejaTraversee())
+              && !selected_data?.etape_terminale
               && peutAgir"
     class="ts-btn ts-btn--amber" (click)="open2()" [disabled]="loading">
     <i class="bi bi-pencil-square"></i> Traiter la demande
@@ -67,6 +75,12 @@
   <button *ngIf="peutAgir && selected_data?.current_status?.short_name === 'en_attente_signature'"
     class="ts-btn ts-btn--teal" (click)="traiter('prevalider')" [disabled]="loading">
     <i class="bi bi-check2-circle"></i> Pré-valider
+  </button>
+
+  <!-- Régresser (admin global uniquement) -->
+  <button *ngIf="hasPermission('access:admin-global')"
+    class="ts-btn ts-btn--grey" (click)="openRegresser(dialogRegresser)" [disabled]="loading">
+    <i class="bi bi-arrow-counterclockwise"></i> Régresser
   </button>
 
 </div>
@@ -120,6 +134,179 @@
     </div>
   </div>
 
+  <!-- ── Créneau RDV pré-sélectionné depuis le PNS ────────── -->
+  <div *ngIf="selected_data?.planning_slot" class="ts-section">
+    <div class="ts-section-header ts-section-header--blue">
+      <i class="bi bi-calendar2-check-fill"></i> Créneau RDV sélectionné
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-info-grid">
+        <div class="ts-info-item">
+          <div class="ts-info-label">Date</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.slot_date | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Heure</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.heure_debut | slice:0:5 }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Durée</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.duration_minutes ?? 20 }} min
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Lieu</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.unite_admin?.libelle ?? '—' }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Session</div>
+          <div class="ts-info-value">
+            {{ selected_data.planning_slot.session_type }}
+          </div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Agenda</div>
+          <div class="ts-info-value">
+            <span *ngIf="selected_data.agendas?.length > 0" class="ts-badge ts-badge--teal ts-badge--sm">
+              <i class="bi bi-check-circle-fill"></i> Créé automatiquement
+            </span>
+            <span *ngIf="!selected_data.agendas?.length" class="ts-badge ts-badge--amber ts-badge--sm">
+              <i class="bi bi-hourglass-split"></i> En attente
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Rendez-vous (agenda) ─────────────────────────────── -->
+  <div *ngIf="selected_data?.agendas?.length > 0" class="ts-section">
+    <div class="ts-section-header ts-section-header--teal">
+      <i class="bi bi-calendar-check-fill"></i> Rendez-vous
+    </div>
+    <div class="ts-section-body">
+      <div *ngFor="let rdv of selected_data.agendas; let i = index"
+           [class.mt-3]="i > 0"
+           [class.pt-3]="i > 0"
+           [class.border-top]="i > 0">
+        <div class="ts-info-grid">
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Titre</div>
+            <div class="ts-info-value fw-semibold">{{ rdv.title ?? '—' }}</div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Statut</div>
+            <div class="ts-info-value">
+              <span class="ts-badge ts-badge--sm"
+                [class.ts-badge--teal]="rdv.status === 'Ouvert'"
+                [class.ts-badge--dark]="rdv.status === 'Clos'">
+                <i class="bi" [class.bi-calendar-check]="rdv.status === 'Ouvert'" [class.bi-calendar-x]="rdv.status === 'Clos'"></i>
+                {{ rdv.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Date début</div>
+            <div class="ts-info-value">{{ rdv.date_start | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="ts-info-item">
+            <div class="ts-info-label">Date fin</div>
+            <div class="ts-info-value">{{ rdv.date_end | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.duration_minutes">
+            <div class="ts-info-label">Durée</div>
+            <div class="ts-info-value">{{ rdv.duration_minutes }} min</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.session_type">
+            <div class="ts-info-label">Type de session</div>
+            <div class="ts-info-value">{{ rdv.session_type }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.rdv_type">
+            <div class="ts-info-label">Type de RDV</div>
+            <div class="ts-info-value">{{ rdv.rdv_type }}</div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.priority">
+            <div class="ts-info-label">Priorité</div>
+            <div class="ts-info-value">
+              <span class="ts-badge ts-badge--sm"
+                [class.ts-badge--danger]="rdv.priority === 'Haute'"
+                [class.ts-badge--amber]="rdv.priority === 'Moyenne'"
+                [class.ts-badge--grey]="rdv.priority === 'Faible'">
+                {{ rdv.priority }}
+              </span>
+            </div>
+          </div>
+
+          <div class="ts-info-item" *ngIf="rdv.from">
+            <div class="ts-info-label">Initié par</div>
+            <div class="ts-info-value">{{ rdv.from }}</div>
+          </div>
+
+        </div>
+
+        <div *ngIf="rdv.description" class="mt-2 small text-muted">
+          <i class="bi bi-chat-text me-1"></i>{{ rdv.description }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Session d'étude ───────────────────────────────────── -->
+  <div *ngIf="selected_data?.project" class="ts-section">
+    <div class="ts-section-header ts-section-header--amber">
+      <i class="bi bi-calendar2-week-fill"></i> Session d'étude
+    </div>
+    <div class="ts-section-body">
+      <div class="ts-info-grid">
+        <div class="ts-info-item">
+          <div class="ts-info-label">Titre</div>
+          <div class="ts-info-value">{{ selected_data.project.title }}</div>
+        </div>
+        <div class="ts-info-item" *ngIf="selected_data.project.periode_etude">
+          <div class="ts-info-label">Période</div>
+          <div class="ts-info-value">{{ selected_data.project.periode_etude }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Du</div>
+          <div class="ts-info-value">{{ selected_data.project.date_start | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Au</div>
+          <div class="ts-info-value">{{ selected_data.project.date_end | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="ts-info-item">
+          <div class="ts-info-label">Statut</div>
+          <div class="ts-info-value">
+            <span class="ts-badge ts-badge--sm"
+              [ngClass]="{
+                'ts-badge--teal':  selected_data.project.status === 'open',
+                'ts-badge--amber': selected_data.project.status === 'en_cours_etude' || selected_data.project.status === 'en_attente_arrete',
+                'ts-badge--dark':  selected_data.project.status === 'closed'
+              }">
+              {{ selected_data.project.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Instruction affectation ────────────────────────── -->
   <div *ngIf="selected_data?.affectation?.instruction" class="ts-alert ts-alert--amber">
     <i class="bi bi-exclamation-triangle-fill ts-alert-icon"></i>
@@ -163,62 +350,6 @@
     </div>
   </div>
 
-  <!-- ── Historique des transitions ─────────────────────── -->
-  <div class="ts-section" *ngIf="selected_data?.requete_etape_logs?.length > 0">
-    <div class="ts-section-header ts-section-header--dark">
-      <i class="bi bi-clock-history"></i> Historique des transitions
-    </div>
-    <div class="ts-section-body p-0">
-      <div class="table-responsive">
-        <table class="ts-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>De</th>
-              <th>Vers</th>
-              <th>Statut</th>
-              <th>Acteur</th>
-              <th>Commentaire</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngIf="loading">
-              <tr *ngFor="let i of [1,2,3,4,5]">
-                <td *ngFor="let j of [1,2,3,4,5,6,7]">
-                  <span class="placeholder placeholder-glow col-10 rounded"></span>
-                </td>
-              </tr>
-            </ng-container>
-            <ng-container *ngIf="!loading">
-              <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
-                <td class="text-muted">{{ i + 1 }}</td>
-                <td><span class="ts-badge ts-badge--grey ts-badge--sm">{{ log?.etape_from?.name }}</span></td>
-                <td>
-                  <span class="ts-badge ts-badge--blue ts-badge--sm">{{ log?.etape_to?.name }}</span>
-                  <ul class="ts-visibilites">
-                    <li *ngFor="let v of log?.transition?.visibilites">
-                      <i class="bi bi-eye"></i> {{ v?.role_name }}
-                      [{{ v?.ua?.entite?.sigle ?? '—' }} / {{ v?.ua?.sigle ?? '—' }}]
-                      <i *ngIf="v?.can_act" class="bi bi-pencil-square text-warning ms-1"></i>
-                      <i *ngIf="v?.can_read" class="bi bi-file-earmark-text text-primary ms-1"></i>
-                    </li>
-                  </ul>
-                </td>
-                <td><span class="ts-badge ts-badge--cyan ts-badge--sm">{{ log?.status?.name }}</span></td>
-                <td class="small">
-                  {{ log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—') }}
-                </td>
-                <td class="text-muted small">{{ log?.comment ?? '—' }}</td>
-                <td class="small text-muted">{{ log?.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
   <!-- ── Documents produits ──────────────────────────────── -->
   <div class="ts-section" *ngIf="selected_data?.document_actes?.length > 0">
     <div class="ts-section-header ts-section-header--teal">
@@ -256,6 +387,84 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Historique des transitions ─────────────────────── -->
+  <div class="ts-section" *ngIf="selected_data?.requete_etape_logs?.length > 0">
+    <div class="ts-section-header ts-section-header--dark">
+      <i class="bi bi-clock-history"></i> Historique des transitions
+    </div>
+    <div class="ts-section-body p-0">
+      <div class="table-responsive">
+        <table class="ts-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>De</th>
+              <th>Vers</th>
+              <th>Type</th>
+              <th>Statut</th>
+              <th>Acteur</th>
+              <th>Commentaire</th>
+              <th>Note</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="loading">
+              <tr *ngFor="let i of [1,2,3,4,5]">
+                <td *ngFor="let j of [1,2,3,4,5,6,7,8,9]">
+                  <span class="placeholder placeholder-glow col-10 rounded"></span>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="!loading">
+              <tr *ngFor="let log of selected_data?.requete_etape_logs; let i = index">
+                <td class="text-muted">{{ i + 1 }}</td>
+                <td><span class="ts-badge ts-badge--grey ts-badge--sm">{{ log?.etape_from?.name }}</span></td>
+                <td>
+                  <span class="ts-badge ts-badge--blue ts-badge--sm">{{ log?.etape_to?.name }}</span>
+                  <ul class="ts-visibilites">
+                    <li *ngFor="let v of log?.transition?.visibilites">
+                      <i class="bi bi-eye"></i> {{ v?.role_name }}
+                      [{{ v?.ua?.entite?.sigle ?? '—' }} / {{ v?.ua?.sigle ?? '—' }}]
+                      <i *ngIf="v?.can_act" class="bi bi-pencil-square text-warning ms-1"></i>
+                      <i *ngIf="v?.can_read" class="bi bi-file-earmark-text text-primary ms-1"></i>
+                    </li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="ts-badge ts-badge--sm"
+                    [ngClass]="{
+                      'ts-badge--blue':   log?.transition?.condition_type === 'auto',
+                      'ts-badge--teal':   log?.transition?.condition_type === 'validation' || log?.transition?.condition_type === 'prevalidation',
+                      'ts-badge--amber':  log?.transition?.condition_type === 'paraphe' || log?.transition?.condition_type === 'signature',
+                      'ts-badge--danger': log?.transition?.condition_type === 'rejet',
+                      'ts-badge--grey':   !log?.transition?.condition_type
+                    }">
+                    {{ log?.transition?.condition_type ?? '—' }}
+                  </span>
+                </td>
+                <td><span class="ts-badge ts-badge--cyan ts-badge--sm">{{ log?.status?.name }}</span></td>
+                <td class="small">
+                  {{ log?.triggered_by_type === 'système' ? 'Système' : (log?.triggered_by?.name ?? '—') }}
+                </td>
+                <td class="text-muted small" [innerHTML]="log?.comment ?? '—'"></td>
+                <td>
+                  <button *ngIf="log?.metadata?.note_file_path"
+                    class="ts-btn-sm ts-btn-sm--dark"
+                    (click)="viewNoteFile(log.metadata.note_file_path)">
+                    <i class="bi bi-paperclip"></i> Voir
+                  </button>
+                  <span *ngIf="!log?.metadata?.note_file_path" class="text-muted small">—</span>
+                </td>
+                <td class="small text-muted">{{ log?.transitioned_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -414,6 +623,44 @@
   </form>
 </ng-template>
 
+<!-- Modal Régression admin -->
+<ng-template #dialogRegresser let-c="close" let-d="dismiss">
+  <form #regresserForm="ngForm" (ngSubmit)="submitRegresser(regresserForm.value)">
+    <div class="modal-header ts-modal-header ts-modal-header--dark">
+      <div class="d-flex align-items-center gap-3">
+        <div class="ts-modal-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+        <div>
+          <h5 class="modal-title mb-0">Régression administrative</h5>
+          <small>Retour à une étape précédente — action admin</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="d()"></button>
+    </div>
+    <div class="modal-body ts-modal-body">
+      <div class="ts-modal-section">
+        <div class="ts-modal-section-title"><i class="bi bi-diagram-3"></i> Étape cible</div>
+        <select name="etape_id" class="ts-select" ngModel required>
+          <option value="">Sélectionner une étape...</option>
+          <option *ngFor="let e of etapesPrecedentes" [value]="e.id">
+            {{ e.name }} <span *ngIf="e.transitioned_at"> — {{ e.transitioned_at | date:'dd/MM/yyyy' }}</span>
+          </option>
+        </select>
+      </div>
+      <div class="ts-modal-section mt-3">
+        <div class="ts-modal-section-title"><i class="bi bi-chat-left-text"></i> Motif (optionnel)</div>
+        <textarea name="comment" class="ts-input" ngModel rows="3" placeholder="Raison de la régression..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer ts-modal-footer">
+      <button type="button" class="ts-btn-footer ts-btn-footer--cancel" (click)="d()">Annuler</button>
+      <button type="submit" class="ts-btn-footer ts-btn-footer--submit" [disabled]="regresserForm.invalid || loading">
+        <i class="bi bi-arrow-counterclockwise"></i> Régresser
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>
+
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- OFFCANVAS : PDF Viewer                                  -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -425,6 +672,6 @@
     <button type="button" class="btn-close" (click)="offcanvas.dismiss()"></button>
   </div>
   <div class="offcanvas-body p-0">
-    <object [data]="pdfSrc" type="application/pdf" width="100%" height="100%"></object>
+    <iframe [src]="pdfSrc"></iframe>
   </div>
 </ng-template>

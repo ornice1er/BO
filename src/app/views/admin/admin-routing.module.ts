@@ -27,6 +27,7 @@ import { DocumentCircuitEtapeComponent } from "./pages/document-circuit-etape/do
 import { EtapeDocumentComponent } from "./pages/etape-document/etape-document.component";
 import { MotifRejetComponent } from "./pages/motif-rejet/motif-rejet.component";
 import { EtapeVisibiliteComponent } from "./pages/etape-visibilite/etape-visibilite.component";
+import { EtapePrestationComponent } from "./pages/etape-prestation/etape-prestation.component";
 import { FilesComponent } from "./pages/files/files.component";
 import { HistoriqueComponent } from "./pages/historique/historique.component";
 import { OfficerComponent } from "./pages/officer/officer.component";
@@ -34,6 +35,7 @@ import { PermissionComponent } from "./pages/permission/permission.component";
 import { PostComponent } from "./pages/post/post.component";
 import { PrestationStatusComponent } from "./pages/prestation-status/prestation-status.component";
 import { PrestationComponent } from "./pages/prestation/prestation.component";
+import { PaymentAccountComponent } from "./pages/payment-account/payment-account.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { ProjectDetailComponent } from "./pages/project/project-detail/project-detail.component";
 import { ProjectComponent } from "./pages/project/project.component";
@@ -53,6 +55,7 @@ import { PlanningSlotComponent } from "./pages/planning-slot/planning-slot.compo
 import { MunicipalityComponent } from "./pages/municipality/municipality.component";
 import { DistrictComponent } from "./pages/district/district.component";
 import { VillageComponent } from "./pages/village/village.component";
+import { DocumentTemplateComponent } from "./pages/document-template/document-template.component";
 
 export const AdminRoutes: any = [ // ✅ Doit être un tableau
     {
@@ -165,6 +168,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 component: PrestationComponent,
             },
             {
+                path: 'payment-accounts',
+                component: PaymentAccountComponent,
+            },
+            {
                 path: 'projects',
                 component: ProjectComponent,
             },
@@ -205,6 +212,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
                 path: 'eservice/configurations/workflows',
                 component: WorkflowComponent,
             },
+            {
+                path: 'eservice/configurations/workflows/:slug',
+                component: WorkflowComponent,
+            },
              {
                 path: 'eservice/workflow-state/:id',
                 component: WorkflowStateComponent,
@@ -216,6 +227,10 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
              {
                 path: 'eservice/configurations/etape-visibilites',
                 component: EtapeVisibiliteComponent,
+            },
+            {
+                path: 'eservice/configurations/etape-prestations',
+                component: EtapePrestationComponent,
             },
             {
                 path: 'eservice/configurations/planning-slots',
@@ -355,6 +370,7 @@ export const AdminRoutes: any = [ // ✅ Doit être un tableau
         { path: 'roles', component: RoleComponent },
         { path: 'permissions', component: PermissionComponent },
         { path: 'profils', component: ProfileComponent },
+        { path: 'document-templates', component: DocumentTemplateComponent },
 
       ]
     }

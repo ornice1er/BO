@@ -58,15 +58,13 @@ export type EtapeType = 'depot' | 'traitement' | 'commission' | 'delivrance';
 
 export type TransitionCondition =
   | 'auto' | 'validation' | 'rejet' | 'complement'
-  | 'signature' | 'cloture' | 'paraphe' | 'prevalidation' | 'choix_sortie';
+  | 'signature' | 'cloture' | 'paraphe' | 'prevalidation' | 'choix_sortie' | 'correction' | 'retour_correction';
 
 export interface Etape {
   id: number;
   name: string;
   type: EtapeType;
   unite_admin_id: number | null;
-  is_terminal: boolean;
-  allow_partial_save: boolean;
   sla_days: number | null;
   produces_document: boolean;
   document_template_key: string | null;

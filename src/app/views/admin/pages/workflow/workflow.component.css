@@ -1,0 +1,19 @@
+.badge-correction {
+  background-color: #e67e22;
+  color: #fff;
+}
+
+.badge-retour-correction {
+  background-color: #8e44ad;
+  color: #fff;
+}
+
+.observation-block {
+  white-space: pre-wrap;
+  background: #f8f9fa;
+  border-left: 3px solid #e67e22;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}

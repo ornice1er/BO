@@ -11,7 +11,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { SampleSearchPipe } from '../../../../../core/pipes/sample-search.pipe';
-import { AffectationService } from '../../../../../core/services/affectation.service';
 import { RequeteService } from '../../../../../core/services/requete.service';
 import { ResponseService } from '../../../../../core/services/response.service';
 import { ConfigService } from '../../../../../core/utils/config-service';
@@ -19,11 +18,13 @@ import { GlobalName } from '../../../../../core/utils/global-name';
 import { LocalStorageService } from '../../../../../core/utils/local-stoarge-service';
 import { LoadingComponent } from '../../../../components/loading/loading.component';
 import { AppSweetAlert } from '../../../../../core/utils/app-sweet-alert';
+import { AppErrorShow } from '../../../../../core/utils/app-error-show';
+import { HelpPanelComponent } from '../../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-espace-signature',
     templateUrl: './espace-signature.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     styleUrls: ['./espace-signature.component.css']
 })
 export class EspaceSignatureComponent implements OnInit {
@@ -100,7 +101,6 @@ export class EspaceSignatureComponent implements OnInit {
       constructor(
         private activatedRoute:ActivatedRoute ,
          private locService:LocalStorageService,
-        private affService:AffectationService,
         private requeteService:RequeteService,
         private toastrService:ToastrService,
         private router:Router,
@@ -314,7 +314,7 @@ export class EspaceSignatureComponent implements OnInit {
         },
         (err:any)=>{
             this.loading=false;
-             this.toastrService.error("Opération échouée");
+             AppErrorShow.showError("Opération échouée", err);
     
         })
    //   }})
@@ -322,9 +322,10 @@ export class EspaceSignatureComponent implements OnInit {
   }
 
   
-   delete() {
+   async delete() {
     this.loading=true;
-    if(confirm('Voulez vous supprimer cet élément')){
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+    if (result.isConfirmed) {
       this.requeteService.delete(this.selected_data.id).subscribe(
         (res:any)=>{
         this.loading=false;
@@ -335,16 +336,18 @@ export class EspaceSignatureComponent implements OnInit {
         this.loading=false;
     })
     }
-  
+
   }
 
   add(content:any){
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -378,29 +381,15 @@ export class EspaceSignatureComponent implements OnInit {
 
         //MyToastr.make('info',"Affectation",`Opération en cours`,this.toastrService)
 
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:1,
-          instruction:value.instruction,
-          delay:value.delay,
-        }).subscribe(
-            (res:any)=>{
-               this.toastrService.success("`La demande ${this.selected_data.code} a été affectée avec succès");
-            this.loading=false;
-            this.all();
-        },
-        (err:any)=>{
-            this.loading=false;
-            //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
-    
-        })
+        this.loading = false;
+        this.all();
       //}})
   
   }
 
-  decline(value:any, ref:any){
-   if(confirm("Envoyer le mail de rejet")){
+  async decline(value:any, ref:any){
+   const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Envoyer le mail de rejet');
+   if (result.isConfirmed) {
           //MyToastr.make('info',"Opération encours","Annulation en cours",this.toastrService)
           this.loading=true;
           this.responseService.decline({
@@ -417,13 +406,13 @@ export class EspaceSignatureComponent implements OnInit {
 
           },
           (error:any)=>{
-            
+
             this.loading=false;
             //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
 
           })
         }
-    
+
   }
   authorized(value:any){
     if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
@@ -474,22 +463,8 @@ export class EspaceSignatureComponent implements OnInit {
     .onClose.subscribe(result =>{
       if(result){*/
         //MyToastr.make('info',"Transmission",`Opération en cours`,this.toastrService)
-        this.affService.store({
-          requete_id:this.selected_data.id,
-          unite_admin_id:this.user.agent.unite_admin.id,
-          sens:-1
-        }).subscribe(
-            (res:any)=>{
-            this.loading=false;
-            this.all();
-            //MyToastr.make('success',"Transmission",`La demande ${this.selected_data.code} a été transmise avec succès`,this.toastrService)
-    
-        },
-        (err:any)=>{
-            this.loading=false;
-            //MyToastr.make('danger',"Opération échouée","Veuillez contactee l'administrateur",this.toastrService)
-    
-        })
+        this.loading = false;
+        this.all();
     //  }
    // });
    
@@ -624,7 +599,7 @@ export class EspaceSignatureComponent implements OnInit {
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
       //  }
@@ -653,7 +628,7 @@ export class EspaceSignatureComponent implements OnInit {
           },
           (err:any)=>{
               this.loading=false;
-               this.toastrService.error("Opération échouée");
+               AppErrorShow.showError("Opération échouée", err);
       
           })
        // }
@@ -663,12 +638,13 @@ export class EspaceSignatureComponent implements OnInit {
   }
 
   
-  delivered(){
+  async delivered(){
       if (this.prestation == 'autorisation-de-stage' && (this.selected_data.content == null || this.selected_data.content2 == null || this.selected_data.content3 == null )) {
         //MyToastr.make('danger',"Opération échouée","Les contenus livrables des trois types de documents sont requis! ",this.toastrService)
         return ;
       }
-       if(confirm("Envoyer l'attestation au demandeur")){
+       const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', "Envoyer l'attestation au demandeur");
+       if (result.isConfirmed) {
           //MyToastr.make('info',"Opération encours","Autorisation en cours d'envoi",this.toastrService)
           this.loading=true;
           this.responseService.store({
@@ -678,7 +654,7 @@ export class EspaceSignatureComponent implements OnInit {
           }).subscribe((res:any)=>{
            this.all()
             this.loading=false;
-            
+
             //MyToastr.make('success',"Envoi d'attestation",`L'attestaion issue de la demande ${this.selected_data.code} a été envoyéee avec succès`,this.toastrService)
 
           },
@@ -689,8 +665,8 @@ export class EspaceSignatureComponent implements OnInit {
 
           })
         }
-    
-   
+
+
   }
 
   changeDesc(event:any){
@@ -743,7 +719,7 @@ export class EspaceSignatureComponent implements OnInit {
           (err:any)=>{
             this.loading=false
             console.log(err)
-              AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+              AppErrorShow.showError("Opération échouée", err)
           })
       }
 

@@ -1,260 +1,102 @@
 
 export const MENU_ADMIN_NATIONAL: any[] = [
+  { title: 'Principal', isTitle: true },
+  { title: 'Tableau de bord',          icon: 'fas fa-home',             link: '/admin/dashboard' },
+  { title: 'Comptes Admin Sectoriels', icon: 'fas fa-users',            link: '/admin/users' },
+  { title: 'e-Services', isTitle: true },
+  { title: 'Déclaration périodique',   icon: 'fas fa-file-signature',   link: '/admin/projects' },
+  { title: 'Modèles de documents',      icon: 'fas fa-file-alt',         link: '/admin/document-templates' },
+  { title: 'Référentiels', isTitle: true },
   {
-    title: 'Menu',
-    icon: 'home-outline',
-    link: '/admin/dashboard',
-    home: true,
-    isTitle:true
+    title: 'Découpage territorial', icon: 'fas fa-map-marked-alt',
+    isTitle: false, hasChildren: true, collapse: false,
+    children: [
+      { title: 'Départements',  link: '/admin/departments' },
+      { title: 'Municipalités', link: '/admin/municipalities' },
+      { title: 'Districts',     link: '/admin/districts' },
+      { title: 'Villages',      link: '/admin/villages' },
+    ]
   },
-    {
-      title: 'Tableau de bord',
-      icon: 'home-outline',
-      link: '/admin/dashboard',
-      home: true,
-    },
-    {
-        title: 'Comptes Admin Sectoriels',
-        icon: 'person-outline',
-        link: '/admin/users',
-      },
-  
-    {
-      title: 'Découpage territorial',
-      icon: 'map-outline',
-      isTitle: false,
-      hasChildren: true,
-      collapse: false,
-      children: [
-        {
-          title: 'Départements',
-          link: '/admin/departments',
-        },
-        {
-          title: 'Municipalités',
-          link: '/admin/municipalities',
-        },
-        {
-          title: 'Districts',
-          link: '/admin/districts',
-        },
-        {
-          title: 'Villages',
-          link: '/admin/villages',
-        },
-      ]
-    },
-    {
-        title: 'Type Entité',
-        icon: 'options-outline',
-        link: '/admin/entity-type',
-      },
-      {
-        title: 'Entités',
-        icon: 'options-outline',
-        link: '/admin/entities',
-      },
-      {
-        title: 'Type Unité Admin',
-        icon: 'options-outline',
-        link: '/admin/unity-admin-type',
-      },
-      {
-        title: 'Rôle & Permissions',
-        icon: 'options-outline',
-        link: '/admin/profiles',
-      },
-         {
-      title: 'Statistiques',
-      isTitle:false,
-      hasChildren:false, collapse:false,
-      slug:'',
-      link: '/admin/eservice/statistiques',
-    },
-      {
-        title: 'Paramètre',
-        icon: 'settings-2-outline',
-        link: '/admin/settings',
-      },
-  ];
+  { title: 'Type Entité',      icon: 'fas fa-tag',        link: '/admin/entity-type' },
+  { title: 'Entités',          icon: 'fas fa-building',   link: '/admin/entities' },
+  { title: 'Type Unité Admin', icon: 'fas fa-sitemap',    link: '/admin/unity-admin-type' },
+  { title: 'Rôles & Permissions', icon: 'fas fa-shield-alt', link: '/admin/profiles' },
+  { title: 'Analyses', isTitle: true },
+  { title: 'Statistiques',     icon: 'fas fa-chart-bar',  link: '/admin/eservice/statistiques' },
+  { title: 'Système', isTitle: true },
+  { title: 'Paramètres',       icon: 'fas fa-cog',        link: '/admin/settings' },
+];
 
   export const MENU_ADMIN_SECTORIEL: any[] = [
+    { title: 'Principal', isTitle: true },
+    { title: 'Tableau de bord', icon: 'fas fa-home', link: '/admin/dashboard' },
+
+    { title: 'Utilisateurs', isTitle: true },
+    { title: 'Agents',               icon: 'fas fa-id-badge',      link: '/admin/officers' },
+    { title: 'Comptes utilisateurs', icon: 'fas fa-users',          link: '/admin/users' },
     {
-      title: 'Menu',
-      icon: 'home-outline',
-      link: '/admin/dashboard',
-      home: true,
-      isTitle:true
-    },
-    {
-      title: 'Tableau de bord',
-      icon: 'home-outline',
-      link: '/admin/dashboard',
-      home: true,
-    },
-    {
-      title: 'Agents',
-      icon: 'person-outline',
-      link: '/admin/officers',
-    },
-    {
-        title: 'Comptes utilisateurs',
-        icon: 'person-outline',
-        link: '/admin/users',
-      },
-      {
-        title: 'Prestations',
-        icon: 'home-outline',
-        link: '',
-        home: true,
-        isTitle:true
-      },
-      {
-        title: 'Prestations',
-        icon: 'award-outline',
-        link: '/admin/prestations',
-      },
-       {
-        title: 'Déclaration périodique',
-        icon: 'award-outline',
-        link: '/admin/projects',
-      },
-    /*  {
-        title: 'Pièce à fournir',
-        icon: 'attach-2-outline',
-        link: '/admin/files',
-      },*/
-      {
-        title: 'Paramètre',
-        icon: 'home-outline',
-        link: '',
-        isTitle:true
-      },
-      {
-        title: 'Unité Admin',
-        icon: 'options-outline',
-        link: '/admin/unity-admins',
-      },
-      {
-        title: 'Fonction Agent',
-        icon: 'options-outline',
-        link: '/admin/posts',
-      },
-      {
-        title: 'Découpage territorial',
-        icon: 'map-outline',
-        isTitle: false,
-        hasChildren: true,
-        collapse: false,
-        children: [
-          {
-            title: 'Départements',
-            link: '/admin/departments',
-          },
-          {
-            title: 'Municipalités',
-            link: '/admin/municipalities',
-          },
-          {
-            title: 'Districts',
-            link: '/admin/districts',
-          },
-          {
-            title: 'Villages',
-            link: '/admin/villages',
-          },
-        ]
-      },
-       {
-      title: 'Configuration eServices',
-      icon: 'award-outline',
-      isTitle:false,
-      hasChildren:true,
-      collapse:false,
+      title: 'Accès & Sécurité', icon: 'fas fa-shield-alt',
+      isTitle: false, hasChildren: true, collapse: false,
       children: [
-        {
-          title: 'Gestion des Statuts',
-          link: '/admin/eservice/configurations/status',
-        },
-        {
-          title: 'Gestion des étapes',
-          link: '/admin/eservice/configurations/etapes',
-        },
-         {
-          title: 'Gestion Status par prestations',
-          link: '/admin/eservice/configurations/prestation-status',
-        },
-          {
-          title: 'Workflow',
-          link: '/admin/eservice/configurations/workflows',
-        },
-        {
-          title: 'Documents produits',
-          link: '/admin/eservice/configurations/etape-documents-produits',
-        },
-        {
-          title: 'Circuit de signature',
-          link: '/admin/eservice/configurations/document-circuit-etapes',
-        },
-        {
-          title: 'Pièces justificatives',
-          link: '/admin/eservice/configurations/etape-documents',
-        },
-        {
-          title: 'Motifs de rejet',
-          link: '/admin/eservice/configurations/motifs-rejet',
-        },
-        {
-          title: 'Règles de visibilité',
-          link: '/admin/eservice/configurations/etape-visibilites',
-        },
-        {
-          title: 'Créneaux RDV',
-          link: '/admin/eservice/configurations/planning-slots',
-        },
+        { title: 'Profils',      link: '/admin/profiles' },
+        { title: 'Rôles',        link: '/admin/roles' },
+        { title: 'Permissions',  link: '/admin/permissions' },
       ]
-      },
-      {
-        title: 'Statistiques',
-        isTitle:false,
-        hasChildren:false, collapse:false,
-        slug:'',
-        link: '/admin/eservice/statistiques',
-      },
-      {
-        title: 'Paramètre',
-        icon: 'settings-2-outline',
-        link: '/admin/settings',
-      },
-      {
-        title: 'Support',
-        icon: 'settings-2-outline',
-        link: '/admin/billings',
-      },
-      {
-        title: 'Sujet de support',
-        icon: 'settings-2-outline',
-        link: '/admin/type-billings',
-      },
+    },
+
+    { title: 'e-Services', isTitle: true },
+    { title: 'Prestations',            icon: 'fas fa-award',          link: '/admin/prestations' },
+    { title: 'Comptes de recette',     icon: 'fas fa-cash-register',  link: '/admin/payment-accounts' },
+    { title: 'Déclaration périodique', icon: 'fas fa-file-signature', link: '/admin/projects' },
+    { title: 'Modèles de documents',   icon: 'fas fa-file-alt',       link: '/admin/document-templates' },
+    {
+      title: 'Configuration',  icon: 'fas fa-tools',
+      isTitle: false, hasChildren: true, collapse: false,
+      children: [
+        { title: 'Prestations & Statuts',   link: '/admin/eservice/configurations/prestation-status' },
+        { title: 'Étapes',                  link: '/admin/eservice/configurations/etapes' },
+        { title: 'Statuts',                 link: '/admin/eservice/configurations/status' },
+        { title: 'Workflow',                link: '/admin/eservice/configurations/workflows' },
+        { title: 'Documents produits',      link: '/admin/eservice/configurations/etape-documents-produits' },
+        { title: 'Circuit de signature',    link: '/admin/eservice/configurations/document-circuit-etapes' },
+        { title: 'Pièces justificatives',   link: '/admin/eservice/configurations/etape-documents' },
+        { title: 'Motifs de rejet',         link: '/admin/eservice/configurations/motifs-rejet' },
+        { title: 'Règles de visibilité',    link: '/admin/eservice/configurations/etape-visibilites' },
+        { title: 'Étapes par prestation',   link: '/admin/eservice/configurations/etape-prestations' },
+        { title: 'Créneaux RDV',            link: '/admin/eservice/configurations/planning-slots' },
+      ]
+    },
+
+    { title: 'Référentiels', isTitle: true },
+    { title: 'Unité Admin',    icon: 'fas fa-sitemap',   link: '/admin/unity-admins' },
+    { title: 'Fonction Agent', icon: 'fas fa-briefcase', link: '/admin/posts' },
+    {
+      title: 'Découpage territorial', icon: 'fas fa-map-marked-alt',
+      isTitle: false, hasChildren: true, collapse: false,
+      children: [
+        { title: 'Départements',  link: '/admin/departments' },
+        { title: 'Municipalités', link: '/admin/municipalities' },
+        { title: 'Districts',     link: '/admin/districts' },
+        { title: 'Villages',      link: '/admin/villages' },
+      ]
+    },
+
+    { title: 'Analyses', isTitle: true },
+    { title: 'RDV général',  icon: 'fas fa-calendar-alt', link: '/admin/agenda' },
+    { title: 'Statistiques', icon: 'fas fa-chart-bar',    link: '/admin/eservice/statistiques' },
+
+    { title: 'Système', isTitle: true },
+    { title: 'Paramètres',      icon: 'fas fa-cog',             link: '/admin/settings' },
+    { title: 'Support',         icon: 'fas fa-headset',          link: '/admin/billings' },
+    { title: 'Sujet de support', icon: 'fas fa-question-circle', link: '/admin/type-billings' },
   ];
 
   export const MENU_DECISIONNEL: any[] = [
+    { title: 'Principal', isTitle: true },
+    { title: 'Tableau de bord', icon: 'fas fa-home',  link: '/admin/dashboard' },
     {
-      title: 'Menu',
-      icon: 'home-outline',
-      link: '/admin/dashboard',
-      home: true,
-      isTitle:true
-    },
-    {
-      title: 'Tableau de bord ',
-      icon: 'home-outline',
-      link: '/admin/dashboard',
-      home: true,
-    },
-    {
-      title: 'E Service',
-      icon: 'award-outline',
+      title: 'e-Services', icon: 'fas fa-layer-group',
+      hasChildren: true, collapse: false,
       children: [
       /*  {
           title: 'Attestation de non litige',
@@ -298,18 +140,10 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         // },
       ],
     },
-       {
-      title: 'Statistiques',
-      isTitle:false,
-      hasChildren:false, collapse:false,
-      slug:'',
-      link: '/admin/eservice/statistiques',
-    },
-    {
-      title: 'Paramètre',
-      icon: 'settings-2-outline',
-      link: '/admin/settings',
-    },
+    { title: 'Analyses', isTitle: true },
+    { title: 'Statistiques', icon: 'fas fa-chart-bar', link: '/admin/eservice/statistiques' },
+    { title: 'Système', isTitle: true },
+    { title: 'Paramètres', icon: 'fas fa-cog', link: '/admin/settings' },
   ];
 
   export const MENU_DIRECTION: any[] = [
@@ -338,6 +172,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
       home: true,
       isTitle:false,
       hasChildren:false,
+    },
+    {
+      title: 'RDV général',
+      icon: 'fas fa-calendar-alt',
+      link: '/admin/agenda',
+      isTitle: false,
+      hasChildren: false,
     },
     {
       title: 'Attestation de non litige',
@@ -372,6 +213,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-non-litige',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-non-litige',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -415,6 +263,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/declaration-etablissement',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/declaration-etablissement',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/declaration-etablissement',
         }
@@ -454,6 +309,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-service-fait',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-service-fait',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -500,6 +362,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/autorisation-de-stage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-stage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/autorisation-de-stage',
         }
@@ -538,6 +407,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-stage',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-stage',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -579,6 +455,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-presence-au-poste',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-presence-au-poste',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -626,6 +509,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-reglement-interieur-entreprise',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-reglement-interieur-entreprise',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-reglement-interieur-entreprise',
         }
@@ -671,6 +561,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
         }
@@ -712,6 +609,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/visa-contrat-apprentisage',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-contrat-apprentisage',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -757,6 +661,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/decision-agrement-exercice-medecin',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/decision-agrement-exercice-medecin',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/decision-agrement-exercice-medecin',
         }
@@ -798,6 +709,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/certificat-de-non-radiation',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/certificat-de-non-radiation',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/certificat-de-non-radiation',
         }
@@ -837,6 +755,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-validite-des-services',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-validite-des-services',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -920,6 +845,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-non-litige',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-non-litige',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-non-litige',
         }
@@ -958,6 +890,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/declaration-etablissement',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/declaration-etablissement',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1001,6 +940,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-non-litige',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-non-litige',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-non-litige',
         }
@@ -1039,6 +985,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-stage',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-stage',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1083,6 +1036,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-stage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-stage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-stage',
         }
@@ -1121,6 +1081,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-presence-au-poste',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-presence-au-poste',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1167,6 +1134,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-reglement-interieur-entreprise',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-reglement-interieur-entreprise',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-reglement-interieur-entreprise',
         }
@@ -1205,6 +1179,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1250,6 +1231,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-contrat-apprentisage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-contrat-apprentisage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-contrat-apprentisage',
         }
@@ -1288,6 +1276,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/decision-agrement-exercice-medecin',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/decision-agrement-exercice-medecin',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1333,6 +1328,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/certificat-de-non-radiation',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/certificat-de-non-radiation',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/certificat-de-non-radiation',
         }
@@ -1371,6 +1373,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-validite-des-services',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-validite-des-services',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1447,6 +1456,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-non-litige',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-non-litige',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-non-litige',
         }
@@ -1483,6 +1499,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/declaration-etablissement',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/declaration-etablissement',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1523,6 +1546,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-service-fait',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-service-fait',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-service-fait',
         }
@@ -1559,6 +1589,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-stage',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-stage',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1601,6 +1638,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-stage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-stage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-stage',
         }
@@ -1637,6 +1681,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-presence-au-poste',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-presence-au-poste',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1680,6 +1731,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-reglement-interieur-entreprise',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-reglement-interieur-entreprise',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-reglement-interieur-entreprise',
         }
@@ -1716,6 +1774,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1759,6 +1824,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-contrat-apprentisage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-contrat-apprentisage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-contrat-apprentisage',
         }
@@ -1795,6 +1867,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/decision-agrement-exercice-medecin',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/decision-agrement-exercice-medecin',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1836,6 +1915,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/certificat-de-non-radiation',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/certificat-de-non-radiation',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/certificat-de-non-radiation',
         }
@@ -1872,6 +1958,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-validite-des-services',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-validite-des-services',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -1954,6 +2047,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-non-litige',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-non-litige',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-non-litige',
         }
@@ -1990,6 +2090,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/declaration-etablissement',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/declaration-etablissement',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -2031,6 +2138,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-service-fait',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-service-fait',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-service-fait',
         }
@@ -2067,6 +2181,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-stage',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-stage',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -2106,6 +2227,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/attestation-de-stage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-stage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/attestation-de-stage',
         }
@@ -2142,6 +2270,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-presence-au-poste',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-presence-au-poste',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -2185,6 +2320,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-reglement-interieur-entreprise',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-reglement-interieur-entreprise',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-reglement-interieur-entreprise',
         }
@@ -2221,6 +2363,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/autorisation-de-licenciement-pour-motif-economique-ou-motif-personnel',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -2264,6 +2413,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
           link: '/admin/eservice/historique/visa-contrat-apprentisage',
         },
         {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/visa-contrat-apprentisage',
+
+        },
+        {
           title: 'Statistiques e-services ',
           link: '/admin/eservice/statistiques/visa-contrat-apprentisage',
         }
@@ -2300,6 +2456,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/decision-agrement-exercice-medecin',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/decision-agrement-exercice-medecin',
+
         },
         {
           title: 'Statistiques e-services ',
@@ -2339,6 +2502,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
             link: '/admin/eservice/historique/certificat-de-non-radiation',
           },
           {
+
+            title: 'Transitions workflow',
+
+            link: '/admin/eservice/configurations/workflows/certificat-de-non-radiation',
+
+          },
+          {
             title: 'Statistiques e-services ',
             link: '/admin/eservice/statistiques/certificat-de-non-radiation',
           }
@@ -2375,6 +2545,13 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         {
           title: 'Parcours demandes',
           link: '/admin/eservice/historique/attestation-de-validite-des-services',
+        },
+        {
+
+          title: 'Transitions workflow',
+
+          link: '/admin/eservice/configurations/workflows/attestation-de-validite-des-services',
+
         },
         {
           title: 'Statistiques e-services ',

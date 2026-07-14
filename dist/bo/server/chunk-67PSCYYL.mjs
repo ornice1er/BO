@@ -1,0 +1,2 @@
+import './polyfills.server.mjs';
+import{a as i,b as o,c as t,d as n,e as c,f as e,g as u,i as d,r as G,s as l}from"./chunk-ZCLRA3YA.mjs";var p=class extends l{static{e(this,"GitGraphTokenBuilder")}constructor(){super(["gitGraph"])}},m={parser:{TokenBuilder:e(()=>new p,"TokenBuilder"),ValueConverter:e(()=>new G,"ValueConverter")}};function h(s=n){let r=t(o(s),u),a=t(i({shared:r}),d,m);return r.ServiceRegistry.register(a),{shared:r,GitGraph:a}}e(h,"createGitGraphServices");export{m as a,h as b};

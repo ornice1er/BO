@@ -18,13 +18,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PrestationService } from '../../../../core/services/prestation.service';
 import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 import { OfficerService } from '../../../../core/services/officer.service';
+import { PermissionUtils } from '../../../../core/utils/permission-utils';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 declare var bootstrap: any;
 
 
 @Component({
     selector: 'app-user',
     templateUrl: './user.component.html',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
     styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit,AfterViewInit  {
@@ -53,6 +55,7 @@ selectedId: number | null = null;
   role_name=""
   role:any
   user:any
+  isGlobalAdmin = false;
   pg={
     pageSize:10,
     p:1,
@@ -90,6 +93,7 @@ selectedId: number | null = null;
   ngOnInit(): void {
     this.user=this.lsService.get(GlobalName.userName)
     this.role=this.user.roles[0].name
+    this.isGlobalAdmin = PermissionUtils.isGlobalAdmin(this.user);
     this.init()
     this.buttonsPermission = {
       show:true,
@@ -186,7 +190,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
 
@@ -204,7 +208,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
   update(value:any){
@@ -231,7 +235,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       this.loading=false
 
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
   delete(){
@@ -245,7 +249,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     },
     (err:any)=>{
       console.log(err)
-        AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+        AppErrorShow.showError("Opération échouée", err)
     })
   }
 })
@@ -278,7 +282,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.allSelected = checked;
   }
 
-  private syncAllSelected(): void {
+  syncAllSelected(): void {
     this.allSelected = this.prestations.length > 0 && this.prestations.every((p:any) => p.state);
   }
 
@@ -297,6 +301,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
     this.new_is_trade = false;
     this.prestations.forEach((e:any) => e.state = false);
     this.allSelected = false;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
@@ -304,11 +309,13 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
   show(content:any){
     if(!this.verifyIfElementChecked()) return ;
     
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
   }
 
   edit(content:any){
     if(!this.verifyIfElementChecked()) return ;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content,{size:'lg'});
 
   }
@@ -325,7 +332,7 @@ AppErrorShow.showError("Gestion des utilisateurs",err)
       (err:any)=>{
         this.loading=false
         console.log(err)
-          AppSweetAlert.simpleAlert("error","Gestion des utilisateurs",err.error.message)
+          AppErrorShow.showError("Opération échouée", err)
       })
   }
 

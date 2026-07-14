@@ -4,9 +4,9 @@ export default `<!doctype html>
   <meta charset="utf-8">
   <title>Espace de traitement des e-services</title>
     <!-- <base href="http://preprodmemp.gouv.bj/pprod-bo/"> -->
-    <base href="https://preprodmtfp.gouv.bj/pprod-bo/">
+    <!-- <base href="https://preprodmtfp.gouv.bj/pprod-bo/"> -->
 
-  <!-- <base href="/"> -->
+  <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="assets/amoirie_benin.svg">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@angular/material@15.0.0/prebuilt-themes/indigo-pink.css">
@@ -14,10 +14,10 @@ export default `<!doctype html>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles-F53JYRNN.css"></head>
+<link rel="stylesheet" href="styles-6YXGFLK6.css"></head>
 <body><script type="text/javascript" id="ng-event-dispatch-contract">(()=>{function p(t,n,r,o,e,i,f,m){return{eventType:t,event:n,targetElement:r,eic:o,timeStamp:e,eia:i,eirp:f,eiack:m}}function u(t){let n=[],r=e=>{n.push(e)};return{c:t,q:n,et:[],etc:[],d:r,h:e=>{r(p(e.type,e,e.target,t,Date.now()))}}}function s(t,n,r){for(let o=0;o<n.length;o++){let e=n[o];(r?t.etc:t.et).push(e),t.c.addEventListener(e,t.h,r)}}function c(t,n,r,o,e=window){let i=u(t);e._ejsas||(e._ejsas={}),e._ejsas[n]=i,s(i,r),s(i,o,!0)}window.__jsaction_bootstrap=c;})();
 </script>
   <app-root></app-root>
-<link rel="modulepreload" href="chunk-MAVNWS4Y.js"><link rel="modulepreload" href="chunk-LISODJIC.js"><link rel="modulepreload" href="chunk-GAL4ENT6.js"><script src="polyfills-B6TNHZQ6.js" type="module"></script><script src="scripts-SATGWWHT.js" defer=""></script><script src="main-T5F3ESAZ.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-6YAIAKQO.js"><link rel="modulepreload" href="chunk-BFCTEPH7.js"><link rel="modulepreload" href="chunk-GNPHXMFI.js"><link rel="modulepreload" href="chunk-QIEJZITX.js"><link rel="modulepreload" href="chunk-4W2AA24Q.js"><link rel="modulepreload" href="chunk-WJVCEP4V.js"><link rel="modulepreload" href="chunk-62QEBAUP.js"><script src="polyfills-B6TNHZQ6.js" type="module"></script><script src="scripts-SATGWWHT.js" defer=""></script><script src="main-CTTVMYYV.js" type="module"></script></body>
 </html>
 `;

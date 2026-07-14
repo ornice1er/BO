@@ -16,6 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppSweetAlert } from '../../../core/utils/app-sweet-alert';
 import { FormsModule } from '@angular/forms';
 import { MENU_ADMIN_NATIONAL, MENU_ADMIN_SECTORIEL, MENU_DECISIONNEL } from '../admin-menu';
+import { PermissionUtils } from '../../../core/utils/permission-utils';
 import { DashService } from '../../../core/services/dash.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
@@ -134,63 +135,55 @@ toggleMenu() {
 
 
       getUserMenu(){
-   
-    switch (this.role) {
-       case "Super Admin":
-            this.menu=MENU_ADMIN_NATIONAL;
-        break;
-      case "Admin national":
-            this.menu=MENU_ADMIN_NATIONAL;
-        break;
-        case "Admin Sectoriel":
-          
-            this.menu=MENU_ADMIN_SECTORIEL;
-        break;
-         case "Administrateur Sectoriel":
-          
-            this.menu=MENU_ADMIN_SECTORIEL;
-        break;
-        case "Decisionnel":
-          this.menu=MENU_DECISIONNEL;
-      break;
-  
-      default:
 
-      
-      this.menu.push( {
+    if (PermissionUtils.isGlobalAdmin(this.user)) {
+      this.menu = MENU_ADMIN_NATIONAL;
+      return;
+    }
+
+    if (PermissionUtils.has(this.user, 'access:admin-sectoriel')) {
+      this.menu = MENU_ADMIN_SECTORIEL;
+      return;
+    }
+
+    if (this.role === 'Decisionnel') {
+      this.menu = MENU_DECISIONNEL;
+      return;
+    }
+
+    // Agent / autres rôles — construction dynamique depuis les prestations
+
+      this.menu.push({
         title: 'Menu',
-        icon: 'home-outline',
+        icon: 'fas fa-home',
         link: '/admin/dashboard',
         home: true,
-        isTitle:true,
-        hasChildren:false,
-  
+        isTitle: true,
+        hasChildren: false,
       })
-      this.menu.push(  {
-        title: 'Tableau de bord ',
-        icon: 'home-outline',
+      this.menu.push({
+        title: 'Tableau de bord',
+        icon: 'fas fa-home',
         link: '/admin/dashboard',
         home: true,
-        isTitle:false,
-        hasChildren:false,
-  
+        isTitle: false,
+        hasChildren: false,
       })
-       this.menu.push(  {
-        title: 'Déclaration périodique ',
-        icon: 'home-outline',
+      this.menu.push({
+        title: 'Déclaration périodique',
+        icon: 'fas fa-file-signature',
         link: '/admin/projects',
         home: true,
-        isTitle:false,
-        hasChildren:false,
-  
+        isTitle: false,
+        hasChildren: false,
       })
-      this.menu.push(  {
+      this.menu.push({
         title: 'Mes e-Services',
-        icon: 'home-outline',
+        icon: 'fas fa-layer-group',
         link: '/admin/dashboard',
         home: false,
-        isTitle:true,
-        hasChildren:false,
+        isTitle: true,
+        hasChildren: false,
       })
     
        
@@ -473,9 +466,17 @@ toggleMenu() {
           );
           }
 
+          this.menu.push({
+            title: 'RDV général',
+            icon: 'fas fa-calendar-alt',
+            link: '/admin/agenda',
+            isTitle: false,
+            hasChildren: false,
+          });
+
           this.menu.push( {
             title: 'Support',
-            icon: 'home-phone',
+            icon: 'fas fa-headset',
             link: '/admin/supports',
             isTitle:false,
             hasChildren:false,
@@ -486,10 +487,8 @@ toggleMenu() {
         
           this.dashService.statsForMenu().subscribe((res:any)=>{
             this.data=res.data.stats
-          
+
           })
-        break;
-    }
   }
 
   getSlug(link:any){

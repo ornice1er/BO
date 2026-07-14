@@ -13,11 +13,12 @@ import { LocalStorageService } from '../../../../core/utils/local-stoarge-servic
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
 import { AppSweetAlert } from '../../../../core/utils/app-sweet-alert';
+import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-municipality',
   templateUrl: './municipality.component.html',
-  imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
   styleUrls: ['./municipality.component.css']
 })
 export class MunicipalityComponent implements OnInit {
@@ -66,15 +67,18 @@ export class MunicipalityComponent implements OnInit {
 
   checked(el: any) { this.selected_data = el; }
 
-  add(content: any) { this.modalService.open(content, { size: 'lg' }); }
+  add(content: any) { (document.activeElement as HTMLElement)?.blur();
+ this.modalService.open(content, { size: 'lg' }); }
 
   show(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
   edit(content: any) {
     if (!this.verifyIfElementChecked()) return;
+    (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }
 
@@ -102,8 +106,9 @@ export class MunicipalityComponent implements OnInit {
     );
   }
 
-  delete() {
-    if (confirm('Voulez vous supprimer cet élément')) {
+  async delete() {
+    const result = await AppSweetAlert.confirmBox('warning', 'Confirmation', 'Voulez vous supprimer cet élément');
+    if (result.isConfirmed) {
       this.loading = true;
       this.municipalityService.delete(this.selected_data.id).subscribe(
         () => { this.loading = false; this.all(); },

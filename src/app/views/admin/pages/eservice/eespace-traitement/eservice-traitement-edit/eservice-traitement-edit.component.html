@@ -44,50 +44,55 @@
 </div>
 
 
-<!-- ── BLOC A : Éditeur de document ────────────────────────── -->
-<ng-container *ngIf="selectedData?.current_etape?.produces_document && !documentDejaSoumis">
-
-  <!-- Documents du circuit -->
-  <div class="te-section mb-4" *ngIf="documentsDuCircuit.length > 0">
-    <div class="te-section__header">
-      <i class="bi bi-file-earmark-check"></i>
-      Documents du circuit
-    </div>
-    <div class="te-section__body">
-      <div class="row g-3">
-        <div *ngFor="let acte of documentsDuCircuit" class="col-md-6">
-          <div class="te-doc-card">
-            <div class="te-doc-card__top">
-              <span class="te-doc-card__name">{{ acte?.doc_produit?.name }}</span>
-              <span class="te-badge te-badge--sm" [ngClass]="{
-                'te-badge--amber': acte?.status === 'en_edition',
-                'te-badge--blue':  acte?.status === 'en_circuit',
-                'te-badge--green': acte?.status === 'complet',
-                'te-badge--red':   acte?.status === 'rejete'
-              }">{{ acte?.status }}</span>
-            </div>
-            <p class="te-doc-card__num">N° {{ acte?.numero_identification ?? '—' }}</p>
-            <p class="te-doc-card__step" *ngIf="acte?.current_circuit_step">
-              <i class="bi bi-arrow-right-short"></i>
-              En attente : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
-              <span class="text-muted ms-1">({{ acte?.current_circuit_step?.action_type }})</span>
-            </p>
-            <div class="d-flex gap-2 mt-2 flex-wrap">
-              <button *ngIf="acte?.file_url" class="te-btn te-btn--ghost te-btn--sm"
-                (click)="showResponseFile(acte.file_url)">
-                <i class="bi bi-eye"></i> Visualiser
-              </button>
-              <button *ngIf="peutAgirSurDocument(acte)" class="te-btn te-btn--primary te-btn--sm"
-                (click)="actionSurDocument(acte)" [disabled]="loading">
-                <i class="bi bi-pen"></i>
-                {{ acte?.current_circuit_step?.action_type | titlecase }}
-              </button>
-            </div>
+<!-- ── Documents du circuit (toujours visible) ───────────────── -->
+<div class="te-section mb-4" *ngIf="documentsDuCircuit.length > 0">
+  <div class="te-section__header">
+    <i class="bi bi-file-earmark-check"></i>
+    Documents du circuit
+  </div>
+  <div class="te-section__body">
+    <div class="row g-3">
+      <div *ngFor="let acte of documentsDuCircuit" class="col-md-6">
+        <div class="te-doc-card">
+          <div class="te-doc-card__top">
+            <span class="te-doc-card__name">{{ acte?.doc_produit?.name }}</span>
+            <span class="te-badge te-badge--sm" [ngClass]="{
+              'te-badge--amber': acte?.status === 'en_edition',
+              'te-badge--blue':  acte?.status === 'en_circuit',
+              'te-badge--green': acte?.status === 'complet',
+              'te-badge--red':   acte?.status === 'rejete'
+            }">{{ acte?.status }}</span>
+          </div>
+          <p class="te-doc-card__num">N° {{ acte?.numero_identification ?? '—' }}</p>
+          <p class="te-doc-card__step" *ngIf="acte?.current_circuit_step">
+            <i class="bi bi-arrow-right-short"></i>
+            En attente : <strong>{{ acte?.current_circuit_step?.role_name }}</strong>
+            <span class="text-muted ms-1">({{ acte?.current_circuit_step?.action_type }})</span>
+          </p>
+          <div class="d-flex gap-2 mt-2 flex-wrap">
+            <button *ngIf="acte?.file_url" class="te-btn te-btn--ghost te-btn--sm"
+              (click)="showResponseFile(acte.file_url)">
+              <i class="bi bi-eye"></i> Visualiser
+            </button>
+            <button *ngIf="peutAgirSurDocument(acte)" class="te-btn te-btn--ghost te-btn--sm"
+              (click)="modifierDocument(acte)" [disabled]="loading">
+              <i class="bi bi-pencil-square"></i> Modifier
+            </button>
+            <button *ngIf="peutAgirSurDocument(acte)" class="te-btn te-btn--primary te-btn--sm"
+              (click)="actionSurDocument(acte)" [disabled]="loading">
+              <i class="bi bi-pen"></i>
+              {{ acte?.current_circuit_step?.action_type | titlecase }}
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+<!-- ── BLOC A : Éditeur de document ────────────────────────── -->
+<ng-container *ngIf="selectedData?.current_etape?.produces_document && !documentDejaSoumis">
 
   <!-- Éditeur -->
   <div class="te-section mb-4">
@@ -165,15 +170,30 @@
     <!-- Observation -->
     <div class="te-form-group" *ngIf="showAddingField.observation">
       <label class="te-label"><i class="bi bi-chat-left-text me-1"></i>Observation</label>
-      <textarea class="te-input" rows="3"
+      <quill-editor
         [(ngModel)]="responseData.comment"
-        placeholder="Commentaire ou observation..."></textarea>
+        [modules]="quillModules"
+        placeholder="Commentaire ou observation..."
+        style="display:block;">
+      </quill-editor>
     </div>
 
-    <!-- Pièce jointe -->
-    <div class="te-form-group" *ngIf="showAddingField.note_file">
+    <!-- Pièce jointe *ngIf="showAddingField.note_file" -->
+    <div class="te-form-group" >
       <label class="te-label"><i class="bi bi-paperclip me-1"></i>Joindre une note ou PJ</label>
       <input type="file" class="te-input" (change)="upload($event)">
+
+      <div *ngIf="fileUploaded" class="form-check mt-2">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="sharePjToPns"
+          [(ngModel)]="sharePjToPns">
+        <label class="form-check-label text-muted" for="sharePjToPns">
+          <i class="bi bi-share me-1"></i>
+          Partager cette PJ à la prochaine action vers le PNS
+        </label>
+      </div>
     </div>
 
   </div>
@@ -207,6 +227,26 @@
     <app-loading [isVisible]="loading"></app-loading>
   </button>
 </div>
+
+
+<!-- ── Éditeur document (offcanvas modification) ─────────────── -->
+<ng-template #editeurOffcanvas let-offcanvas>
+  <div class="offcanvas-header" style="background:linear-gradient(135deg,#0A3764,#0d4e8a);color:#fff;">
+    <h5 class="offcanvas-title mb-0">
+      <i class="bi bi-pencil-square me-2"></i>
+      Modifier — {{ acteAModifier?.doc_produit?.name }}
+    </h5>
+    <button type="button" class="btn-close btn-close-white" (click)="offcanvas.dismiss()"></button>
+  </div>
+  <div class="offcanvas-body p-3" *ngIf="acteAModifier">
+    <app-document-editor
+      [requeteId]="selectedData?.id"
+      [contentType]="selectedData?.prestation?.content_type"
+      [docProduitId]="acteAModifier?.doc_produit?.id"
+      (submitted)="onDocumentModifie()">
+    </app-document-editor>
+  </div>
+</ng-template>
 
 
 <!-- ── Viewer PDF (offcanvas) ───────────────────────────────── -->
