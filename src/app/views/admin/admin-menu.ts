@@ -62,6 +62,7 @@ export const MENU_ADMIN_NATIONAL: any[] = [
         { title: 'Pièces justificatives',   link: '/admin/eservice/configurations/etape-documents' },
         { title: 'Motifs de rejet',         link: '/admin/eservice/configurations/motifs-rejet' },
         { title: 'Règles de visibilité',    link: '/admin/eservice/configurations/etape-visibilites' },
+        { title: 'Étapes par prestation',   link: '/admin/eservice/configurations/etape-prestations' },
         { title: 'Créneaux RDV',            link: '/admin/eservice/configurations/planning-slots' },
       ]
     },

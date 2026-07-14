@@ -1,0 +1,182 @@
+<div class="container-fluid">
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <h4 class="mb-1">Étapes par prestation</h4>
+      <p class="text-muted mb-0">
+        Les étapes sont <strong>globales</strong> et partagées entre e-services. Le délai, l'unité
+        responsable, le rendez-vous et l'association à une session peuvent varier d'un e-service à
+        l'autre : configurez-les ici. Une valeur non surchargée est
+        <span class="badge bg-secondary">héritée</span> de l'étape.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+
+      <!-- Sélection de la prestation -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Prestation (e-service)</label>
+          <ng-select [(ngModel)]="selectedPrestationId" (change)="chargerEtapes()"
+                     placeholder="Sélectionner une prestation">
+            <ng-option [value]="p.id" *ngFor="let p of prestations">{{ p.name }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="text-center py-4" *ngIf="loading2">
+        <div class="spinner-border text-primary"></div>
+      </div>
+
+      <div class="alert alert-info" *ngIf="!selectedPrestationId && !loading2">
+        Sélectionnez une prestation pour voir les étapes de son parcours.
+      </div>
+
+      <div class="alert alert-warning" *ngIf="selectedPrestationId && !loading2 && etapes.length === 0">
+        Aucune étape dans le graphe de cette prestation — commencez par configurer ses transitions.
+      </div>
+
+      <!-- Étapes partagées : les seules qui demandent un arbitrage -->
+      <div class="alert alert-warning d-flex align-items-start" *ngIf="nbPartagees > 0 && !loading2">
+        <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+        <div>
+          <strong>{{ nbPartagees }} étape(s) de ce parcours sont partagées avec d'autres e-services.</strong>
+          Tant qu'elles ne sont pas surchargées ici, elles portent la même valeur partout : modifier
+          le délai ou l'unité depuis la configuration des étapes affecterait aussi les autres e-services.
+          Ce sont les seules lignes qui demandent un arbitrage — les autres sont exactes.
+        </div>
+      </div>
+
+      <!-- Étapes du graphe -->
+      <div class="table-responsive" *ngIf="etapes.length > 0 && !loading2">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Étape</th>
+              <th scope="col">Type</th>
+              <th scope="col">Délai (jours)</th>
+              <th scope="col">Unité responsable</th>
+              <th scope="col">RDV requis</th>
+              <th scope="col">Association session</th>
+              <th scope="col">Origine</th>
+              <th scope="col" class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of etapes">
+              <td class="fw-semibold">
+                {{ e.name }}
+                <span class="badge bg-warning text-dark ms-1" *ngIf="e.nb_eservices > 1"
+                      [matTooltip]="'Cette étape est utilisée par ' + e.nb_eservices + ' e-services. Sans surcharge, ils partagent tous la même valeur.'">
+                  <i class="fas fa-exclamation-triangle me-1"></i>Partagée ({{ e.nb_eservices }})
+                </span>
+                <span class="badge bg-dark ms-1" *ngIf="e.hors_graphe"
+                      matTooltip="Étape absente du graphe de transitions actuel, mais encore référencée (demande en cours ou configuration héritée). Elle reste configurable.">
+                  <i class="fas fa-code-branch me-1"></i>Hors graphe
+                </span>
+              </td>
+              <td><span class="badge bg-light text-dark">{{ e.type | titlecase }}</span></td>
+              <td>{{ e.effectif?.sla_days ?? '—' }}</td>
+              <td>{{ uniteNom(e.effectif?.unite_admin_id) }}</td>
+              <td>
+                <span class="badge" [class.bg-success]="e.effectif?.need_meeting"
+                      [class.bg-secondary]="!e.effectif?.need_meeting">
+                  {{ e.effectif?.need_meeting ? 'Oui' : 'Non' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.bg-success]="e.effectif?.can_associate"
+                      [class.bg-secondary]="!e.effectif?.can_associate">
+                  {{ e.effectif?.can_associate ? 'Oui' : 'Non' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge bg-primary" *ngIf="estContextualisee(e)"
+                      matTooltip="Valeurs propres à cette prestation">
+                  Contextualisée
+                </span>
+                <span class="badge bg-secondary" *ngIf="!estContextualisee(e)"
+                      matTooltip="Valeurs par défaut de l'étape, partagées avec les autres e-services">
+                  Héritée
+                </span>
+              </td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary me-1"
+                        (click)="ouvrirConfig(configModal, e)" matTooltip="Configurer pour cette prestation">
+                  <i class="fas fa-sliders-h"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" *ngIf="estContextualisee(e)"
+                        (click)="reinitialiser(e)" matTooltip="Revenir aux valeurs par défaut">
+                  <i class="fas fa-undo"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal de configuration -->
+<ng-template #configModal let-modal>
+  <form #configForm="ngForm" (ngSubmit)="enregistrer(configForm)">
+    <div class="modal-header">
+      <h5 class="modal-title">Configurer « {{ selected_data?.etape_name }} »</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
+
+    <div class="modal-body">
+      <p class="text-muted small">
+        Ces valeurs ne s'appliquent qu'à <strong>cette prestation</strong>. Les autres e-services qui
+        utilisent la même étape ne sont pas affectés.
+      </p>
+
+      <div class="row">
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Délai de traitement (jours)</label>
+          <input type="number" class="form-control" name="sla_days" min="0"
+                 [(ngModel)]="selected_data.sla_days" placeholder="Aucun délai">
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Unité administrative responsable</label>
+          <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id"
+                     placeholder="Sélectionner une unité">
+            <ng-option [value]="u.id" *ngFor="let u of unites">{{ u.libelle }} [{{ u.sigle }}]</ng-option>
+          </ng-select>
+          <small class="text-muted">Détermine les agents notifiés à l'arrivée sur cette étape.</small>
+        </div>
+
+        <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Création de RDV requise</label>
+          <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+        <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
+          <label class="mb-0">Association à une session possible</label>
+          <ng-toggle name="can_associate" [(ngModel)]="selected_data.can_associate"
+            [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
+            [values]="{ checked: true, unchecked: false }">
+          </ng-toggle>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        Enregistrer
+        <app-loading [isVisible]="loading"></app-loading>
+      </button>
+    </div>
+  </form>
+</ng-template>

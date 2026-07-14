@@ -65,8 +65,6 @@ export interface Etape {
   name: string;
   type: EtapeType;
   unite_admin_id: number | null;
-  is_terminal: boolean;
-  allow_partial_save: boolean;
   sla_days: number | null;
   produces_document: boolean;
   document_template_key: string | null;
