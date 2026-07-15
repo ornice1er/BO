@@ -15,12 +15,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SampleSearchPipe } from '../../../../core/pipes/sample-search.pipe';
 import { LoadingComponent } from '../../../components/loading/loading.component';
-import { NgToggleModule, NgToggleComponent } from 'ng-toggle-button';
 import { HelpPanelComponent } from '../../../components/help-panel/help-panel.component';
 
 @Component({
     selector: 'app-etape',
-    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, NgToggleModule, NgToggleComponent, HelpPanelComponent],
+    imports: [CommonModule, FormsModule, NgbModule, LoadingComponent, SampleSearchPipe, NgSelectModule, NgxPaginationModule, MatTooltipModule, HelpPanelComponent],
     templateUrl: './etape.component.html',
     styleUrl: './etape.component.css'
 })
@@ -29,7 +28,7 @@ isDtInitialized:boolean = false
 
   selected_data: any
   user: any
-  add_data: any = { can_associate: false, need_meeting: false }
+  add_data: any = {}
   data:any[]=[]
   data2:any[]=[]
   data3:any[]=[]
@@ -119,7 +118,7 @@ remoteSearchData: any[] = []
   
     
 add(content: any) {
-    this.add_data = { can_associate: false, need_meeting: false };
+    this.add_data = {};
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });
   }

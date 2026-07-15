@@ -49,16 +49,13 @@
                 <th style="width: 50px;">#</th>
                 <th scope="col">Libellé</th>
                 <th scope="col">Type</th>
-                <th scope="col">Unité admin</th>
-                <th scope="col">SLA (jours)</th>
-                <th scope="col">RDV requis</th>
             </tr>
             </thead>
             <tbody>
             <!-- Skeleton loader -->
             <ng-container *ngIf="loading">
                 <tr *ngFor="let i of [1,2,3,4,5,6,7]" class="table-skeleton">
-                    <td *ngFor="let j of [1,2,3,4,5,6,7]">
+                    <td *ngFor="let j of [1,2,3]">
                         <span class="placeholder col-10 rounded"></span>
                     </td>
                 </tr>
@@ -166,13 +163,6 @@
                     {{ d?.type | titlecase }}
                   </span>
                 </td>
-                <td>{{ d?.unite_admin?.libelle ?? '—' }}</td>
-                <td>{{ d?.sla_days ?? '—' }}</td>
-                <td>
-                  <span class="badge" [class.bg-success]="d?.need_meeting" [class.bg-secondary]="!d?.need_meeting">
-                    {{ d?.need_meeting ? 'Oui' : 'Non' }}
-                  </span>
-                </td>
 
             </tr>
             </ng-container><!-- end *ngIf="!loading" -->
@@ -233,32 +223,13 @@
             </select>
           </div>
 
-          <div class="form-group col-md-6 mb-3">
-            <label>Délai SLA (jours)</label>
-            <input type="number" name="sla_days" class="form-control" ngModel min="0">
-          </div>
-
-          <div class="form-group col-12 mb-3">
-            <label>Unité administrative responsable</label>
-            <ng-select name="unite_admin_id" ngModel placeholder="Sélectionner une unité">
-              <ng-option [value]="ua?.id" *ngFor="let ua of data2">{{ ua?.libelle }} [{{ ua?.sigle }} ]</ng-option>
-            </ng-select>
-          </div>
-
-             <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Association à une session possible</label>
-            <ng-toggle name="can_associate" [(ngModel)]="add_data.can_associate"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Création de RDV requise</label>
-            <ng-toggle name="need_meeting" [(ngModel)]="add_data.need_meeting"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
+          <div class="col-12 mb-3">
+            <div class="alert alert-info py-2 mb-0">
+              <i class="bi bi-info-circle me-1"></i>
+              Le délai, l'unité responsable, le RDV et l'association à une session se définissent
+              désormais par prestation, dans <strong>Configurations → Étapes par prestation</strong>,
+              afin d'être précis à chaque e-service.
+            </div>
           </div>
 
         </div>
@@ -300,32 +271,13 @@
             </select>
           </div>
 
-          <div class="form-group col-md-6 mb-3">
-            <label>Délai SLA (jours)</label>
-            <input type="number" name="sla_days" class="form-control" [(ngModel)]="selected_data.sla_days" min="0">
-          </div>
-
-          <div class="form-group col-12 mb-3">
-            <label>Unité administrative responsable</label>
-            <ng-select name="unite_admin_id" [(ngModel)]="selected_data.unite_admin_id" placeholder="Sélectionner une unité">
-              <ng-option [value]="ua?.id" *ngFor="let ua of data2">{{ ua?.libelle }} [{{ ua?.sigle }} ]</ng-option>
-            </ng-select>
-          </div>
-
-           <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Association à une session possible</label>
-            <ng-toggle name="can_associate" [(ngModel)]="selected_data.can_associate"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
-          </div>
-
-          <div class="col-md-6 mb-3 d-flex justify-content-between align-items-center">
-            <label class="mb-0">Création de RDV requise</label>
-            <ng-toggle name="need_meeting" [(ngModel)]="selected_data.need_meeting"
-              [color]="{ unchecked: '#939da2', checked: '#0C574E' }"
-              [values]="{ checked: true, unchecked: false }">
-            </ng-toggle>
+          <div class="col-12 mb-3">
+            <div class="alert alert-info py-2 mb-0">
+              <i class="bi bi-info-circle me-1"></i>
+              Le délai, l'unité responsable, le RDV et l'association à une session se définissent
+              désormais par prestation, dans <strong>Configurations → Étapes par prestation</strong>,
+              afin d'être précis à chaque e-service.
+            </div>
           </div>
 
         </div>

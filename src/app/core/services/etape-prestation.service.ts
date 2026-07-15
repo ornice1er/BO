@@ -40,4 +40,12 @@ export class EtapePrestationService {
   graphe(prestationId: number) {
     return this.http.get<any>(`${this.url}/graphe/${prestationId}`);
   }
+
+  /** Copie la contextualisation des étapes d'une prestation vers d'autres. */
+  copyFromPrestation(fromPrestationId: number, toPrestationIds: number[]) {
+    return this.http.post(`${this.url}/copy-from-prestation`, {
+      from_prestation_id: fromPrestationId,
+      to_prestation_ids:  toPrestationIds,
+    });
+  }
 }
