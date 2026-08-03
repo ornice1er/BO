@@ -257,6 +257,15 @@
           <small class="text-muted">Doit correspondre exactement à la valeur de <code>meta.requestType</code> envoyée par le portail. Laisser vide pour appliquer à tous.</small>
         </div>
 
+        <div class="form-group col-md-6 mb-3">
+          <label>Destinataire du document</label>
+          <select name="destinataire" class="form-select" [(ngModel)]="add_data.destinataire">
+            <option value="usager">Demandeur (délivrance PNS)</option>
+            <option value="structure">Structure d'accueil (envoi par e-mail)</option>
+          </select>
+          <small class="text-muted">« Structure » envoie le document par e-mail à la structure d'affectation quand la demande atteint son étape terminale.</small>
+        </div>
+
         <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
           <label class="mb-0">Avancer le workflow si document récupéré/généré</label>
           <ng-toggle name="avancer_workflow" [(ngModel)]="add_data.avancer_workflow"
@@ -391,6 +400,15 @@
           <input type="text" name="demandeur_type" class="form-control" [(ngModel)]="selected_data.demandeur_type"
             placeholder="ex: physique, morale, entreprise… (vide = tous)">
           <small class="text-muted">Doit correspondre exactement à la valeur de <code>meta.requestType</code> envoyée par le portail. Laisser vide pour appliquer à tous.</small>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+          <label>Destinataire du document</label>
+          <select name="destinataire" class="form-select" [(ngModel)]="selected_data.destinataire">
+            <option value="usager">Demandeur (délivrance PNS)</option>
+            <option value="structure">Structure d'accueil (envoi par e-mail)</option>
+          </select>
+          <small class="text-muted">« Structure » envoie le document par e-mail à la structure d'affectation quand la demande atteint son étape terminale.</small>
         </div>
 
         <div class="col-12 mb-3 d-flex justify-content-between align-items-center">

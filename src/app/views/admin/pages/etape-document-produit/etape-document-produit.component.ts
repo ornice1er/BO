@@ -33,7 +33,7 @@ export class EtapeDocumentProduitComponent implements OnInit {
 
   selected_data: any;
   user: any;
-  add_data: any = { allow_correction: true, avancer_workflow: false, content: '' };
+  add_data: any = { allow_correction: true, avancer_workflow: false, content: '', destinataire: 'usager' };
   data: any[] = [];
   etapes: any[] = [];
   prestations: any[] = [];
@@ -115,7 +115,7 @@ formats = [
   }
 
   add(content: any) {
-    this.add_data = { allow_correction: true, avancer_workflow: false, content: '', name: '', slug: '' };
+    this.add_data = { allow_correction: true, avancer_workflow: false, content: '', name: '', slug: '', destinataire: 'usager' };
     this.slugManuallyEdited = false;
     (document.activeElement as HTMLElement)?.blur();
     this.modalService.open(content, { size: 'lg' });

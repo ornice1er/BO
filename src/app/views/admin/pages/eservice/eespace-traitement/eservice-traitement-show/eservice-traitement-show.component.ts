@@ -20,6 +20,7 @@ import { ProjectService } from '../../../../../../core/services/project.service'
 import { DepartmentService } from '../../../../../../core/services/department.service';
 import { MunicipalityService } from '../../../../../../core/services/municipality.service';
 import { DistrictService } from '../../../../../../core/services/district.service';
+import { UnityAdminService } from '../../../../../../core/services/unity_admin.service';
 
 @Component({
   selector: 'ngx-eservice-traitement-show',
@@ -44,6 +45,15 @@ export class EserviceTraitementShowComponent implements OnInit {
   projects: any[] = [];
   etapesPrecedentes: any[] = [];
 
+  // ── Structure d'accueil de stage ────────────────────────────────────────────
+  unites: any[] = [];
+  structureId: number | null = null;
+  savingStructure = false;
+
+  // ── Rapport de stage ────────────────────────────────────────────────────────
+  rapportFile: File | null = null;
+  uploadingRapport = false;
+
   private deptMap = new Map<string, string>();
   private muniMap = new Map<string, string>();
   private distMap = new Map<string, string>();
@@ -65,6 +75,7 @@ export class EserviceTraitementShowComponent implements OnInit {
     private departmentService: DepartmentService,
     private municipalityService: MunicipalityService,
     private districtService: DistrictService,
+    private unityAdminService: UnityAdminService,
     private sanitizer: DomSanitizer,
     private router: Router,
     private toastr: ToastrService,
@@ -80,6 +91,9 @@ export class EserviceTraitementShowComponent implements OnInit {
   // ── Initialisation ─────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.loadGeoData();
+    this.unityAdminService.getAll().subscribe((res: any) => {
+      this.unites = res.data ?? res ?? [];
+    });
     this.activatedRoute.paramMap.subscribe(() => {
       this.selected_data = undefined;
       this.code       = this.activatedRoute.snapshot.paramMap.get('code');
@@ -171,6 +185,7 @@ add(content:any){
         this.modalService.dismissAll();
         this.selected_data = res.data;
         this.stepContents  = res.data?.step_contents ?? [];
+        this.structureId   = res.data?.structure_id ?? null;
 
         
         // Vérifier si l'agent connecté peut agir sur cette demande
@@ -186,6 +201,66 @@ add(content:any){
       error: () => {
         this.toastr.error('Impossible de charger la demande');
       }
+    });
+  }
+
+  // ── Structure d'accueil de stage ──────────────────────────────────────────
+  enregistrerStructure(): void {
+    if (!this.selected_data?.id) return;
+    this.savingStructure = true;
+    this.requeteService.affecterStructure(this.selected_data.id, this.structureId ?? null).subscribe({
+      next: (res: any) => {
+        this.savingStructure = false;
+        this.selected_data.structure_id = this.structureId ?? null;
+        this.selected_data.structure    = res?.data?.structure ?? null;
+        this.toastr.success('Structure d\'accueil enregistrée');
+      },
+      error: (err: any) => {
+        this.savingStructure = false;
+        AppErrorShow.showError('Enregistrement impossible', err);
+      }
+    });
+  }
+
+  // ── Rapport de stage ──────────────────────────────────────────────────────
+  onRapportSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      this.rapportFile = file;
+    } else {
+      this.toastr.warning('Seuls les fichiers PDF sont acceptés');
+    }
+  }
+
+  uploadRapport(): void {
+    if (!this.rapportFile || !this.selected_data?.id) return;
+    this.uploadingRapport = true;
+    this.requeteService.uploadRapportStage(this.selected_data.id, this.rapportFile).subscribe({
+      next: (res: any) => {
+        this.uploadingRapport = false;
+        this.rapportFile = null;
+        this.selected_data.rapport_stage_path       = res?.data?.rapport_stage_path ?? 'set';
+        this.selected_data.rapport_stage_url        = res?.data?.rapport_stage_url ?? null;
+        this.selected_data.rapport_stage_uploaded_at = res?.data?.rapport_stage_uploaded_at ?? null;
+        this.toastr.success('Rapport de stage déposé');
+      },
+      error: (err: any) => {
+        this.uploadingRapport = false;
+        AppErrorShow.showError('Dépôt impossible', err);
+      }
+    });
+  }
+
+  supprimerRapport(): void {
+    if (!this.selected_data?.id) return;
+    this.requeteService.supprimerRapportStage(this.selected_data.id).subscribe({
+      next: () => {
+        this.selected_data.rapport_stage_path = null;
+        this.selected_data.rapport_stage_url  = null;
+        this.selected_data.rapport_stage_uploaded_at = null;
+        this.toastr.success('Rapport de stage retiré');
+      },
+      error: (err: any) => AppErrorShow.showError('Suppression impossible', err)
     });
   }
 

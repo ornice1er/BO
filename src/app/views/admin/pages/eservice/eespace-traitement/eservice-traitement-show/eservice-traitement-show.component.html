@@ -142,6 +142,75 @@
   </div>
 
   <!-- ── Créneau RDV pré-sélectionné depuis le PNS ────────── -->
+  <!-- ── Structure d'affectation de stage ─────────────────── -->
+  <div *ngIf="peutAgir" class="ts-section">
+    <div class="ts-section-header ts-section-header--blue">
+      <i class="bi bi-building"></i> Structure d'affectation
+    </div>
+    <div class="ts-section-body">
+      <p class="text-muted small mb-2">
+        Structure d'accueil à laquelle le demandeur est affecté pour son stage. Les documents
+        adressés à la structure (ex. autorisation de stage) lui seront envoyés par e-mail.
+      </p>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <ng-select style="min-width: 320px;" [(ngModel)]="structureId"
+                   [clearable]="true" placeholder="Sélectionner une structure">
+          <ng-option [value]="u.id" *ngFor="let u of unites">
+            {{ u?.libelle }}<span *ngIf="u?.sigle"> [{{ u?.sigle }}]</span>
+          </ng-option>
+        </ng-select>
+        <button class="btn btn-primary" (click)="enregistrerStructure()" [disabled]="savingStructure">
+          <i class="bi bi-save me-1"></i> Enregistrer
+          <app-loading [isVisible]="savingStructure"></app-loading>
+        </button>
+      </div>
+      <div *ngIf="selected_data?.structure" class="mt-2 small">
+        <i class="bi bi-check-circle-fill text-success me-1"></i>
+        Affecté à <strong>{{ selected_data.structure.libelle }}</strong>
+        <span *ngIf="selected_data.structure.email"> — {{ selected_data.structure.email }}</span>
+        <span *ngIf="!selected_data.structure.email" class="text-danger">
+          — aucune adresse e-mail sur cette structure : le document ne pourra pas être envoyé.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Rapport de stage (demande source, ex. PS00928) ───── -->
+  <div *ngIf="selected_data?.manages_rapport_stage" class="ts-section">
+    <div class="ts-section-header ts-section-header--teal">
+      <i class="bi bi-file-earmark-text"></i> Rapport de stage
+    </div>
+    <div class="ts-section-body">
+      <p class="text-muted small mb-2">
+        Rapport de stage rattaché à cette demande. Il conditionne la délivrance automatique
+        de l'attestation liée (demande de suite).
+      </p>
+
+      <div *ngIf="selected_data?.rapport_stage_path" class="d-flex align-items-center gap-2 flex-wrap mb-2">
+        <span class="ts-badge ts-badge--teal ts-badge--sm">
+          <i class="bi bi-check-circle-fill"></i> Rapport déposé
+        </span>
+        <a *ngIf="selected_data?.rapport_stage_url" [href]="selected_data.rapport_stage_url" target="_blank"
+           class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-eye me-1"></i> Consulter
+        </a>
+        <button class="btn btn-sm btn-outline-danger" (click)="supprimerRapport()">
+          <i class="bi bi-trash me-1"></i> Retirer
+        </button>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <input type="file" accept="application/pdf" class="form-control" style="max-width: 360px;"
+               (change)="onRapportSelected($event)">
+        <button class="btn btn-primary" (click)="uploadRapport()" [disabled]="!rapportFile || uploadingRapport">
+          <i class="bi bi-upload me-1"></i>
+          {{ selected_data?.rapport_stage_path ? 'Remplacer' : 'Déposer' }}
+          <app-loading [isVisible]="uploadingRapport"></app-loading>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="selected_data?.planning_slot" class="ts-section">
     <div class="ts-section-header ts-section-header--blue">
       <i class="bi bi-calendar2-check-fill"></i> Créneau RDV sélectionné

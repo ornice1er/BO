@@ -117,6 +117,23 @@ getTransitionsDisponibles(prestationId: any, etapeId: any): any {
     return this.http.post<any>(`${this.url}/${id}/traiter`, payload);
   }
 
+  /** Affecte (ou retire) la structure d'accueil de stage sur une demande. */
+  affecterStructure(id: any, structureId: number | null): any {
+    return this.http.put<any>(`${this.url}/${id}/structure`, { structure_id: structureId });
+  }
+
+  /** Dépose le rapport de stage sur une demande (ex. PS00928). */
+  uploadRapportStage(id: any, file: File): any {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.url}/${id}/rapport-stage`, form);
+  }
+
+  /** Retire le rapport de stage d'une demande. */
+  supprimerRapportStage(id: any): any {
+    return this.http.delete<any>(`${this.url}/${id}/rapport-stage`);
+  }
+
   uploadNoteFile(id: any, file: File): any {
     const form = new FormData();
     form.append('file', file);
